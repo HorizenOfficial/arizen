@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Arizen</title>
+        <link rel="stylesheet" href="resources/styles.css">
+    </head>
+    <body>
+        <div id="mySidenav" class="sidenav">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a href="#" onclick="showVersion()">About</a>
+        </div>
+
+        <div id="topHeader" class="topHeader">
+            <span style="font-size:25px" onclick="openNav()">&#9776; Menu</span>
+        </div>
+
+        <div id="leftWallet" class="leftWallet">
+            <span style="font-size:25px">Wallet</span>
+        </div>
+
+        <div id="rightTxHistory" class="rightTxHistory">
+            <span style="font-size:25px">Transaction history</span>
+        </div>
+
+
+        <script>
+            function openNav() {
+                document.getElementById("mySidenav").style.width = "250px";
+            }
+
+            function closeNav() {
+                document.getElementById("mySidenav").style.width = "0";
+            }
+
+            function showVersion() {
+                let pckg = require("./package.json");
+                console.log("Arizen version: " + pckg.version);
+                window.alert("Arizen version: " + pckg.version);
+            }
+        </script>
+    </body>
+</html>
