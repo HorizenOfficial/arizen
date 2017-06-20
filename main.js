@@ -3,25 +3,104 @@
 /*jslint node: true */
 "use strict";
 
-const {app, dialog, BrowserWindow} = require("electron");
+const {app, BrowserWindow, Menu} = require("electron");
 const path = require("path");
 const url = require("url");
+const os = require("os");
 
 // Keep a global reference of the window object, if you don"t, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
 
+function checkAll() {
+    
+}
+
 function createWindow() {
+    const template = [
+        {
+            label: "File",
+            submenu: [
+                {
+                    label: "Backup wallet",
+                    click() {
+                        //dialog.showOpenDialog(getFileLocationOpts("Import eleos-wallets.tar"), function (path) {
+                        //});
+                    }
+                },
+                {
+                    type: "separator"
+                },
+                {
+                    label: "Import wallet",
+                    click() {
+                        //dialog.showSaveDialog(getSaveLocationOpts("Save Eleos wallets", "eleos-wallets.tar"), function (path) {
+                        //);
+                    }
+                }
+            ]
+        },
+        {
+            label: "Edit",
+            submenu: [
+                {label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:"},
+                {label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:"},
+                {type: "separator"},
+                {label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:"},
+                {label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:"},
+                {label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:"},
+                {label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:"}
+            ]
+        }
+    ];
+
+    if (os.platform() === "darwin") {
+        template.unshift({
+            label: app.getName(),
+            submenu: [
+                {
+                    role: "about"
+                },
+                {
+                    type: "separator"
+                },
+                {
+                    role: "services",
+                    submenu: []
+                },
+                {
+                    type: "separator"
+                },
+                {
+                    role: "hide"
+                },
+                {
+                    role: "hideothers"
+                },
+                {
+                    role: "unhide"
+                },
+                {
+                    type: "separator"
+                },
+                {
+                    role: "quit"
+                }
+            ]
+        });
+    }
+
+    const menu = Menu.buildFromTemplate(template);
+    Menu.setApplicationMenu(menu);
     // Create the browser window.
-    win = new BrowserWindow({width: 800, height: 600, resizable: false});
+    win = new BrowserWindow({width: 1050, height: 730, resizable: false, icon: "resources/zen.png"});
 
     // and load the index.html of the app.
     win.loadURL(url.format({
-        pathname: path.join(__dirname, "index.html"),
+        pathname: path.join(__dirname, "login.html"),
         protocol: "file:",
         slashes: true
     }));
-
     // Open the DevTools.
     win.webContents.openDevTools();
 
@@ -44,7 +123,7 @@ app.on("window-all-closed", function () {
     // On macOS it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q
     if (process.platform !== "darwin") {
-        app.quit();
+        app.exit(0);
     }
 });
 
@@ -53,6 +132,7 @@ app.on("activate", function () {
     // dock icon is clicked and there are no other windows open.
     if (win === null) {
         createWindow();
+        checkAll();
     }
 });
 

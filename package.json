@@ -1,5 +1,5 @@
 {
-  "name": "arizen",
+  "name": "Arizen",
   "version": "0.0.1",
   "description": "Wallet for ZEN",
   "main": "main.js",
@@ -17,6 +17,7 @@
   "license": "MIT",
   "dependencies": {
     "electron-packager": "^8.7.1",
+    "electron-tabs": "^0.6.1",
     "errors": "^0.3.0"
   },
   "devDependencies": {

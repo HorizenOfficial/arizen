@@ -1,6 +1,6 @@
 body {
     font-family: "Lato", sans-serif;
-    color: #F88900;
+    color: #f1f1f1;
     background-color: #818181;
 }
 /*Orange: F88900
@@ -30,7 +30,7 @@ Dark Brown: 0D1006*/
 }
 
 .sidenav a:hover, .offcanvas a:focus{
-    color: #F88900;
+    color: #f1f1f1;
 }
 
 .sidenav .closebtn {
@@ -47,20 +47,47 @@ Dark Brown: 0D1006*/
 }
 
 div.leftWallet{
+    /*box-sizing: border-box;*/
+    /*-moz-box-sizing: border-box;*/
+    /*-webkit-box-sizing: border-box;*/
+    /*border: 1px solid #000;*/
     width: 50%;
-    height: auto;
+    height: 90%;
     float: left;
 }
 
 div.rightTxHistory{
+    /*box-sizing: border-box;*/
+    /*-moz-box-sizing: border-box;*/
+    /*-webkit-box-sizing: border-box;*/
+    /*border: 1px solid #000;*/
     width: 50%;
-    height: auto;
+    height: 90%;
     float: right;
 }
 
 dif.header{
+    /*box-sizing: border-box;*/
+    /*-moz-box-sizing: border-box;*/
+    /*-webkit-box-sizing: border-box;*/
+    /*border: 1px solid #000;*/
     width: 100%;
     height: 10%;
     float: top;
-    border-bottom: 1px solid #818181;
+}
+
+#button1{
+    width: 49.5%;
+    height: 40px;
+    font-size: 25px;
+}
+
+#button2{
+    width: 49.5%;
+    height: 40px;
+    font-size: 25px;
+}
+
+#container{
+    text-align: center;
 }

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Password Verification</title>
+    <script src="https://code.jquery.com/jquery-1.7.min.js"></script>
+    <link rel="stylesheet" href="resources/login_styles.css">
+</head>
+<body>
+
+
+<div id="container">
+    <h1>Password Verification</h1>
+    <form>
+        <ul>
+            <li>
+                <label for="username">Username:</label>
+                <span><input id="username" name="username" type="text"/></span>
+            </li>
+            <li>
+                <label for="pswd">Password:</label>
+                <span><input id="pswd" type="password" name="pswd"/></span>
+            </li>
+            <li>
+                <label for="pswd_again">Password again:</label>
+                <span><input id="pswd_again" type="password" name="pswd_again"/></span>
+            </li>
+            <li>
+                <button type="submit">Register</button>
+            </li>
+        </ul>
+    </form>
+    <div id="pswd_info">
+        <h4>Password must meet the following requirements:</h4>
+        <ul>
+            <li id="letter" class="invalid">At least <strong>one letter</strong></li>
+            <li id="capital" class="invalid">At least <strong>one capital letter</strong></li>
+            <li id="number" class="invalid">At least <strong>one number</strong></li>
+            <li id="length" class="invalid">Be at least <strong>8 characters</strong></li>
+        </ul>
+    </div>
+    <div id="pswd_identical">
+        <h4>Password has to be:</h4>
+        <ul>
+            <li id="identical" class="invalid"><strong>Identical</strong></li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    function loginExist() {
+        const fs = require("fs");
+        let path = require("./common.js").getLoginPath();
+
+        fs.stat(path, function (err, stat) {
+            if (err === null) {
+                console.log("File exists");
+                return true;
+            } else if (err.code === "ENOENT") {
+                console.log("File does not exists");
+                return false;
+            }
+//            else {
+//                console.log("Some other error: ", err.code);
+//                return;
+//            }
+        });
+    }
+
+    function showRegisterOrLogin() {
+        if (loginExist()) {
+            // you know your login
+        } else {
+            // you are new here
+        }
+        document.getElementById("receive").style.display = "none";
+        document.getElementById("send").style.display = "block";
+    }
+
+    $(document).ready(function () {
+        var pswd;
+        var pswd_again;
+        $('input[id=pswd]').keyup(function () {
+            // keyup event code here
+            // set password variable
+            pswd = $(this).val();
+
+            //validate the length
+            if (pswd.length < 8) {
+                $('#length').removeClass('valid').addClass('invalid');
+            } else {
+                $('#length').removeClass('invalid').addClass('valid');
+            }
+            //validate letter
+            if (pswd.match(/[A-z]/)) {
+                $('#letter').removeClass('invalid').addClass('valid');
+            } else {
+                $('#letter').removeClass('valid').addClass('invalid');
+            }
+
+            //validate capital letter
+            if (pswd.match(/[A-Z]/)) {
+                $('#capital').removeClass('invalid').addClass('valid');
+            } else {
+                $('#capital').removeClass('valid').addClass('invalid');
+            }
+
+            //validate number
+            if (pswd.match(/\d/)) {
+                $('#number').removeClass('invalid').addClass('valid');
+            } else {
+                $('#number').removeClass('valid').addClass('invalid');
+            }
+        }).focus(function () {
+            // focus code here
+            $('#pswd_info').show();
+        }).blur(function () {
+            // blur code here
+            $('#pswd_info').hide();
+        });
+
+        $('input[id=pswd_again]').keyup(function () {
+            // keyup event code here
+            pswd_again = $(this).val();
+            console.log(pswd);
+            console.log(pswd_again);
+            //validate if passwords are identical
+            if (pswd === pswd_again) {
+                $('#identical').removeClass('invalid').addClass('valid');
+            } else {
+                $('#identical').removeClass('valid').addClass('invalid');
+            }
+
+        }).focus(function () {
+            // focus code here
+            $('#pswd_identical').show();
+        }).blur(function () {
+            // blur code here
+            $('#pswd_identical').hide();
+        });
+    });
+</script>
+</body>
+</html>

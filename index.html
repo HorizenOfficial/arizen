@@ -15,12 +15,40 @@
             <span style="font-size:25px" onclick="openNav()">&#9776; Menu</span>
         </div>
 
+        <hr>
+
         <div id="leftWallet" class="leftWallet">
-            <span style="font-size:25px">Wallet</span>
+            <div id="container">
+                <button id="button1" onclick="showReceive()">Receive</button>
+                <button id="button2" onclick="showSend()">Send</button>
+            </div>
+            <br>
+
+            <div id="receive" class="receive" style="display:none">
+                NOT IMPLEMENTED
+            </div>
+
+            <div id="send" class="send" style="display:none">
+                <label style="width:10%;">To:</label>
+                <input id="sendToAddress" type="text" style="width: 90%; height: 20px" align="right" value="address">
+                <br>
+                <label style="width:10%;">Amount:</label>
+                <input id="coinAmount" type="number" style="width: 80%; height: 20px" align="right" value="0.00">
+            </div>
+
+            <!--<div id="receive" style="font-size:25px; alignment: center">Receive</div>-->
+            <!--<div id="send" style="font-size:25px">Send</div>-->
+
+            <!--<input type="button" name="answer" value="Show Div" onclick="showDiv()" />-->
+
         </div>
 
         <div id="rightTxHistory" class="rightTxHistory">
-            <span style="font-size:25px">Transaction history</span>
+            <div style="text-align: center">
+                <span style="font-size:25px">Transaction History</span>
+            </div>
+            <hr>
+
         </div>
 
 
@@ -37,6 +65,16 @@
                 let pckg = require("./package.json");
                 console.log("Arizen version: " + pckg.version);
                 window.alert("Arizen version: " + pckg.version);
+            }
+
+            function showSend() {
+                document.getElementById("receive").style.display = "none";
+                document.getElementById("send").style.display = "block";
+            }
+
+            function showReceive() {
+                document.getElementById("send").style.display = "none";
+                document.getElementById("receive").style.display = "block";
             }
         </script>
     </body>
