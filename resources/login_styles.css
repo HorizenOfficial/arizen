@@ -108,6 +108,38 @@ button:active {
     text-shadow: 0 -1px 0 #1e3c5e;
 }
 
+#username_info {
+    position: absolute;
+    bottom: -78px;
+    bottom: -115px \9; /* IE Specific */
+    right: 55px;
+    width: 250px;
+    padding: 15px;
+    background: #fefefe;
+    font-size: .875em;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px #ccc;
+    border: 1px solid #ddd;
+}
+
+#username_info h4 {
+    margin: 0 0 10px 0;
+    padding: 0;
+    font-weight: normal;
+}
+
+#username_info::before {
+    content: "\25B2";
+    position: absolute;
+    top: -12px;
+    left: 45%;
+    font-size: 14px;
+    line-height: 14px;
+    color: #ddd;
+    text-shadow: none;
+    display: block;
+}
+
 #pswd_info {
     position: absolute;
     bottom: -150px;
@@ -140,9 +172,9 @@ button:active {
     display: block;
 }
 
-#pswd_identical {
+#pswd_identical_info {
     position: absolute;
-    bottom: -62px;
+    bottom: -78px;
     bottom: -115px \9; /* IE Specific */
     right: 55px;
     width: 250px;
@@ -154,13 +186,13 @@ button:active {
     border: 1px solid #ddd;
 }
 
-#pswd_identical h4 {
+#pswd_identical_info h4 {
     margin: 0 0 10px 0;
     padding: 0;
     font-weight: normal;
 }
 
-#pswd_identical::before {
+#pswd_identical_info::before {
     content: "\25B2";
     position: absolute;
     top: -12px;
@@ -186,10 +218,14 @@ button:active {
     color: #3a7d34;
 }
 
+#username_info {
+    display:none;
+}
+
 #pswd_info {
     display:none;
 }
 
-#pswd_identical {
+#pswd_identical_info {
     display:none;
 }

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Password Verification</title>
+    <title>Arizen: Password Verification</title>
     <script src="https://code.jquery.com/jquery-1.7.min.js"></script>
     <link rel="stylesheet" href="resources/login_styles.css">
 </head>
@@ -18,30 +18,36 @@
             </li>
             <li>
                 <label for="pswd">Password:</label>
-                <span><input id="pswd" type="password" name="pswd"/></span>
+                <span><input id="pswd" name="pswd" type="password"/></span>
             </li>
             <li>
                 <label for="pswd_again">Password again:</label>
-                <span><input id="pswd_again" type="password" name="pswd_again"/></span>
+                <span><input id="pswd_again" name="pswd_again" type="password"/></span>
             </li>
             <li>
-                <button type="submit">Register</button>
+                <button id="btSubmit" name="btSubmit" type="submit" disabled onclick="loginExist()">Register</button>
             </li>
         </ul>
     </form>
+    <div id="username_info">
+        <h4>Username must meet the following requirements:</h4>
+        <ul>
+            <li id="usrnm_length_info" class="invalid">At least <strong>four letters</strong></li>
+        </ul>
+    </div>
     <div id="pswd_info">
         <h4>Password must meet the following requirements:</h4>
         <ul>
-            <li id="letter" class="invalid">At least <strong>one letter</strong></li>
-            <li id="capital" class="invalid">At least <strong>one capital letter</strong></li>
-            <li id="number" class="invalid">At least <strong>one number</strong></li>
-            <li id="length" class="invalid">Be at least <strong>8 characters</strong></li>
+            <li id="letter_info" class="invalid">At least <strong>one letter</strong></li>
+            <li id="capital_info" class="invalid">At least <strong>one capital letter</strong></li>
+            <li id="number_info" class="invalid">At least <strong>one number</strong></li>
+            <li id="length_info" class="invalid">Be at least <strong>8 characters</strong></li>
         </ul>
     </div>
-    <div id="pswd_identical">
-        <h4>Password has to be:</h4>
+    <div id="pswd_identical_info">
+        <h4>Password must meet the following requirements:</h4>
         <ul>
-            <li id="identical" class="invalid"><strong>Identical</strong></li>
+            <li id="identical_info" class="invalid"><strong>Identical</strong></li>
         </ul>
     </div>
 </div>
@@ -77,38 +83,75 @@
     }
 
     $(document).ready(function () {
-        var pswd;
-        var pswd_again;
+        $(':input[id="btSubmit"]').prop('disabled', true);
+        let usr_val = null;
+        let pswd_val = null;
+        let pswd_again_val = null;
+        let usr = false;
+        let len = false;
+        let lett = false;
+        let capl = false;
+        let num = false;
+        let ide = false;
+
+        $('input[id=username]').keyup(function () {
+            usr_val = $(this).val();
+
+            // validate the length
+            if (usr_val.length < 4) {
+                $('#usrnm_length_info').removeClass('valid').addClass('invalid');
+                usr = false;
+            } else {
+                $('#usrnm_length_info').removeClass('invalid').addClass('valid');
+                usr = true;
+            }
+        }).focus(function () {
+            // focus code here
+            $('#username_info').show();
+        }).blur(function () {
+            // blur code here
+            $('#username_info').hide();
+        });
+
         $('input[id=pswd]').keyup(function () {
             // keyup event code here
             // set password variable
-            pswd = $(this).val();
+            pswd_val = $(this).val();
 
-            //validate the length
-            if (pswd.length < 8) {
-                $('#length').removeClass('valid').addClass('invalid');
+            // validate the length
+            if (pswd_val.length < 8) {
+                $('#length_info').removeClass('valid').addClass('invalid');
+                len = false;
             } else {
-                $('#length').removeClass('invalid').addClass('valid');
-            }
-            //validate letter
-            if (pswd.match(/[A-z]/)) {
-                $('#letter').removeClass('invalid').addClass('valid');
-            } else {
-                $('#letter').removeClass('valid').addClass('invalid');
+                $('#length_info').removeClass('invalid').addClass('valid');
+                len = true;
             }
 
-            //validate capital letter
-            if (pswd.match(/[A-Z]/)) {
-                $('#capital').removeClass('invalid').addClass('valid');
+            // validate letter
+            if (pswd_val.match(/[A-z]/)) {
+                $('#letter_info').removeClass('invalid').addClass('valid');
+                lett = true;
             } else {
-                $('#capital').removeClass('valid').addClass('invalid');
+                $('#letter_info').removeClass('valid').addClass('invalid');
+                lett = false;
             }
 
-            //validate number
-            if (pswd.match(/\d/)) {
-                $('#number').removeClass('invalid').addClass('valid');
+            // validate capital letter
+            if (pswd_val.match(/[A-Z]/)) {
+                $('#capital_info').removeClass('invalid').addClass('valid');
+                capl = true;
             } else {
-                $('#number').removeClass('valid').addClass('invalid');
+                $('#capital_info').removeClass('valid').addClass('invalid');
+                capl = false;
+            }
+
+            // validate number
+            if (pswd_val.match(/\d/)) {
+                $('#number_info').removeClass('invalid').addClass('valid');
+                num = true;
+            } else {
+                $('#number_info').removeClass('valid').addClass('invalid');
+                num = false;
             }
         }).focus(function () {
             // focus code here
@@ -120,22 +163,32 @@
 
         $('input[id=pswd_again]').keyup(function () {
             // keyup event code here
-            pswd_again = $(this).val();
-            console.log(pswd);
-            console.log(pswd_again);
-            //validate if passwords are identical
-            if (pswd === pswd_again) {
-                $('#identical').removeClass('invalid').addClass('valid');
+            pswd_again_val = $(this).val();
+            // console.log(pswd);
+            // console.log(pswd_again);
+            // validate if passwords are identical
+            if (pswd_val === pswd_again_val) {
+                $('#identical_info').removeClass('invalid').addClass('valid');
+                ide = true;
             } else {
-                $('#identical').removeClass('valid').addClass('invalid');
+                $('#identical_info').removeClass('valid').addClass('invalid');
+                ide = false;
             }
-
         }).focus(function () {
             // focus code here
-            $('#pswd_identical').show();
+            $('#pswd_identical_info').show();
         }).blur(function () {
             // blur code here
-            $('#pswd_identical').hide();
+            $('#pswd_identical_info').hide();
+        });
+
+        $('input[id="username"], input[id="pswd"], input[id="pswd_again"]').keyup(function() {
+            if($(this).val() != '') {
+                console.log(usr, len, lett, capl, num, ide);
+                if(usr && len && lett && capl && num && ide){
+                    $(':input[type="submit"]').prop('disabled', false);
+                }
+            }
         });
     });
 </script>
