@@ -12,9 +12,9 @@ const os = require("os");
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
 
-function checkAll() {
-    
-}
+// function checkAll() {
+//
+// }
 
 function createWindow() {
     const template = [
@@ -97,7 +97,7 @@ function createWindow() {
 
     // and load the index.html of the app.
     win.loadURL(url.format({
-        pathname: path.join(__dirname, "login.html"),
+        pathname: path.join(__dirname, "index.html"),
         protocol: "file:",
         slashes: true
     }));
@@ -132,7 +132,7 @@ app.on("activate", function () {
     // dock icon is clicked and there are no other windows open.
     if (win === null) {
         createWindow();
-        checkAll();
+        // checkAll();
     }
 });
 
@@ -152,3 +152,22 @@ app.on("before-quit", function () {
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
+
+function getRootConfigPath() {
+    let rootPath;
+    if (os.platform() === "win32" || os.platform() === "darwin") {
+        rootPath = app.getPath("appData") + "/" + "Zen/";
+    }
+    if (os.platform() === "linux") {
+        rootPath = app.getPath("home") + "/" + "./zen/";
+    }
+    return rootPath;
+}
+
+function getLoginPath() {
+    let rootPath = getRootConfigPath();
+    let loginPath = rootPath + "loginInfo.txt";
+    return loginPath;
+}
+
+module.exports = {getRootConfigPath, getLoginPath};

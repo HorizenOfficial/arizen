@@ -5,53 +5,46 @@
         <title>Arizen</title>
         <link rel="stylesheet" href="resources/styles.css">
     </head>
+
+
+    <script type="text/javascript">
+
+        console.log("index");
+
+        function loginExist() {
+            const fs = require("fs");
+//            let path = require("./main.js").getLoginPath();
+
+//            fs.stat(path, function (err, stat) {
+//                if (err === null) {
+//                    console.log("File exists");
+//                    return true;
+//                } else if (err.code === "ENOENT") {
+//                    console.log("File does not exists");
+//                    return false;
+//                }
+//            else {
+//                console.log("Some other error: ", err.code);
+//                return;
+//            }
+//            });
+        }
+
+        function showRegisterOrLogin() {
+            if (loginExist()) {
+                // you know your login
+            } else {
+                // you are new here
+            }
+            document.getElementById("receive").style.display = "none";
+            document.getElementById("send").style.display = "block";
+        }
+
+        let le = loginExist();
+        console.log("login info exist:" + le);
+    </script>
+
     <body>
-        <div id="mySidenav" class="sidenav">
-            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-            <a href="#" onclick="showVersion()">About</a>
-        </div>
-
-        <div id="topHeader" class="topHeader">
-            <span style="font-size:25px" onclick="openNav()">&#9776; Menu</span>
-        </div>
-
-        <hr>
-
-        <div id="leftWallet" class="leftWallet">
-            <div id="container">
-                <button id="button1" onclick="showReceive()">Receive</button>
-                <button id="button2" onclick="showSend()">Send</button>
-            </div>
-            <br>
-
-            <div id="receive" class="receive" style="display:none">
-                NOT IMPLEMENTED
-            </div>
-
-            <div id="send" class="send" style="display:none">
-                <label style="width:10%;">To:</label>
-                <input id="sendToAddress" type="text" style="width: 90%; height: 20px" align="right" value="address">
-                <br>
-                <label style="width:10%;">Amount:</label>
-                <input id="coinAmount" type="number" style="width: 80%; height: 20px" align="right" value="0.00">
-            </div>
-
-            <!--<div id="receive" style="font-size:25px; alignment: center">Receive</div>-->
-            <!--<div id="send" style="font-size:25px">Send</div>-->
-
-            <!--<input type="button" name="answer" value="Show Div" onclick="showDiv()" />-->
-
-        </div>
-
-        <div id="rightTxHistory" class="rightTxHistory">
-            <div style="text-align: center">
-                <span style="font-size:25px">Transaction History</span>
-            </div>
-            <hr>
-
-        </div>
-
-
         <script>
             function openNav() {
                 document.getElementById("mySidenav").style.width = "250px";
