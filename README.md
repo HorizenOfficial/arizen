@@ -3,7 +3,7 @@ ZenCash wallet
 
 ![Screenshot](https://github.com/ZencashOfficial/arizen/blob/master/images/login.png)
 
-# Planed Features 
+# Planned Features 
 - login pass
 - encrypted wallet.dat file
 - light client (no more wait for sync)
