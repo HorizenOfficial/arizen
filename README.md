@@ -1,6 +1,8 @@
 # Arizen Wallet
 ZenCash wallet
 
+![Screenshot](https://github.com/ZencashOfficial/arizen/blob/master/images/login.png)
+
 # Planed Features 
 - login pass
 - encrypted wallet.dat file
