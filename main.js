@@ -3,18 +3,39 @@
 /*jslint node: true */
 "use strict";
 
-const {app, BrowserWindow, Menu} = require("electron");
+const electron = require("electron");
+const {app, dialog, ipcMain, Menu} = require("electron");
+const BrowserWindow = electron.BrowserWindow;
+
 const path = require("path");
 const url = require("url");
 const os = require("os");
+const fs = require("fs");
 
 // Keep a global reference of the window object, if you don"t, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
 
-// function checkAll() {
-//
-// }
+function getRootConfigPath() {
+    let rootPath;
+    if (os.platform() === "win32" || os.platform() === "darwin") {
+        rootPath = app.getPath("appData") + "/" + "Arizen/";
+    }
+    if (os.platform() === "linux") {
+        rootPath = app.getPath("home") + "/" + "./arizen/";
+    }
+    return rootPath;
+}
+
+function getLoginPath() {
+    let rootPath = getRootConfigPath();
+    let loginPath = rootPath + "loginInfo.txt";
+    return loginPath;
+}
+
+function isNewUser() {
+    return !fs.existsSync(getLoginPath());
+}
 
 function createWindow() {
     const template = [
@@ -89,18 +110,24 @@ function createWindow() {
             ]
         });
     }
-
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
-    // Create the browser window.
     win = new BrowserWindow({width: 1050, height: 730, resizable: false, icon: "resources/zen.png"});
 
-    // and load the index.html of the app.
-    win.loadURL(url.format({
-        pathname: path.join(__dirname, "login.html"),
-        protocol: "file:",
-        slashes: true
-    }));
+    if (isNewUser()) {
+        win.loadURL(url.format({
+            pathname: path.join(__dirname, "register.html"),
+            protocol: "file:",
+            slashes: true
+        }));
+    } else {
+        win.loadURL(url.format({
+            pathname: path.join(__dirname, "login.html"),
+            protocol: "file:",
+            slashes: true
+        }));
+    }
+
     // Open the DevTools.
     win.webContents.openDevTools();
 
@@ -153,21 +180,3 @@ app.on("before-quit", function () {
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
 
-function getRootConfigPath() {
-    let rootPath;
-    if (os.platform() === "win32" || os.platform() === "darwin") {
-        rootPath = app.getPath("appData") + "/" + "Zen/";
-    }
-    if (os.platform() === "linux") {
-        rootPath = app.getPath("home") + "/" + "./zen/";
-    }
-    return rootPath;
-}
-
-function getLoginPath() {
-    let rootPath = getRootConfigPath();
-    let loginPath = rootPath + "loginInfo.txt";
-    return loginPath;
-}
-
-module.exports = {getRootConfigPath, getLoginPath};

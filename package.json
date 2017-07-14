@@ -16,16 +16,16 @@
   "author": "Zen Team",
   "license": "MIT",
   "dependencies": {
+    "electron": "^1.6.11",
     "electron-packager": "^8.7.1",
-    "electron-tabs": "^0.6.1",
+    "electron-tabs": "^0.7.1",
     "errors": "^0.3.0"
   },
   "devDependencies": {
-    "electron": "^1.7.3",
     "electron-installer-debian": "^0.5.2",
     "electron-installer-dmg": "*",
     "electron-installer-windows": "^0.2.0",
     "electron-rebuild": "^1.5.11",
-    "flow-bin": "^0.48.0"
+    "flow-bin": "^0.50.0"
   }
 }

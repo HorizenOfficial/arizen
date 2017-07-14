@@ -3,7 +3,7 @@
 // /*jslint node: true */
 // "use strict";
 //
-// const {app, BrowserWindow, Menu} = require("electron");
+// //const {app, BrowserWindow, Menu} = require("electron");
 // // const path = require("path");
 // const os = require("os");
 //
