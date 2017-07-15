@@ -3,25 +3,23 @@
 // /*jslint node: true */
 // "use strict";
 //
-// //const {app, BrowserWindow, Menu} = require("electron");
-// // const path = require("path");
+// const {app} = require("electron");
 // const os = require("os");
 //
 // function getRootConfigPath() {
 //     let rootPath;
 //     if (os.platform() === "win32" || os.platform() === "darwin") {
-//         rootPath = app.getPath("appData") + "/" + "Zen/";
+//         rootPath = app.getPath("appData") + "/" + "Arizen/";
 //     }
 //     if (os.platform() === "linux") {
-//         rootPath = app.getPath("home") + "/" + "./zen/";
+//         rootPath = app.getPath("home") + "/" + "./arizen/";
 //     }
 //     return rootPath;
 // }
 //
 // function getLoginPath() {
 //     let rootPath = getRootConfigPath();
-//     let loginPath = rootPath + "loginInfo.txt";
-//     return loginPath;
+//     return `${rootPath}loginInfo.txt`;
 // }
 //
 // module.exports = {getRootConfigPath, getLoginPath};

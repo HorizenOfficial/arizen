@@ -9,6 +9,9 @@ ZenCash wallet
 - light client (no more wait for sync)
 - nice GUI
 
+# Work in progress
+- keytar storing password
+
 
 ### **Would you like buy me some sweets? Thank you!**
 - ZEN: znWz8NuJ6iZNyT2BxKKeMiWsdRM44VMs8mM

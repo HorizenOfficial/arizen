@@ -4,9 +4,10 @@
 "use strict";
 
 const electron = require("electron");
-const {app, dialog, ipcMain, Menu} = require("electron");
+const {app, Menu} = require("electron");
 const BrowserWindow = electron.BrowserWindow;
 
+// const keytar = require('keytar'); -
 const path = require("path");
 const url = require("url");
 const os = require("os");
@@ -20,22 +21,24 @@ function getRootConfigPath() {
     let rootPath;
     if (os.platform() === "win32" || os.platform() === "darwin") {
         rootPath = app.getPath("appData") + "/" + "Arizen/";
-    }
-    if (os.platform() === "linux") {
+    } else if (os.platform() === "linux") {
         rootPath = app.getPath("home") + "/" + "./arizen/";
+    } else {
+        console.log("Unidentified OS.");
+        app.exit(0);
     }
     return rootPath;
 }
 
 function getLoginPath() {
-    let rootPath = getRootConfigPath();
-    let loginPath = rootPath + "loginInfo.txt";
-    return loginPath;
+    return getRootConfigPath() + "loginInfo.txt";
 }
 
 function isNewUser() {
-    return !fs.existsSync(getLoginPath());
+    return !fs.exists(getLoginPath());
 }
+
+
 
 function createWindow() {
     const template = [
@@ -45,6 +48,7 @@ function createWindow() {
                 {
                     label: "Backup wallet",
                     click() {
+                        console.log("Backuping wallet is not implemented.");
                         //dialog.showOpenDialog(getFileLocationOpts("Import eleos-wallets.tar"), function (path) {
                         //});
                     }
@@ -55,6 +59,7 @@ function createWindow() {
                 {
                     label: "Import wallet",
                     click() {
+                        console.log("Importing wallet is not implemented.");
                         //dialog.showSaveDialog(getSaveLocationOpts("Save Eleos wallets", "eleos-wallets.tar"), function (path) {
                         //);
                     }
@@ -164,6 +169,7 @@ app.on("activate", function () {
 });
 
 app.on("before-quit", function () {
+    console.log("quitting");
     // dialog.showMessageBox({
     //     type: "question",
     //     buttons: ["Yes", "No"],
@@ -180,3 +186,12 @@ app.on("before-quit", function () {
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
 
+// ipcMain.on("get-password", function (event, user) {
+//     event.returnValue = keytar.getPassword("Arizen", user);
+// });
+//
+// ipcMain.on("set-password", function (event, user, pass) {
+//     event.returnValue = keytar.setPassword("Arizen", user, pass);
+// });
+
+module.exports = {getLoginPath};

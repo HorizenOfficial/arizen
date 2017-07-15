@@ -52,11 +52,16 @@
 </div>
 
 <script type="text/javascript">
-    $('#btSubmit').click(function(){
-        location.href="./wallet.html";
-        console.log("Registration was successful - redirecting to wallet.html");
-        return false;
-    });
+    function writeLoginInfo(login, pswd) {
+        const fs = require('fs');
+        let path = require("./main.js").getLoginPath();
+        fs.writeFileSync(path, login, function(err) {
+            if(err) {
+                return console.log(err);
+            }
+            console.log("The file was saved!");
+        });
+    }
 
     $(document).ready(function () {
         let usr_val = null;
@@ -68,6 +73,13 @@
         let capl = false;
         let num = false;
         let ide = false;
+
+        $('#btSubmit').click(function(){
+            writeLoginInfo(usr_val, pswd_val);
+            location.href="./wallet.html";
+            console.log("Registration was successful - redirecting to wallet.html");
+            return false;
+        });
 
         // username conditions
         $('input[id=username]').keyup(function () {
