@@ -19,7 +19,8 @@
     "electron": "^1.6.11",
     "electron-packager": "^8.7.1",
     "electron-tabs": "^0.7.1",
-    "errors": "^0.3.0"
+    "errors": "^0.3.0",
+	"password-hash": "*"
   },
   "devDependencies": {
     "electron-installer-debian": "^0.5.2",
