@@ -1,7 +1,7 @@
 body {
-    font-family: "Lato", sans-serif;
-    color: #f1f1f1;
-    background-color: #818181;
+    font-family:  "Raleway", "Lato", sans-serif;
+    color: #0d1006;
+    background-color: #ffffff;
 }
 /*Orange: F88900
 Light Grey: CCB18E
@@ -14,17 +14,18 @@ Dark Brown: 0D1006*/
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: #111;
+    background-color: #0d1006;
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
+    color: #ccb18e;
 }
 
 .sidenav a {
     padding: 8px 8px 8px 32px;
     text-decoration: none;
     font-size: 25px;
-    color: #818181;
+    color: #ccb18e;
     display: block;
     transition: 0.3s;
 }
