@@ -1,5 +1,5 @@
 {
-  "name": "Arizen",
+  "name": "arizen",
   "version": "0.0.1",
   "description": "Wallet for ZEN",
   "main": "main.js",
@@ -7,20 +7,23 @@
     "start": "electron ."
   },
   "homepage": "https://zensystem.io",
-  "repository": "https://github.com/zencashofficial/arizen",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zencashofficial/arizen.git"
+  },
   "keywords": [
     "zencash",
     "equihash",
     "wallet"
   ],
-  "author": "Zen Team",
+  "author": "ZEN Team",
   "license": "MIT",
   "dependencies": {
     "electron": "^1.6.11",
     "electron-packager": "^8.7.1",
     "electron-tabs": "^0.7.1",
     "errors": "^0.3.0",
-	"password-hash": "*"
+    "password-hash": "*"
   },
   "devDependencies": {
     "electron-installer-debian": "^0.5.2",
@@ -28,5 +31,8 @@
     "electron-installer-windows": "^0.2.0",
     "electron-rebuild": "^1.5.11",
     "flow-bin": "^0.50.0"
+  },
+  "bugs": {
+    "url": "https://github.com/zencashofficial/arizen/issues"
   }
 }
