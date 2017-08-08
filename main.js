@@ -4,7 +4,7 @@
 "use strict";
 
 const electron = require("electron");
-const {app, Menu} = require("electron");
+var {app, Menu, ipcMain} = require("electron");
 const BrowserWindow = electron.BrowserWindow;
 
 // const keytar = require('keytar'); -
@@ -16,6 +16,11 @@ const fs = require("fs");
 // Keep a global reference of the window object, if you don"t, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
+
+
+function getLoginPath() {
+    return getRootConfigPath() + "login.txt";
+}
 
 function getRootConfigPath() {
     let rootPath;
@@ -29,16 +34,6 @@ function getRootConfigPath() {
     }
     return rootPath;
 }
-
-function getLoginPath() {
-    return getRootConfigPath() + "loginInfo.txt";
-}
-
-function isNewUser() {
-    return !fs.exists(getLoginPath());
-}
-
-
 
 function createWindow() {
     const template = [
@@ -119,15 +114,15 @@ function createWindow() {
     Menu.setApplicationMenu(menu);
     win = new BrowserWindow({width: 1050, height: 730, resizable: false, icon: "resources/zen.png"});
 
-    if (isNewUser()) {
+    if (fs.existsSync(getLoginPath())) {
         win.loadURL(url.format({
-            pathname: path.join(__dirname, "register.html"),
+            pathname: path.join(__dirname, "login.html"),
             protocol: "file:",
             slashes: true
         }));
     } else {
         win.loadURL(url.format({
-            pathname: path.join(__dirname, "login.html"),
+            pathname: path.join(__dirname, "register.html"),
             protocol: "file:",
             slashes: true
         }));
@@ -186,6 +181,20 @@ app.on("before-quit", function () {
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
 
+ipcMain.on("write-login-info", function (event, login, pass) {
+    let path = getLoginPath();
+    let data = {
+        login: login,
+        password: pass
+    };
+    fs.writeFileSync(path, JSON.stringify(data), function(err) {
+        if (err) {
+            return console.log(err);
+        }
+        console.log("The file was saved!");
+    });
+});
+
 // ipcMain.on("get-password", function (event, user) {
 //     event.returnValue = keytar.getPassword("Arizen", user);
 // });
@@ -193,5 +202,3 @@ app.on("before-quit", function () {
 // ipcMain.on("set-password", function (event, user, pass) {
 //     event.returnValue = keytar.setPassword("Arizen", user, pass);
 // });
-
-module.exports = {getLoginPath};

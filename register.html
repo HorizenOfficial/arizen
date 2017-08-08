@@ -52,16 +52,8 @@
 </div>
 
 <script type="text/javascript">
-    function writeLoginInfo(login, pswd) {
-        const fs = require('fs');
-        let path = require("./main.js").getLoginPath();
-        fs.writeFileSync(path, login, function(err) {
-            if(err) {
-                return console.log(err);
-            }
-            console.log("The file was saved!");
-        });
-    }
+    const electron = require("electron");
+    const {ipcRenderer} = electron;
 
     $(document).ready(function () {
         let usr_val = null;
@@ -75,7 +67,8 @@
         let ide = false;
 
         $('#btSubmit').click(function(){
-            writeLoginInfo(usr_val, pswd_val);
+            var passwordHash = require('password-hash');
+            ipcRenderer.send("write-login-info", usr_val, passwordHash.generate(pswd_val, {"algorithm": "sha256", "saltLength": 10}));
             location.href="./wallet.html";
             console.log("Registration was successful - redirecting to wallet.html");
             return false;
