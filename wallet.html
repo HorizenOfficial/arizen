@@ -6,19 +6,22 @@
     <link rel="stylesheet" href="resources/styles.css">
 </head>
 <body>
-<div id="mySidenav" class="sidenav">
-    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-    <a href="#" onclick="showVersion()">About</a>
-</div>
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="#" onclick="showVersion()">About</a>
+    </div>
 
 <div id="topHeader" class="topHeader">
-    <span style="font-size:25px" onclick="openNav()">&#9776; Menu</span>
+    <a class="opennav" onclick="openNav()">
+        &nbsp;&#9776;
+    </a>
+    <img style="padding-left:475px; vertical-align: middle;" src="resources/zen_icon.png" width="25px" />
 </div>
 
 <div id="leftWallet" class="leftWallet">
     <div id="container">
-        <button id="button1" onclick="showReceive()">Receive</button>
-        <button id="button2" onclick="showSend()">Send</button>
+        <button class="buttons" onclick="showReceive()">Receive</button>
+        <button class="buttons" onclick="showSend()">Send</button>
     </div>
     <br>
 
@@ -27,11 +30,11 @@
     </div>
 
     <div id="send" class="send" style="display:none">
-        <label style="width:10%;">To:</label>
-        <input id="sendToAddress" type="text" style="width: 90%; height: 20px" align="right" value="address">
+        <label style="width:10%;">&nbsp;To:</label>
+        <input id="sendToAddress" type="text" style="width: 90%; height: 20px; border: 1px solid #0d1006; background-color: #dddddd; padding:5px; margin-bottom:10px;" align="right" value="address">
         <br>
-        <label style="width:10%;">Amount:</label>
-        <input id="coinAmount" type="number" style="width: 80%; height: 20px" align="right" value="0.00">
+        <label style="width:10%;">&nbsp;Amount:</label>
+        <input id="coinAmount" type="number" style="width: 80%; height: 20px; border: 1px solid #0d1006; background-color: #dddddd; padding:5px;" align="right" value="0.00">
     </div>
 
     <!--<div id="receive" style="font-size:25px; alignment: center">Receive</div>-->
@@ -43,7 +46,7 @@
 
 <div id="rightTxHistory" class="rightTxHistory">
     <div style="text-align: center">
-        <span style="font-size:25px">Transaction History</span>
+        <div style="font-size:25px; padding-top:12.5px; height:37.5px; background-color: #dddddd; border-bottom: 1px solid #ccb18e;">Transaction History</div>
     </div>
 
 

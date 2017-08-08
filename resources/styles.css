@@ -2,10 +2,22 @@ body {
     font-family:  "Raleway", "Lato", sans-serif;
     color: #0d1006;
     background-color: #ffffff;
+    margin:0;
 }
 /*Orange: F88900
 Light Grey: CCB18E
 Dark Brown: 0D1006*/
+
+.opennav {
+    font-size:25px;
+    vertical-align: middle;
+}
+
+.opennav:hover {
+    font-size:25px;
+    vertical-align: middle;
+    color: #f88900;
+}
 
 .sidenav {
     height: 100%;
@@ -19,6 +31,7 @@ Dark Brown: 0D1006*/
     transition: 0.5s;
     padding-top: 60px;
     color: #ccb18e;
+    border-right: 2px solid #f88900;
 }
 
 .sidenav a {
@@ -62,9 +75,11 @@ div.rightTxHistory{
     /*-moz-box-sizing: border-box;*/
     /*-webkit-box-sizing: border-box;*/
     /*border: 1px solid #000;*/
-    width: 50%;
-    height: 90%;
+    width: 49.5%;
+    height: 630px;
     float: right;
+    border-left: 2px dotted #ccb18e;
+    color: #0d1006;
 }
 
 dif.header{
@@ -77,17 +92,26 @@ dif.header{
     float: top;
 }
 
-#button1{
-    width: 49.5%;
-    height: 40px;
-    font-size: 25px;
+#topHeader{
+    padding:none;
+    padding-bottom:5px;
 }
 
-#button2{
+.buttons{
     width: 49.5%;
-    height: 40px;
+    height: 50px;
     font-size: 25px;
+    color: #ccb18e;
+    background-color: #0d1006;
+    border: 1px solid #0d1006;
 }
+
+.buttons:hover {
+    border: 1px solid #f88900;
+    color: #f88900;
+}
+
+input
 
 #container{
     text-align: center;
