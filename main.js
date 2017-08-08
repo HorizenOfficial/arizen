@@ -4,7 +4,7 @@
 "use strict";
 
 const electron = require("electron");
-var {app, Menu, ipcMain} = require("electron");
+const {app, Menu, ipcMain} = require("electron");
 const BrowserWindow = electron.BrowserWindow;
 
 // const keytar = require('keytar'); -
@@ -16,7 +16,6 @@ const fs = require("fs");
 // Keep a global reference of the window object, if you don"t, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
-
 
 function getLoginPath() {
     return getRootConfigPath() + "login.txt";
