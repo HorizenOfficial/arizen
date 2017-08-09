@@ -1,11 +1,23 @@
 body {
-    font-family: "Lato", sans-serif;
-    color: #f1f1f1;
-    background-color: #818181;
+    font-family:  "Raleway", "Lato", sans-serif;
+    color: #0d1006;
+    background-color: #ffffff;
+    margin:0;
 }
 /*Orange: F88900
 Light Grey: CCB18E
 Dark Brown: 0D1006*/
+
+.opennav {
+    font-size:25px;
+    vertical-align: middle;
+}
+
+.opennav:hover {
+    font-size:25px;
+    vertical-align: middle;
+    color: #f88900;
+}
 
 .sidenav {
     height: 100%;
@@ -14,17 +26,19 @@ Dark Brown: 0D1006*/
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: #111;
+    background-color: #0d1006;
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
+    color: #ccb18e;
+    border-right: 2px solid #f88900;
 }
 
 .sidenav a {
     padding: 8px 8px 8px 32px;
     text-decoration: none;
     font-size: 25px;
-    color: #818181;
+    color: #ccb18e;
     display: block;
     transition: 0.3s;
 }
@@ -61,9 +75,11 @@ div.rightTxHistory{
     /*-moz-box-sizing: border-box;*/
     /*-webkit-box-sizing: border-box;*/
     /*border: 1px solid #000;*/
-    width: 50%;
-    height: 90%;
+    width: 49.5%;
+    height: 630px;
     float: right;
+    border-left: 2px dotted #ccb18e;
+    color: #0d1006;
 }
 
 dif.header{
@@ -76,17 +92,26 @@ dif.header{
     float: top;
 }
 
-#button1{
-    width: 49.5%;
-    height: 40px;
-    font-size: 25px;
+#topHeader{
+    padding:none;
+    padding-bottom:5px;
 }
 
-#button2{
+.buttons{
     width: 49.5%;
-    height: 40px;
+    height: 50px;
     font-size: 25px;
+    color: #ccb18e;
+    background-color: #0d1006;
+    border: 1px solid #0d1006;
 }
+
+.buttons:hover {
+    border: 1px solid #f88900;
+    color: #f88900;
+}
+
+input
 
 #container{
     text-align: center;

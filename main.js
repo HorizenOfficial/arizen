@@ -4,7 +4,7 @@
 "use strict";
 
 const electron = require("electron");
-var {app, Menu, ipcMain} = require("electron");
+const {app, Menu, ipcMain} = require("electron");
 const BrowserWindow = electron.BrowserWindow;
 
 // const keytar = require('keytar'); -
