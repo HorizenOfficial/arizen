@@ -4,12 +4,64 @@
     <meta charset="UTF-8">
     <title>Arizen</title>
     <link rel="stylesheet" href="resources/styles.css">
+    <script>
+    const electron = require("electron");
+    const {ipcRenderer} = electron;
+    
+    ipcRenderer.send("check-login-info");
+
+    ipcRenderer.on('verify-login-response', function (event, resp) {
+        /* FIXME: wallet "blink" is not very nice */
+        let data = JSON.parse(resp);
+
+        if (data.response !== "OK") {
+            location.href="./login.html";
+            console.log("Login not performed!");
+        }
+    });
+
+    function openNav() {
+        document.getElementById("mySidenav").style.width = "250px";
+    }
+
+    function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+    }
+
+    function showVersion() {
+        let pckg = require("./package.json");
+        console.log("Arizen version: " + pckg.version);
+        window.alert("Arizen version: " + pckg.version);
+    }
+
+    function logout() {
+        ipcRenderer.send("do-logout");
+        location.href="./login.html";
+    }
+
+    function exitApp() {
+        ipcRenderer.send("exit-from-menu");
+    }
+
+    function showSend() {
+        document.getElementById("receive").style.display = "none";
+        document.getElementById("send").style.display = "block";
+    }
+
+    function showReceive() {
+        document.getElementById("send").style.display = "none";
+        document.getElementById("receive").style.display = "block";
+    }
+</script>
 </head>
 <body>
-    <div id="mySidenav" class="sidenav">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="#" onclick="showVersion()">About</a>
-    </div>
+
+<div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <a href="#" onclick="showVersion()">About</a>
+    <a href="#" onclick="logout()">Logout</a>
+    <a href="#" onclick="exitApp()">Exit</a>
+</div>
 
 <div id="topHeader" class="topHeader">
     <a class="opennav" onclick="openNav()">
@@ -51,32 +103,5 @@
 
 
 </div>
-
-
-<script>
-    function openNav() {
-        document.getElementById("mySidenav").style.width = "250px";
-    }
-
-    function closeNav() {
-        document.getElementById("mySidenav").style.width = "0";
-    }
-
-    function showVersion() {
-        let pckg = require("./package.json");
-        console.log("Arizen version: " + pckg.version);
-        window.alert("Arizen version: " + pckg.version);
-    }
-
-    function showSend() {
-        document.getElementById("receive").style.display = "none";
-        document.getElementById("send").style.display = "block";
-    }
-
-    function showReceive() {
-        document.getElementById("send").style.display = "none";
-        document.getElementById("receive").style.display = "block";
-    }
-</script>
 </body>
 </html>

@@ -16,6 +16,7 @@ const fs = require("fs");
 // Keep a global reference of the window object, if you don"t, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
+var loggedIn = false;
 
 function getLoginPath() {
     return getRootConfigPath() + "login.txt";
@@ -192,6 +193,51 @@ ipcMain.on("write-login-info", function (event, login, pass) {
         }
         console.log("The file was saved!");
     });
+});
+
+ipcMain.on("verify-login-info", function (event, login, pass) {
+    let path = getLoginPath();
+    let data = JSON.parse(fs.readFileSync(path).toString());
+    var passwordHash = require('password-hash');
+    var resp;
+    
+    if (data.login === login) {
+        if (passwordHash.verify(pass, data.password)) {
+            loggedIn = true;
+            resp = {
+                response: "OK"
+            };
+        } else {
+            loggedIn = false;
+            resp = {
+                response: "ERR"
+            };
+        }
+        event.sender.send("verify-login-response", JSON.stringify(resp));
+    }
+});
+
+ipcMain.on("check-login-info", function (event, login, pass) {
+    var resp;
+    
+    if (loggedIn) {
+        resp = {
+            response: "OK"
+        };
+    } else {
+        resp = {
+            response: "ERR"
+        };
+    }
+    event.sender.send("verify-login-response", JSON.stringify(resp));
+});
+
+ipcMain.on("do-logout", function (event) {
+    loggedIn = false;
+});
+
+ipcMain.on("exit-from-menu", function (event) {
+    app.exit(0);
 });
 
 // ipcMain.on("get-password", function (event, user) {
