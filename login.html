@@ -23,14 +23,28 @@
                 <button id="btSubmit" name="btSubmit" type="submit">Login</button>
             </li>
         </ul>
+        <a href="./register.html">register</a>
     </form>
+    <div id="pswd_info">
+        <ul>
+            <li>Wrong <strong>username</strong> or <strong>password</strong></li>
+        </ul>
+    </div>
 </div>
 
 <script type="text/javascript">
-    $('#btSubmit').click(function(){
-        location.href="./wallet.html";
-        console.log("Login was successful - redirecting to wallet.html");
-        return false;
+    const electron = require("electron");
+    const {ipcRenderer} = electron;
+
+    ipcRenderer.on('verify-login-response', function (event, resp) {
+        let data = JSON.parse(resp);
+
+        if (data.response === "OK") {
+            location.href="./wallet.html";
+            console.log("Login was successful - redirecting to wallet.html");
+        } else {
+            $('#pswd_info').show();
+        }
     });
 
     $(document).ready(function () {
@@ -38,6 +52,11 @@
         let pswd_val = null;
         let usr = false;
         let psw = false;
+
+        $('#btSubmit').click(function() {
+            ipcRenderer.send("verify-login-info", usr_val, pswd_val);
+            return false;
+        });
 
         // username conditions
         $('input[id=username]').keyup(function () {
