@@ -16,7 +16,7 @@ const fs = require("fs");
 // Keep a global reference of the window object, if you don"t, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
-var loggedIn = false;
+let loggedIn = false;
 
 function getLoginPath() {
     return getRootConfigPath() + "login.txt";
@@ -25,7 +25,7 @@ function getLoginPath() {
 function getRootConfigPath() {
     let rootPath;
     if (os.platform() === "win32" || os.platform() === "darwin") {
-        rootPath = app.getPath("appData") + "/" + "Arizen/";
+        rootPath = app.getPath("appData") + "/Arizen/";
     } else if (os.platform() === "linux") {
         rootPath = app.getPath("home") + "/" + "/.arizen/";
         if (!fs.existsSync(rootPath)){
@@ -212,9 +212,9 @@ ipcMain.on("write-login-info", function (event, login, pass) {
 ipcMain.on("verify-login-info", function (event, login, pass) {
     let path = getLoginPath();
     let data = JSON.parse(fs.readFileSync(path).toString());
-    var passwordHash = require('password-hash');
-    var resp;
-    var user = data.users.filter(function(user){return user.login === login;});
+    let passwordHash = require('password-hash');
+    let resp;
+    let user = data.users.filter(function(user){return user.login === login;});
 
     if  (user.length === 1 && user[0].login === login) {
         if (passwordHash.verify(pass, user[0].password)) {
@@ -238,7 +238,7 @@ ipcMain.on("verify-login-info", function (event, login, pass) {
 });
 
 ipcMain.on("check-login-info", function (event, login, pass) {
-    var resp;
+    let resp;
 
     if (loggedIn) {
         resp = {
