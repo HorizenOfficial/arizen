@@ -183,10 +183,15 @@ app.on("before-quit", function () {
 
 ipcMain.on("write-login-info", function (event, login, pass) {
     let path = getLoginPath();
-    let data = {
+    let data = [];
+    if (fs.existsSync(getLoginPath())) {
+        data = JSON.parse(fs.readFileSync(path).toString());
+    }
+    let user = {
         login: login,
         password: pass
     };
+    data.users.push(user);
     fs.writeFileSync(path, JSON.stringify(data), function(err) {
         if (err) {
             return console.log(err);
@@ -200,9 +205,10 @@ ipcMain.on("verify-login-info", function (event, login, pass) {
     let data = JSON.parse(fs.readFileSync(path).toString());
     var passwordHash = require('password-hash');
     var resp;
+    var user = data.users.filter(function(user){return user.login === login;});
     
-    if (data.login === login) {
-        if (passwordHash.verify(pass, data.password)) {
+    if  (user.length === 1 && user[0].login === login) {
+        if (passwordHash.verify(pass, user[0].password)) {
             loggedIn = true;
             resp = {
                 response: "OK"
@@ -213,8 +219,13 @@ ipcMain.on("verify-login-info", function (event, login, pass) {
                 response: "ERR"
             };
         }
-        event.sender.send("verify-login-response", JSON.stringify(resp));
+    } else {
+        loggedIn = false;
+        resp = {
+            response: "ERR"
+        };
     }
+    event.sender.send("verify-login-response", JSON.stringify(resp));
 });
 
 ipcMain.on("check-login-info", function (event, login, pass) {

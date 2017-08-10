@@ -26,11 +26,13 @@
     "password-hash": "*"
   },
   "devDependencies": {
-    "electron-installer-debian": "^0.5.2",
     "electron-installer-dmg": "*",
     "electron-installer-windows": "^0.2.0",
     "electron-rebuild": "^1.5.11",
     "flow-bin": "^0.50.0"
+  },
+  "optionalDependencies": {
+    "electron-installer-debian": "^0.5.2"
   },
   "bugs": {
     "url": "https://github.com/zencashofficial/arizen/issues"

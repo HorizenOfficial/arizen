@@ -69,7 +69,7 @@
         $('#btSubmit').click(function(){
             var passwordHash = require('password-hash');
             ipcRenderer.send("write-login-info", usr_val, passwordHash.generate(pswd_val, {"algorithm": "sha256", "saltLength": 10}));
-            location.href="./wallet.html";
+            location.href="./login.html";
             console.log("Registration was successful - redirecting to wallet.html");
             return false;
         });
