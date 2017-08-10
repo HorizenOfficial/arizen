@@ -11,6 +11,11 @@ ul, li {
     list-style-type: none;
 }
 
+#topHeader{
+    padding:none;
+    padding-bottom:60px;
+}
+
 #container {
     width: 400px;
     padding: 0px;
@@ -22,6 +27,7 @@ ul, li {
     box-shadow: 0 1px 1px #ccc;
     border-radius: 5px;
     position: relative;
+    padding-bottom: 10px;
 }
 
 h1 {
@@ -228,4 +234,18 @@ button:active {
 
 #pswd_identical_info {
     display:none;
+}
+
+/* Login.html only */
+.register_link{
+    color: #f88900;
+    padding : 10px;
+    margin: 10px;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+.register_link:hover{
+    color: #0d1006;
+    padding : 10px;
 }
