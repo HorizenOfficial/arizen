@@ -25,9 +25,9 @@ function getLoginPath() {
 function getRootConfigPath() {
     let rootPath;
     if (os.platform() === "win32" || os.platform() === "darwin") {
-        rootPath = app.getPath("appData") + "/" + "Arizen/";
+        rootPath = app.getPath("appData") + "/Arizen/";
     } else if (os.platform() === "linux") {
-        rootPath = app.getPath("home") + "/" + "./arizen/";
+        rootPath = app.getPath("home") + "/.arizen/";
     } else {
         console.log("Unidentified OS.");
         app.exit(0);
