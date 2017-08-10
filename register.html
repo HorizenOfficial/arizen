@@ -145,10 +145,10 @@
             // validate special character
             if (pswd_val.match(/[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/+@#]/)) {
                 $('#special_info').removeClass('invalid').addClass('valid');
-                capl = true;
+                spec = true;
             } else {
                 $('#special_info').removeClass('valid').addClass('invalid');
-                capl = false;
+                spec = false;
             }
 
         }).focus(function () {
