@@ -44,6 +44,7 @@
             <li id="letter_info" class="invalid">At least <strong>one letter</strong></li>
             <li id="capital_info" class="invalid">At least <strong>one capital letter</strong></li>
             <li id="number_info" class="invalid">At least <strong>one number</strong></li>
+            <li id="special_info" class="invalid">At least <strong>one special character</strong></li>
             <li id="length_info" class="invalid">Be at least <strong>8 characters</strong></li>
         </ul>
     </div>
@@ -69,6 +70,7 @@
         let capl = false;
         let num = false;
         let ide = false;
+        let spec = false;
 
         $('#btSubmit').click(function(){
             var passwordHash = require('password-hash');
@@ -139,6 +141,16 @@
                 $('#number_info').removeClass('valid').addClass('invalid');
                 num = false;
             }
+
+            // validate special character
+            if (pswd_val.match(/[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/+@#]/)) {
+                $('#special_info').removeClass('invalid').addClass('valid');
+                capl = true;
+            } else {
+                $('#special_info').removeClass('valid').addClass('invalid');
+                capl = false;
+            }
+
         }).focus(function () {
             // focus code here
             $('#pswd_info').show();
@@ -173,7 +185,7 @@
         $(':input[id="btSubmit"]').prop('disabled', true);
         $('input[id="username"], input[id="pswd"], input[id="pswd_again"]').keyup(function() {
             if($(this).val() !== '') {
-                if(usr && len && lett && capl && num && ide){
+                if(usr && len && lett && capl && num && ide && spec){
                     $(':input[type="submit"]').prop('disabled', false);
                 }
             }
