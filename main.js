@@ -27,7 +27,10 @@ function getRootConfigPath() {
     if (os.platform() === "win32" || os.platform() === "darwin") {
         rootPath = app.getPath("appData") + "/Arizen/";
     } else if (os.platform() === "linux") {
-        rootPath = app.getPath("home") + "/.arizen/";
+        rootPath = app.getPath("home") + "/" + "/.arizen/";
+        if (!fs.existsSync(rootPath)){
+            fs.mkdirSync(rootPath);
+        }
     } else {
         console.log("Unidentified OS.");
         app.exit(0);
@@ -183,15 +186,21 @@ app.on("before-quit", function () {
 
 ipcMain.on("write-login-info", function (event, login, pass) {
     let path = getLoginPath();
-    let data = [];
+    let data;
     if (fs.existsSync(getLoginPath())) {
         data = JSON.parse(fs.readFileSync(path).toString());
+        data.users.push({
+            login: login,
+            password: pass
+        });
+    } else {
+        data = {
+            users : [{
+                login: login,
+                password: pass
+            }]
+        };
     }
-    let user = {
-        login: login,
-        password: pass
-    };
-    data.users.push(user);
     fs.writeFileSync(path, JSON.stringify(data), function(err) {
         if (err) {
             return console.log(err);
@@ -206,7 +215,7 @@ ipcMain.on("verify-login-info", function (event, login, pass) {
     let passwordHash = require('password-hash');
     let resp;
     let user = data.users.filter(function(user){return user.login === login;});
-    
+
     if  (user.length === 1 && user[0].login === login) {
         if (passwordHash.verify(pass, user[0].password)) {
             loggedIn = true;
@@ -230,7 +239,7 @@ ipcMain.on("verify-login-info", function (event, login, pass) {
 
 ipcMain.on("check-login-info", function (event, login, pass) {
     let resp;
-    
+
     if (loggedIn) {
         resp = {
             response: "OK"
