@@ -43,7 +43,7 @@ function getZenPath() {
     if (os.platform() === "win32" || os.platform() === "darwin") {
         zenPath = app.getPath("appData") + "/Zen/";
     } else if (os.platform() === "linux") {
-        zenPath = app.getPath("home") + "/" + "/.zen/";
+        zenPath = app.getPath("home") + "/.zen/";
     } else {
         console.log("Unidentified OS.");
         app.exit(0);
