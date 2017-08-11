@@ -82,19 +82,8 @@ div.rightTxHistory{
     color: #0d1006;
 }
 
-dif.header{
-    /*box-sizing: border-box;*/
-    /*-moz-box-sizing: border-box;*/
-    /*-webkit-box-sizing: border-box;*/
-    /*border: 1px solid #000;*/
-    width: 100%;
-    height: 10%;
-    float: top;
-}
-
 #topHeader{
-    padding:none;
-    padding-bottom:5px;
+    padding: 0 0 5px;
 }
 
 .buttons{
@@ -111,7 +100,27 @@ dif.header{
     color: #f88900;
 }
 
-input
+.wallet_inputs{
+    padding: 10px 10px;
+    border: none;
+    border-bottom: 1px solid #888888;
+    /*width: 328px; /* 400 (#container) - 40 (li margins) -  10 (span paddings) - 20 (input paddings) - 2 (input borders) */
+    font-size: 1.3em;
+    outline: 0; /* remove webkit focus styles */
+    transition: all 0.4s;
+    color: #888888;
+}
+
+.wallet_inputs:focus {
+    /*width: 318px;*/
+    padding: 15px 15px;
+    border:none;
+    border-bottom: 3px solid #f88900;
+}
+
+.wallet_labels{
+    width:10%;
+}
 
 #container{
     text-align: center;

@@ -11,12 +11,15 @@
     ipcRenderer.send("check-login-info");
 
     ipcRenderer.on('verify-login-response', function (event, resp) {
-        /* FIXME: wallet "blink" is not very nice */
         let data = JSON.parse(resp);
 
         if (data.response !== "OK") {
             location.href="./login.html";
             console.log("Login not performed!");
+        }
+        else {
+            /* FIXED: 'blink' of wallet.html, page is hidden until login is performed. */
+            document.body.style.display = 'block';
         }
     });
 
@@ -54,50 +57,49 @@
     }
 </script>
 </head>
-<body>
-
-<div id="mySidenav" class="sidenav">
-    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-    <a href="messenger.html">Messenger</a>
-    <a href="#" onclick="showVersion()">About</a>
-    <a href="#" onclick="logout()">Logout</a>
-    <a href="#" onclick="exitApp()">Exit</a>
-</div>
-
-<div id="topHeader" class="topHeader">
-    <a class="opennav" onclick="openNav()">
-        &nbsp;&#9776;
-    </a>
-    <!--FIXME: This inspection highlights width and height attribute values of IMG tag that are different from the width and height of the original image.-->
-    <img style="padding-left:475px; vertical-align: middle;" src="resources/zen_icon.png" width="25px" />
-</div>
-
-<div id="leftWallet" class="leftWallet">
-    <div id="container">
-        <button class="buttons" onclick="showReceive()">Receive</button>
-        <button class="buttons" onclick="showSend()">Send</button>
-    </div>
-    <br>
-
-    <div id="receive" class="receive" style="display:none">
-        NOT IMPLEMENTED
+<body onload="document.body.style.display='none';">
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="messenger.html">Messenger</a>
+        <a href="#" onclick="showVersion()">About</a>
+        <a href="#" onclick="logout()">Logout</a>
+        <a href="#" onclick="exitApp()">Exit</a>
     </div>
 
-    <div id="send" class="send" style="display:none">
-        <label style="width:10%;">&nbsp;To:</label>
-        <!--TODO: styles to css-->
-        <input id="sendToAddress" type="text" style="width: 90%; height: 20px; border: 1px solid #0d1006; background-color: #dddddd; padding:5px; margin-bottom:10px;" align="right" value="address">
+    <div id="topHeader" class="topHeader">
+        <a class="opennav" onclick="openNav()">
+            &nbsp;&#9776;
+        </a>
+        <!-- same as in register.html -->
+        <img style="padding-left:475px; vertical-align: middle;" src="resources/zen_icon.png" width="25px" />
+    </div>
+
+    <div id="leftWallet" class="leftWallet">
+        <div id="container">
+            <button class="buttons" onclick="showReceive()">Receive</button>
+            <button class="buttons" onclick="showSend()">Send</button>
+        </div>
         <br>
-        <label style="width:10%;">&nbsp;Amount:</label>
-        <input id="coinAmount" type="number" style="width: 80%; height: 20px; border: 1px solid #0d1006; background-color: #dddddd; padding:5px;" align="right" value="0.00">
+
+        <div id="receive" class="receive" style="display:none">
+            NOT IMPLEMENTED
+        </div>
+
+        <div id="send" class="send" style="display:none">
+            <label class="wallet_labels">&nbsp;To:</label>
+            <!--TODO: styles to css-->
+            <input id="sendToAddress" class="wallet_inputs" type="text" align="right" value="address">
+            <br>
+            <label class="wallet_labels">&nbsp;Amount:</label>
+            <input id="coinAmount" class="wallet_inputs" type="number" align="right" value="0.00">
+        </div>
+
+        <!--<div id="receive" style="font-size:25px; alignment: center">Receive</div>-->
+        <!--<div id="send" style="font-size:25px">Send</div>-->
+
+        <!--<input type="button" name="answer" value="Show Div" onclick="showDiv()" />-->
+
     </div>
-
-    <!--<div id="receive" style="font-size:25px; alignment: center">Receive</div>-->
-    <!--<div id="send" style="font-size:25px">Send</div>-->
-
-    <!--<input type="button" name="answer" value="Show Div" onclick="showDiv()" />-->
-
-</div>
 
 <div id="rightTxHistory" class="rightTxHistory">
     <div style="text-align: center">

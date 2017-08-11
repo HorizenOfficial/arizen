@@ -146,7 +146,7 @@ function createWindow() {
     }
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
-    win = new BrowserWindow({width: 1050, height: 730, resizable: false, icon: "resources/zen.png"});
+    win = new BrowserWindow({width: 1050, height: 730, resizable: false, icon: "resources/zen_icon.png"});
 
     if (fs.existsSync(getLoginPath())) {
         win.loadURL(url.format({
