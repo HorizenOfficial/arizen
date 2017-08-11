@@ -8,17 +8,17 @@
 
 <body>
 <div id="topHeader" class="topHeader">
+    <!-- Inspection tool is to verbose here, it is only information that the size of the source image is different than
+         the size in the page (image is resized)-->
     <img style="padding-left:500px; vertical-align: middle;" src="resources/zen_icon.png" width="40px" />
 </div>
 
 <div id="container">
-    <!--<h1>Password Authentication</h1>-->
     <form>
         <ul>
             <li>
                 <span style="text-align:center;"><label for="username">Username:</label></span>
-                <!--FIXME: type="text" is redundant here - check it-->
-                <span><input id="username" name="username" type="text"/></span>
+                <span><input id="username" name="username"/></span>
             </li>
             <li>
                 <span style="text-align:center;"><label for="pswd">Password:</label></span>
@@ -29,11 +29,14 @@
                 <span><input id="pswd_again" name="pswd_again" type="password"/></span>
             </li>
             <li>
-                <!--FIXME: type="submit" is redundant here - check it-->
-                <button id="btSubmit" name="btSubmit" type="submit">Register</button>
+                <button id="btSubmit" name="btSubmit">Register</button>
             </li>
         </ul>
+        <span style="text-align:right;">
+            <a href="./login.html" class="register_link">login</a>|
+        </span>
     </form>
+
     <div id="username_info">
         <h4>Username must meet the following requirements:</h4>
         <ul>
@@ -188,7 +191,7 @@
         $('input[id="username"], input[id="pswd"], input[id="pswd_again"]').keyup(function() {
             if($(this).val() !== '') {
                 if(usr && len && lett && capl && num && ide && spec){
-                    $(':input[type="submit"]').prop('disabled', false);
+                    $(':input[id="btSubmit"]').prop('disabled', false);
                 }
             }
         });

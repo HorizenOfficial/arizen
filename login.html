@@ -8,6 +8,7 @@
 
 <body>
 <div id="topHeader" class="topHeader">
+    <!-- same as in register.html -->
     <img style="padding-left:500px; vertical-align: middle;" src="resources/zen_icon.png" width="40px" />
 </div>
 <div id="container">
@@ -16,18 +17,19 @@
         <ul>
             <li>
                 <span style="text-align:center;"><label for="username">Username</label></span>
-                <span><input id="username" name="username" type="text"/></span>
+                <span><input id="username" name="username"/></span>
             </li>
             <li>
                 <span style="text-align:center;"><label for="pswd">Password</label></span>
                 <span><input id="pswd" name="pswd" type="password"/></span>
             </li>
             <li>
-                <button id="btSubmit" name="btSubmit" type="submit">Login</button>
+                <button id="btSubmit" name="btSubmit">Login</button>
             </li>
         </ul>
         <span style="text-align:right;">
-            <a href="./register.html" class="register_link">register</a></span>
+            <a href="./register.html" class="register_link">register</a>
+        </span>
     </form>
     <div id="pswd_info">
         <ul>
@@ -91,7 +93,7 @@
         $('input[id="username"], input[id="pswd"]').keyup(function() {
             if($(this).val() !== '') {
                 if(usr && psw){
-                    $(':input[type="submit"]').prop('disabled', false);
+                    $(':input[id="btSubmit"]').prop('disabled', false);
                 }
             }
         });
