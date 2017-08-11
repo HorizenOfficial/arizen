@@ -25,10 +25,24 @@
 
         function openNav() {
             document.getElementById("mySidenav").style.width = "250px";
+            //document.getElementById("darkContainer").style.width = "100%";
+            document.getElementById("darkContainer").style.transition = "1.4s";
+            document.getElementById("darkContainer").style.zIndex = "1";
+            document.getElementById("darkContainer").style.opacity = "0.7";
+            document.getElementById("sidenavIMG").style.transition = "0.4s";
+            document.getElementById("sidenavIMG").style.transitionDelay = "0.5s";
+            document.getElementById("sidenavIMG").style.opacity = "0.9";
         }
 
         function closeNav() {
             document.getElementById("mySidenav").style.width = "0";
+            //document.getElementById("darkContainer").style.width = "0";
+            document.getElementById("darkContainer").style.transition = "0s";
+            document.getElementById("darkContainer").style.opacity = "0";
+            document.getElementById("darkContainer").style.zIndex = "-1";
+            document.getElementById("sidenavIMG").style.transitionDelay = "0s";
+            document.getElementById("sidenavIMG").style.transition = "0s";
+            document.getElementById("sidenavIMG").style.opacity = "0";
         }
 
         function showVersion() {
@@ -49,23 +63,31 @@
         function showSend() {
             document.getElementById("receive").style.display = "none";
             document.getElementById("send").style.display = "block";
+            /* TODO : Send button stay same as when it has cursor over itself.*/
         }
 
         function showReceive() {
             document.getElementById("send").style.display = "none";
             document.getElementById("receive").style.display = "block";
+            /* TODO : Receive button stay same as when it has cursor over itself.*/
         }
     </script>
 </head>
-<body onload="document.body.style.display='none';">
+<!--<body onload="document.body.style.display='none';">-->
+<body>
 <div id="mySidenav" class="sidenav">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
     <a href="messenger.html">Messenger</a>
     <p>&nbsp;</p>
     <a href="#" onclick="logout()">Logout</a>
     <a href="#" onclick="exitApp()">Exit</a>
-    <!--FIXME: move "About" section to the bottom of sidenav menu-->
-    <a href="#" onclick="showVersion()">About</a>
+    <div class="center">
+        <img id="sidenavIMG" src="resources/zen_icon.png" width="200px"/>
+    </div>
+    <a id="about" href="#" onclick="showVersion()">About</a>
+</div>
+
+<div id="darkContainer">
 </div>
 
 <div id="topHeader" class="topHeader">
@@ -77,25 +99,24 @@
 </div>
 
 <div id="leftWallet" class="leftWallet">
-    <div id="container">
-        <button class="buttons" onclick="showReceive()">Receive</button>
-        <button class="buttons" onclick="showSend()">Send</button>
-    </div>
-    <br>
-
-    <div id="receive" class="receive" style="display:none">
-        NOT IMPLEMENTED
-    </div>
-
-    <div id="send" class="send" style="display:none">
-        <label class="wallet_labels">&nbsp;To:</label>
-        <!--TODO: styles to css-->
-        <input id="sendToAddress" class="wallet_inputs" type="text" align="right" value="address">
+    <div id="containerLeftWalletFirst">
+        <div class="center">
+            <button class="buttons" onclick="showReceive()">Receive</button>
+            <button class="buttons" onclick="showSend()">Send</button>
+        </div>
         <br>
-        <label class="wallet_labels">&nbsp;Amount:</label>
-        <input id="coinAmount" class="wallet_inputs" type="number" align="right" value="0.00">
-    </div>
+        <div id="receive" class="receive" style="display:none">
+            NOT IMPLEMENTED
+        </div>
 
+        <div id="send" class="send" style="display:none">
+            <label class="wallet_labels" for="sendToAddress">&nbsp;To:</label><br/>
+            <input id="sendToAddress" class="wallet_inputs" align="right" value="address">
+            <br>
+            <label class="wallet_labels" for="coinAmount">&nbsp;Amount:</label><br/>
+            <input id="coinAmount" class="wallet_inputs" type="number" align="right" value="0.00000000" step="0.00000001">
+        </div>
+    </div>
     <!--<div id="receive" style="font-size:25px; alignment: center">Receive</div>-->
     <!--<div id="send" style="font-size:25px">Send</div>-->
 
@@ -104,13 +125,13 @@
 </div>
 
 <div id="rightTxHistory" class="rightTxHistory">
-    <div style="text-align: center">
-        <div style="font-size:25px; padding-top:12.5px; height:37.5px; background-color: #dddddd; border-bottom: 1px solid #ccb18e;">
+    <div class="center">
+        <div class="rightTxHistoryTitle">
             Transaction History
         </div>
     </div>
-
-
 </div>
+
+
 </body>
 </html>
