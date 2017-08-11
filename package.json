@@ -23,8 +23,8 @@
     "electron-packager": "^8.7.1",
     "electron-tabs": "^0.7.1",
     "errors": "^0.3.0",
-    "password-hash": "^1.2.2",
-    "fs-extra": "^4.0.1"
+    "fs-extra": "^4.0.1",
+    "password-hash": "^1.2.2"
   },
   "devDependencies": {
     "electron-installer-dmg": "*",

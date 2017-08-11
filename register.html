@@ -17,6 +17,7 @@
         <ul>
             <li>
                 <span style="text-align:center;"><label for="username">Username:</label></span>
+                <!--FIXME: type="text" is redundant here - check it-->
                 <span><input id="username" name="username" type="text"/></span>
             </li>
             <li>
@@ -28,6 +29,7 @@
                 <span><input id="pswd_again" name="pswd_again" type="password"/></span>
             </li>
             <li>
+                <!--FIXME: type="submit" is redundant here - check it-->
                 <button id="btSubmit" name="btSubmit" type="submit">Register</button>
             </li>
         </ul>
@@ -73,7 +75,7 @@
         let spec = false;
 
         $('#btSubmit').click(function(){
-            var passwordHash = require('password-hash');
+            let passwordHash = require('password-hash');
             ipcRenderer.send("write-login-info", usr_val, passwordHash.generate(pswd_val, {"algorithm": "sha256", "saltLength": 10}));
             location.href="./login.html";
             console.log("Registration was successful - redirecting to wallet.html");
@@ -143,7 +145,7 @@
             }
 
             // validate special character
-            if (pswd_val.match(/[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/+@#]/)) {
+            if (pswd_val.match(/[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/@#]/)) {
                 $('#special_info').removeClass('invalid').addClass('valid');
                 spec = true;
             } else {
