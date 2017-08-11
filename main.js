@@ -4,19 +4,19 @@
 "use strict";
 
 const electron = require("electron");
-var {app, Menu, ipcMain} = require("electron");
+const {app, Menu, ipcMain} = require("electron");
 const BrowserWindow = electron.BrowserWindow;
 
 // const keytar = require('keytar'); -
 const path = require("path");
 const url = require("url");
 const os = require("os");
-const fs = require("fs");
+const fs = require("fs-extra");
 
 // Keep a global reference of the window object, if you don"t, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
-
+let loggedIn = false;
 
 function getLoginPath() {
     return getRootConfigPath() + "login.txt";
@@ -25,14 +25,39 @@ function getLoginPath() {
 function getRootConfigPath() {
     let rootPath;
     if (os.platform() === "win32" || os.platform() === "darwin") {
-        rootPath = app.getPath("appData") + "/" + "Arizen/";
+        rootPath = app.getPath("appData") + "/Arizen/";
     } else if (os.platform() === "linux") {
-        rootPath = app.getPath("home") + "/" + "./arizen/";
+        rootPath = app.getPath("home") + "/" + "/.arizen/";
+        if (!fs.existsSync(rootPath)){
+            fs.mkdirSync(rootPath);
+        }
     } else {
         console.log("Unidentified OS.");
         app.exit(0);
     }
     return rootPath;
+}
+
+function getZenPath() {
+    let zenPath;
+    if (os.platform() === "win32" || os.platform() === "darwin") {
+        zenPath = app.getPath("appData") + "/Zen/";
+    } else if (os.platform() === "linux") {
+        zenPath = app.getPath("home") + "/" + "/.zen/";
+    } else {
+        console.log("Unidentified OS.");
+        app.exit(0);
+    }
+    return zenPath;
+};
+
+function getTmpPath() {
+    let tmpPath = os.tmpdir() + "/arizen";
+    console.log(tmpPath);
+    if (!fs.existsSync(tmpPath)) {
+        fs.mkdirSync(tmpPath);
+    }
+    return tmpPath;
 }
 
 function createWindow() {
@@ -57,6 +82,15 @@ function createWindow() {
                         console.log("Importing wallet is not implemented.");
                         //dialog.showSaveDialog(getSaveLocationOpts("Save Eleos wallets", "eleos-wallets.tar"), function (path) {
                         //);
+                    }
+                },
+                {
+                    type: "separator"
+                },
+                {
+                    label: "Exit",
+                    click() {
+                        app.quit();
                     }
                 }
             ]
@@ -112,7 +146,7 @@ function createWindow() {
     }
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
-    win = new BrowserWindow({width: 1050, height: 730, resizable: false, icon: "resources/zen.png"});
+    win = new BrowserWindow({width: 1050, height: 730, resizable: false, icon: "resources/zen_icon.png"});
 
     if (fs.existsSync(getLoginPath())) {
         win.loadURL(url.format({
@@ -150,7 +184,7 @@ app.on("window-all-closed", function () {
     // On macOS it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q
     if (process.platform !== "darwin") {
-        app.exit(0);
+        app.quit();
     }
 });
 
@@ -165,6 +199,7 @@ app.on("activate", function () {
 
 app.on("before-quit", function () {
     console.log("quitting");
+    fs.removeSync(getTmpPath());
     // dialog.showMessageBox({
     //     type: "question",
     //     buttons: ["Yes", "No"],
@@ -183,16 +218,80 @@ app.on("before-quit", function () {
 
 ipcMain.on("write-login-info", function (event, login, pass) {
     let path = getLoginPath();
-    let data = {
-        login: login,
-        password: pass
-    };
-    fs.writeFileSync(path, JSON.stringify(data), function(err) {
+    let data;
+    if (fs.existsSync(getLoginPath())) {
+        data = JSON.parse(fs.readFileSync(path, 'utf8'));
+        data.users.push({
+            login: login,
+            password: pass
+        });
+    } else {
+        data = {
+            users : [{
+                login: login,
+                password: pass
+            }]
+        };
+    }
+    fs.writeFileSync(path, JSON.stringify(data), 'utf8', function(err) {
         if (err) {
             return console.log(err);
         }
         console.log("The file was saved!");
     });
+});
+
+ipcMain.on("verify-login-info", function (event, login, pass) {
+    let path = getLoginPath();
+    let data = JSON.parse(fs.readFileSync(path, 'utf8'));
+    let passwordHash = require('password-hash');
+    let resp;
+    let user = data.users.filter(function(user){return user.login === login;});
+
+    if  (user.length === 1 && user[0].login === login) {
+        if (passwordHash.verify(pass, user[0].password)) {
+            fs.copy(getZenPath(), getTmpPath());
+            loggedIn = true;
+            resp = {
+                response: "OK"
+            };
+        } else {
+            loggedIn = false;
+            resp = {
+                response: "ERR"
+            };
+        }
+    } else {
+        loggedIn = false;
+        resp = {
+            response: "ERR"
+        };
+    }
+    event.sender.send("verify-login-response", JSON.stringify(resp));
+});
+
+ipcMain.on("check-login-info", function (event, login, pass) {
+    let resp;
+
+    if (loggedIn) {
+        resp = {
+            response: "OK"
+        };
+    } else {
+        resp = {
+            response: "ERR"
+        };
+    }
+    event.sender.send("verify-login-response", JSON.stringify(resp));
+});
+
+ipcMain.on("do-logout", function (event) {
+    fs.removeSync(getTmpPath());
+    loggedIn = false;
+});
+
+ipcMain.on("exit-from-menu", function (event) {
+    app.quit();
 });
 
 // ipcMain.on("get-password", function (event, user) {

@@ -7,30 +7,50 @@
 </head>
 
 <body>
+<div id="topHeader" class="topHeader">
+    <!-- same as in register.html -->
+    <img style="padding-left:500px; vertical-align: middle;" src="resources/zen_icon.png" width="40px" />
+</div>
 <div id="container">
-    <h1>Password Authentication</h1>
+    <!--<h1>Password Authentication</h1> -->
     <form>
         <ul>
             <li>
-                <label for="username">Username:</label>
-                <span><input id="username" name="username" type="text"/></span>
+                <span style="text-align:center;"><label for="username">Username</label></span>
+                <span><input id="username" name="username"/></span>
             </li>
             <li>
-                <label for="pswd">Password:</label>
+                <span style="text-align:center;"><label for="pswd">Password</label></span>
                 <span><input id="pswd" name="pswd" type="password"/></span>
             </li>
             <li>
-                <button id="btSubmit" name="btSubmit" type="submit">Login</button>
+                <button id="btSubmit" name="btSubmit">Login</button>
             </li>
         </ul>
+        <span style="text-align:right;">
+            <a href="./register.html" class="register_link">register</a>
+        </span>
     </form>
+    <div id="pswd_info">
+        <ul>
+            <li>Wrong <strong>username</strong> or <strong>password</strong></li>
+        </ul>
+    </div>
 </div>
 
 <script type="text/javascript">
-    $('#btSubmit').click(function(){
-        location.href="./wallet.html";
-        console.log("Login was successful - redirecting to wallet.html");
-        return false;
+    const electron = require("electron");
+    const {ipcRenderer} = electron;
+
+    ipcRenderer.on('verify-login-response', function (event, resp) {
+        let data = JSON.parse(resp);
+
+        if (data.response === "OK") {
+            location.href="./wallet.html";
+            console.log("Login was successful - redirecting to wallet.html");
+        } else {
+            $('#pswd_info').show();
+        }
     });
 
     $(document).ready(function () {
@@ -38,6 +58,11 @@
         let pswd_val = null;
         let usr = false;
         let psw = false;
+
+        $('#btSubmit').click(function() {
+            ipcRenderer.send("verify-login-info", usr_val, pswd_val);
+            return false;
+        });
 
         // username conditions
         $('input[id=username]').keyup(function () {
@@ -68,7 +93,7 @@
         $('input[id="username"], input[id="pswd"]').keyup(function() {
             if($(this).val() !== '') {
                 if(usr && psw){
-                    $(':input[type="submit"]').prop('disabled', false);
+                    $(':input[id="btSubmit"]').prop('disabled', false);
                 }
             }
         });

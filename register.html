@@ -7,27 +7,36 @@
 </head>
 
 <body>
+<div id="topHeader" class="topHeader">
+    <!-- Inspection tool is to verbose here, it is only information that the size of the source image is different than
+         the size in the page (image is resized)-->
+    <img style="padding-left:500px; vertical-align: middle;" src="resources/zen_icon.png" width="40px" />
+</div>
+
 <div id="container">
-    <h1>Password Authentication</h1>
     <form>
         <ul>
             <li>
-                <label for="username">Username:</label>
-                <span><input id="username" name="username" type="text"/></span>
+                <span style="text-align:center;"><label for="username">Username:</label></span>
+                <span><input id="username" name="username"/></span>
             </li>
             <li>
-                <label for="pswd">Password:</label>
+                <span style="text-align:center;"><label for="pswd">Password:</label></span>
                 <span><input id="pswd" name="pswd" type="password"/></span>
             </li>
             <li>
-                <label for="pswd_again">Password again:</label>
+                <span style="text-align:center;"><label for="pswd_again">Password again:</label></span>
                 <span><input id="pswd_again" name="pswd_again" type="password"/></span>
             </li>
             <li>
-                <button id="btSubmit" name="btSubmit" type="submit">Register</button>
+                <button id="btSubmit" name="btSubmit">Register</button>
             </li>
         </ul>
+        <span style="text-align:right;">
+            <a href="./login.html" class="register_link">login</a>|
+        </span>
     </form>
+
     <div id="username_info">
         <h4>Username must meet the following requirements:</h4>
         <ul>
@@ -40,6 +49,7 @@
             <li id="letter_info" class="invalid">At least <strong>one letter</strong></li>
             <li id="capital_info" class="invalid">At least <strong>one capital letter</strong></li>
             <li id="number_info" class="invalid">At least <strong>one number</strong></li>
+            <li id="special_info" class="invalid">At least <strong>one special character</strong></li>
             <li id="length_info" class="invalid">Be at least <strong>8 characters</strong></li>
         </ul>
     </div>
@@ -65,11 +75,12 @@
         let capl = false;
         let num = false;
         let ide = false;
+        let spec = false;
 
         $('#btSubmit').click(function(){
-            var passwordHash = require('password-hash');
+            let passwordHash = require('password-hash');
             ipcRenderer.send("write-login-info", usr_val, passwordHash.generate(pswd_val, {"algorithm": "sha256", "saltLength": 10}));
-            location.href="./wallet.html";
+            location.href="./login.html";
             console.log("Registration was successful - redirecting to wallet.html");
             return false;
         });
@@ -135,6 +146,16 @@
                 $('#number_info').removeClass('valid').addClass('invalid');
                 num = false;
             }
+
+            // validate special character
+            if (pswd_val.match(/[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/@#]/)) {
+                $('#special_info').removeClass('invalid').addClass('valid');
+                spec = true;
+            } else {
+                $('#special_info').removeClass('valid').addClass('invalid');
+                spec = false;
+            }
+
         }).focus(function () {
             // focus code here
             $('#pswd_info').show();
@@ -169,8 +190,8 @@
         $(':input[id="btSubmit"]').prop('disabled', true);
         $('input[id="username"], input[id="pswd"], input[id="pswd_again"]').keyup(function() {
             if($(this).val() !== '') {
-                if(usr && len && lett && capl && num && ide){
-                    $(':input[type="submit"]').prop('disabled', false);
+                if(usr && len && lett && capl && num && ide && spec){
+                    $(':input[id="btSubmit"]').prop('disabled', false);
                 }
             }
         });
