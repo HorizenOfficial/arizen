@@ -5,107 +5,109 @@
     <title>Arizen</title>
     <link rel="stylesheet" href="resources/styles.css">
     <script>
-    const electron = require("electron");
-    const {ipcRenderer} = electron;
-    
-    ipcRenderer.send("check-login-info");
+        const electron = require("electron");
+        const {ipcRenderer} = electron;
 
-    ipcRenderer.on('verify-login-response', function (event, resp) {
-        let data = JSON.parse(resp);
+        ipcRenderer.send("check-login-info");
 
-        if (data.response !== "OK") {
-            location.href="./login.html";
-            console.log("Login not performed!");
+        ipcRenderer.on('verify-login-response', function (event, resp) {
+            let data = JSON.parse(resp);
+
+            if (data.response !== "OK") {
+                location.href = "./login.html";
+                console.log("Login not performed!");
+            }
+            else {
+                /* FIXED: 'blink' of wallet.html, page is hidden until login is performed. */
+                document.body.style.display = 'block';
+            }
+        });
+
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "250px";
         }
-        else {
-            /* FIXED: 'blink' of wallet.html, page is hidden until login is performed. */
-            document.body.style.display = 'block';
+
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
         }
-    });
 
-    function openNav() {
-        document.getElementById("mySidenav").style.width = "250px";
-    }
+        function showVersion() {
+            let pckg = require("./package.json");
+            console.log("Arizen version: " + pckg.version);
+            window.alert("Arizen version: " + pckg.version);
+        }
 
-    function closeNav() {
-        document.getElementById("mySidenav").style.width = "0";
-    }
+        function logout() {
+            ipcRenderer.send("do-logout");
+            location.href = "./login.html";
+        }
 
-    function showVersion() {
-        let pckg = require("./package.json");
-        console.log("Arizen version: " + pckg.version);
-        window.alert("Arizen version: " + pckg.version);
-    }
+        function exitApp() {
+            ipcRenderer.send("exit-from-menu");
+        }
 
-    function logout() {
-        ipcRenderer.send("do-logout");
-        location.href="./login.html";
-    }
+        function showSend() {
+            document.getElementById("receive").style.display = "none";
+            document.getElementById("send").style.display = "block";
+        }
 
-    function exitApp() {
-        ipcRenderer.send("exit-from-menu");
-    }
-
-    function showSend() {
-        document.getElementById("receive").style.display = "none";
-        document.getElementById("send").style.display = "block";
-    }
-
-    function showReceive() {
-        document.getElementById("send").style.display = "none";
-        document.getElementById("receive").style.display = "block";
-    }
-</script>
+        function showReceive() {
+            document.getElementById("send").style.display = "none";
+            document.getElementById("receive").style.display = "block";
+        }
+    </script>
 </head>
 <body onload="document.body.style.display='none';">
-    <div id="mySidenav" class="sidenav">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="messenger.html">Messenger</a>
-        <p>&nbsp;</p>
-        <a href="#" onclick="logout()">Logout</a>
-        <a href="#" onclick="exitApp()">Exit</a>
-        <!--FIXME: move "About" section to the bottom of sidenav menu-->
-        <a href="#" onclick="showVersion()">About</a>
+<div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <a href="messenger.html">Messenger</a>
+    <p>&nbsp;</p>
+    <a href="#" onclick="logout()">Logout</a>
+    <a href="#" onclick="exitApp()">Exit</a>
+    <!--FIXME: move "About" section to the bottom of sidenav menu-->
+    <a href="#" onclick="showVersion()">About</a>
+</div>
+
+<div id="topHeader" class="topHeader">
+    <a class="opennav" onclick="openNav()">
+        &nbsp;&#9776;
+    </a>
+    <!-- same as in register.html -->
+    <img style="padding-left:475px; vertical-align: middle;" src="resources/zen_icon.png" width="25px"/>
+</div>
+
+<div id="leftWallet" class="leftWallet">
+    <div id="container">
+        <button class="buttons" onclick="showReceive()">Receive</button>
+        <button class="buttons" onclick="showSend()">Send</button>
+    </div>
+    <br>
+
+    <div id="receive" class="receive" style="display:none">
+        NOT IMPLEMENTED
     </div>
 
-    <div id="topHeader" class="topHeader">
-        <a class="opennav" onclick="openNav()">
-            &nbsp;&#9776;
-        </a>
-        <!-- same as in register.html -->
-        <img style="padding-left:475px; vertical-align: middle;" src="resources/zen_icon.png" width="25px" />
-    </div>
-
-    <div id="leftWallet" class="leftWallet">
-        <div id="container">
-            <button class="buttons" onclick="showReceive()">Receive</button>
-            <button class="buttons" onclick="showSend()">Send</button>
-        </div>
+    <div id="send" class="send" style="display:none">
+        <label class="wallet_labels">&nbsp;To:</label>
+        <!--TODO: styles to css-->
+        <input id="sendToAddress" class="wallet_inputs" type="text" align="right" value="address">
         <br>
-
-        <div id="receive" class="receive" style="display:none">
-            NOT IMPLEMENTED
-        </div>
-
-        <div id="send" class="send" style="display:none">
-            <label class="wallet_labels">&nbsp;To:</label>
-            <!--TODO: styles to css-->
-            <input id="sendToAddress" class="wallet_inputs" type="text" align="right" value="address">
-            <br>
-            <label class="wallet_labels">&nbsp;Amount:</label>
-            <input id="coinAmount" class="wallet_inputs" type="number" align="right" value="0.00">
-        </div>
-
-        <!--<div id="receive" style="font-size:25px; alignment: center">Receive</div>-->
-        <!--<div id="send" style="font-size:25px">Send</div>-->
-
-        <!--<input type="button" name="answer" value="Show Div" onclick="showDiv()" />-->
-
+        <label class="wallet_labels">&nbsp;Amount:</label>
+        <input id="coinAmount" class="wallet_inputs" type="number" align="right" value="0.00">
     </div>
+
+    <!--<div id="receive" style="font-size:25px; alignment: center">Receive</div>-->
+    <!--<div id="send" style="font-size:25px">Send</div>-->
+
+    <!--<input type="button" name="answer" value="Show Div" onclick="showDiv()" />-->
+
+</div>
 
 <div id="rightTxHistory" class="rightTxHistory">
     <div style="text-align: center">
-        <div style="font-size:25px; padding-top:12.5px; height:37.5px; background-color: #dddddd; border-bottom: 1px solid #ccb18e;">Transaction History</div>
+        <div style="font-size:25px; padding-top:12.5px; height:37.5px; background-color: #dddddd; border-bottom: 1px solid #ccb18e;">
+            Transaction History
+        </div>
     </div>
 
 

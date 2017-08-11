@@ -28,7 +28,7 @@ function getRootConfigPath() {
         rootPath = app.getPath("appData") + "/Arizen/";
     } else if (os.platform() === "linux") {
         rootPath = app.getPath("home") + "/" + "/.arizen/";
-        if (!fs.existsSync(rootPath)){
+        if (!fs.existsSync(rootPath)) {
             fs.mkdirSync(rootPath);
         }
     } else {
@@ -49,7 +49,7 @@ function getZenPath() {
         app.exit(0);
     }
     return zenPath;
-};
+}
 
 function getTmpPath() {
     let tmpPath = os.tmpdir() + "/arizen";
@@ -227,13 +227,13 @@ ipcMain.on("write-login-info", function (event, login, pass) {
         });
     } else {
         data = {
-            users : [{
+            users: [{
                 login: login,
                 password: pass
             }]
         };
     }
-    fs.writeFileSync(path, JSON.stringify(data), 'utf8', function(err) {
+    fs.writeFileSync(path, JSON.stringify(data), 'utf8', function (err) {
         if (err) {
             return console.log(err);
         }
@@ -246,9 +246,11 @@ ipcMain.on("verify-login-info", function (event, login, pass) {
     let data = JSON.parse(fs.readFileSync(path, 'utf8'));
     let passwordHash = require('password-hash');
     let resp;
-    let user = data.users.filter(function(user){return user.login === login;});
+    let user = data.users.filter(function (user) {
+        return user.login === login;
+    });
 
-    if  (user.length === 1 && user[0].login === login) {
+    if (user.length === 1 && user[0].login === login) {
         if (passwordHash.verify(pass, user[0].password)) {
             fs.copy(getZenPath(), getTmpPath());
             loggedIn = true;

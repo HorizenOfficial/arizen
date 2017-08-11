@@ -9,7 +9,7 @@
 <body>
 <div id="topHeader" class="topHeader">
     <!-- same as in register.html -->
-    <img style="padding-left:500px; vertical-align: middle;" src="resources/zen_icon.png" width="40px" />
+    <img style="padding-left:500px; vertical-align: middle;" src="resources/zen_icon.png" width="40px"/>
 </div>
 <div id="container">
     <!--<h1>Password Authentication</h1> -->
@@ -46,7 +46,7 @@
         let data = JSON.parse(resp);
 
         if (data.response === "OK") {
-            location.href="./wallet.html";
+            location.href = "./wallet.html";
             console.log("Login was successful - redirecting to wallet.html");
         } else {
             $('#pswd_info').show();
@@ -59,7 +59,7 @@
         let usr = false;
         let psw = false;
 
-        $('#btSubmit').click(function() {
+        $('#btSubmit').click(function () {
             ipcRenderer.send("verify-login-info", usr_val, pswd_val);
             return false;
         });
@@ -90,9 +90,9 @@
 
         // activate submit button
         $(':input[id="btSubmit"]').prop('disabled', true);
-        $('input[id="username"], input[id="pswd"]').keyup(function() {
-            if($(this).val() !== '') {
-                if(usr && psw){
+        $('input[id="username"], input[id="pswd"]').keyup(function () {
+            if ($(this).val() !== '') {
+                if (usr && psw) {
                     $(':input[id="btSubmit"]').prop('disabled', false);
                 }
             }

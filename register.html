@@ -10,7 +10,7 @@
 <div id="topHeader" class="topHeader">
     <!-- Inspection tool is to verbose here, it is only information that the size of the source image is different than
          the size in the page (image is resized)-->
-    <img style="padding-left:500px; vertical-align: middle;" src="resources/zen_icon.png" width="40px" />
+    <img style="padding-left:500px; vertical-align: middle;" src="resources/zen_icon.png" width="40px"/>
 </div>
 
 <div id="container">
@@ -77,10 +77,13 @@
         let ide = false;
         let spec = false;
 
-        $('#btSubmit').click(function(){
+        $('#btSubmit').click(function () {
             let passwordHash = require('password-hash');
-            ipcRenderer.send("write-login-info", usr_val, passwordHash.generate(pswd_val, {"algorithm": "sha256", "saltLength": 10}));
-            location.href="./login.html";
+            ipcRenderer.send("write-login-info", usr_val, passwordHash.generate(pswd_val, {
+                "algorithm": "sha256",
+                "saltLength": 10
+            }));
+            location.href = "./login.html";
             console.log("Registration was successful - redirecting to wallet.html");
             return false;
         });
@@ -188,9 +191,9 @@
 
         // activate submit button
         $(':input[id="btSubmit"]').prop('disabled', true);
-        $('input[id="username"], input[id="pswd"], input[id="pswd_again"]').keyup(function() {
-            if($(this).val() !== '') {
-                if(usr && len && lett && capl && num && ide && spec){
+        $('input[id="username"], input[id="pswd"], input[id="pswd_again"]').keyup(function () {
+            if ($(this).val() !== '') {
+                if (usr && len && lett && capl && num && ide && spec) {
                     $(':input[id="btSubmit"]').prop('disabled', false);
                 }
             }
