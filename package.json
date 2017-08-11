@@ -1,7 +1,7 @@
 {
   "name": "arizen",
   "version": "0.0.1",
-  "description": "Wallet for ZenCash (ZEN)",
+  "description": "Wallet for ZEN",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
@@ -19,21 +19,18 @@
   "author": "ZEN Team",
   "license": "MIT",
   "dependencies": {
-    "electron": "^1.7.6",
+    "electron": "^1.6.11",
     "electron-packager": "^8.7.1",
     "electron-tabs": "^0.7.1",
     "errors": "^0.3.0",
-    "fs-extra": "^4.0.1",
-    "password-hash": "^1.2.2"
+    "password-hash": "*"
   },
   "devDependencies": {
+    "electron-installer-debian": "^0.5.2",
     "electron-installer-dmg": "*",
     "electron-installer-windows": "^0.2.0",
     "electron-rebuild": "^1.5.11",
     "flow-bin": "^0.50.0"
-  },
-  "optionalDependencies": {
-    "electron-installer-debian": "^0.5.2"
   },
   "bugs": {
     "url": "https://github.com/zencashofficial/arizen/issues"
