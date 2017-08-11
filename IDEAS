@@ -1,0 +1,12 @@
+
+Backend:
+- hardcode few reliable security node tracking servers (seed)
+- get multiple tracking security nodes
+- Use security node tracking system for getting reliable nodes
+    - that could be based on approved transactions, uptime, win challenges, etc
+- Use security nodes as reliable nodes for Arizen wallets backend
+- Connect remotely to the one randomly selected security node and process the communication and send transaction through
+this security node (could be able to process both types of transactions)
+
+Encription:
+
