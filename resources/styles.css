@@ -1,7 +1,7 @@
 body {
     font-family:  "Raleway", "Lato", sans-serif;
     color: #0d1006;
-    background-color: #ffffff;
+    background: #edf1f4;
     margin:0;
 }
 /*Orange: F88900
@@ -23,28 +23,28 @@ Dark Brown: 0D1006*/
     height: 100%;
     width: 0;
     position: fixed;
-    z-index: 1;
+    z-index: 2;
     top: 0;
     left: 0;
-    background-color: #0d1006;
+    background-color: #fefefe;
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
-    color: #ccb18e;
+    color: #888888;
     border-right: 2px solid #f88900;
 }
 
 .sidenav a {
     padding: 8px 8px 8px 32px;
     text-decoration: none;
-    font-size: 25px;
-    color: #ccb18e;
+    font-size: 1.3em;
+    color: #888888;
     display: block;
-    transition: 0.3s;
+    transition: all 0.4s;
 }
 
 .sidenav a:hover, .offcanvas a:focus{
-    color: #f1f1f1;
+    color: #f88900;
 }
 
 .sidenav .closebtn {
@@ -55,57 +55,91 @@ Dark Brown: 0D1006*/
     margin-left: 50px;
 }
 
+#sidenavIMG{
+    opacity:0;
+    margin-top: 100px;
+    transition: all 0.4s;
+    transition-delay: 0.5s;
+}
+
 @media screen and (max-height: 450px) {
     .sidenav {padding-top: 15px;}
     .sidenav a {font-size: 18px;}
 }
 
 div.leftWallet{
-    /*box-sizing: border-box;*/
-    /*-moz-box-sizing: border-box;*/
-    /*-webkit-box-sizing: border-box;*/
-    /*border: 1px solid #000;*/
-    width: 50%;
+    width: 49%;
     height: 90%;
     float: left;
+    font-size: 1.1em;
+    color: #888888;
+    padding: 5px 5px;
 }
 
 div.rightTxHistory{
-    /*box-sizing: border-box;*/
-    /*-moz-box-sizing: border-box;*/
-    /*-webkit-box-sizing: border-box;*/
-    /*border: 1px solid #000;*/
-    width: 49.5%;
+    padding: 5px 5px;
+    background: #fefefe;
+    margin: 5px auto;
+    margin-right:5px;
+    border: 1px solid #c4cddb;
+    border-top-color: #d3dbde;
+    border-bottom-color: #bfc9dc;
+    box-shadow: 0 1px 1px #ccc;
+    position: relative;
+    width: 48%;
     height: 630px;
     float: right;
-    border-left: 2px dotted #ccb18e;
     color: #0d1006;
 }
 
 #topHeader{
-    padding: 0 0 5px;
+    padding: 5px;
+    background: #fefefe;
+    margin: 0 auto;
+    border: 1px solid #c4cddb;
+    /*border-top-color: #d3dbde;*/
+    border-top: none;
+    border-bottom-color: #bfc9dc;
+    box-shadow: 0 1px 1px #ccc;
+    position: relative;
+    color: #0d1006;
 }
 
 .buttons{
-    width: 49.5%;
-    height: 50px;
-    font-size: 25px;
-    color: #ccb18e;
-    background-color: #0d1006;
-    border: 1px solid #0d1006;
+    width: 49%;
+    background-color: #f88900;
+    border: 1px #fefefe solid;
+    color: #fefefe;
+    font-size: 1em;
+    padding: 8px 15px;
+    outline: none;
+    transition: all 0.2s;
 }
 
 .buttons:hover {
-    border: 1px solid #f88900;
+    border-radius: 2px;
+    background-color: transparent;
+    border: 1px #f88900 solid;
     color: #f88900;
 }
 
+.buttons:active {
+    border-radius: 2px;
+    background-color: transparent;
+    border: 1px #f88900 solid;
+    color: #f88900;
+}
+
+
+
+
 .wallet_inputs{
     padding: 10px 10px;
+    margin-left: 5%;
     border: none;
     border-bottom: 1px solid #888888;
-    /*width: 328px; /* 400 (#container) - 40 (li margins) -  10 (span paddings) - 20 (input paddings) - 2 (input borders) */
-    font-size: 1.3em;
+    width: 85%; /* 400 (#container) - 40 (li margins) -  10 (span paddings) - 20 (input paddings) - 2 (input borders) */
+    font-size: 1em;
     outline: 0; /* remove webkit focus styles */
     transition: all 0.4s;
     color: #888888;
@@ -113,7 +147,7 @@ div.rightTxHistory{
 
 .wallet_inputs:focus {
     /*width: 318px;*/
-    padding: 15px 15px;
+    /*padding: 15px 15px;*/
     border:none;
     border-bottom: 3px solid #f88900;
 }
@@ -122,6 +156,44 @@ div.rightTxHistory{
     width:10%;
 }
 
-#container{
-    text-align: center;
+.center{
+    text-align:center;
+}
+
+.rightTxHistoryTitle{
+    padding: 12px 15px;
+    border: none;
+    border-bottom: 1px solid #f88900;
+    font-size: 1.3em;
+    outline: 0; /* remove webkit focus styles */
+    transition: all 0.4s;
+    color: #888888;
+}
+
+#containerLeftWalletFirst {
+    padding: 10px 10px;
+    background: #fefefe;
+    margin: 0 auto;
+    border: 1px solid #c4cddb;
+    border-top-color: #d3dbde;
+    border-bottom-color: #bfc9dc;
+    box-shadow: 0 1px 1px #ccc;
+    position: relative;
+
+}
+
+#darkContainer{
+    background-color: #000000;
+    height: 100%;
+    width: 100%;
+    margin:0;
+    padding: 0;
+    position: fixed;
+    z-index: -1;
+    opacity: 0;
+    transition: all 1.4s;
+}
+
+#about{
+    margin-top:80px;
 }
