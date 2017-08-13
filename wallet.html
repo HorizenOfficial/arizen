@@ -64,12 +64,60 @@
             document.getElementById("receive").style.display = "none";
             document.getElementById("send").style.display = "block";
             /* TODO : Send button stay same as when it has cursor over itself.*/
+            document.getElementById("sendButtonMenu").style.borderRadius = "2px";
+            document.getElementById("sendButtonMenu").style.backgroundColor = "transparent";
+            document.getElementById("sendButtonMenu").style.border = "1px #f88900 solid";
+            document.getElementById("sendButtonMenu").style.color = "#f88900";
+
+            document.getElementById("receiveButtonMenu").style.borderRadius = "0px";
+            document.getElementById("receiveButtonMenu").style.backgroundColor = "#f88900";
+            document.getElementById("receiveButtonMenu").style.border = "1px #fefefe solid";
+            document.getElementById("receiveButtonMenu").style.color = "#fefefe";
+
+
         }
 
         function showReceive() {
             document.getElementById("send").style.display = "none";
             document.getElementById("receive").style.display = "block";
             /* TODO : Receive button stay same as when it has cursor over itself.*/
+            document.getElementById("receiveButtonMenu").style.borderRadius = "2px";
+            document.getElementById("receiveButtonMenu").style.backgroundColor = "transparent";
+            document.getElementById("receiveButtonMenu").style.border = "1px #f88900 solid";
+            document.getElementById("receiveButtonMenu").style.color = "#f88900";
+
+            document.getElementById("sendButtonMenu").style.borderRadius = "0px";
+            document.getElementById("sendButtonMenu").style.backgroundColor = "#f88900";
+            document.getElementById("sendButtonMenu").style.border = "1px #fefefe solid";
+            document.getElementById("sendButtonMenu").style.color = "#fefefe";
+        }
+
+        function changeAmount() {
+            let number = document.getElementById("coinAmount").value;
+            /* Number has to be greater or equal to zero */
+            if (number < 0) {
+                document.getElementById("coinAmount").value = Number(0).toFixed(8);
+                return;
+            }
+            console.log(number);
+            document.getElementById("coinAmount").value = Number(number).toFixed(8);
+        }
+
+        function clearValue(){
+            if (document.getElementById("sendToAddress").value === "address") {
+                document.getElementById("sendToAddress").value = "";
+            }
+        }
+
+        function setValueIfEmpty() {
+            if (document.getElementById("sendToAddress").value === "") {
+                document.getElementById("sendToAddress").value = "address";
+            }
+        }
+
+
+        function send() {
+            return 0;
         }
     </script>
 </head>
@@ -101,8 +149,8 @@
 <div id="leftWallet" class="leftWallet">
     <div id="containerLeftWalletFirst">
         <div class="center">
-            <button class="buttons" onclick="showReceive()">Receive</button>
-            <button class="buttons" onclick="showSend()">Send</button>
+            <button class="buttons" onclick="showReceive()" id="receiveButtonMenu">Receive</button>
+            <button class="buttons" onclick="showSend()" id="sendButtonMenu">Send</button>
         </div>
         <br>
         <div id="receive" class="receive" style="display:none">
@@ -111,12 +159,24 @@
 
         <div id="send" class="send" style="display:none">
             <label class="wallet_labels" for="sendToAddress">&nbsp;To:</label><br/>
-            <input id="sendToAddress" class="wallet_inputs" align="right" value="address">
+            <input id="sendToAddress" class="wallet_inputs" align="right" value="address" onfocus="clearValue()" onblur="setValueIfEmpty()">
             <br>
             <label class="wallet_labels" for="coinAmount">&nbsp;Amount:</label><br/>
-            <input id="coinAmount" class="wallet_inputs" type="number" align="right" value="0.00000000" step="0.00000001">
+            <input id="coinAmount" class="wallet_inputs" align="right" value="0.00000000" step="0.00000001" onchange="changeAmount()">
+            <br>
+            <div class="center">
+                <button class="buttons sendButton" onclick="send()">Send now </button>
+            </div>
         </div>
     </div>
+
+    <!--
+    <div id="containerLeftWalletSecond">
+        <div class="rightTxHistoryTitle">
+            Information about your wallet
+        </div>
+    </div>
+    -->
     <!--<div id="receive" style="font-size:25px; alignment: center">Receive</div>-->
     <!--<div id="send" style="font-size:25px">Send</div>-->
 

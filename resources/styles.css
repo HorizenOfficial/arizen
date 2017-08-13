@@ -79,8 +79,7 @@ div.leftWallet{
 div.rightTxHistory{
     padding: 5px 5px;
     background: #fefefe;
-    margin: 5px auto;
-    margin-right:5px;
+    margin: 5px 5px 5px auto;
     border: 1px solid #c4cddb;
     border-top-color: #d3dbde;
     border-bottom-color: #bfc9dc;
@@ -130,6 +129,9 @@ div.rightTxHistory{
     color: #f88900;
 }
 
+.sendButton{
+    margin: 15px;
+}
 
 
 
@@ -179,7 +181,18 @@ div.rightTxHistory{
     border-bottom-color: #bfc9dc;
     box-shadow: 0 1px 1px #ccc;
     position: relative;
+}
 
+#containerLeftWalletSecond {
+    padding: 10px 10px;
+    background: #fefefe;
+    margin: 0 auto;
+    margin-top:5px;
+    border: 1px solid #c4cddb;
+    border-top-color: #d3dbde;
+    border-bottom-color: #bfc9dc;
+    box-shadow: 0 1px 1px #ccc;
+    position: relative;
 }
 
 #darkContainer{
