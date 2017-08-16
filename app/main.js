@@ -6,12 +6,13 @@
 const electron = require("electron");
 const {app, Menu, ipcMain} = require("electron");
 const BrowserWindow = electron.BrowserWindow;
-
-// const keytar = require('keytar'); -
 const path = require("path");
 const url = require("url");
 const os = require("os");
 const fs = require("fs-extra");
+const updater = require("electron-simple-updater");
+updater.init({checkUpdateOnStart: true, autoDownload: true,
+        url: "https://raw.githubusercontent.com/ZencashOfficial/arizen/master/updates.json"});
 
 // Keep a global reference of the window object, if you don"t, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -164,6 +165,8 @@ function createWindow() {
 
     // Open the DevTools.
     win.webContents.openDevTools();
+
+    //win.loadURL("file://" + __dirname + "/index.html");
 
     // Emitted when the window is closed.
     win.on("closed", function () {

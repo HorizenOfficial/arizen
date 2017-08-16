@@ -1,10 +1,63 @@
+
 // @flow
 /*jshint esversion: 6 */
-/*jslint node: true */
 "use strict";
 
-const {ipcRenderer} = require("electron");
+const {remote} = require("electron");
+const updater = remote.require("electron-simple-updater");
 
+function attachUiHandlers() {
+    const btnUpdate = document.getElementById("btn-update");
+    const btnInstall = document.getElementById("btn-install");
+    const chkAutomatically = document.getElementById("automatically");
+
+    btnUpdate.addEventListener("click", function () {
+        updater.checkForUpdates();
+        document.body.classList.add("update-downloading");
+    });
+
+    btnInstall.addEventListener("click", function () {
+        updater.downloadUpdate();
+    });
+
+    chkAutomatically.addEventListener("change", function () {
+        updater.setOptions("autoDownload", this.checked);
+    });
+}
+
+function attachUpdaterHandlers() {
+    updater.on("update-available", onUpdateAvailable);
+    updater.on("update-downloading", onUpdateDownloading);
+    updater.on("update-downloaded", onUpdateDownloaded);
+
+    function onUpdateAvailable(meta) {
+        setText('new-version', meta.version);
+        setText('description', meta.readme);
+        document.body.className = 'update-available';
+    }
+
+    function onUpdateDownloading() {
+        document.body.classList.add('update-downloading');
+    }
+
+    function onUpdateDownloaded() {
+        if (window.confirm('The app has been updated. Do you like to restart it now?')) {
+            updater.quitAndInstall();
+        }
+    }
+}
+
+function setText(id, text) {
+    document.getElementById(id).appendChild(
+        document.createTextNode(text)
+    );
+}
+
+setText("version", updater.version);
+setText("build", updater.buildId);
+
+attachUiHandlers();
+attachUpdaterHandlers();
 
 // const {remote} = require("electron");
 // // use `remote` require so that it"s run in the context of the main process
@@ -34,11 +87,6 @@ const {ipcRenderer} = require("electron");
 //
 //
 //
-
-
-
-
-
 
 
 //

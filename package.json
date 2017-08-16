@@ -21,6 +21,7 @@
   "dependencies": {
     "electron": "^1.7.6",
     "electron-packager": "^8.7.1",
+    "electron-simple-updater": "^1.2.1",
     "electron-tabs": "^0.7.1",
     "errors": "^0.3.0",
     "fs-extra": "^4.0.1",
