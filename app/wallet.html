@@ -33,41 +33,88 @@
 </div>
 
 <div id="leftWallet" class="leftWallet">
-    <div id="containerLeftWalletFirst">
+    <div id="containerLeftWallet">
         <div class="center">
+            <button class="buttons" onclick="showWallet()" id="myWalletButtonMenu">My wallet</button>
             <button class="buttons" onclick="showReceive()" id="receiveButtonMenu">Receive</button>
             <button class="buttons" onclick="showSend()" id="sendButtonMenu">Send</button>
         </div>
         <br>
+
+        <div id="mywallet" class="mywallet" style="display:none">
+            <div class="sectionTitle">
+                List of Wallets
+                <button class="buttons sectionButton" onclick="hideBalances()" id="hideZeroBalancesButton">Hide zero Balances</button>
+                <button class="buttons sectionButton" onclick="addWallet()" id="addWalletButton">Add Wallet</button>
+            </div>
+
+            <div id="walletList">
+                <div class="walletListItem">
+                    <span class="walletListItemAddress walletListItemTitle">Address</span>
+                    <span class="walletListItemBalance walletListItemTitle">Balance</span>
+                </div>
+
+
+                <div class="walletListItem walletListItemOdd">
+                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
+                    <span class="walletListItemBalance">110.00000000</span>
+                </div>
+                <div class="walletListItem">
+                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
+                    <span class="walletListItemBalance">11.00000000</span>
+                </div>
+                <div class="walletListItem walletListItemOdd">
+                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
+                    <span class="walletListItemBalance">110.00000000</span>
+                </div>
+                <div class="walletListItem">
+                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
+                    <span class="walletListItemBalance">110.00000000</span>
+                </div>
+                <div class="walletListItem walletListItemOdd">
+                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
+                    <span class="walletListItemBalance">110.00000000</span>
+                </div>
+                <div class="walletListItem">
+                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
+                    <span class="walletListItemBalance">110.00000000</span>
+                </div>
+                <div class="walletListItem walletListItemOdd">
+                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
+                    <span class="walletListItemBalance">110.00000000</span>
+                </div>
+
+
+            </div>
+
+
+
+        </div>
+
         <div id="receive" class="receive" style="display:none">
             NOT IMPLEMENTED
         </div>
 
         <div id="send" class="send" style="display:none">
+            <label class="wallet_labels" for="sendFromAddress">&nbsp;From:</label><br/>
+            <select id="sendFromAddress" class="wallet_inputs wallet_select" align="right">
+                <option value="null">WIP -> will be redesigned using JS</option>
+                <option value="null">Address 2</option>
+                <option value="null">Address 3</option>
+                <option value="null">Address 4</option>
+            </select>
+            <br>
             <label class="wallet_labels" for="sendToAddress">&nbsp;To:</label><br/>
             <input id="sendToAddress" class="wallet_inputs" align="right" value="address" onfocus="clearValue()" onblur="setValueIfEmpty()">
             <br>
             <label class="wallet_labels" for="coinAmount">&nbsp;Amount:</label><br/>
-            <input id="coinAmount" class="wallet_inputs" align="right" value="0.00000000" step="0.00000001" onchange="changeAmount()">
+            <input id="coinAmount" class="wallet_inputs" align="right" value="0.00000000" onchange="changeAmount()">
             <br>
             <div class="center">
                 <button class="buttons sendButton" onclick="send()">Send now </button>
             </div>
         </div>
     </div>
-
-    <!--
-    <div id="containerLeftWalletSecond">
-        <div class="rightTxHistoryTitle">
-            Information about your wallet
-        </div>
-    </div>
-    -->
-    <!--<div id="receive" style="font-size:25px; alignment: center">Receive</div>-->
-    <!--<div id="send" style="font-size:25px">Send</div>-->
-
-    <!--<input type="button" name="answer" value="Show Div" onclick="showDiv()" />-->
-
 </div>
 
 <div id="rightTxHistory" class="rightTxHistory">
@@ -78,7 +125,10 @@
     </div>
 </div>
 
-<script src="wallet.js"></script>
+<div id="walletFooter">
+</div>
+
+<script src="wallet.js"></script><!-- Has to be in header -->
 
 </body>
 </html>
