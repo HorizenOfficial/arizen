@@ -12,12 +12,22 @@
     "url": "git+https://github.com/zencashofficial/arizen.git"
   },
   "keywords": [
+    "zen",
     "zencash",
     "equihash",
-    "wallet"
+    "wallet",
+    "windows",
+    "mac",
+    "osx",
+    "linux",
+    "desktop",
+    "electron"
   ],
   "author": "ZEN Team",
   "license": "MIT",
+  "engines": {
+    "node": ">=6.0"
+  },
   "dependencies": {
     "electron": "^1.7.6",
     "electron-packager": "^8.7.1",
