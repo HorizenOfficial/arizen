@@ -63,7 +63,6 @@
         function showSend() {
             document.getElementById("receive").style.display = "none";
             document.getElementById("send").style.display = "block";
-            /* TODO : Send button stay same as when it has cursor over itself.*/
             document.getElementById("sendButtonMenu").style.borderRadius = "2px";
             document.getElementById("sendButtonMenu").style.backgroundColor = "transparent";
             document.getElementById("sendButtonMenu").style.border = "1px #f88900 solid";
@@ -73,14 +72,11 @@
             document.getElementById("receiveButtonMenu").style.backgroundColor = "#f88900";
             document.getElementById("receiveButtonMenu").style.border = "1px #fefefe solid";
             document.getElementById("receiveButtonMenu").style.color = "#fefefe";
-
-
         }
 
         function showReceive() {
             document.getElementById("send").style.display = "none";
             document.getElementById("receive").style.display = "block";
-            /* TODO : Receive button stay same as when it has cursor over itself.*/
             document.getElementById("receiveButtonMenu").style.borderRadius = "2px";
             document.getElementById("receiveButtonMenu").style.backgroundColor = "transparent";
             document.getElementById("receiveButtonMenu").style.border = "1px #f88900 solid";
@@ -94,6 +90,11 @@
 
         function changeAmount() {
             let number = document.getElementById("coinAmount").value;
+            /* Input value is Not A Number*/
+            if (isNaN(Number(number))) {
+                document.getElementById("coinAmount").value = Number(0).toFixed(8);
+                return;
+            }
             /* Number has to be greater or equal to zero */
             if (number < 0) {
                 document.getElementById("coinAmount").value = Number(0).toFixed(8);
