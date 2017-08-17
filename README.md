@@ -1,17 +1,14 @@
-# Arizen Wallet
-ZenCash wallet
-
-![Screenshot](https://i.imgur.com/HL5SHDh.png)
+# Arizen - ZenCash Wallet
 
 # Planned Features 
-- login pass
-- encrypted wallet.dat file
-- light client (no more wait for sync)
-- nice GUI
+- [x] nice GUI
+- [x] login pass
+- [ ] encrypted login pass
+- [ ] encrypted wallet.dat file
+- [ ] light SPV client
+- [ ] automatically download updates
 
-# Work in progress
-- keytar storing password
-
+![Screenshot](https://i.imgur.com/Cc14AP2.png)
 
 ### **Would you like buy me some sweets? Thank you!**
 - ZEN: znWz8NuJ6iZNyT2BxKKeMiWsdRM44VMs8mM
