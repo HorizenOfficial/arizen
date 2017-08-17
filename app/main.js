@@ -6,32 +6,18 @@
 const electron = require("electron");
 const {app, Menu, ipcMain} = require("electron");
 const BrowserWindow = electron.BrowserWindow;
-
-// const keytar = require('keytar'); -
 const path = require("path");
 const url = require("url");
 const os = require("os");
 const fs = require("fs-extra");
-const crypto = require("crypto");
-const request = require('request');
-const unzip = require('unzip');
-const { spawn } = require('child_process');
+const updater = require("electron-simple-updater");
+updater.init({checkUpdateOnStart: true, autoDownload: true,
+        url: "https://raw.githubusercontent.com/ZencashOfficial/arizen/master/updates.json"});
 
 // Keep a global reference of the window object, if you don"t, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-/* FIXME: this should be done automatically */
-const zendVersion = "v2.0.9-4";
-const zendCommit = "2045d34";
 let win;
 let loggedIn = false;
-let username;
-let daemon;
-let rpcPassword;
-
-function delaySync(msec) {
-    let waitTill = new Date(new Date().getTime() + msec);
-    while (waitTill > new Date()){}
-}
 
 function getLoginPath() {
     return getRootConfigPath() + "login.txt";
@@ -73,101 +59,6 @@ function getTmpPath() {
         fs.mkdirSync(tmpPath);
     }
     return tmpPath;
-}
-
-function getLatestZend() {
-    let zendPlatform;
-
-    if (os.platform() === "win32") {
-        zendPlatform = "Win";
-    } else if (os.platform() === "darwin") {
-        zendPlatform = "Mac";
-/*    } else if (os.platform() === "linux") {
-        zenPath = app.getPath("home") + "/.zen/";*/
-    } else {
-        console.log("Unidentified OS.");
-        app.exit(0);
-    }
-    
-    let link = "https://github.com/ZencashOfficial/zen/releases/download/" + zendVersion + "/Zen_" + zendPlatform + "_binaries_" + zendVersion + "-" + zendCommit + ".zip";
-    let file = fs.createWriteStream("./daemon/zend.zip");
-    let sendReq = request.get(link);
-    /* FIXME: this can block for some time */
-    sendReq.pipe(file);
-    
-    file.on('finish', function() {
-        file.close(extractLatestZend);
-    });
-}
-
-function extractLatestZend() {
-    let readStream = fs.createReadStream('./daemon/zend.zip');
-
-    /* FIXME: this can block for some time */
-    readStream.pipe(unzip.Extract({ path: './daemon' }));
-    console.log("unzip done");
-}
-
-function checkLatestZend() {
-    if (!fs.existsSync("./daemon")) {
-        fs.mkdirSync("./daemon");
-        getLatestZend();
-    }
-}
-
-function startZend() {
-    let cmd;
-
-    if (os.platform() === "win32") {
-        cmd = "./daemon/zend.exe";
-    }
-    else if (os.platform() === "darwin") {
-        cmd = "./daemon/zend";
-    } else {
-        console.log("Unidentified OS.");
-        app.exit(0);
-    }
-    if (!fs.existsSync(cmd)) {
-        getLatestZend();
-    } else {
-        daemon = spawn(cmd, ["--datadir=" + getTmpPath()]);
-        daemon.on('close', (code) => {
-            fs.copySync(getTmpPath() + "/wallet.dat", "./wallets/wallet.dat." + username);
-            fs.removeSync(getTmpPath());
-        });
-    }
-}
-
-function zendQuery(query, callback) {
-    let options = {
-        method: "POST",
-        url: encodeURI("http://zenrpc:" + rpcPassword + "@127.0.0.1:8231"),
-        headers: {
-            "Content-type": "text/plain"
-        },
-        json: query
-    };
-    request(options, function (error, response, body) {
-        if (!error && response.statusCode === 401) { // we have an error
-            console.log("Cannot authenticate with wallet RPC service. Check username and password.");
-            callback(response.body);
-        } else if (!error) {
-            try {
-                callback(response.body);
-            } catch (err) {
-                console.log(err.message);
-            }
-        }
-    });
-}
-
-function closeZend() {
-    console.log("stopping zend");
-
-    zendQuery({"jsonrpc": "1.0", "id": "stop", "method": "stop", "params": []},
-        function (text) {
-            console.log(text.result);
-        });
 }
 
 function createWindow() {
@@ -275,6 +166,8 @@ function createWindow() {
     // Open the DevTools.
     win.webContents.openDevTools();
 
+    //win.loadURL("file://" + __dirname + "/index.html");
+
     // Emitted when the window is closed.
     win.on("closed", function () {
         // Dereference the window object, usually you would store windows
@@ -309,14 +202,7 @@ app.on("activate", function () {
 
 app.on("before-quit", function () {
     console.log("quitting");
-    
-    if (loggedIn) {
-        closeZend();
-    } else {
-        fs.removeSync(getTmpPath());
-    }
-
-    console.log("before-quit finished");
+    fs.removeSync(getTmpPath());
     // dialog.showMessageBox({
     //     type: "question",
     //     buttons: ["Yes", "No"],
@@ -369,21 +255,8 @@ ipcMain.on("verify-login-info", function (event, login, pass) {
 
     if (user.length === 1 && user[0].login === login) {
         if (passwordHash.verify(pass, user[0].password)) {
-            rpcPassword = crypto.randomBytes(8).toString("hex");
-            let config = [
-                "rpcuser=zenrpc",
-                "rpcpassword=" + rpcPassword,
-                "rpcport=8231"
-            ];
-
-            fs.writeFileSync(getTmpPath() + "/zen.conf", config.join("\n"), 'utf8');
-            /* FIXME: decryption should be done here */
-            if (fs.existsSync("./wallets/wallet.dat." + login)) {
-                fs.copySync("./wallets/wallet.dat." + login, getTmpPath() + "/wallet.dat");
-            }
-            startZend();
+            fs.copy(getZenPath(), getTmpPath());
             loggedIn = true;
-            username = user[0].login;
             resp = {
                 response: "OK"
             };
@@ -418,12 +291,17 @@ ipcMain.on("check-login-info", function (event, login, pass) {
 });
 
 ipcMain.on("do-logout", function (event) {
+    fs.removeSync(getTmpPath());
     loggedIn = false;
-    closeZend();
 });
 
 ipcMain.on("exit-from-menu", function (event) {
-    app.quit();
+    // On macOS it is common for applications and their menu bar
+    // to stay active until the user quits explicitly with Cmd + Q
+    // if (process.platform !== "darwin") {
+    //     app.quit()
+    // }
+    app.quit()
 });
 
 // ipcMain.on("get-password", function (event, user) {

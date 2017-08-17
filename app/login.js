@@ -3,12 +3,3 @@
 /*jslint node: true */
 "use strict";
 
-
-
-function checkConfigFolder() {
-    
-}
-
-function checkAll() {
-
-}

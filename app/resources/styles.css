@@ -68,12 +68,20 @@ Dark Brown: 0D1006*/
 }
 
 div.leftWallet{
-    width: 49%;
-    height: 90%;
+    width: 48.2%;
     float: left;
+    position: relative;
+    height: 600px;
     font-size: 1.1em;
     color: #888888;
+    background: #fefefe;
     padding: 5px 5px;
+    margin: 5px 5px 5px 5px;
+    border: 1px solid #c4cddb;
+    border-top-color: #d3dbde;
+    border-bottom-color: #bfc9dc;
+    box-shadow: 0 1px 1px #ccc;
+
 }
 
 div.rightTxHistory{
@@ -85,8 +93,8 @@ div.rightTxHistory{
     border-bottom-color: #bfc9dc;
     box-shadow: 0 1px 1px #ccc;
     position: relative;
-    width: 48%;
-    height: 630px;
+    width:  48%;
+    height: 600px;
     float: right;
     color: #0d1006;
 }
@@ -104,8 +112,36 @@ div.rightTxHistory{
     color: #0d1006;
 }
 
+#walletFooter{
+    padding: 5px;
+    background: #fefefe;
+    /*margin: 0;*/
+    border: 1px solid #c4cddb;
+    border-bottom: none;
+    border-top-color: #bfc9dc;
+    box-shadow: 0 1px 1px #ccc;
+    position: relative;
+    height:29px;
+    margin: 0 auto;
+    width:98.9%;
+    float:left;
+    color: #0d1006;
+}
+
+
+.sectionTitle{
+    padding: 10px 15px;
+    border: none;
+    border-bottom: 1px solid #f88900;
+    font-size: 1.1em;
+    transition: all 0.4s;
+    color: #888888;
+    margin-bottom: 10px;
+}
+
+
 .buttons{
-    width: 49%;
+    width: 32%;
     background-color: #f88900;
     border: 1px #fefefe solid;
     color: #fefefe;
@@ -128,6 +164,19 @@ div.rightTxHistory{
     border: 1px #f88900 solid;
     color: #f88900;
 }
+
+.sectionButton{
+    /*width: 25%;*/
+    background-color: #f88900;
+    border: 1px #fefefe solid;
+    color: #fefefe;
+    font-size: 0.8em;
+    padding: 4px 6px;
+    /*margin-left:222px;*/
+    outline: none;
+    transition: all 0.2s;
+}
+
 
 .sendButton{
     margin: 15px;
@@ -154,6 +203,24 @@ div.rightTxHistory{
     border-bottom: 3px solid #f88900;
 }
 
+.wallet_select {
+    outline:none;
+    background: #fefefe;
+    -webkit-appearance: none;
+}
+
+.wallet_select * {
+    outline:none;
+    background: #fefefe;
+    -webkit-appearance: none;
+}
+
+.wallet_select *:hover {
+    outline:none;
+    background: #f88900;
+    -webkit-appearance: none;
+}
+
 .wallet_labels{
     width:10%;
 }
@@ -172,28 +239,14 @@ div.rightTxHistory{
     color: #888888;
 }
 
-#containerLeftWalletFirst {
-    padding: 10px 10px;
-    background: #fefefe;
+#containerLeftWallet {
+    #padding: 10px 10px;
+    background: transparent;
     margin: 0 auto;
-    border: 1px solid #c4cddb;
-    border-top-color: #d3dbde;
-    border-bottom-color: #bfc9dc;
-    box-shadow: 0 1px 1px #ccc;
+    padding:5px;
     position: relative;
 }
 
-#containerLeftWalletSecond {
-    padding: 10px 10px;
-    background: #fefefe;
-    margin: 0 auto;
-    margin-top:5px;
-    border: 1px solid #c4cddb;
-    border-top-color: #d3dbde;
-    border-bottom-color: #bfc9dc;
-    box-shadow: 0 1px 1px #ccc;
-    position: relative;
-}
 
 #darkContainer{
     background-color: #000000;
@@ -209,4 +262,105 @@ div.rightTxHistory{
 
 #about{
     margin-top:80px;
+}
+
+/* Messenger*/
+#conversationContainer{
+    width: 70%;
+    height: 90%;
+    float: left;
+    font-size: 1.1em;
+    color: #888888;
+    padding: 5px 5px;
+}
+
+#ConversationContainerContact{
+    padding: 10px 10px;
+    background: #fefefe;
+    margin: 0 auto;
+    border: 1px solid #c4cddb;
+    border-top-color: #d3dbde;
+    border-bottom-color: #bfc9dc;
+    box-shadow: 0 1px 1px #ccc;
+    position: relative;
+}
+
+
+#conversationContainerMessages {
+    padding: 10px 10px;
+    background: #fefefe;
+    margin: 0 auto;
+    border: 1px solid #c4cddb;
+    border-top-color: #d3dbde;
+    border-bottom-color: #bfc9dc;
+    box-shadow: 0 1px 1px #ccc;
+    position: relative;
+}
+
+#conversationContainerForm {
+    padding: 10px 10px;
+    background: #fefefe;
+    margin: 5px auto 0;
+    border: 1px solid #c4cddb;
+    border-top-color: #d3dbde;
+    border-bottom-color: #bfc9dc;
+    box-shadow: 0 1px 1px #ccc;
+    position: relative;
+}
+
+.ConversationContainerMessagesClass {
+    padding: 10px 10px;
+    background: #fefefe;
+    margin: 0 auto;
+    border: 1px solid #c4cddb;
+    border-top-color: #d3dbde;
+    border-bottom-color: #bfc9dc;
+    box-shadow: 0 1px 1px #ccc;
+    position: relative;
+}
+
+
+#contactsContainer{
+    padding: 5px 5px;
+    background: #fefefe;
+    margin: 5px 5px 5px auto;
+    border: 1px solid #c4cddb;
+    border-top-color: #d3dbde;
+    border-bottom-color: #bfc9dc;
+    box-shadow: 0 1px 1px #ccc;
+    position: relative;
+    width: 27%;
+    height: 630px;
+    float: right;
+    color: #0d1006;
+}
+
+#walletList{
+    padding:5px;
+    font-size: 0.9em;
+}
+
+.walletListItem {
+    padding: 5px;
+}
+
+.walletListItemAddress {
+    width:70%;
+    display:inline-block;
+}
+
+.walletListItemBalance{
+    width:28%;
+    text-align: right;
+    display:inline-block;
+}
+
+.walletListItemTitle{
+    color: #f88900;
+    font-size: 1.1em;
+    font-weight: 800;
+}
+
+.walletListItemOdd{
+    background: #dddddd;
 }
