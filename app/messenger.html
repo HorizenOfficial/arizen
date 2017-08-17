@@ -3,8 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <title>ZEN Messenger</title>
-</head>
+    <link rel="stylesheet" href="resources/styles.css">
 <body>
+
+<div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <a href="messenger.html">Messenger</a>
+    <p>&nbsp;</p>
+    <a href="#" onclick="logout()">Logout</a>
+    <a href="#" onclick="exitApp()">Exit</a>
+    <div class="center">
+        <img id="sidenavIMG" src="resources/zen_icon.png" width="200px"/>
+    </div>
+    <a id="about" href="#" onclick="showVersion()">About</a>
+</div>
+
+<div id="darkContainer">
+</div>
+
+<div id="topHeader" class="topHeader">
+    <a class="opennav" onclick="openNav()">
+        &nbsp;&#9776;
+    </a>
+    <!-- same as in register.html -->
+    <img style="padding-left:475px; vertical-align: middle;" src="resources/zen_icon.png" width="25px"/>
+</div>
+
+<div id="conversationContainer">
+    <div id="ConversationContainerContact" class="ConversationContainerMessagesClass">
+        Info about contact
+    </div>
+
+    <div id="ConversationContainerMessages" class="ConversationContainerMessagesClass">
+        No messages yet
+    </div>
+
+
+    <div id="ConversationContainerForm" class="ConversationContainerMessagesClass">
+        <input id="sendToAddress" class="wallet_inputs" align="right" value="message" onfocus="clearValue()" onblur="setValueIfEmpty()">
+            <button class="buttons sendButton" onclick="send()">Send</button>
+    </div>
+
+</div>
+
+<div id="contactsContainer" class="contactsContainerClass">
+    <div class="center">
+        <div class="rightTxHistoryTitle">
+            Contacts
+        </div>
+    </div>
+</div>
 
 <!--TODO: implement this messenger-->
 <!--TODO: 1-1 messages, 1-many messages-->
