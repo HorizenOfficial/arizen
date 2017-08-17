@@ -58,32 +58,45 @@ function exitApp() {
     ipcRenderer.send("exit-from-menu");
 }
 
+function setButtonActive(className) {
+    document.getElementById(className).style.borderRadius = "2px";
+    document.getElementById(className).style.backgroundColor = "transparent";
+    document.getElementById(className).style.border = "1px #f88900 solid";
+    document.getElementById(className).style.color = "#f88900";
+}
+
+function setButtonInactive(className) {
+    document.getElementById(className).style.borderRadius = "0px";
+    document.getElementById(className).style.backgroundColor = "#f88900";
+    document.getElementById(className).style.border = "1px #fefefe solid";
+    document.getElementById(className).style.color = "#fefefe";
+}
+
 function showSend() {
     document.getElementById("receive").style.display = "none";
+    document.getElementById("mywallet").style.display = "none";
     document.getElementById("send").style.display = "block";
-    document.getElementById("sendButtonMenu").style.borderRadius = "2px";
-    document.getElementById("sendButtonMenu").style.backgroundColor = "transparent";
-    document.getElementById("sendButtonMenu").style.border = "1px #f88900 solid";
-    document.getElementById("sendButtonMenu").style.color = "#f88900";
-
-    document.getElementById("receiveButtonMenu").style.borderRadius = "0px";
-    document.getElementById("receiveButtonMenu").style.backgroundColor = "#f88900";
-    document.getElementById("receiveButtonMenu").style.border = "1px #fefefe solid";
-    document.getElementById("receiveButtonMenu").style.color = "#fefefe";
+    setButtonActive("sendButtonMenu");
+    setButtonInactive("receiveButtonMenu");
+    setButtonInactive("myWalletButtonMenu");
 }
 
 function showReceive() {
     document.getElementById("send").style.display = "none";
+    document.getElementById("mywallet").style.display = "none";
     document.getElementById("receive").style.display = "block";
-    document.getElementById("receiveButtonMenu").style.borderRadius = "2px";
-    document.getElementById("receiveButtonMenu").style.backgroundColor = "transparent";
-    document.getElementById("receiveButtonMenu").style.border = "1px #f88900 solid";
-    document.getElementById("receiveButtonMenu").style.color = "#f88900";
+    setButtonActive("receiveButtonMenu");
+    setButtonInactive("sendButtonMenu");
+    setButtonInactive("myWalletButtonMenu");
+}
 
-    document.getElementById("sendButtonMenu").style.borderRadius = "0px";
-    document.getElementById("sendButtonMenu").style.backgroundColor = "#f88900";
-    document.getElementById("sendButtonMenu").style.border = "1px #fefefe solid";
-    document.getElementById("sendButtonMenu").style.color = "#fefefe";
+function showWallet() {
+    document.getElementById("send").style.display = "none";
+    document.getElementById("mywallet").style.display = "block";
+    document.getElementById("receive").style.display = "none";
+    setButtonActive("myWalletButtonMenu");
+    setButtonInactive("sendButtonMenu");
+    setButtonInactive("receiveButtonMenu");
 }
 
 function changeAmount() {
