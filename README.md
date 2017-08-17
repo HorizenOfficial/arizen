@@ -1,6 +1,4 @@
 # Arizen - ZenCash Wallet
-
-# Planned Features 
 - [x] nice GUI
 - [x] login pass
 - [ ] encrypted login pass
