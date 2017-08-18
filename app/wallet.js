@@ -127,6 +127,17 @@ function setValueIfEmpty() {
     }
 }
 
+function hideBalances() {
+    if (document.getElementById("hideZeroBalancesButton").textContent === "Hide Zero Balances") {
+        document.getElementById("hideZeroBalancesButton").textContent = "Show Zero Balances";
+        document.getElementById("hideZeroBalancesButton").classList.remove("balancesButtonHide");
+        document.getElementById("hideZeroBalancesButton").classList.add("balancesButtonShow");
+    } else {
+        document.getElementById("hideZeroBalancesButton").textContent = "Hide Zero Balances";
+        document.getElementById("hideZeroBalancesButton").classList.remove("balancesButtonShow");
+        document.getElementById("hideZeroBalancesButton").classList.add("balancesButtonHide");
+    }
+}
 
 function send() {
     return 0;
