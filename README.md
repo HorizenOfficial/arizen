@@ -1,7 +1,7 @@
 # Arizen - ZenCash Wallet
 - [x] nice GUI
 - [x] login pass
-- [ ] encrypted login pass
+- [x] encrypted login pass
 - [ ] encrypted wallet.dat file
 - [ ] light SPV client
 - [ ] automatically download updates
