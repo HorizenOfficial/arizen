@@ -1,0 +1,235 @@
+/* Messenger*/
+
+
+#contactsContainer{
+    position: absolute;
+    float: left;
+    margin: 5px 5px 5px auto;
+    padding: 5px 5px;
+    left: 5px;
+    top: 40px;
+    width: 328px;
+    bottom: 40px;
+    /*#height: 630px;*/
+    border: 1px solid #c4cddb;
+    border-top-color: #d3dbde;
+    border-bottom-color: #bfc9dc;
+    background: #fefefe;
+    box-shadow: 0 1px 1px #ccc;
+    color: #888888;
+}
+
+.contact{
+    color: #f88900;
+    font-size: 1em;
+    margin: 3px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+.contactName{
+    color: #888888;
+    font-size: 1em;
+}
+
+.contactOdd{
+    background: #eeeeee;
+}
+
+#contactList{
+    height:510px;
+    overflow-y: scroll;
+}
+
+#contactList::-webkit-scrollbar-track
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: #FeFeFe;
+}
+
+#contactList::-webkit-scrollbar
+{
+    width: 10px;
+    background-color: #FeFeFe;
+}
+
+#contactList::-webkit-scrollbar-thumb
+{
+    background-color: #cccccc;
+    background-image: -webkit-linear-gradient(70deg,
+    rgba(255, 255, 255, .2) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, .2) 50%,
+    rgba(255, 255, 255, .2) 75%,
+    transparent 75%,
+    transparent)
+}
+
+.addContactButton{
+    width: 130px;
+}
+
+#conversationContainer{
+    position:absolute;
+    margin: 5px 0px 5px auto;
+    padding: 5px 5px;
+    width: 685px;
+    right: 5px;
+    top: 40px;
+    bottom: 40px;
+    color: #888888;
+    font-size: 1em;
+    border: 1px solid #c4cddb;
+    border-top-color: #d3dbde;
+    border-bottom-color: #bfc9dc;
+    background: #fefefe;
+    box-shadow: 0 1px 1px #ccc;
+}
+
+#ConversationContainerContact{
+    height: 21px;
+    font-size: 1.0em;
+}
+
+
+#ConversationContainerMessages {
+    height: 485px;
+    overflow-y: scroll;
+}
+
+#ConversationContainerForm {
+    height: 50px;
+    margin: 0 auto;
+    padding: 10px 10px;
+}
+
+.ConversationContainerMessagesClass {
+    position: relative;
+    margin: 0 auto;
+    padding: 10px 10px;
+    border-bottom: 1px solid #f88900;
+    background: #fefefe;
+}
+
+.messengerContact{
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+
+.messenger_input{
+    margin-left: 0;
+    float: left;
+    margin-right: 0;
+    padding: 10px 10px;
+    width: 560px;
+    height: 15px;
+
+ }
+
+.messenger_input:focus{
+    margin-left: 0;
+    float: left;
+    margin-right: 0;
+    padding: 10px 10px;
+    width: 560px;
+    height: 15px;
+    border-bottom: 1px #f88900 solid;
+}
+
+.messenger_button{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-left: 0;
+    width: 80px;
+    font-size: 1em;
+    height: 36px;
+    border: 1px #f88900 solid;
+}
+
+.messageFrom {
+    position: relative;
+    padding: 5px;
+    margin: 0.3em 0 0.3em;
+    color: #ffffff;
+    background: #888888;
+    border-radius: 5px;
+    background: linear-gradient(top, #f9d835, #f3961c);
+}
+
+/* creates triangle */
+.messageFrom:after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 30px;
+    width: 0;
+    border-width: 10px 10px 0;
+    border-style: solid;
+    border-color: #888888 transparent;
+}
+
+.messageTo {
+    position: relative;
+    padding: 5px;
+    margin: 0.3em 0 0.3em;
+    color: #ffffff;
+    background: #f88900;
+    border: 1px solid #f88900;
+    border-radius: 5px;
+    background: linear-gradient(top, #f9d835, #f3961c);
+}
+
+.messageTo:after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    right: 30px;
+    width: 0;
+    border-width: 10px 10px 0;
+    border-style: solid;
+    border-color: #f88900 transparent ;
+}
+
+.messageMyInfo{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-right: 30px;
+    text-align: right;
+    color: #f88900;
+}
+
+.messageContactInfo{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-left: 10px;
+    text-align: left;
+    color: #888888;
+}
+
+
+#ConversationContainerMessages::-webkit-scrollbar-track
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: #FeFeFe;
+}
+
+#ConversationContainerMessages::-webkit-scrollbar
+{
+    width: 10px;
+    background-color: #FeFeFe;
+}
+
+#ConversationContainerMessages::-webkit-scrollbar-thumb
+{
+    background-color: #F90;
+    background-image: -webkit-linear-gradient(45deg,
+    rgba(255, 255, 255, .2) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, .2) 50%,
+    rgba(255, 255, 255, .2) 75%,
+    transparent 75%,
+    transparent)
+}
