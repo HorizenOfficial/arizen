@@ -177,6 +177,55 @@ div.rightTxHistory{
     transition: all 0.2s;
 }
 
+.addWalletButton{
+    width: 18%;
+    background-color: #f88900;
+    border: 1px #fefefe solid;
+    color: #fefefe;
+    font-size: 0.8em;
+    padding: 4px 6px;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.balancesButtonHide{
+    width: 30%;
+    background-color: #f82000;
+    border: 1px #fefefe solid;
+    color: #fefefe;
+    font-size: 0.8em;
+    padding: 4px 6px;
+    outline: none;
+    transition: all 0.2s;
+
+}
+
+.balancesButtonHide:hover{
+    border-radius: 2px;
+    background-color: transparent;
+    border: 1px #f82000 solid;
+    color: #f82000;
+}
+
+.balancesButtonShow{
+    width: 30%;
+    background-color: #00a820;
+    border: 1px #fefefe solid;
+    color: #fefefe;
+    font-size: 0.8em;
+    padding: 4px 6px;
+    outline: none;
+    transition: all 0.2s;
+}
+
+
+.balancesButtonShow:hover{
+    border-radius: 2px;
+    background-color: transparent;
+    border: 1px #00a820 solid;
+    color: #00a820;
+}
+
 
 .sendButton{
     margin: 15px;
@@ -227,6 +276,10 @@ div.rightTxHistory{
 
 .center{
     text-align:center;
+}
+
+.right{
+    text-align:right;
 }
 
 .rightTxHistoryTitle{
