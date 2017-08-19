@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <title>Arizen</title>
     <link rel="stylesheet" href="resources/styles.css">
+    <link rel="stylesheet" href="resources/wallet.css">
     <script src="wallet.js"></script>
 </head>
+<!-- Comment bellow should be uncommented (replace <body> tag) when it will be ready to beta testing (blink bug) -->
 <!--<body onload="document.body.style.display='none';">-->
 <body>
 <div id="mySidenav" class="sidenav">
@@ -89,7 +91,43 @@
         </div>
 
         <div id="receive" class="receive" style="display:none">
-            NOT IMPLEMENTED
+            <div class="sectionTitle">
+                List of Wallets
+            </div>
+            <div id="walletListReceive">
+                <div class="walletListItem">
+                    <span class="walletListItemAddress walletListItemTitle">Address</span>
+                    <span class="walletListItemBalance walletListItemTitle">Balance</span>
+                </div>
+                <div class="walletListItem walletListItemOdd">
+                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
+                    <span class="walletListItemBalance">110.00000000</span>
+                </div>
+                <div class="walletListItem">
+                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
+                    <span class="walletListItemBalance">11.00000000</span>
+                </div>
+                <div class="walletListItem walletListItemOdd">
+                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
+                    <span class="walletListItemBalance">110.00000000</span>
+                </div>
+                <div class="walletListItem">
+                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
+                    <span class="walletListItemBalance">110.00000000</span>
+                </div>
+                <div class="walletListItem walletListItemOdd">
+                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
+                    <span class="walletListItemBalance">110.00000000</span>
+                </div>
+                <div class="walletListItem">
+                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
+                    <span class="walletListItemBalance">110.00000000</span>
+                </div>
+                <div class="walletListItem walletListItemOdd">
+                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
+                    <span class="walletListItemBalance">110.00000000</span>
+                </div>
+            </div>
         </div>
 
         <div id="send" class="send" style="display:none">
@@ -123,6 +161,7 @@
 </div>
 
 <div id="walletFooter">
+    Total balance: <b>671 ZEN</b>
 </div>
 
 <script src="wallet.js"></script><!-- Has to be in header -->
