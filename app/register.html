@@ -3,8 +3,7 @@
 <head>
     <title>Arizen: Register</title>
     <link rel="stylesheet" href="resources/login_styles.css">
-    <!--FIXME: remove jQuery and put all javascript to the register.js-->
-    <script src="resources/jquery-1.7.min.js"></script>
+    <script src="register.js"></script>
 </head>
 
 <body>
@@ -19,18 +18,18 @@
         <ul>
             <li>
                 <span style="text-align:center;"><label for="username">Username:</label></span>
-                <span><input id="username" name="username"/></span>
+                <span><input id="username" name="username" onkeyup="checkLogin();" onfocus="selectColumn(true, false, false);"/></span>
             </li>
             <li>
                 <span style="text-align:center;"><label for="pswd">Password:</label></span>
-                <span><input id="pswd" name="pswd" type="password"/></span>
+                <span><input id="pswd" name="pswd" type="password" onkeyup="checkPasswd();" onfocus="selectColumn(false, true, false);"/></span>
             </li>
             <li>
                 <span style="text-align:center;"><label for="pswd_again">Password again:</label></span>
-                <span><input id="pswd_again" name="pswd_again" type="password"/></span>
+                <span><input id="pswd_again" name="pswd_again" type="password" onkeyup="checkPasswdAgain();" onfocus="selectColumn(false, false, true);"/></span>
             </li>
             <li>
-                <input id="btSubmit" name="btSubmit" type="button" value="Register" disabled/>
+                <input id="btSubmit" name="btSubmit" type="button" value="Register" onclick="doRegister();" disabled/>
             </li>
         </ul>
         <span style="text-align:center;">
@@ -61,145 +60,5 @@
         </ul>
     </div>
 </div>
-
-<script type="text/javascript">
-    const electron = require("electron");
-    const {ipcRenderer} = electron;
-
-    $(document).ready(function () {
-        let usr_val = null;
-        let pswd_val = null;
-        let pswd_again_val = null;
-        let usr = false;
-        let len = false;
-        let lett = false;
-        let capl = false;
-        let num = false;
-        let ide = false;
-        let spec = false;
-
-        $('#btSubmit').click(function () {
-            let passwordHash = require('password-hash');
-            ipcRenderer.send("write-login-info", usr_val, passwordHash.generate(pswd_val, {
-                "algorithm": "sha256",
-                "saltLength": 10
-            }));
-            location.href = "./login.html";
-            console.log("Registration was successful - redirecting to wallet.html");
-            return false;
-        });
-
-        // username conditions
-        $('input[id=username]').keyup(function () {
-            usr_val = $(this).val();
-
-            // validate the length
-            if (usr_val.length < 4) {
-                $('#usrnm_length_info').removeClass('valid').addClass('invalid');
-                usr = false;
-            } else {
-                $('#usrnm_length_info').removeClass('invalid').addClass('valid');
-                usr = true;
-            }
-        }).focus(function () {
-            // focus code here
-            $('#username_info').show();
-        }).blur(function () {
-            // blur code here
-            $('#username_info').hide();
-        });
-
-        // pswd conditions
-        $('input[id=pswd]').keyup(function () {
-            // keyup event code here
-            // set password variable
-            pswd_val = $(this).val();
-
-            // validate the length
-            if (pswd_val.length < 8) {
-                $('#length_info').removeClass('valid').addClass('invalid');
-                len = false;
-            } else {
-                $('#length_info').removeClass('invalid').addClass('valid');
-                len = true;
-            }
-
-            // validate letter
-            if (pswd_val.match(/[A-z]/)) {
-                $('#letter_info').removeClass('invalid').addClass('valid');
-                lett = true;
-            } else {
-                $('#letter_info').removeClass('valid').addClass('invalid');
-                lett = false;
-            }
-
-            // validate capital letter
-            if (pswd_val.match(/[A-Z]/)) {
-                $('#capital_info').removeClass('invalid').addClass('valid');
-                capl = true;
-            } else {
-                $('#capital_info').removeClass('valid').addClass('invalid');
-                capl = false;
-            }
-
-            // validate number
-            if (pswd_val.match(/\d/)) {
-                $('#number_info').removeClass('invalid').addClass('valid');
-                num = true;
-            } else {
-                $('#number_info').removeClass('valid').addClass('invalid');
-                num = false;
-            }
-
-            // validate special character
-            if (pswd_val.match(/[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/@#]/)) {
-                $('#special_info').removeClass('invalid').addClass('valid');
-                spec = true;
-            } else {
-                $('#special_info').removeClass('valid').addClass('invalid');
-                spec = false;
-            }
-
-        }).focus(function () {
-            // focus code here
-            $('#pswd_info').show();
-        }).blur(function () {
-            // blur code here
-            $('#pswd_info').hide();
-        });
-
-        // pswd_again conditions
-        $('input[id=pswd_again]').keyup(function () {
-            // keyup event code here
-            pswd_again_val = $(this).val();
-            // console.log(pswd);
-            // console.log(pswd_again);
-            // validate if passwords are identical
-            if (pswd_val === pswd_again_val) {
-                $('#identical_info').removeClass('invalid').addClass('valid');
-                ide = true;
-            } else {
-                $('#identical_info').removeClass('valid').addClass('invalid');
-                ide = false;
-            }
-        }).focus(function () {
-            // focus code here
-            $('#pswd_identical_info').show();
-        }).blur(function () {
-            // blur code here
-            $('#pswd_identical_info').hide();
-        });
-
-        // activate submit button
-        $(':input[id="btSubmit"]').prop('disabled', true);
-        $('input[id="username"], input[id="pswd"], input[id="pswd_again"]').keyup(function () {
-            if ($(this).val() !== '') {
-                if (usr && len && lett && capl && num && ide && spec) {
-                    $(':input[id="btSubmit"]').prop('disabled', false);
-                }
-            }
-        });
-    });
-</script>
 </body>
 </html>
