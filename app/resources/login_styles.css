@@ -62,7 +62,7 @@ input {
     color: #888888;
 }
 
-input:focus {
+input[type="text"]:focus {
     width: 318px;
     padding: 15px 15px;
     border:none;
@@ -85,7 +85,7 @@ label {
     margin-top: 5px;
 }
 
-button {
+input[type="button"] {
     background-color: #f88900;
     border: 1px #fff solid;
     color: #ffffff;
@@ -96,14 +96,14 @@ button {
     margin-top: 20px;
 }
 
-button:hover{
+input[type="button"]:hover{
     border-radius: 2px;
     background-color: transparent;
     border: 1px #f88900 solid;
     color: #f88900;
 }
 
-button:active {
+input[type="button"]:active {
     border-radius: 2px;
     background-color: transparent;
     border: 1px #f88900 solid;

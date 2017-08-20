@@ -3,8 +3,7 @@
 <head>
     <title>Arizen: Login</title>
     <link rel="stylesheet" href="resources/login_styles.css">
-    <!--FIXME: remove jQuery and put all javascript to the login.js-->
-    <script src="resources/jquery-1.7.min.js"></script>
+    <script src="login.js"></script>
 </head>
 
 <body>
@@ -18,14 +17,14 @@
         <ul>
             <li>
                 <span style="text-align:center;"><label for="username">Username</label></span>
-                <span><input id="username" name="username"/></span>
+                <span><input id="username" name="username" onkeyup="checkLoginInfo();"/></span>
             </li>
             <li>
                 <span style="text-align:center;"><label for="pswd">Password</label></span>
-                <span><input id="pswd" name="pswd" type="password"/></span>
+                <span><input id="pswd" name="pswd" type="password" onkeyup="checkLoginInfo();"/></span>
             </li>
             <li>
-                <button id="btSubmit" name="btSubmit">Login</button>
+                <input id="btSubmit" name="btSubmit" type="button" value="Login" onclick="doLogin();" disabled/>
             </li>
         </ul>
         <span style="text-align:center;">
@@ -38,67 +37,6 @@
         </ul>
     </div>
 </div>
-
-<script type="text/javascript">
-    const electron = require("electron");
-    const {ipcRenderer} = electron;
-
-    ipcRenderer.on('verify-login-response', function (event, resp) {
-        let data = JSON.parse(resp);
-
-        if (data.response === "OK") {
-            location.href = "./wallet.html";
-            console.log("Login was successful - redirecting to wallet.html");
-        } else {
-            $('#pswd_info').show();
-        }
-    });
-
-    $(document).ready(function () {
-        let usr_val = null;
-        let pswd_val = null;
-        let usr = false;
-        let psw = false;
-
-        $('#btSubmit').click(function () {
-            ipcRenderer.send("verify-login-info", usr_val, pswd_val);
-            return false;
-        });
-
-        // username conditions
-        $('input[id=username]').keyup(function () {
-            usr_val = $(this).val();
-
-            // validate the length
-            if (usr_val.length >= 4) {
-                usr = true;
-            } else {
-                usr = false;
-            }
-        });
-
-        // pswd conditions
-        $('input[id=pswd]').keyup(function () {
-            pswd_val = $(this).val();
-
-            // validate the length
-            if (pswd_val.length >= 8) {
-                psw = true;
-            } else {
-                psw = false;
-            }
-        });
-
-        // activate submit button
-        $(':input[id="btSubmit"]').prop('disabled', true);
-        $('input[id="username"], input[id="pswd"]').keyup(function () {
-            if ($(this).val() !== '') {
-                if (usr && psw) {
-                    $(':input[id="btSubmit"]').prop('disabled', false);
-                }
-            }
-        });
-    });
-</script>
+   
 </body>
 </html>
