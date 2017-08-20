@@ -1,0 +1,169 @@
+/* Left panel */
+.leftWallet{
+    position: relative;
+    float: left;
+    margin: 5px 5px 5px 5px;
+    padding: 5px 5px;
+    width: 48.2%;
+    height: 600px;
+    border: 1px solid #c4cddb;
+    border-top-color: #d3dbde;
+    border-bottom-color: #bfc9dc;
+    background: #fefefe;
+    box-shadow: 0 1px 1px #ccc;
+    color: #888888;
+    font-size: 1.1em;
+}
+
+.addWalletButton{
+    padding: 4px 6px;
+    width: 18%;
+    outline: none;
+    border: 1px #fefefe solid;
+    background-color: #f88900;
+    color: #fefefe;
+    font-size: 0.8em;
+    transition: all 0.2s;
+}
+
+.balancesButtonHide{
+    padding: 4px 6px;
+    width: 30%;
+    outline: none;
+    border: 1px #fefefe solid;
+    background-color: #f82000;
+    color: #fefefe;
+    font-size: 0.8em;
+    transition: all 0.2s;
+
+}
+
+.balancesButtonHide:hover{
+    border: 1px #f82000 solid;
+    border-radius: 2px;
+    background-color: transparent;
+    color: #f82000;
+}
+
+.balancesButtonShow{
+    padding: 4px 6px;
+    width: 30%;
+    outline: none;
+    border: 1px #fefefe solid;
+    background-color: #00a820;
+    color: #fefefe;
+    font-size: 0.8em;
+    transition: all 0.2s;
+}
+
+
+.balancesButtonShow:hover{
+    border: 1px #00a820 solid;
+    border-radius: 2px;
+    background-color: transparent;
+    color: #00a820;
+}
+
+
+.sendButton{
+    margin: 15px;
+}
+
+.wallet_select {
+    outline:none;
+    background: #fefefe;
+    -webkit-appearance: none;
+}
+
+.wallet_select * {
+    outline:none;
+    background: #fefefe;
+    -webkit-appearance: none;
+}
+
+.wallet_select *:hover {
+    outline:none;
+    background: #f88900;
+    -webkit-appearance: none;
+}
+
+.wallet_labels{
+    width:10%;
+}
+
+#containerLeftWallet {
+    position: relative;
+    margin: 0 auto;
+    padding:5px;
+    background: transparent;
+    #padding: 10px 10px;
+}
+
+#walletList{
+    padding:5px;
+    font-size: 0.8em;
+}
+
+#walletListReceive{
+    display: block;
+    padding:5px;
+    font-size: 0.8em;
+}
+
+.walletListItem {
+    padding: 5px;
+}
+
+.walletListItemAddress {
+    display:inline-block;
+    width:70%;
+}
+
+.walletListItemBalance{
+    display:inline-block;
+    width:28%;
+    text-align: right;
+}
+
+.walletListItemTitle{
+    color: #f88900;
+    font-weight: 800;
+    font-size: 1.1em;
+}
+
+.walletListItemOdd{
+    background: #eeeeee;
+}
+
+
+
+
+/* Right Pannel */
+
+.rightTxHistory{
+    position: relative;
+    float: right;
+    margin: 5px 5px 5px auto;
+    padding: 5px 5px;
+    width:  48%;
+    height: 600px;
+    border: 1px solid #c4cddb;
+    border-top-color: #d3dbde;
+    border-bottom-color: #bfc9dc;
+    background: #fefefe;
+    box-shadow: 0 1px 1px #ccc;
+    color: #0d1006;
+}
+
+
+
+.rightTxHistoryTitle{
+    padding: 12px 15px;
+    outline: 0;
+    border: none;
+    border-bottom: 1px solid #f88900;
+    color: #888888; /* remove webkit focus styles */
+    font-size: 1.3em;
+    transition: all 0.4s;
+}
+

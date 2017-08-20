@@ -1,45 +1,57 @@
-body {
-    font-family:  "Raleway", "Lato", sans-serif;
-    color: #0d1006;
-    background: #edf1f4;
-    margin:0;
-}
-/*Orange: F88900
-Light Grey: CCB18E
-Dark Brown: 0D1006*/
+/*
+   Main styles file for whole APP
+*/
 
+
+/* Application */
+body {
+    margin:0;
+    background: #eeeeee;
+    color: #888888;
+    font-family:  "Raleway", "Lato", sans-serif;
+}
+
+.center{
+    text-align:center;
+}
+
+.right{
+    text-align:right;
+}
+
+/* Side navigation */
 .opennav {
-    font-size:25px;
     vertical-align: middle;
+    font-size:25px;
 }
 
 .opennav:hover {
-    font-size:25px;
-    vertical-align: middle;
     color: #f88900;
+    vertical-align: middle;
+    font-size:25px;
 }
 
 .sidenav {
-    height: 100%;
-    width: 0;
     position: fixed;
-    z-index: 2;
     top: 0;
     left: 0;
-    background-color: #fefefe;
+    z-index: 2;
     overflow-x: hidden;
-    transition: 0.5s;
     padding-top: 60px;
-    color: #888888;
+    width: 0;
+    height: 100%;
     border-right: 2px solid #f88900;
+    background-color: #fefefe;
+    color: #888888;
+    transition: 0.5s;
 }
 
 .sidenav a {
+    display: block;
     padding: 8px 8px 8px 32px;
+    color: #888888;
     text-decoration: none;
     font-size: 1.3em;
-    color: #888888;
-    display: block;
     transition: all 0.4s;
 }
 
@@ -51,13 +63,13 @@ Dark Brown: 0D1006*/
     position: absolute;
     top: 0;
     right: 25px;
-    font-size: 36px;
     margin-left: 50px;
+    font-size: 36px;
 }
 
 #sidenavIMG{
-    opacity:0;
     margin-top: 100px;
+    opacity:0;
     transition: all 0.4s;
     transition-delay: 0.5s;
 }
@@ -67,133 +79,101 @@ Dark Brown: 0D1006*/
     .sidenav a {font-size: 18px;}
 }
 
-div.leftWallet{
-    width: 48.2%;
-    float: left;
-    position: relative;
-    height: 600px;
-    font-size: 1.1em;
-    color: #888888;
-    background: #fefefe;
-    padding: 5px 5px;
-    margin: 5px 5px 5px 5px;
-    border: 1px solid #c4cddb;
-    border-top-color: #d3dbde;
-    border-bottom-color: #bfc9dc;
-    box-shadow: 0 1px 1px #ccc;
-
+#darkContainer{
+    position: fixed;
+    z-index: -1;
+    margin:0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000000;
+    opacity: 0;
+    transition: all 1.4s;
 }
 
-div.rightTxHistory{
-    padding: 5px 5px;
-    background: #fefefe;
-    margin: 5px 5px 5px auto;
-    border: 1px solid #c4cddb;
-    border-top-color: #d3dbde;
-    border-bottom-color: #bfc9dc;
-    box-shadow: 0 1px 1px #ccc;
-    position: relative;
-    width:  48%;
-    height: 600px;
-    float: right;
-    color: #0d1006;
+
+#about{
+    position:absolute;
+    top: 650px;
 }
 
+/* Header */
 #topHeader{
-    padding: 5px;
-    background: #fefefe;
+    position: relative;
     margin: 0 auto;
+    padding: 5px;
     border: 1px solid #c4cddb;
-    /*border-top-color: #d3dbde;*/
     border-top: none;
     border-bottom-color: #bfc9dc;
-    box-shadow: 0 1px 1px #ccc;
-    position: relative;
-    color: #0d1006;
-}
-
-#walletFooter{
-    padding: 5px;
     background: #fefefe;
-    /*margin: 0;*/
-    border: 1px solid #c4cddb;
-    border-bottom: none;
-    border-top-color: #bfc9dc;
     box-shadow: 0 1px 1px #ccc;
-    position: relative;
-    height:29px;
-    margin: 0 auto;
-    width:98.9%;
-    float:left;
     color: #0d1006;
 }
 
+/* Footer */
+#walletFooter{
+    position: absolute;
+    top:662px;
+    float:left;
+    margin: 0 auto;
+    padding: 10px 10px 10px 10px;
+    width: 1028px;
+    height:19px;
+    border: 1px solid #c4cddb;
+    border-top-color: #bfc9dc;
+    border-bottom: none;
+    background: #fefefe;
+    box-shadow: 0 1px 1px #ccc;
+    color: #888888;
+}
 
+/* Titles */
 .sectionTitle{
+    margin-bottom: 10px;
     padding: 10px 15px;
     border: none;
     border-bottom: 1px solid #f88900;
+    color: #888888;
     font-size: 1.1em;
     transition: all 0.4s;
-    color: #888888;
-    margin-bottom: 10px;
 }
 
-
+/* Forms */
 .buttons{
+    padding: 8px 15px;
     width: 32%;
-    background-color: #f88900;
+    outline: none;
     border: 1px #fefefe solid;
+    background-color: #f88900;
     color: #fefefe;
     font-size: 1em;
-    padding: 8px 15px;
-    outline: none;
     transition: all 0.2s;
 }
 
 .buttons:hover {
-    border-radius: 2px;
-    background-color: transparent;
     border: 1px #f88900 solid;
+    /*border-radius: 2px;*/
+    background-color: transparent;
     color: #f88900;
 }
 
 .buttons:active {
+    border: 1px #f88900 solid;
     border-radius: 2px;
     background-color: transparent;
-    border: 1px #f88900 solid;
     color: #f88900;
 }
 
-.sectionButton{
-    /*width: 25%;*/
-    background-color: #f88900;
-    border: 1px #fefefe solid;
-    color: #fefefe;
-    font-size: 0.8em;
-    padding: 4px 6px;
-    /*margin-left:222px;*/
-    outline: none;
-    transition: all 0.2s;
-}
-
-
-.sendButton{
-    margin: 15px;
-}
-
-
-
 .wallet_inputs{
-    padding: 10px 10px;
     margin-left: 5%;
-    border: none;
+    padding: 10px 10px;
+    width: 85%;
+    outline: 0;
+    border: none; /* 400 (#container) - 40 (li margins) -  10 (span paddings) - 20 (input paddings) - 2 (input borders) */
     border-bottom: 1px solid #888888;
-    width: 85%; /* 400 (#container) - 40 (li margins) -  10 (span paddings) - 20 (input paddings) - 2 (input borders) */
+    color: #888888; /* remove webkit focus styles */
     font-size: 1em;
-    outline: 0; /* remove webkit focus styles */
     transition: all 0.4s;
-    color: #888888;
 }
 
 .wallet_inputs:focus {
@@ -203,164 +183,6 @@ div.rightTxHistory{
     border-bottom: 3px solid #f88900;
 }
 
-.wallet_select {
-    outline:none;
-    background: #fefefe;
-    -webkit-appearance: none;
-}
-
-.wallet_select * {
-    outline:none;
-    background: #fefefe;
-    -webkit-appearance: none;
-}
-
-.wallet_select *:hover {
-    outline:none;
-    background: #f88900;
-    -webkit-appearance: none;
-}
-
-.wallet_labels{
-    width:10%;
-}
-
-.center{
-    text-align:center;
-}
-
-.rightTxHistoryTitle{
-    padding: 12px 15px;
-    border: none;
-    border-bottom: 1px solid #f88900;
-    font-size: 1.3em;
-    outline: 0; /* remove webkit focus styles */
-    transition: all 0.4s;
-    color: #888888;
-}
-
-#containerLeftWallet {
-    #padding: 10px 10px;
-    background: transparent;
-    margin: 0 auto;
-    padding:5px;
-    position: relative;
-}
 
 
-#darkContainer{
-    background-color: #000000;
-    height: 100%;
-    width: 100%;
-    margin:0;
-    padding: 0;
-    position: fixed;
-    z-index: -1;
-    opacity: 0;
-    transition: all 1.4s;
-}
 
-#about{
-    margin-top:80px;
-}
-
-/* Messenger*/
-#conversationContainer{
-    width: 70%;
-    height: 90%;
-    float: left;
-    font-size: 1.1em;
-    color: #888888;
-    padding: 5px 5px;
-}
-
-#ConversationContainerContact{
-    padding: 10px 10px;
-    background: #fefefe;
-    margin: 0 auto;
-    border: 1px solid #c4cddb;
-    border-top-color: #d3dbde;
-    border-bottom-color: #bfc9dc;
-    box-shadow: 0 1px 1px #ccc;
-    position: relative;
-}
-
-
-#conversationContainerMessages {
-    padding: 10px 10px;
-    background: #fefefe;
-    margin: 0 auto;
-    border: 1px solid #c4cddb;
-    border-top-color: #d3dbde;
-    border-bottom-color: #bfc9dc;
-    box-shadow: 0 1px 1px #ccc;
-    position: relative;
-}
-
-#conversationContainerForm {
-    padding: 10px 10px;
-    background: #fefefe;
-    margin: 5px auto 0;
-    border: 1px solid #c4cddb;
-    border-top-color: #d3dbde;
-    border-bottom-color: #bfc9dc;
-    box-shadow: 0 1px 1px #ccc;
-    position: relative;
-}
-
-.ConversationContainerMessagesClass {
-    padding: 10px 10px;
-    background: #fefefe;
-    margin: 0 auto;
-    border: 1px solid #c4cddb;
-    border-top-color: #d3dbde;
-    border-bottom-color: #bfc9dc;
-    box-shadow: 0 1px 1px #ccc;
-    position: relative;
-}
-
-
-#contactsContainer{
-    padding: 5px 5px;
-    background: #fefefe;
-    margin: 5px 5px 5px auto;
-    border: 1px solid #c4cddb;
-    border-top-color: #d3dbde;
-    border-bottom-color: #bfc9dc;
-    box-shadow: 0 1px 1px #ccc;
-    position: relative;
-    width: 27%;
-    height: 630px;
-    float: right;
-    color: #0d1006;
-}
-
-#walletList{
-    padding:5px;
-    font-size: 0.9em;
-}
-
-.walletListItem {
-    padding: 5px;
-}
-
-.walletListItemAddress {
-    width:70%;
-    display:inline-block;
-}
-
-.walletListItemBalance{
-    width:28%;
-    text-align: right;
-    display:inline-block;
-}
-
-.walletListItemTitle{
-    color: #f88900;
-    font-size: 1.1em;
-    font-weight: 800;
-}
-
-.walletListItemOdd{
-    background: #dddddd;
-}

@@ -59,14 +59,12 @@ function exitApp() {
 }
 
 function setButtonActive(className) {
-    document.getElementById(className).style.borderRadius = "2px";
     document.getElementById(className).style.backgroundColor = "transparent";
     document.getElementById(className).style.border = "1px #f88900 solid";
     document.getElementById(className).style.color = "#f88900";
 }
 
 function setButtonInactive(className) {
-    document.getElementById(className).style.borderRadius = "0px";
     document.getElementById(className).style.backgroundColor = "#f88900";
     document.getElementById(className).style.border = "1px #fefefe solid";
     document.getElementById(className).style.color = "#fefefe";
@@ -127,6 +125,17 @@ function setValueIfEmpty() {
     }
 }
 
+function hideBalances() {
+    if (document.getElementById("hideZeroBalancesButton").textContent === "Hide Zero Balances") {
+        document.getElementById("hideZeroBalancesButton").textContent = "Show Zero Balances";
+        document.getElementById("hideZeroBalancesButton").classList.remove("balancesButtonHide");
+        document.getElementById("hideZeroBalancesButton").classList.add("balancesButtonShow");
+    } else {
+        document.getElementById("hideZeroBalancesButton").textContent = "Hide Zero Balances";
+        document.getElementById("hideZeroBalancesButton").classList.remove("balancesButtonShow");
+        document.getElementById("hideZeroBalancesButton").classList.add("balancesButtonHide");
+    }
+}
 
 function send() {
     return 0;
