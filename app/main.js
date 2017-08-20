@@ -287,7 +287,7 @@ ipcMain.on("check-login-info", function (event, login, pass) {
             response: "ERR"
         };
     }
-    event.sender.send("verify-login-response", JSON.stringify(resp));
+    event.sender.send("check-login-response", JSON.stringify(resp));
 });
 
 ipcMain.on("do-logout", function (event) {
