@@ -26,6 +26,32 @@
 <div id="darkContainer">
 </div>
 
+<div id="addContactDialog">
+    <div class="right">
+        <a href="javascript:void(0)" class="closeAddContactDialog " onclick="closeDialog()">&times</a>
+    </div>
+    <div class="center">
+        <div class="sectionTitle">
+            Add Contact
+        </div>
+    </div>
+    <div class="padding50">
+        <label class="wallet_labels" for="newContactAddress">&nbsp;Address</label><br/>
+        <input id="newContactAddress" class="wallet_inputs" value="">
+        <br>
+        <label class="wallet_labels" for="newContactNickname">&nbsp;Nickname:</label><br/>
+        <input id="newContactNickname" class="wallet_inputs" value="">
+        <br>
+        <label class="wallet_labels" for="newContactName">&nbsp;Name:</label><br/>
+        <input id="newContactName" class="wallet_inputs" value="">
+        <div class="right">
+            <button class="buttons saveContactButton" onclick="saveContact()">Save contact</button>
+        </div>
+    </div>
+</div>
+
+
+
 <div id="topHeader" class="topHeader">
     <a class="opennav" onclick="openNav()">
         &nbsp;&#9776;
@@ -50,7 +76,7 @@
         <div class="contact contactOdd" title="Address: znbcHyStHjZdfWhZdZs5124fddggswf9481">Ironman <span class="contactName">- Anthony Stark</span></div>
     </div>
     <div>
-        <button class="buttons addContactButton" onclick="send()">Add Contact</button>
+        <button class="buttons addContactButton" onclick="addContactDialog()">Add Contact</button>
     </div>
 
 </div>

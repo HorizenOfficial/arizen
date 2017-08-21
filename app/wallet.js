@@ -11,7 +11,7 @@ function setButtonActive(className) {
 
 function setButtonInactive(className) {
     document.getElementById(className).style.backgroundColor = "#f88900";
-    document.getElementById(className).style.border = "1px #fefefe solid";
+    document.getElementById(className).style.border = "1px #f88900 solid";
     document.getElementById(className).style.color = "#fefefe";
 }
 
