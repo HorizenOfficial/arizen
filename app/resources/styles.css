@@ -143,11 +143,23 @@ body {
     padding: 8px 15px;
     width: 32%;
     outline: none;
-    border: 1px #fefefe solid;
     background-color: #f88900;
     color: #fefefe;
     font-size: 1em;
     transition: all 0.2s;
+    border-radius: 5px;
+    background-image: -webkit-linear-gradient(90deg,
+    rgba(255, 255, 255, .1) 0%,
+    transparent 0%,
+    transparent 50%,
+    rgba(255, 255, 255, .1) 50%,
+    rgba(255, 255, 255, .1) 100%,
+    transparent 100%,
+    transparent);
+    border: 1px solid #f88900;
+    border-top-color: #d3dbde;
+    border-bottom-color: #bfc9dc;
+    box-shadow: 0 1px 1px #aaa;
 }
 
 .buttons:hover {
@@ -169,16 +181,14 @@ body {
     padding: 10px 10px;
     width: 85%;
     outline: 0;
-    border: none; /* 400 (#container) - 40 (li margins) -  10 (span paddings) - 20 (input paddings) - 2 (input borders) */
-    border-bottom: 1px solid #888888;
-    color: #888888; /* remove webkit focus styles */
+    border: none;
+    color: #888888;
     font-size: 1em;
+    border-bottom: 1px solid #888888;
     transition: all 0.4s;
 }
 
 .wallet_inputs:focus {
-    /*width: 318px;*/
-    /*padding: 15px 15px;*/
     border:none;
     border-bottom: 3px solid #f88900;
 }

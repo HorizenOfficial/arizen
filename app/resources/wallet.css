@@ -19,7 +19,6 @@
     padding: 4px 6px;
     width: 18%;
     outline: none;
-    border: 1px #fefefe solid;
     background-color: #f88900;
     color: #fefefe;
     font-size: 0.8em;
@@ -30,8 +29,8 @@
     padding: 4px 6px;
     width: 30%;
     outline: none;
-    border: 1px #fefefe solid;
     background-color: #f82000;
+    border: 1px #f82000 solid;
     color: #fefefe;
     font-size: 0.8em;
     transition: all 0.2s;
@@ -40,7 +39,6 @@
 
 .balancesButtonHide:hover{
     border: 1px #f82000 solid;
-    border-radius: 2px;
     background-color: transparent;
     color: #f82000;
 }
@@ -49,8 +47,8 @@
     padding: 4px 6px;
     width: 30%;
     outline: none;
-    border: 1px #fefefe solid;
     background-color: #00a820;
+    border: 1px #00a820 solid;
     color: #fefefe;
     font-size: 0.8em;
     transition: all 0.2s;
@@ -59,7 +57,6 @@
 
 .balancesButtonShow:hover{
     border: 1px #00a820 solid;
-    border-radius: 2px;
     background-color: transparent;
     color: #00a820;
 }

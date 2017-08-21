@@ -56,7 +56,7 @@
 #contactList::-webkit-scrollbar-thumb
 {
     background-color: #cccccc;
-    background-image: -webkit-linear-gradient(70deg,
+    background-image: -webkit-linear-gradient(45deg,
     rgba(255, 255, 255, .2) 25%,
     transparent 25%,
     transparent 50%,
@@ -125,7 +125,7 @@
     padding: 10px 10px;
     width: 560px;
     height: 15px;
-
+    box-shadow: 0 1px 1px #aaa;
  }
 
 .messenger_input:focus{
@@ -139,13 +139,15 @@
 }
 
 .messenger_button{
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 8px;
+    padding-bottom: 12px;
     margin-left: 0;
     width: 80px;
     font-size: 1em;
     height: 36px;
     border: 1px #f88900 solid;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
 .messageFrom {
@@ -155,7 +157,6 @@
     color: #ffffff;
     background: #888888;
     border-radius: 5px;
-    background: linear-gradient(top, #f9d835, #f3961c);
 }
 
 /* creates triangle */
@@ -178,7 +179,6 @@
     background: #f88900;
     border: 1px solid #f88900;
     border-radius: 5px;
-    background: linear-gradient(top, #f9d835, #f3961c);
 }
 
 .messageTo:after {
@@ -232,4 +232,44 @@
     rgba(255, 255, 255, .2) 75%,
     transparent 75%,
     transparent)
+}
+
+#addContactDialog {
+    position: absolute;
+    z-index: -1;
+    background-color: #fefefe;
+    left: 162px;
+    width: 700px;
+    height: 400px;
+    top:100px;
+    padding: 5px;
+    border: 1px solid #c4cddb;
+    border-top-color: #d3dbde;
+    border-bottom-color: #bfc9dc;
+    box-shadow: 0 1px 1px #ccc;
+    opacity:0;
+    transition: 0.5s;
+}
+
+.padding50{
+    padding: 50px;
+}
+
+.saveContactButton{
+    margin-top:30px;
+}
+
+.closeAddContactDialog {
+    position: absolute;
+    top: 0;
+    right: 15px;
+    font-size: 30px;
+    color:#888888;
+    text-decoration: none;
+}
+
+
+.closeAddContactDialog:hover {
+    color:#f88900;
+
 }
