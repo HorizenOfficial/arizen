@@ -61,6 +61,15 @@ function getTmpPath() {
     return tmpPath;
 }
 
+function encryptWallet(inputBytes) {
+    // TODO: encrypt
+    return inputBytes;
+}
+
+function generateNewWallet() {
+    console.log("not implemented");
+}
+
 function createWindow() {
     const template = [
         {
@@ -219,7 +228,7 @@ app.on("before-quit", function () {
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
 
-ipcMain.on("write-login-info", function (event, login, pass) {
+ipcMain.on("write-login-info", function (event, login, pass, wallet) {
     let path = getLoginPath();
     let data;
     if (fs.existsSync(getLoginPath())) {
@@ -242,6 +251,20 @@ ipcMain.on("write-login-info", function (event, login, pass) {
         }
         console.log("The file was saved!");
     });
+    if (wallet !== "") {
+        if (fs.existsSync(wallet)) {
+            let walletBytes = fs.readFileSync(wallet);
+            let walletEncrypted = encryptWallet(walletBytes);
+            fs.writeFileSync("./wallets/walet.dat." + login, walletEncrypted, function (err) {
+                if (err) {
+                    return console.log(err);
+                }
+                console.log("The file was saved!");
+            });
+        }
+    } else {
+        generateNewWallet();
+    }
 });
 
 ipcMain.on("verify-login-info", function (event, login, pass) {
@@ -255,7 +278,7 @@ ipcMain.on("verify-login-info", function (event, login, pass) {
 
     if (user.length === 1 && user[0].login === login) {
         if (passwordHash.verify(pass, user[0].password)) {
-            fs.copy(getZenPath(), getTmpPath());
+            //fs.copy(getZenPath(), getTmpPath());
             loggedIn = true;
             resp = {
                 response: "OK"

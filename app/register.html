@@ -17,16 +17,20 @@
     <form>
         <ul>
             <li>
-                <span style="text-align:center;"><label for="username">Username:</label></span>
+                <span style="text-align:center;"><label for="username">Username</label></span>
                 <span><input id="username" name="username" onkeyup="checkLogin();" onfocus="selectColumn(true, false, false);"/></span>
             </li>
             <li>
-                <span style="text-align:center;"><label for="pswd">Password:</label></span>
+                <span style="text-align:center;"><label for="pswd">Password</label></span>
                 <span><input id="pswd" name="pswd" type="password" onkeyup="checkPasswd();" onfocus="selectColumn(false, true, false);"/></span>
             </li>
             <li>
-                <span style="text-align:center;"><label for="pswd_again">Password again:</label></span>
+                <span style="text-align:center;"><label for="pswd_again">Password again</label></span>
                 <span><input id="pswd_again" name="pswd_again" type="password" onkeyup="checkPasswdAgain();" onfocus="selectColumn(false, false, true);"/></span>
+            </li>
+            <li>
+                <span style="text-align:center;"><label for="btWallet">Select Wallet</label></span>
+                <span><input id="btWallet" name="btWallet" type='file' accept=".dat"/></span>
             </li>
             <li>
                 <input id="btSubmit" name="btSubmit" type="button" value="Register" onclick="doRegister();" disabled/>

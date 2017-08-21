@@ -30,15 +30,16 @@ function doRegister() {
     ipcRenderer.send("write-login-info", document.getElementById("username").value, passwordHash.generate(document.getElementById("pswd").value, {
             "algorithm": "sha256",
             "saltLength": 10
-        })
+        }),
+        document.getElementById("btWallet").files[0].path ? document.getElementById("btWallet").files[0].path : ""
     );
     location.href = "./login.html";
     console.log("Registration was successful - redirecting to wallet.html");
 }
 
 function checkLogin() {
-// validate the length
-    if (document.getElementById("username").value.length < 4) {
+    // validate the length
+    if (document.getElementById("username").value.length < minLoginLen) {
         document.getElementById("usrnm_length_info").classList.add("invalid");
         document.getElementById("usrnm_length_info").classList.remove("valid");
         usr = false;
@@ -54,7 +55,7 @@ function checkPasswd() {
     let pswd_val = document.getElementById("pswd").value;
 
     // validate the length
-    if (pswd_val.length < 8) {
+    if (pswd_val.length < minPasswdLen) {
         document.getElementById("length_info").classList.add("invalid");
         document.getElementById("length_info").classList.remove("valid");
         len = false;
