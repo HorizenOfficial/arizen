@@ -10,6 +10,8 @@ const path = require("path");
 const url = require("url");
 const os = require("os");
 const fs = require("fs-extra");
+const passwordHash = require("password-hash");
+const crypto = require("crypto");
 const updater = require("electron-simple-updater");
 updater.init({checkUpdateOnStart: true, autoDownload: true,
         url: "https://raw.githubusercontent.com/ZencashOfficial/arizen/master/updates.json"});
@@ -18,9 +20,14 @@ updater.init({checkUpdateOnStart: true, autoDownload: true,
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
 let loggedIn = false;
+let walletDecrypted;
 
 function getLoginPath() {
     return getRootConfigPath() + "login.txt";
+}
+
+function getWalletPath() {
+    return getRootConfigPath() + "wallets/";
 }
 
 function getRootConfigPath() {
@@ -61,13 +68,40 @@ function getTmpPath() {
     return tmpPath;
 }
 
-function encryptWallet(inputBytes) {
-    // TODO: encrypt
-    return inputBytes;
+function encryptWallet(login, password, inputBytes) {
+    let iv = crypto.randomBytes(64);
+    let salt = crypto.randomBytes(64);
+    let key = crypto.pbkdf2Sync(password, salt, 2145, 32, "sha512");
+    let cipher = crypto.createCipheriv("aes-256-gcm", key, iv)
+    let encrypted = Buffer.concat([cipher.update(Buffer.from(login, "utf8")), cipher.update(inputBytes), cipher.final()]);
+
+    return Buffer.concat([salt, iv, cipher.getAuthTag(), encrypted]);
 }
 
-function generateNewWallet() {
-    console.log("not implemented");
+function decryptWallet(login, password) {
+    let inputBytes = fs.readFileSync(getWalletPath() + "wallet.dat." + login);
+    let outputBytes;
+    let salt = inputBytes.slice(0, 64);
+    let iv = inputBytes.slice(64, 128);
+    let tag = inputBytes.slice(128, 144);
+    let encrypted = inputBytes.slice(144);
+    let key = crypto.pbkdf2Sync(password, salt , 2145, 32, "sha512");
+    let decipher = crypto.createDecipheriv("aes-256-gcm", key, iv);
+
+    decipher.setAuthTag(tag);
+    outputBytes = decipher.update(encrypted) + decipher.final();
+
+    let recoveredLogin = outputBytes.slice(0,login.length).toString("utf8");
+    if (login === recoveredLogin)
+    {
+        return outputBytes.slice(login.length);
+    } else {
+        return null;
+    }
+}
+
+function generateNewWallet(login, password) {
+    fs.writeFileSync(getWalletPath() + "wallet.dat." + login, "TESTING ONLY!");
 }
 
 function createWindow() {
@@ -231,21 +265,26 @@ app.on("before-quit", function () {
 ipcMain.on("write-login-info", function (event, login, pass, wallet) {
     let path = getLoginPath();
     let data;
+    let passHash = passwordHash.generate(pass, {
+        "algorithm": "sha256",
+        "saltLength": 10
+    });
+
     if (fs.existsSync(getLoginPath())) {
-        data = JSON.parse(fs.readFileSync(path, 'utf8'));
+        data = JSON.parse(fs.readFileSync(path, "utf8"));
         data.users.push({
             login: login,
-            password: pass
+            password: passHash
         });
     } else {
         data = {
             users: [{
                 login: login,
-                password: pass
+                password: passHash
             }]
         };
     }
-    fs.writeFileSync(path, JSON.stringify(data), 'utf8', function (err) {
+    fs.writeFileSync(path, JSON.stringify(data), "utf8", function (err) {
         if (err) {
             return console.log(err);
         }
@@ -254,8 +293,11 @@ ipcMain.on("write-login-info", function (event, login, pass, wallet) {
     if (wallet !== "") {
         if (fs.existsSync(wallet)) {
             let walletBytes = fs.readFileSync(wallet);
-            let walletEncrypted = encryptWallet(walletBytes);
-            fs.writeFileSync("./wallets/walet.dat." + login, walletEncrypted, function (err) {
+            let walletEncrypted = encryptWallet(login, pass, walletBytes);
+            if (!fs.existsSync(getWalletPath())) {
+                fs.mkdirSync(getWalletPath());
+            }
+            fs.writeFileSync(getWalletPath() + "wallet.dat." + login, walletEncrypted, function (err) {
                 if (err) {
                     return console.log(err);
                 }
@@ -270,7 +312,6 @@ ipcMain.on("write-login-info", function (event, login, pass, wallet) {
 ipcMain.on("verify-login-info", function (event, login, pass) {
     let path = getLoginPath();
     let data = JSON.parse(fs.readFileSync(path, 'utf8'));
-    let passwordHash = require('password-hash');
     let resp;
     let user = data.users.filter(function (user) {
         return user.login === login;
@@ -278,7 +319,7 @@ ipcMain.on("verify-login-info", function (event, login, pass) {
 
     if (user.length === 1 && user[0].login === login) {
         if (passwordHash.verify(pass, user[0].password)) {
-            //fs.copy(getZenPath(), getTmpPath());
+            walletDecrypted = decryptWallet(login, pass);
             loggedIn = true;
             resp = {
                 response: "OK"
@@ -314,8 +355,8 @@ ipcMain.on("check-login-info", function (event, login, pass) {
 });
 
 ipcMain.on("do-logout", function (event) {
-    fs.removeSync(getTmpPath());
     loggedIn = false;
+    walletDecrypted = [];
 });
 
 ipcMain.on("exit-from-menu", function (event) {
