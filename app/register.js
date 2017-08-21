@@ -25,10 +25,9 @@ function checkLoginInfo() {
 }
 
 function doRegister() {
-    let passwordHash = require('password-hash');
+    let passwordHash = require("password-hash");
 
-    ipcRenderer.send("write-login-info", document.getElementById("username").value, 
-        passwordHash.generate(document.getElementById("pswd").value, {
+    ipcRenderer.send("write-login-info", document.getElementById("username").value, passwordHash.generate(document.getElementById("pswd").value, {
             "algorithm": "sha256",
             "saltLength": 10
         })
@@ -40,12 +39,12 @@ function doRegister() {
 function checkLogin() {
 // validate the length
     if (document.getElementById("username").value.length < 4) {
-        document.getElementById("usrnm_length_info").classList.add('invalid');
-        document.getElementById("usrnm_length_info").classList.remove('valid');
+        document.getElementById("usrnm_length_info").classList.add("invalid");
+        document.getElementById("usrnm_length_info").classList.remove("valid");
         usr = false;
     } else {
-        document.getElementById("usrnm_length_info").classList.add('valid');
-        document.getElementById("usrnm_length_info").classList.remove('invalid');
+        document.getElementById("usrnm_length_info").classList.add("valid");
+        document.getElementById("usrnm_length_info").classList.remove("invalid");
         usr = true;
     }
     checkLoginInfo();
@@ -56,56 +55,56 @@ function checkPasswd() {
 
     // validate the length
     if (pswd_val.length < 8) {
-        document.getElementById("length_info").classList.add('invalid');
-        document.getElementById("length_info").classList.remove('valid');
+        document.getElementById("length_info").classList.add("invalid");
+        document.getElementById("length_info").classList.remove("valid");
         len = false;
     } else {
-        document.getElementById("length_info").classList.add('valid');
-        document.getElementById("length_info").classList.remove('invalid');
+        document.getElementById("length_info").classList.add("valid");
+        document.getElementById("length_info").classList.remove("invalid");
         len = true;
     }
 
     // validate letter
     if (pswd_val.match(/[A-z]/)) {
-        document.getElementById("letter_info").classList.add('valid');
-        document.getElementById("letter_info").classList.remove('invalid');
+        document.getElementById("letter_info").classList.add("valid");
+        document.getElementById("letter_info").classList.remove("invalid");
         lett = true;
     } else {
-        document.getElementById("letter_info").classList.add('invalid');
-        document.getElementById("letter_info").classList.remove('valid');
+        document.getElementById("letter_info").classList.add("invalid");
+        document.getElementById("letter_info").classList.remove("valid");
         lett = false;
     }
 
     // validate capital letter
     if (pswd_val.match(/[A-Z]/)) {
-        document.getElementById("capital_info").classList.add('valid');
-        document.getElementById("capital_info").classList.remove('invalid');
+        document.getElementById("capital_info").classList.add("valid");
+        document.getElementById("capital_info").classList.remove("invalid");
         capl = true;
     } else {
-        document.getElementById("capital_info").classList.add('invalid');
-        document.getElementById("capital_info").classList.remove('valid');
+        document.getElementById("capital_info").classList.add("invalid");
+        document.getElementById("capital_info").classList.remove("valid");
         capl = false;
     }
 
     // validate number
     if (pswd_val.match(/\d/)) {
-        document.getElementById("number_info").classList.add('valid');
-        document.getElementById("number_info").classList.remove('invalid');
+        document.getElementById("number_info").classList.add("valid");
+        document.getElementById("number_info").classList.remove("invalid");
         num = true;
     } else {
-        document.getElementById("number_info").classList.add('invalid');
-        document.getElementById("number_info").classList.remove('valid');
+        document.getElementById("number_info").classList.add("invalid");
+        document.getElementById("number_info").classList.remove("valid");
         num = false;
     }
 
     // validate special character
-    if (pswd_val.match(/[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/@#]/)) {
-        document.getElementById("special_info").classList.add('valid');
-        document.getElementById("special_info").classList.remove('invalid');
+    if (pswd_val.match(/[-!$%^&*()_+|~=`{}\[\]:";"<>?,.\/@#]/)) {
+        document.getElementById("special_info").classList.add("valid");
+        document.getElementById("special_info").classList.remove("invalid");
         spec = true;
     } else {
-        document.getElementById("special_info").classList.add('invalid');
-        document.getElementById("special_info").classList.remove('valid');
+        document.getElementById("special_info").classList.add("invalid");
+        document.getElementById("special_info").classList.remove("valid");
         spec = false;
     }
     checkLoginInfo();
@@ -113,12 +112,12 @@ function checkPasswd() {
 
 function checkPasswdAgain() {
     if (document.getElementById("pswd").value === document.getElementById("pswd_again").value) {
-        document.getElementById("identical_info").classList.add('valid');
-        document.getElementById("identical_info").classList.remove('invalid');
+        document.getElementById("identical_info").classList.add("valid");
+        document.getElementById("identical_info").classList.remove("invalid");
         ide = true;
     } else {
-        document.getElementById("identical_info").classList.add('invalid');
-        document.getElementById("identical_info").classList.remove('valid');
+        document.getElementById("identical_info").classList.add("invalid");
+        document.getElementById("identical_info").classList.remove("valid");
         ide = false;
     }
     checkLoginInfo();

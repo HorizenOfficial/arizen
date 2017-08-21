@@ -21,7 +21,7 @@ function doLogin() {
     ipcRenderer.send("verify-login-info", document.getElementById("username").value, document.getElementById("pswd").value);
 }
 
-ipcRenderer.on('verify-login-response', function (event, resp) {
+ipcRenderer.on("verify-login-response", function (event, resp) {
     let data = JSON.parse(resp);
 
     if (data.response === "OK") {
