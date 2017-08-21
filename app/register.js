@@ -25,12 +25,7 @@ function checkLoginInfo() {
 }
 
 function doRegister() {
-    let passwordHash = require("password-hash");
-
-    ipcRenderer.send("write-login-info", document.getElementById("username").value, passwordHash.generate(document.getElementById("pswd").value, {
-            "algorithm": "sha256",
-            "saltLength": 10
-        }),
+    ipcRenderer.send("write-login-info", document.getElementById("username").value, document.getElementById("pswd").value,
         document.getElementById("btWallet").files[0].path ? document.getElementById("btWallet").files[0].path : ""
     );
     location.href = "./login.html";
