@@ -5,8 +5,8 @@
 
 const electron = require("electron");
 const {ipcRenderer} = electron;
-const minLoginLen = 0;
-const minPasswdLen = 0;
+const minLoginLen = 4;
+const minPasswdLen = 8;
 
 let usr = false;
 let len = false;
