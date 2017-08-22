@@ -26,7 +26,7 @@ function checkLoginInfo() {
 
 function doRegister() {
     ipcRenderer.send("write-login-info", document.getElementById("username").value, document.getElementById("pswd").value,
-        document.getElementById("btWallet").files[0].path ? document.getElementById("btWallet").files[0].path : ""
+        (document.getElementById("btWallet").files.length > 0) ? document.getElementById("btWallet").files[0].path : ""
     );
     location.href = "./login.html";
     console.log("Registration was successful - redirecting to wallet.html");
