@@ -19,6 +19,10 @@ body {
     text-align:right;
 }
 
+.padding25{
+    padding: 25px;
+}
+
 /* Side navigation */
 .opennav {
     vertical-align: middle;

@@ -85,3 +85,21 @@ function hideBalances() {
 function send() {
     return 0;
 }
+
+function addWalletDialog() {
+    document.getElementById("darkContainer").style.transition = "0.5s";
+    document.getElementById("darkContainer").style.zIndex = "1";
+    document.getElementById("darkContainer").style.opacity = "0.7";
+    document.getElementById("addWalletDialog").style.zIndex = "2";
+    document.getElementById("addWalletDialog").style.opacity = "1";
+}
+
+function closeDialog() {
+    document.getElementById("darkContainer").style.transition = "0s";
+    document.getElementById("darkContainer").style.opacity = "0";
+    document.getElementById("darkContainer").style.zIndex = "-1";
+    document.getElementById("addWalletDialog").style.zIndex = "-1";
+    document.getElementById("addWalletDialog").style.opacity = "0";
+
+
+}
