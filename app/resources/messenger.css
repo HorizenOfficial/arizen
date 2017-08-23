@@ -240,7 +240,7 @@
     background-color: #fefefe;
     left: 162px;
     width: 700px;
-    height: 400px;
+    height: 350px;
     top:100px;
     padding: 5px;
     border: 1px solid #c4cddb;
@@ -271,5 +271,4 @@
 
 .closeAddContactDialog:hover {
     color:#f88900;
-
 }

@@ -164,3 +164,37 @@
     transition: all 0.4s;
 }
 
+#addWalletDialog {
+    position: absolute;
+    z-index: -1;
+    background-color: #fefefe;
+    left: 162px;
+    width: 700px;
+    height: 250px;
+    top:170px;
+    padding: 5px;
+    border: 1px solid #c4cddb;
+    border-top-color: #d3dbde;
+    border-bottom-color: #bfc9dc;
+    box-shadow: 0 1px 1px #ccc;
+    opacity:0;
+    transition: 0.5s;
+}
+
+.generateWalletButton{
+    margin-top:30px;
+}
+
+.closeAddWalletDialog {
+    position: absolute;
+    top: 0;
+    right: 15px;
+    font-size: 30px;
+    color:#888888;
+    text-decoration: none;
+}
+
+
+.closeAddWalletDialog:hover {
+    color:#f88900;
+}

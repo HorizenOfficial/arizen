@@ -27,6 +27,27 @@
 <div id="darkContainer">
 </div>
 
+<div id="addWalletDialog">
+    <div class="right">
+        <a href="javascript:void(0)" class="closeAddWalletDialog " onclick="closeDialog()">&times</a>
+    </div>
+    <div class="center">
+        <div class="sectionTitle">
+            Add Wallet
+        </div>
+    </div>
+    <div class="padding25">
+        <label class="wallet_labels" for="newWalletAddress">&nbsp;Address</label><br/>
+        <input id="newWalletAddress" class="wallet_inputs" value="" readonly>
+        <br>
+        <div class="right">
+            <button class="buttons generateWalletButton" onclick="generateNewWallet()">Generate</button>
+        </div>
+    </div>
+</div>
+
+
+
 <div id="topHeader" class="topHeader">
     <a class="opennav" onclick="openNav()">
         &nbsp;&#9776;
@@ -50,7 +71,7 @@
             </div>
             <div class="right">
                 <button class="buttons balancesButtonShow" onclick="hideBalances()" id="hideZeroBalancesButton">Show Zero Balances</button>
-                <button class="buttons addWalletButton" onclick="addWallet()" id="addWalletButton">New Wallet</button>
+                <button class="buttons addWalletButton" onclick="addWalletDialog()" id="addWalletButton">New Wallet</button>
             </div>
             <div id="walletList">
                 <div class="walletListItem">
