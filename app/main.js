@@ -23,7 +23,7 @@ let loggedIn = false;
 let walletDecrypted;
 
 function getLoginPath() {
-    return getRootConfigPath() + "login.txt";
+    return getRootConfigPath() + "users.arizen";
 }
 
 function getWalletPath() {
@@ -271,11 +271,11 @@ ipcMain.on("write-login-info", function (event, login, pass, wallet) {
     let path = getLoginPath();
     let data;
     let passHash = passwordHash.generate(pass, {
-        "algorithm": "sha256",
-        "saltLength": 10
+        "algorithm": "sha512",
+        "saltLength": 32
     });
 
-    if (fs.existsSync(getLoginPath())) {
+    if (fs.existsSync(path)) {
         data = JSON.parse(fs.readFileSync(path, "utf8"));
         data.users.push({
             login: login,
@@ -289,24 +289,24 @@ ipcMain.on("write-login-info", function (event, login, pass, wallet) {
             }]
         };
     }
-    fs.writeFileSync(path, JSON.stringify(data), "utf8", function (err) {
+    fs.writeFileSync(path, JSON.stringify(data), function (err) {
         if (err) {
             return console.log(err);
         }
-        console.log("The file was saved!");
     });
-    if (!fs.existsSync(getWalletPath())) {
-        fs.mkdirSync(getWalletPath());
+
+    path = getWalletPath();
+    if (!fs.existsSync(path)) {
+        fs.mkdirSync(path);
     }
     if (wallet !== "") {
         if (fs.existsSync(wallet)) {
             let walletBytes = fs.readFileSync(wallet);
             let walletEncrypted = encryptWallet(login, pass, walletBytes);
-            fs.writeFileSync(getWalletPath() + "wallet.dat." + login, walletEncrypted, function (err) {
+            fs.writeFileSync(path + "wallet.dat." + login, walletEncrypted, function (err) {
                 if (err) {
                     return console.log(err);
                 }
-                console.log("The file was saved!");
             });
         }
     } else {
@@ -316,7 +316,7 @@ ipcMain.on("write-login-info", function (event, login, pass, wallet) {
 
 ipcMain.on("verify-login-info", function (event, login, pass) {
     let path = getLoginPath();
-    let data = JSON.parse(fs.readFileSync(path, 'utf8'));
+    let data = JSON.parse(fs.readFileSync(path, "utf8"));
     let resp;
     let user = data.users.filter(function (user) {
         return user.login === login;
