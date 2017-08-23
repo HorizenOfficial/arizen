@@ -69,39 +69,44 @@ function getTmpPath() {
 }
 
 function encryptWallet(login, password, inputBytes) {
-    let iv = crypto.randomBytes(64);
+    let iv = Buffer.concat([Buffer.from(login, "utf8"), crypto.randomBytes(64)]);
     let salt = crypto.randomBytes(64);
     let key = crypto.pbkdf2Sync(password, salt, 2145, 32, "sha512");
     let cipher = crypto.createCipheriv("aes-256-gcm", key, iv)
-    let encrypted = Buffer.concat([cipher.update(Buffer.from(login, "utf8")), cipher.update(inputBytes), cipher.final()]);
+    let encrypted = Buffer.concat([cipher.update(inputBytes), cipher.final()]);
 
-    return Buffer.concat([salt, iv, cipher.getAuthTag(), encrypted]);
+    return Buffer.concat([iv, salt, cipher.getAuthTag(), encrypted]);
 }
 
 function decryptWallet(login, password) {
+    let i = login.length;
     let inputBytes = fs.readFileSync(getWalletPath() + "wallet.dat." + login);
-    let outputBytes;
-    let salt = inputBytes.slice(0, 64);
-    let iv = inputBytes.slice(64, 128);
-    let tag = inputBytes.slice(128, 144);
-    let encrypted = inputBytes.slice(144);
-    let key = crypto.pbkdf2Sync(password, salt , 2145, 32, "sha512");
-    let decipher = crypto.createDecipheriv("aes-256-gcm", key, iv);
+    let outputBytes = [];
+    let recoveredLogin = inputBytes.slice(0, i).toString("utf8");
 
-    decipher.setAuthTag(tag);
-    outputBytes = decipher.update(encrypted) + decipher.final();
-
-    let recoveredLogin = outputBytes.slice(0,login.length).toString("utf8");
     if (login === recoveredLogin)
     {
-        return outputBytes.slice(login.length);
-    } else {
-        return null;
+        let iv = inputBytes.slice(0, i + 64);
+        i += 64;
+        let salt = inputBytes.slice(i, i + 64);
+        i += 64;
+        let tag = inputBytes.slice(i, i + 16);
+        i += 16;
+        let encrypted = inputBytes.slice(i);
+        let key = crypto.pbkdf2Sync(password, salt , 2145, 32, "sha512");
+        let decipher = crypto.createDecipheriv("aes-256-gcm", key, iv);
+
+        decipher.setAuthTag(tag);
+        outputBytes = decipher.update(encrypted);
+        /* FIXME: handle error */
+        outputBytes += decipher.final();
     }
+
+    return outputBytes;
 }
 
 function generateNewWallet(login, password) {
-    fs.writeFileSync(getWalletPath() + "wallet.dat." + login, "TESTING ONLY!");
+    fs.writeFileSync(getWalletPath() + "wallet.dat." + login, encryptWallet(login, password, Buffer.from("TESTING ONLY!", "utf8")));
 }
 
 function createWindow() {
@@ -290,13 +295,13 @@ ipcMain.on("write-login-info", function (event, login, pass, wallet) {
         }
         console.log("The file was saved!");
     });
+    if (!fs.existsSync(getWalletPath())) {
+        fs.mkdirSync(getWalletPath());
+    }
     if (wallet !== "") {
         if (fs.existsSync(wallet)) {
             let walletBytes = fs.readFileSync(wallet);
             let walletEncrypted = encryptWallet(login, pass, walletBytes);
-            if (!fs.existsSync(getWalletPath())) {
-                fs.mkdirSync(getWalletPath());
-            }
             fs.writeFileSync(getWalletPath() + "wallet.dat." + login, walletEncrypted, function (err) {
                 if (err) {
                     return console.log(err);
@@ -305,7 +310,7 @@ ipcMain.on("write-login-info", function (event, login, pass, wallet) {
             });
         }
     } else {
-        generateNewWallet();
+        generateNewWallet(login, pass);
     }
 });
 
@@ -320,10 +325,18 @@ ipcMain.on("verify-login-info", function (event, login, pass) {
     if (user.length === 1 && user[0].login === login) {
         if (passwordHash.verify(pass, user[0].password)) {
             walletDecrypted = decryptWallet(login, pass);
-            loggedIn = true;
-            resp = {
-                response: "OK"
-            };
+            if (walletDecrypted.length > 0)
+            {
+                loggedIn = true;
+                resp = {
+                    response: "OK"
+                };
+            } else {
+                loggedIn = false;
+                resp = {
+                    response: "ERR"
+                };
+            }
         } else {
             loggedIn = false;
             resp = {
