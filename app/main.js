@@ -375,10 +375,9 @@ ipcMain.on("do-logout", function (event) {
 ipcMain.on("exit-from-menu", function (event) {
     // On macOS it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q
-    // if (process.platform !== "darwin") {
-    //     app.quit()
-    // }
-    app.quit()
+    if (process.platform !== "darwin") {
+        app.quit()
+    }
 });
 
 // ipcMain.on("get-password", function (event, user) {
