@@ -1,7 +1,7 @@
 body {
     background: #edf1f4;
     font-family: "Segoe UI", Candara, "Bitstream Vera Sans", "DejaVu Sans", "Bitstream Vera Sans", "Trebuchet MS", Verdana, "Verdana Ref", sans serif;
-    font-size: 16px;
+    font-size: 15px;
     color: #444;
 }
 
@@ -10,6 +10,11 @@ ul, li {
     padding: 0;
     list-style-type: none;
 }
+
+.right{
+    text-align:right;
+}
+
 
 #topHeader{
     padding: 0 0 60px;
@@ -49,7 +54,7 @@ form ul li:last-child {
     margin: 20px 0 25px 0;
 }
 
-input {
+.inputs {
     padding: 10px 10px;
     border: none;
     border-bottom: 1px solid #888888;
@@ -62,15 +67,13 @@ input {
     color: #888888;
 }
 
-input[type="text"]:focus {
+.inputs:focus {
     width: 318px;
     padding: 15px 15px;
     border:none;
     border-bottom: 3px solid #f88900;
-    #border-top-color: #b6d5ea;
-    #border-bottom-color: #b8d4ea;
-    #box-shadow: 0 0 5px #b9d4e9;
 }
+
 
 label {
     font-size: 1.3em;
@@ -85,42 +88,60 @@ label {
     margin-top: 5px;
 }
 
-input[type="button"] {
-    background-color: #f88900;
-    border: 1px #fff solid;
-    color: #ffffff;
-    font-size: 1.3em;
+.buttons{
     padding: 8px 15px;
-    width: 328px;
+    width: 50%;
+    outline: none;
+    background-color: #f88900;
+    color: #fefefe;
+    font-size: 1em;
     transition: all 0.2s;
-    margin-top: 20px;
+    border-radius: 5px;
+    background-image: -webkit-linear-gradient(90deg,
+    rgba(255, 255, 255, .1) 0%,
+    transparent 0%,
+    transparent 50%,
+    rgba(255, 255, 255, .1) 50%,
+    rgba(255, 255, 255, .1) 100%,
+    transparent 100%,
+    transparent);
+    border: 1px solid #f88900;
+    border-top-color: #d3dbde;
+    border-bottom-color: #bfc9dc;
+    box-shadow: 0 1px 1px #aaa;
 }
 
-input[type="button"]:hover{
-    border-radius: 2px;
-    background-color: transparent;
+.buttons:hover {
     border: 1px #f88900 solid;
+    background-color: transparent;
     color: #f88900;
 }
 
-input[type="button"]:active {
-    border-radius: 2px;
-    background-color: transparent;
+.buttons:active {
     border: 1px #f88900 solid;
+    background-color: transparent;
     color: #f88900;
+}
+
+.buttons:focus {
+    border: 1px #f88900 solid;
+    background-color: transparent;
+    color: #f88900;
+    width: 50%;
 }
 
 #username_info {
     position: absolute;
-    bottom: -48px;
-    right: 55px;
+    bottom: 330px;
+    right: -292px;
     width: 250px;
     padding: 15px;
     background: #fefefe;
     font-size: .875em;
-    border-radius: 5px;
-    box-shadow: 0 1px 3px #ccc;
-    border: 1px solid #ddd;
+    border: 1px solid #c4cddb;
+    border-top-color: #d3dbde;
+    border-bottom-color: #bfc9dc;
+    box-shadow: 0 1px 1px #ccc;
 }
 
 #username_info h4 {
@@ -130,29 +151,29 @@ input[type="button"]:active {
 }
 
 #username_info::before {
-    content: "\25B2";
+    content: "\25C0";
     position: absolute;
-    top: -12px;
-    left: 45%;
+    left: -12px;
+    top: 45%;
     font-size: 14px;
     line-height: 14px;
-    color: #ddd;
+    color: #f88900;
     text-shadow: none;
     display: block;
 }
 
 #pswd_info {
     position: absolute;
-    bottom: -144px;
-    /*bottom: -115px \9; /* IE Specific */
-    right: 55px;
+    bottom: 185px;
+    right: -292px;
     width: 250px;
     padding: 15px;
     background: #fefefe;
     font-size: .875em;
-    border-radius: 5px;
-    box-shadow: 0 1px 3px #ccc;
-    border: 1px solid #ddd;
+    border: 1px solid #c4cddb;
+    border-top-color: #d3dbde;
+    border-bottom-color: #bfc9dc;
+    box-shadow: 0 1px 1px #ccc;
 }
 
 #pswd_info h4 {
@@ -162,28 +183,29 @@ input[type="button"]:active {
 }
 
 #pswd_info::before {
-    content: "\25B2";
+    content: "\25C0";
+    color: #f88900;
     position: absolute;
-    top: -12px;
-    left: 45%;
+    top: 45%;
+    left: -12px;
     font-size: 14px;
     line-height: 14px;
-    color: #ddd;
     text-shadow: none;
     display: block;
 }
 
 #pswd_identical_info {
     position: absolute;
-    bottom: -48px;
-    right: 55px;
+    bottom: 145px;
+    right: -292px;
     width: 250px;
     padding: 15px;
     background: #fefefe;
     font-size: .875em;
-    border-radius: 5px;
-    box-shadow: 0 1px 3px #ccc;
-    border: 1px solid #ddd;
+    border: 1px solid #c4cddb;
+    border-top-color: #d3dbde;
+    border-bottom-color: #bfc9dc;
+    box-shadow: 0 1px 1px #ccc;
 }
 
 #pswd_identical_info h4 {
@@ -193,13 +215,13 @@ input[type="button"]:active {
 }
 
 #pswd_identical_info::before {
-    content: "\25B2";
+    content: "\25C0";
     position: absolute;
-    top: -12px;
-    left: 45%;
+    left: -12px;
+    top: 45%;
     font-size: 14px;
     line-height: 14px;
-    color: #ddd;
+    color: #f88900;
     text-shadow: none;
     display: block;
 }
