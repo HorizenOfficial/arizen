@@ -17,19 +17,19 @@
         <ul>
             <li>
                 <span style="text-align:center;"><label for="username">Username</label></span>
-                <span><input id="username" name="username" onkeyup="checkLoginInfo();"/></span>
+                <span><input id="username" class="inputs" name="username" onkeyup="checkLoginInfo();"/></span>
             </li>
             <li>
                 <span style="text-align:center;"><label for="pswd">Password</label></span>
-                <span><input id="pswd" name="pswd" type="password" onkeyup="checkLoginInfo();"/></span>
+                <span><input id="pswd" class="inputs" name="pswd" type="password" onkeyup="checkLoginInfo();"/></span>
             </li>
             <li>
-                <input id="btSubmit" name="btSubmit" type="button" value="Login" onclick="doLogin();" disabled/>
+                <input id="btSubmit" class="buttons" name="btSubmit" type="button" value="Login" onclick="doLogin();" disabled/>
             </li>
         </ul>
-        <span style="text-align:center;">
+        <div class="right">
             <a href="./register.html" class="register_link">register</a>
-        </span>
+        </div>
     </form>
     <div id="pswd_info">
         <ul>

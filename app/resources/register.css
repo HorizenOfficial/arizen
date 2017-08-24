@@ -1,0 +1,40 @@
+#btWallet {
+    font-size: 0.7em;
+}
+
+.btWalletButtonClass{
+    margin-top: 0;
+    padding: 5px 15px;
+    width: 25%;
+    margin-left: 40%;
+    font-size: 0.8em;
+}
+
+.btWalletButtonClass:hover{
+    width: 25%;
+    font-size: 0.8em;
+}
+
+
+.btWalletButtonClass:active{
+    width: 25%;
+    font-size: 0.8em;
+}
+
+.btWalletButtonClass:focus{
+    width: 25%;
+    font-size: 0.8em;
+}
+
+.marginLeft5p{
+    margin-left:5%;
+    color: #888888;
+}
+
+#btWalletFilename {
+    margin-left: 5%;
+    margin-right: 5%;
+    color: #f88900;
+    font-size: 0.8em;
+    border-bottom: 1px solid #888888;
+}

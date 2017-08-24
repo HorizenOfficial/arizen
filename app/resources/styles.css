@@ -168,14 +168,12 @@ body {
 
 .buttons:hover {
     border: 1px #f88900 solid;
-    /*border-radius: 2px;*/
     background-color: transparent;
     color: #f88900;
 }
 
 .buttons:active {
     border: 1px #f88900 solid;
-    border-radius: 2px;
     background-color: transparent;
     color: #f88900;
 }
