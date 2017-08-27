@@ -379,11 +379,3 @@ ipcMain.on("exit-from-menu", function (event) {
         app.quit()
     }
 });
-
-// ipcMain.on("get-password", function (event, user) {
-//     event.returnValue = keytar.getPassword("Arizen", user);
-// });
-//
-// ipcMain.on("set-password", function (event, user, pass) {
-//     event.returnValue = keytar.setPassword("Arizen", user, pass);
-// });
