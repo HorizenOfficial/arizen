@@ -11,6 +11,9 @@
     "type": "git",
     "url": "git+https://github.com/zencashofficial/arizen.git"
   },
+  "bugs": {
+    "url": "https://github.com/zencashofficial/arizen/issues"
+  },
   "keywords": [
     "zen",
     "zencash",
@@ -23,7 +26,7 @@
     "desktop",
     "electron"
   ],
-  "author": "ZEN Team",
+  "author": "@lukas, @nonghost and @k4chn1k",
   "license": "MIT",
   "engines": {
     "node": ">=6.0"
@@ -45,8 +48,5 @@
   },
   "optionalDependencies": {
     "electron-installer-debian": "^0.5.2"
-  },
-  "bugs": {
-    "url": "https://github.com/zencashofficial/arizen/issues"
   }
 }

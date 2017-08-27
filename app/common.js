@@ -43,6 +43,7 @@ function closeNav() {
     document.getElementById("sidenavIMG").style.opacity = "0";
 }
 
+// FIXME: remove?
 function showVersion() {
     let pckg = require("./package.json");
     console.log("Arizen version: " + pckg.version);
@@ -56,6 +57,9 @@ function aboutDialog() {
     document.getElementById("sidenavIMG").style.transition = "0s";
     document.getElementById("sidenavIMG").style.opacity = "0";
     document.getElementById("aboutContent").textContent = "Arizen version: " + pckg.version;
+    // TODO: add these two lines to the About section
+    // document.getElementById("aboutContent").textContent += "Authors: " + pckg.author <br>";
+    // document.getElementById("aboutContent").textContent += "License: " + pckg.license;
     document.getElementById("darkContainer").style.transition = "0.5s";
     document.getElementById("darkContainer").style.zIndex = "1";
     document.getElementById("darkContainer").style.opacity = "0.7";
