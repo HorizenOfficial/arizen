@@ -20,26 +20,26 @@
         <ul>
             <li>
                 <span style="text-align:center;"><label for="username">Username</label></span>
-                <span><input id="username" class="inputs" name="username" onkeyup="checkLogin();" onfocus="selectColumn(true, false, false);"/></span>
+                <span><input id="username" class="inputs" name="username" tabindex="1" onkeyup="checkLogin();" onfocus="selectColumn(true, false, false);"/></span>
             </li>
             <li>
                 <span style="text-align:center;"><label for="pswd">Password</label></span>
-                <span><input id="pswd" class="inputs" name="pswd" type="password" onkeyup="checkPasswd();" onfocus="selectColumn(false, true, false);"/></span>
+                <span><input id="pswd" class="inputs" name="pswd" type="password" onkeyup="checkPasswd();" tabindex="2" onfocus="selectColumn(false, true, false);"/></span>
             </li>
             <li>
                 <span style="text-align:center;"><label for="pswd_again">Password again</label></span>
-                <span><input id="pswd_again" class="inputs" name="pswd_again" type="password" onkeyup="checkPasswdAgain();" onfocus="selectColumn(false, false, true);"/></span>
+                <span><input id="pswd_again" class="inputs" name="pswd_again" type="password" onkeyup="checkPasswdAgain();" tabindex="3" onfocus="selectColumn(false, false, true);"/></span>
             </li>
             <li>
                     <span class="marginLeft5p">Select Wallet
-                    <input id="btWalletButton" class="buttons btWalletButtonClass" name="btWalletButton" type="button" value="Browse" onclick="document.getElementById('btWallet').click();"/>
+                    <input id="btWalletButton" class="buttons btWalletButtonClass" name="btWalletButton" type="button" value="Browse" tabindex="4" onclick="document.getElementById('btWallet').click();"/>
                     <input id="btWallet" name="btWallet" style="display: none;" type='file' accept=".dat" onchange="document.getElementById('btWalletFilename').textContent = document.getElementById('btWallet').value;"/>
                     </span>
                     <span id="btWalletFilename" class="right"></span>
 
             </li>
             <li>
-                <input id="btSubmit" class="buttons" name="btSubmit" type="button" value="Register" onclick="doRegister();" disabled/>
+                <input id="btSubmit" class="buttons" name="btSubmit" type="button" value="Register" tabindex="5" onclick="doRegister();" disabled/>
             </li>
         </ul>
         <div class="right">

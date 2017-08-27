@@ -17,14 +17,14 @@
         <ul>
             <li>
                 <span style="text-align:center;"><label for="username">Username</label></span>
-                <span><input id="username" class="inputs" name="username" onkeyup="checkLoginInfo();"/></span>
+                <span><input id="username" class="inputs" name="username" tabindex="1" /></span>
             </li>
             <li>
                 <span style="text-align:center;"><label for="pswd">Password</label></span>
-                <span><input id="pswd" class="inputs" name="pswd" type="password" onkeyup="checkLoginInfo();"/></span>
+                <span><input id="pswd" class="inputs" name="pswd" type="password" tabindex="2"/></span>
             </li>
             <li>
-                <input id="btSubmit" class="buttons" name="btSubmit" type="button" value="Login" onclick="doLogin();" disabled/>
+                <input id="btSubmit" class="buttons" name="btSubmit" type="button" value="Login" onclick="doLogin();" tabindex="3"/>
             </li>
         </ul>
         <div class="right">
