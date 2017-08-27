@@ -272,3 +272,36 @@
 .closeAddContactDialog:hover {
     color:#f88900;
 }
+
+#contactPreferences {
+    position: absolute;
+    bottom: 10px ;
+    right: 15px;
+    font-size: 0.9em;
+}
+
+.contactPreferencesClass{
+    color:#888888;
+    text-decoration: none;
+}
+
+.contactPreferencesClass:hover {
+    color:#f88900;
+}
+
+#deleteContactDialog {
+    position: absolute;
+    z-index: -1;
+    background-color: #fefefe;
+    left: 162px;
+    width: 700px;
+    height: 350px;
+    top:100px;
+    padding: 5px;
+    border: 1px solid #c4cddb;
+    border-top-color: #d3dbde;
+    border-bottom-color: #bfc9dc;
+    box-shadow: 0 1px 1px #ccc;
+    opacity:0;
+    transition: 0.5s;
+}

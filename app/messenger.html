@@ -28,11 +28,11 @@
 
 <div id="addContactDialog">
     <div class="right">
-        <a href="javascript:void(0)" class="closeAddContactDialog " onclick="closeDialog()">&times</a>
+        <a href="javascript:void(0)" class="closeAddContactDialog " onclick="closeDialog('addContactDialog')">&times</a>
     </div>
     <div class="center">
-        <div class="sectionTitle">
-            Add Contact
+        <div class="sectionTitle"><span id="contactDialogTitle">
+            Add Contact </span>
         </div>
     </div>
     <div class="padding25">
@@ -42,11 +42,48 @@
         <label class="wallet_labels" for="newContactNickname">&nbsp;Nickname:</label><br/>
         <input id="newContactNickname" class="wallet_inputs" value="">
         <br>
-        <label class="wallet_labels" for="newContactName">&nbsp;Name:</label><br/>
+        <label class="wallet_labels" for="newContactName">&nbsp;Name <i>(optional)</i>:</label><br/>
         <input id="newContactName" class="wallet_inputs" value="">
         <div class="right">
             <button class="buttons saveContactButton" onclick="saveContact()">Save contact</button>
         </div>
+    </div>
+</div>
+
+<div id="deleteContactDialog">
+    <div class="right">
+        <a href="javascript:void(0)" class="closeAddContactDialog " onclick="closeDialog('deleteContactDialog')">&times</a>
+    </div>
+    <div class="center">
+        <div class="sectionTitle">
+            Delete Contact
+        </div>
+    </div>
+    <div class="padding25">
+        <label class="wallet_labels" for="deleteContactAddress">&nbsp;Address</label><br/>
+        <input id="deleteContactAddress" class="wallet_inputs" value="">
+        <br>
+        <label class="wallet_labels" for="deleteContactNickname">&nbsp;Nickname:</label><br/>
+        <input id="deleteContactNickname" class="wallet_inputs" value="">
+        <br>
+        <label class="wallet_labels" for="deleteContactName">&nbsp;Name <i>(optional)</i>:</label><br/>
+        <input id="deleteContactName" class="wallet_inputs" value="">
+        <div class="right">
+            <button class="buttons saveContactButton" onclick="deleteContact()">Delete contact</button>
+        </div>
+    </div>
+</div>
+
+<div id="aboutDialog">
+    <div class="right">
+        <a href="javascript:void(0)" class="closeAddContactDialog " onclick="closeAboutDialog()">&times</a>
+    </div>
+    <div class="center">
+        <div class="sectionTitle">
+            About Arizen
+        </div>
+    </div>
+    <div id="aboutContent" class="padding25">
     </div>
 </div>
 
@@ -83,7 +120,9 @@
 
 <div id="conversationContainer">
     <div id="ConversationContainerContact" class="ConversationContainerMessagesClass">
-        <div class="contact messengerContact" title="Address: znbcHyStHjZdfWhZdZs5124fddggswf9481">TheJedi <span class="contactName">- Luke Skywalker</span></div>
+        <div class="contact messengerContact" title="Address: znbcHyStHjZdfWhZdZs5124fddggswf9481">TheJedi <span class="contactName">- Luke Skywalker</span>
+            <span id="contactPreferences"><a href="javascript:void(0)" class="contactPreferencesClass " onclick="addContactDialog(true)">Edit</a> | <a href="javascript:void(0)" class="contactPreferencesClass" onclick="deleteContactDialog()">Delete</a></span>
+        </div>
     </div>
 
     <div id="ConversationContainerMessages" class="ConversationContainerMessagesClass">
