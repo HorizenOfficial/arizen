@@ -11,6 +11,10 @@ body {
     font-family:  "Raleway", "Lato", sans-serif;
 }
 
+::selection {
+    background: transparent;
+}
+
 .center{
     text-align:center;
 }
@@ -195,6 +199,22 @@ body {
     border-bottom: 3px solid #f88900;
 }
 
+#aboutDialog {
+    position: absolute;
+    z-index: -1;
+    background-color: #fefefe;
+    left: 162px;
+    width: 700px;
+    height: 250px;
+    top:170px;
+    padding: 5px;
+    border: 1px solid #c4cddb;
+    border-top-color: #d3dbde;
+    border-bottom-color: #bfc9dc;
+    box-shadow: 0 1px 1px #ccc;
+    opacity:0;
+    transition: 0.5s;
+}
 
 
 
