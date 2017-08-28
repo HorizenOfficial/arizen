@@ -3,9 +3,11 @@
 - [x] login pass
 - [x] encrypted login pass
 - [x] import your old wallet.dat
-- [ ] encrypted wallet.dat file
+- [x] encrypted wallet.dat file
 - [ ] light SPV client
-- [ ] automatically download updates
+- [x] automatically download updates
+- [ ] bug-free
+
 
 ![Screenshot](https://i.imgur.com/Cc14AP2.png)
 ![Screenshot](https://i.imgur.com/qLxk2l4.png)
