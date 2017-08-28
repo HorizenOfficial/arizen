@@ -1,5 +1,5 @@
 {
-  "name": "arizen",
+  "name": "Arizen",
   "version": "0.0.1",
   "description": "Wallet for ZenCash (ZEN)",
   "main": "app/main.js",
@@ -37,7 +37,9 @@
   "build": {
     "appId": "io.zensystem.arizen",
     "mac": {
-      "category": "public.app-category.finance"
+      "category": "public.app-category.finance",
+      "type": "development",
+      "target": "dmg"
     },
     "dmg": {
       "backgroundColor": "#888888",
