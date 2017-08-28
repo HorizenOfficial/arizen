@@ -12,6 +12,8 @@ const os = require("os");
 const fs = require("fs-extra");
 const passwordHash = require("password-hash");
 const crypto = require("crypto");
+var bitcoin = require('bitcoinjs-lib');
+var bip32utils = require('bip32-utils');
 const updater = require("electron-simple-updater");
 updater.init({checkUpdateOnStart: true, autoDownload: true,
         url: "https://raw.githubusercontent.com/ZencashOfficial/arizen/master/updates.json"});
@@ -101,12 +103,62 @@ function decryptWallet(login, password) {
         /* FIXME: handle error */
         outputBytes += decipher.final();
     }
+/*
+    for (var i = 0; i < this.state.privateKeys.length; i++) {
+        var pubKeyHash = this.state.settings.useTestNet ? _zencashjs2.default.config.testnet.wif : _zencashjs2.default.config.mainnet.wif;
 
+        var c_pk_wif;
+        var c_pk = this.state.privateKeys[i];
+
+        // If not 64 length, probs WIF format
+        if (c_pk.length !== 64) {
+          c_pk_wif = c_pk;
+          c_pk = _zencashjs2.default.address.WIFToPrivKey(c_pk);
+        } else {
+          c_pk_wif = _zencashjs2.default.address.privKeyToWIF(c_pk);
+        }
+
+        var c_pk_wif = _zencashjs2.default.address.privKeyToWIF(c_pk, true, pubKeyHash);
+        var c_addr = _privKeyToAddr(c_pk, this.state.settings.compressPubKey, this.state.settings.useTestNet);
+
+        publicAddresses[c_addr] = {
+          privateKey: c_pk,
+          privateKeyWIF: c_pk_wif,
+          confirmedBalance: 'loading...',
+          unconfirmedBalance: 'loading...'
+        };
+      }
+*/
     return outputBytes;
 }
 
+/* wallet generation from kendricktan */
 function generateNewWallet(login, password) {
-    fs.writeFileSync(getWalletPath() + "wallet.dat." + login, encryptWallet(login, password, Buffer.from("TESTING ONLY!", "utf8")));
+    let i;
+    let seedHex = passwordHash.generate(password, {
+        "algorithm": "sha512",
+        "saltLength": 32
+    }).split("$")[3];
+    
+    // chains
+    let hdNode = bitcoin.HDNode.fromSeedHex(seedHex);
+    let chain = new bip32utils.Chain(hdNode);
+    
+    for (i = 0; i < 42; i += 1) {
+      chain.next();
+    }
+    
+    // Get private keys from them
+    let privateKeys = chain.getAll().map(function (x) {
+       return chain.derive(x).keyPair.toWIF();
+    });
+
+    let saveBfr = Buffer.from(privateKeys[0]);
+    for (i = 1; i <= 42; i += 1) {
+        saveBfr = Buffer.concat([saveBfr, Buffer.from(privateKeys[i])])
+    }
+
+    fs.writeFileSync(getWalletPath() + "wallet.dat." + login, encryptWallet(login, password, saveBfr));
 }
 
 function createWindow() {
