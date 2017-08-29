@@ -415,3 +415,23 @@ ipcMain.on("exit-from-menu", function (event) {
         app.quit()
     }
 });
+
+ipcMain.on("get-wallets", function (event) {
+    let resp;
+
+    resp = {
+        response: "OK",
+        wallets: [],
+        total: 0
+    };
+    for (let i = 0, priv; i < walletDecrypted.length; i += 1) {
+        priv = zencashjs.address.WIFToPrivKey(walletDecrypted[i]);
+        resp.wallets.push({
+            id: zencashjs.address.pubKeyToAddr(zencashjs.address.privKeyToPubKey(priv)),
+            balance: i
+        });
+        resp.total += resp.wallets[i].balance;
+    }
+
+    event.sender.send("get-wallets-response", JSON.stringify(resp));
+});
