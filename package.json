@@ -29,7 +29,10 @@
     "desktop",
     "electron"
   ],
-  "author": "@lukas, @nonghost and @k4chn1k",
+  "author": {
+      "name": "@lukas, @nonghost and @k4chn1k",
+      "email" : ["lukas@zensystem.io", "neduchal@gmail.com", "k4ch.n1k@gmail.com"]
+  },
   "license": "MIT",
   "engines": {
     "node": ">=6.0"
@@ -61,7 +64,9 @@
       "target": [
         "AppImage",
         "deb"
-      ]
+      ],
+      "icon": "build/",
+      "category": "Office"
     },
     "win": {
       "target": "squirrel",
