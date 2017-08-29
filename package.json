@@ -38,7 +38,7 @@
     "appId": "io.zensystem.arizen",
     "mac": {
       "category": "public.app-category.finance",
-      "type": "development"
+      "type": "distribution"
     },
     "dmg": {
       "backgroundColor": "#888888",
