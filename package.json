@@ -81,7 +81,8 @@
     "electron-tabs": "^0.7.1",
     "errors": "^0.3.0",
     "fs-extra": "^4.0.1",
-    "password-hash": "^1.2.2"
+    "password-hash": "^1.2.2",
+    "zencashjs": "^1.1.5-a"
   },
   "devDependencies": {
     "electron": "latest",
