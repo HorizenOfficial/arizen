@@ -23,7 +23,6 @@ ipcRenderer.on("check-login-response", function (event, resp) {
 
 function openNav() {
     document.getElementById("mySidenav").style.width = "250px";
-    //document.getElementById("darkContainer").style.width = "100%";
     document.getElementById("darkContainer").style.transition = "1.4s";
     document.getElementById("darkContainer").style.zIndex = "1";
     document.getElementById("darkContainer").style.opacity = "0.7";
@@ -34,7 +33,6 @@ function openNav() {
 
 function closeNav() {
     document.getElementById("mySidenav").style.width = "0";
-    //document.getElementById("darkContainer").style.width = "0";
     document.getElementById("darkContainer").style.transition = "0s";
     document.getElementById("darkContainer").style.opacity = "0";
     document.getElementById("darkContainer").style.zIndex = "-1";
@@ -43,23 +41,15 @@ function closeNav() {
     document.getElementById("sidenavIMG").style.opacity = "0";
 }
 
-// FIXME: remove?
-function showVersion() {
-    let pckg = require("./package.json");
-    console.log("Arizen version: " + pckg.version);
-    window.alert("Arizen version: " + pckg.version);
-}
-
 function aboutDialog() {
-    let pckg = require("./package.json");
+    let pckg = require("../package.json");
     document.getElementById("mySidenav").style.width = "0";
     document.getElementById("sidenavIMG").style.transitionDelay = "0s";
     document.getElementById("sidenavIMG").style.transition = "0s";
     document.getElementById("sidenavIMG").style.opacity = "0";
-    document.getElementById("aboutContent").textContent = "Arizen version: " + pckg.version;
-    // TODO: add these two lines to the About section
-    // document.getElementById("aboutContent").textContent += "Authors: " + pckg.author <br>";
-    // document.getElementById("aboutContent").textContent += "License: " + pckg.license;
+    document.getElementById("aboutContent").innerHTML = "Arizen version: " + pckg.version + "\n<br\>";
+    document.getElementById("aboutContent").innerHTML += "Authors: " + pckg.author + "\<br\>";
+    document.getElementById("aboutContent").innerHTML += "License: " + pckg.license;
     document.getElementById("darkContainer").style.transition = "0.5s";
     document.getElementById("darkContainer").style.zIndex = "1";
     document.getElementById("darkContainer").style.opacity = "0.7";
