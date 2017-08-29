@@ -29,6 +29,6 @@ ipcRenderer.on("verify-login-response", function (event, resp) {
         location.href = "./wallet.html";
         console.log("Login was successful - redirecting to wallet.html");
     } else {
-        document.getElementById("pswd_info").style.display = "block";
+        document.getElementById("login_pswd_info").style.display = "block";
     }
 });
