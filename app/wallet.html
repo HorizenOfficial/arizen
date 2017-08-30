@@ -29,7 +29,7 @@
 
 <div id="addWalletDialog">
     <div class="right">
-        <a href="javascript:void(0)" class="closeAddWalletDialog " onclick="closeDialog()">&times</a>
+        <a href="javascript:void(0)" class="closeAddWalletDialog " onclick="closeDialog('addWalletDialog')">&times</a>
     </div>
     <div class="center">
         <div class="sectionTitle">
@@ -45,6 +45,45 @@
         </div>
     </div>
 </div>
+
+<div id="pickWalletDialog">
+    <div class="right">
+        <a href="javascript:void(0)" class="closeAddWalletDialog " onclick="closeDialog('pickWalletDialog')">&times</a>
+    </div>
+    <div class="center">
+        <div class="sectionTitle">
+            List of Wallets
+        </div>
+    </div>
+    <div class="padding25">
+        <div class="walletListItem walletListItemOdd">
+            <span class="walletListItemAddress walletListItemTitle">My first wallet</span>
+            <span class="walletListItemAddress"><b>Actual address</b> znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
+        </div>
+        <div class="walletListItem">
+            <span class="walletListItemAddress walletListItemTitle">My second wallet</span>
+            <span class="walletListItemAddress"><b>Actual address</b> znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
+        </div>
+        <div class="walletListItem walletListItemOdd">
+            <span class="walletListItemAddress walletListItemTitle">New Car</span>
+            <span class="walletListItemAddress"><b>Actual address</b> znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
+        </div>
+        <div class="walletListItem">
+            <span class="walletListItemAddress walletListItemTitle">Milk</span>
+            <span class="walletListItemAddress"><b>Actual address</b> znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
+        </div>
+        <div class="walletListItem walletListItemOdd">
+            <span class="walletListItemAddress walletListItemTitle">Trip to the Moon</span>
+            <span class="walletListItemAddress"><b>Actual address</b> znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
+        </div>
+        <div class="walletListItem walletListItemChat">
+            <span class="walletListItemAddress">Messenger Wallet</span>
+            <span class="walletListItemAddress"><b>Actual address</b> znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
+        </div>
+    </div>
+</div>
+
+
 
 <div id="aboutDialog">
     <div class="right">
@@ -88,37 +127,29 @@
                 <button class="buttons addWalletButton" onclick="addWalletDialog()" id="addWalletButton">New Wallet</button>
             </div>
             <div id="walletList">
-                <div class="walletListItem">
-                    <span class="walletListItemAddress walletListItemTitle">Address</span>
-                    <span class="walletListItemBalance walletListItemTitle">Balance</span>
-                </div>
                 <div class="walletListItem walletListItemOdd">
-                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
-                    <span class="walletListItemBalance">110.00000000</span>
+                    <span class="walletListItemAddress walletListItemTitle">My first wallet</span>
+                    <span class="walletListItemAddress"><b>Actual address</b> znbcGtStHjZdfWsRhZdZsffaetZZeDfv524  <a href="javascript:void(0)" class="walletListItemDetails">Details</a></span>
                 </div>
                 <div class="walletListItem">
-                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
-                    <span class="walletListItemBalance">11.00000000</span>
+                    <span class="walletListItemAddress walletListItemTitle">My second wallet</span>
+                    <span class="walletListItemAddress"><b>Actual address</b> znbcGtStHjZdfWsRhZdZsffaetZZeDfv524  <a href="javascript:void(0)" class="walletListItemDetails">Details</a></span>
                 </div>
                 <div class="walletListItem walletListItemOdd">
-                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
-                    <span class="walletListItemBalance">110.00000000</span>
+                    <span class="walletListItemAddress walletListItemTitle">New Car</span>
+                    <span class="walletListItemAddress"><b>Actual address</b> znbcGtStHjZdfWsRhZdZsffaetZZeDfv524  <a href="javascript:void(0)" class="walletListItemDetails">Details</a></span>
                 </div>
                 <div class="walletListItem">
-                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
-                    <span class="walletListItemBalance">110.00000000</span>
+                    <span class="walletListItemAddress walletListItemTitle">Milk</span>
+                    <span class="walletListItemAddress"><b>Actual address</b> znbcGtStHjZdfWsRhZdZsffaetZZeDfv524  <a href="javascript:void(0)" class="walletListItemDetails">Details</a></span>
                 </div>
                 <div class="walletListItem walletListItemOdd">
-                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
-                    <span class="walletListItemBalance">110.00000000</span>
+                    <span class="walletListItemAddress walletListItemTitle">Trip to the Moon</span>
+                    <span class="walletListItemAddress"><b>Actual address</b> znbcGtStHjZdfWsRhZdZsffaetZZeDfv524  <a href="javascript:void(0)" class="walletListItemDetails">Details</a></span>
                 </div>
-                <div class="walletListItem">
-                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
-                    <span class="walletListItemBalance">110.00000000</span>
-                </div>
-                <div class="walletListItem walletListItemOdd">
-                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
-                    <span class="walletListItemBalance">110.00000000</span>
+                <div class="walletListItem walletListItemChat">
+                    <span class="walletListItemAddress">Messenger Wallet</span>
+                    <span class="walletListItemAddress"><b>Actual address</b> znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
                 </div>
             </div>
 
@@ -131,49 +162,36 @@
                 List of Wallets
             </div>
             <div id="walletListReceive">
-                <div class="walletListItem">
-                    <span class="walletListItemAddress walletListItemTitle">Address</span>
-                    <span class="walletListItemBalance walletListItemTitle">Balance</span>
-                </div>
                 <div class="walletListItem walletListItemOdd">
-                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
-                    <span class="walletListItemBalance">110.00000000</span>
+                    <span class="walletListItemAddress walletListItemTitle">My first wallet</span>
+                    <span class="walletListItemAddress"><b>Actual address</b> znbcGtStHjZdfWsRhZdZsffaetZZeDfv524  <a href="javascript:void(0)" class="walletListItemDetails">Details</a></span>
                 </div>
                 <div class="walletListItem">
-                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
-                    <span class="walletListItemBalance">11.00000000</span>
+                    <span class="walletListItemAddress walletListItemTitle">My second wallet</span>
+                    <span class="walletListItemAddress"><b>Actual address</b> znbcGtStHjZdfWsRhZdZsffaetZZeDfv524  <a href="javascript:void(0)" class="walletListItemDetails">Details</a></span>
                 </div>
                 <div class="walletListItem walletListItemOdd">
-                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
-                    <span class="walletListItemBalance">110.00000000</span>
+                    <span class="walletListItemAddress walletListItemTitle">New Car</span>
+                    <span class="walletListItemAddress"><b>Actual address</b> znbcGtStHjZdfWsRhZdZsffaetZZeDfv524  <a href="javascript:void(0)" class="walletListItemDetails">Details</a></span>
                 </div>
                 <div class="walletListItem">
-                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
-                    <span class="walletListItemBalance">110.00000000</span>
+                    <span class="walletListItemAddress walletListItemTitle">Milk</span>
+                    <span class="walletListItemAddress"><b>Actual address</b> znbcGtStHjZdfWsRhZdZsffaetZZeDfv524  <a href="javascript:void(0)" class="walletListItemDetails">Details</a></span>
                 </div>
                 <div class="walletListItem walletListItemOdd">
-                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
-                    <span class="walletListItemBalance">110.00000000</span>
+                    <span class="walletListItemAddress walletListItemTitle">Trip to the Moon</span>
+                    <span class="walletListItemAddress"><b>Actual address</b> znbcGtStHjZdfWsRhZdZsffaetZZeDfv524  <a href="javascript:void(0)" class="walletListItemDetails">Details</a></span>
                 </div>
-                <div class="walletListItem">
-                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
-                    <span class="walletListItemBalance">110.00000000</span>
-                </div>
-                <div class="walletListItem walletListItemOdd">
-                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
-                    <span class="walletListItemBalance">110.00000000</span>
+                <div class="walletListItem walletListItemChat">
+                    <span class="walletListItemAddress">Messenger Wallet</span>
+                    <span class="walletListItemAddress"><b>Actual address</b> znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
                 </div>
             </div>
         </div>
 
         <div id="send" class="send" style="display:none">
             <label class="wallet_labels" for="sendFromAddress">&nbsp;From:</label><br/>
-            <select id="sendFromAddress" class="wallet_inputs wallet_select" align="right">
-                <option value="null">WIP -> will be redesigned using JS</option>
-                <option value="null">Address 2</option>
-                <option value="null">Address 3</option>
-                <option value="null">Address 4</option>
-            </select>
+            <span id="sendFromAddressText"></span><input id="sendFromAddress" class="buttons addWalletButton" name="btWalletButton" type="button" value="Select" tabindex="4" onclick="pickWalletDialog()"/>
             <br>
             <label class="wallet_labels" for="sendToAddress">&nbsp;To:</label><br/>
             <input id="sendToAddress" class="wallet_inputs" align="right" value="address" onfocus="clearValue()" onblur="setValueIfEmpty()">

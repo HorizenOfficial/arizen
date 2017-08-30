@@ -30,8 +30,12 @@
     "electron"
   ],
   "author": {
-      "name": "@lukas, @nonghost and @k4chn1k",
-      "email" : ["lukas@zensystem.io", "neduchal@gmail.com", "k4ch.n1k@gmail.com"]
+    "name": "@lukas, @nonghost and @k4chn1k",
+    "email": [
+      "lukas@zensystem.io",
+      "neduchal@gmail.com",
+      "k4ch.n1k@gmail.com"
+    ]
   },
   "license": "MIT",
   "engines": {
@@ -85,7 +89,7 @@
   },
   "devDependencies": {
     "electron": "latest",
-    "electron-builder": "^19.27.0",
+    "electron-builder": "^19.27.1",
     "flow-bin": "^0.50.0"
   },
   "optionalDependencies": {
