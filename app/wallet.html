@@ -127,6 +127,7 @@
                 <button class="buttons addWalletButton" onclick="addWalletDialog()" id="addWalletButton">New Wallet</button>
             </div>
             <div id="walletList">
+<<<<<<< dev_gui
                 <div class="walletListItem walletListItemOdd">
                     <span class="walletListItemAddress walletListItemTitle">My first wallet</span>
                     <span class="walletListItemAddress"><b>Actual address</b> znbcGtStHjZdfWsRhZdZsffaetZZeDfv524  <a href="javascript:void(0)" class="walletListItemDetails">Details</a></span>
@@ -150,6 +151,11 @@
                 <div class="walletListItem walletListItemChat">
                     <span class="walletListItemAddress">Messenger Wallet</span>
                     <span class="walletListItemAddress"><b>Actual address</b> znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
+=======
+                <div class="walletListItem">
+                    <span class="walletListItemAddress walletListItemTitle">Address</span>
+                    <span class="walletListItemBalance walletListItemTitle">Balance</span>
+>>>>>>> development
                 </div>
             </div>
 
@@ -215,10 +221,8 @@
 </div>
 
 <div id="walletFooter">
-    Total balance: <b>671 ZEN</b>
+    Total balance: <div id="walletFooterBalance" style="font-weight: bold;">0</div>ZEN
 </div>
-
-<script src="wallet.js"></script><!-- Has to be in header -->
 
 </body>
 </html>

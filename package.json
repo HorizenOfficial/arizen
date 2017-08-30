@@ -34,7 +34,7 @@
     "email": [
       "lukas@zensystem.io",
       "neduchal@gmail.com",
-      "k4ch.n1k@gmail.com"
+      "k4chn1k@gmail.com"
     ]
   },
   "license": "MIT",
@@ -73,7 +73,7 @@
       "category": "Office"
     },
     "win": {
-      "target": "squirrel",
+      "target": "NSIS",
       "icon": "build/icon.ico"
     }
   },
@@ -85,11 +85,13 @@
     "electron-tabs": "^0.7.1",
     "errors": "^0.3.0",
     "fs-extra": "^4.0.1",
-    "password-hash": "^1.2.2"
+    "password-hash": "^1.2.2",
+    "zencashjs": "^1.1.5-a"
   },
   "devDependencies": {
     "electron": "latest",
     "electron-builder": "^19.27.1",
+    "electron-builder-squirrel-windows": "^19.25.0",
     "flow-bin": "^0.50.0"
   },
   "optionalDependencies": {
