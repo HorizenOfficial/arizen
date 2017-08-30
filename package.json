@@ -90,7 +90,7 @@
   },
   "devDependencies": {
     "electron": "latest",
-    "electron-builder": "^19.27.0",
+    "electron-builder": "^19.27.1",
     "electron-builder-squirrel-windows": "^19.25.0",
     "flow-bin": "^0.50.0"
   },

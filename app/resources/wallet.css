@@ -113,7 +113,7 @@
 
 .walletListItemAddress {
     display:inline-block;
-    width:70%;
+    width:95%;
 }
 
 .walletListItemBalance{
@@ -125,13 +125,37 @@
 .walletListItemTitle{
     color: #f88900;
     font-weight: 800;
-    font-size: 1.1em;
+    font-size: 1em;
+}
+
+.walletListItemDetails {
+    position: absolute;
+    right: 20px;
+    color: #888888;
+    font-weight: 800;
+    font-size: 1em;
+}
+
+.walletListItemDetails:hover {
+    color: #f88900;
 }
 
 .walletListItemOdd{
     background: #eeeeee;
 }
 
+.walletListItemChat{
+    background-color: #F90;
+    background-image: -webkit-linear-gradient(45deg,
+    rgba(255, 255, 255, .2) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, .2) 50%,
+    rgba(255, 255, 255, .2) 75%,
+    transparent 75%,
+    transparent);
+    color: #fefefe;
+}
 
 
 
@@ -181,6 +205,24 @@
     transition: 0.5s;
 }
 
+#pickWalletDialog {
+    position: absolute;
+    z-index: -1;
+    background-color: #fefefe;
+    left: 312px;
+    width: 400px;
+    bottom: 150px;
+    top:150px;
+    padding: 5px;
+    border: 1px solid #c4cddb;
+    border-top-color: #d3dbde;
+    border-bottom-color: #bfc9dc;
+    box-shadow: 0 1px 1px #ccc;
+    opacity:0;
+    transition: 0.5s;
+}
+
+
 .generateWalletButton{
     margin-top:30px;
 }
@@ -197,4 +239,14 @@
 
 .closeAddWalletDialog:hover {
     color:#f88900;
+}
+
+#sendFromAddressText{
+    display: inline-block;
+    width: 70%;
+    margin-left: 5%;
+    margin-right: 1%;
+    color: #f88900;
+    font-size: 0.8em;
+    border-bottom: 1px solid #888888;
 }

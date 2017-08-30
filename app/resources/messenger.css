@@ -74,7 +74,7 @@
     position:absolute;
     margin: 5px 0px 5px auto;
     padding: 5px 5px;
-    width: 685px;
+    left: 348px;
     right: 5px;
     top: 40px;
     bottom: 40px;
@@ -250,6 +250,8 @@
     opacity:0;
     transition: 0.5s;
 }
+
+
 
 .padding50{
     padding: 50px;

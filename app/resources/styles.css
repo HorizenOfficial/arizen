@@ -121,11 +121,12 @@ body {
 /* Footer */
 #walletFooter{
     position: absolute;
-    top:662px;
+    bottom:1px;
     float:left;
     margin: 0 auto;
     padding: 10px 10px 10px 10px;
-    width: 1028px;
+    left:0px;
+    right:0px;
     height:19px;
     border: 1px solid #c4cddb;
     border-top-color: #bfc9dc;
