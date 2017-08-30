@@ -14,6 +14,7 @@ const passwordHash = require("password-hash");
 const crypto = require("crypto");
 const bitcoin = require("bitcoinjs-lib");
 const bip32utils = require("bip32-utils");
+const zencashjs = require("zencashjs");
 const updater = require("electron-simple-updater");
 updater.init({
     checkUpdateOnStart: true, autoDownload: true,
@@ -63,6 +64,7 @@ function getZenPath() {
     return zenPath;
 }
 
+/*
 function getTmpPath() {
     let tmpPath = os.tmpdir() + "/arizen";
     console.log(tmpPath);
@@ -71,6 +73,7 @@ function getTmpPath() {
     }
     return tmpPath;
 }
+*/
 
 function encryptWallet(login, password, inputBytes) {
     let iv = Buffer.concat([Buffer.from(login, "utf8"), crypto.randomBytes(64)]);
@@ -85,10 +88,11 @@ function encryptWallet(login, password, inputBytes) {
 function decryptWallet(login, password) {
     let i = login.length;
     let inputBytes = fs.readFileSync(getWalletPath() + "wallet.dat." + login);
-    let outputBytes = [];
     let recoveredLogin = inputBytes.slice(0, i).toString("utf8");
+    let privateKeys = [];
 
     if (login === recoveredLogin) {
+        let outputBytes = [];
         let iv = inputBytes.slice(0, i + 64);
         i += 64;
         let salt = inputBytes.slice(i, i + 64);
@@ -103,34 +107,13 @@ function decryptWallet(login, password) {
         outputBytes = decipher.update(encrypted);
         /* FIXME: handle error */
         outputBytes += decipher.final();
+        while (outputBytes.length >= 52) {
+            privateKeys.push(outputBytes.slice(0, 52));
+            outputBytes = outputBytes.slice(52);
+        }
     }
-    /*
-        for (var i = 0; i < this.state.privateKeys.length; i++) {
-            var pubKeyHash = this.state.settings.useTestNet ? _zencashjs2.default.config.testnet.wif : _zencashjs2.default.config.mainnet.wif;
-
-            var c_pk_wif;
-            var c_pk = this.state.privateKeys[i];
-
-            // If not 64 length, probs WIF format
-            if (c_pk.length !== 64) {
-              c_pk_wif = c_pk;
-              c_pk = _zencashjs2.default.address.WIFToPrivKey(c_pk);
-            } else {
-              c_pk_wif = _zencashjs2.default.address.privKeyToWIF(c_pk);
-            }
-
-            var c_pk_wif = _zencashjs2.default.address.privKeyToWIF(c_pk, true, pubKeyHash);
-            var c_addr = _privKeyToAddr(c_pk, this.state.settings.compressPubKey, this.state.settings.useTestNet);
-
-            publicAddresses[c_addr] = {
-              privateKey: c_pk,
-              privateKeyWIF: c_pk_wif,
-              confirmedBalance: 'loading...',
-              unconfirmedBalance: 'loading...'
-            };
-          }
-    */
-    return outputBytes;
+    
+    return privateKeys;
 }
 
 /* wallet generation from kendricktan */
@@ -304,7 +287,7 @@ app.on("activate", function () {
 
 app.on("before-quit", function () {
     console.log("quitting");
-    fs.removeSync(getTmpPath());
+    //fs.removeSync(getTmpPath());
     // dialog.showMessageBox({
     //     type: "question",
     //     buttons: ["Yes", "No"],
@@ -431,4 +414,24 @@ ipcMain.on("exit-from-menu", function (event) {
     if (process.platform !== "darwin") {
         app.quit()
     }
+});
+
+ipcMain.on("get-wallets", function (event) {
+    let resp;
+
+    resp = {
+        response: "OK",
+        wallets: [],
+        total: 0
+    };
+    for (let i = 0, priv; i < walletDecrypted.length; i += 1) {
+        priv = zencashjs.address.WIFToPrivKey(walletDecrypted[i]);
+        resp.wallets.push({
+            id: zencashjs.address.pubKeyToAddr(zencashjs.address.privKeyToPubKey(priv)),
+            balance: i
+        });
+        resp.total += resp.wallets[i].balance;
+    }
+
+    event.sender.send("get-wallets-response", JSON.stringify(resp));
 });

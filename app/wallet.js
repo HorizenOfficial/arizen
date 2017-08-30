@@ -100,6 +100,27 @@ function closeDialog() {
     document.getElementById("darkContainer").style.zIndex = "-1";
     document.getElementById("addWalletDialog").style.zIndex = "-1";
     document.getElementById("addWalletDialog").style.opacity = "0";
-
-
 }
+
+function getWallets() {
+    ipcRenderer.send("get-wallets");
+}
+
+ipcRenderer.on("get-wallets-response", function (event, resp) {
+    let walletElem = document.getElementById("walletList");
+    let data = JSON.parse(resp);
+
+    if (walletElem.children.length > 0) {
+        walletElem.innerHTML = walletElem.children[0].outerHTML;
+        for (let i = 0; i < data.wallets.length; i += 1) {
+            walletElem.innerHTML += '<div class="walletListItem"><span class="walletListItemAddress">' + data.wallets[i].id
+                                 +'</span><span class="walletListItemBalance">' + data.wallets[i].balance + '</span></div>';
+            if (i % 2 == 0) {
+                walletElem.children[i].className += " walletListItemOdd";
+            }
+        }
+        document.getElementById("walletFooterBalance").innerHTML = data.total;
+    }
+});
+
+getWallets();
