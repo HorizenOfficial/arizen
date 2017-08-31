@@ -64,17 +64,6 @@ function getZenPath() {
     return zenPath;
 }
 
-/*
-function getTmpPath() {
-    let tmpPath = os.tmpdir() + "/arizen";
-    console.log(tmpPath);
-    if (!fs.existsSync(tmpPath)) {
-        fs.mkdirSync(tmpPath);
-    }
-    return tmpPath;
-}
-*/
-
 function encryptWallet(login, password, inputBytes) {
     let iv = Buffer.concat([Buffer.from(login, "utf8"), crypto.randomBytes(64)]);
     let salt = crypto.randomBytes(64);
@@ -89,7 +78,8 @@ function decryptWallet(login, password) {
     let i = login.length;
     let inputBytes = fs.readFileSync(getWalletPath() + "wallet.dat." + login);
     let recoveredLogin = inputBytes.slice(0, i).toString("utf8");
-    let privateKeys = [];
+    let re = /\x30\x81\xD3\x02\x01\x01\x04\x20(.{32})/gm;
+    let privateKeys;
 
     if (login === recoveredLogin) {
         let outputBytes = [];
@@ -107,10 +97,13 @@ function decryptWallet(login, password) {
         outputBytes = decipher.update(encrypted);
         /* FIXME: handle error */
         outputBytes += decipher.final();
-        while (outputBytes.length >= 52) {
-            privateKeys.push(outputBytes.slice(0, 52));
-            outputBytes = outputBytes.slice(52);
-        }
+        
+        privateKeys = outputBytes.match(re);
+        privateKeys = privateKeys.map(function (x) {
+          x = x.replace('\x30\x81\xD3\x02\x01\x01\x04\x20', '');
+          x = Buffer.from(x, 'latin1').toString('hex');
+          return x;
+        });
     }
     
     return privateKeys;
@@ -338,7 +331,7 @@ ipcMain.on("write-login-info", function (event, login, pass, wallet) {
     }
     if (wallet !== "") {
         if (fs.existsSync(wallet)) {
-            let walletBytes = fs.readFileSync(wallet);
+            let walletBytes = fs.readFileSync(wallet, "binary");
             let walletEncrypted = encryptWallet(login, pass, walletBytes);
             fs.writeFileSync(path + "wallet.dat." + login, walletEncrypted, function (err) {
                 if (err) {
@@ -418,6 +411,10 @@ ipcMain.on("exit-from-menu", function (event) {
 
 ipcMain.on("get-wallets", function (event) {
     let resp;
+    let pk;
+    let pkWif;
+    let pubKey;
+    let zenAddr;
 
     resp = {
         response: "OK",
@@ -425,12 +422,24 @@ ipcMain.on("get-wallets", function (event) {
         total: 0
     };
     for (let i = 0, priv; i < walletDecrypted.length; i += 1) {
-        priv = zencashjs.address.WIFToPrivKey(walletDecrypted[i]);
+        // If not 64 length, probs WIF format
+        if (walletDecrypted[i].length !== 64) {
+            pk = zencashjs.address.WIFToPrivKey(walletDecrypted[i]);
+            pkWif = walletDecrypted[i];
+        } else {
+            pk = walletDecrypted[i];
+            pkWif = zencashjs.address.privKeyToWIF(pk, true);
+        }
+        pubKey = zencashjs.address.privKeyToPubKey(pk, true);
+        zenAddr = zencashjs.address.pubKeyToAddr(pubKey);
         resp.wallets.push({
-            id: zencashjs.address.pubKeyToAddr(zencashjs.address.privKeyToPubKey(priv)),
-            balance: i
+            addr: zenAddr,
+            priv: pk,
+            wif: pkWif,
+            cbalance: 0,
+            ubalance: 0
         });
-        resp.total += resp.wallets[i].balance;
+        resp.total += resp.wallets[i].cbalance;
     }
 
     event.sender.send("get-wallets-response", JSON.stringify(resp));
