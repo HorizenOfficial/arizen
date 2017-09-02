@@ -109,15 +109,28 @@ function closeDialog(clasname) {
     document.getElementById(clasname).style.zIndex = "-1";
     document.getElementById(clasname).style.opacity = "0";
 }
-/*
-function closeDialog() {
-    document.getElementById("darkContainer").style.transition = "0s";
-    document.getElementById("darkContainer").style.opacity = "0";
-    document.getElementById("darkContainer").style.zIndex = "-1";
-    document.getElementById("addWalletDialog").style.zIndex = "-1";
-    document.getElementById("addWalletDialog").style.opacity = "0";
+
+function printWalletListToPickDialog(walletList, wNames){
+    let walletListText;
+    walletListText = "";
+    for (let i = 0; i < walletList.length; i++) {
+        if ((i%2) == 0)
+        {
+            walletListText += "<div class=\"walletListItem walletListItemOdd\">";
+        } else {
+            walletListText += "<div class=\"walletListItem\">";
+        }
+        walletListText += "<span class=\"walletListItemAddress walletListItemTitle\">"+ wNames[walletList[i].id] +"</span>";
+        walletListText += "<div class=\"right\"><span class=\"walletListItemAddress walletListItemBalance\">"+ walletList[i].balance +"</span> ZEN</div>";
+        walletListText += "</div>";
+    }
+    document.getElementById("pickWalletDialogContent").innerHTML = walletListText;
 }
-*/
+
+function renderWallet(walletList, wNames) {
+    printWalletListToPickDialog(walletList, wNames);
+}
+
 
 function getWallets() {
     ipcRenderer.send("get-wallets");
