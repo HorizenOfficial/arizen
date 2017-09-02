@@ -6,11 +6,12 @@
     <link rel="stylesheet" href="resources/styles.css">
     <link rel="stylesheet" href="resources/wallet.css">
     <script src="common.js"></script>
+    <script src="test_data.js"></script>
     <script src="wallet.js"></script>
 </head>
 <!-- Comment bellow should be uncommented (replace <body> tag) when it will be ready to beta testing (blink bug) -->
 <!--<body onload="document.body.style.display='none';">-->
-<body>
+<body onload="renderWallet(wallets, walletNames)">
 <div id="mySidenav" class="sidenav">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
     <a href="messenger.html">Messenger</a>
@@ -55,7 +56,8 @@
             List of Wallets
         </div>
     </div>
-    <div class="padding25">
+    <div id="pickWalletDialogContent" class="padding25">
+        <!--
         <div class="walletListItem walletListItemOdd">
             <span class="walletListItemAddress walletListItemTitle">My first wallet</span>
             <span class="walletListItemAddress"><b>Actual address</b> znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
@@ -80,6 +82,8 @@
             <span class="walletListItemAddress">Messenger Wallet</span>
             <span class="walletListItemAddress"><b>Actual address</b> znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
         </div>
+        -->
+
     </div>
 </div>
 
@@ -127,7 +131,7 @@
                 <button class="buttons addWalletButton" onclick="addWalletDialog()" id="addWalletButton">New Wallet</button>
             </div>
             <div id="walletList">
-<<<<<<< dev_gui
+
                 <div class="walletListItem walletListItemOdd">
                     <span class="walletListItemAddress walletListItemTitle">My first wallet</span>
                     <span class="walletListItemAddress"><b>Actual address</b> znbcGtStHjZdfWsRhZdZsffaetZZeDfv524  <a href="javascript:void(0)" class="walletListItemDetails">Details</a></span>
@@ -151,15 +155,13 @@
                 <div class="walletListItem walletListItemChat">
                     <span class="walletListItemAddress">Messenger Wallet</span>
                     <span class="walletListItemAddress"><b>Actual address</b> znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
-=======
+                </div>
+                <!--
                 <div class="walletListItem">
                     <span class="walletListItemAddress walletListItemTitle">Address</span>
                     <span class="walletListItemBalance walletListItemTitle">Balance</span>
->>>>>>> development
-                </div>
+                </div> -->
             </div>
-
-
 
         </div>
 
@@ -221,7 +223,7 @@
 </div>
 
 <div id="walletFooter">
-    Total balance: <div id="walletFooterBalance" style="font-weight: bold;">0</div>ZEN
+    Total balance: <span id="walletFooterBalance" style="font-weight: bold;">0</span>ZEN
 </div>
 
 </body>

@@ -93,7 +93,6 @@
     margin: 0 auto;
     padding:5px;
     background: transparent;
-    #padding: 10px 10px;
 }
 
 #walletList{
@@ -220,6 +219,32 @@
     box-shadow: 0 1px 1px #ccc;
     opacity:0;
     transition: 0.5s;
+    overflow-y: scroll;
+}
+
+#pickWalletDialog::-webkit-scrollbar-track
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: #FeFeFe;
+}
+
+#pickWalletDialog::-webkit-scrollbar
+{
+    width: 10px;
+    background-color: #FeFeFe;
+}
+
+#pickWalletDialog::-webkit-scrollbar-thumb
+{
+    background-color: #F90;
+    background-image: -webkit-linear-gradient(45deg,
+    rgba(255, 255, 255, .2) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, .2) 50%,
+    rgba(255, 255, 255, .2) 75%,
+    transparent 75%,
+    transparent)
 }
 
 
