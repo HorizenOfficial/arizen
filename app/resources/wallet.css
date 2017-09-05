@@ -15,6 +15,11 @@
     font-size: 1.1em;
 }
 
+#leftWallet{
+    overflow-y: hidden;
+}
+
+
 .addWalletButton{
     padding: 4px 6px;
     width: 18%;
@@ -96,14 +101,69 @@
 }
 
 #walletList{
+    overflow-y: scroll;
+    height: 450px;
     padding:5px;
     font-size: 0.8em;
 }
 
+#walletList::-webkit-scrollbar-track
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: #FeFeFe;
+}
+
+#walletList::-webkit-scrollbar
+{
+    width: 10px;
+    background-color: #FeFeFe;
+}
+
+#walletList::-webkit-scrollbar-thumb
+{
+    background-color: #F90;
+    background-image: -webkit-linear-gradient(45deg,
+    rgba(255, 255, 255, .2) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, .2) 50%,
+    rgba(255, 255, 255, .2) 75%,
+    transparent 75%,
+    transparent)
+}
+
+
 #walletListReceive{
+    overflow-y: scroll;
+    height: 470px;
     display: block;
     padding:5px;
     font-size: 0.8em;
+}
+
+#walletListReceive::-webkit-scrollbar-track
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: #FeFeFe;
+}
+
+#walletListReceive::-webkit-scrollbar
+{
+    width: 10px;
+    background-color: #FeFeFe;
+}
+
+#walletListReceive::-webkit-scrollbar-thumb
+{
+    background-color: #F90;
+    background-image: -webkit-linear-gradient(45deg,
+    rgba(255, 255, 255, .2) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, .2) 50%,
+    rgba(255, 255, 255, .2) 75%,
+    transparent 75%,
+    transparent)
 }
 
 .walletListItem {
@@ -128,8 +188,6 @@
 }
 
 .walletListItemDetails {
-    position: absolute;
-    right: 20px;
     color: #888888;
     font-weight: 800;
     font-size: 1em;
@@ -190,16 +248,10 @@
 #addWalletDialog {
     position: absolute;
     z-index: -1;
-    background-color: #fefefe;
     left: 162px;
     width: 700px;
     height: 250px;
     top:170px;
-    padding: 5px;
-    border: 1px solid #c4cddb;
-    border-top-color: #d3dbde;
-    border-bottom-color: #bfc9dc;
-    box-shadow: 0 1px 1px #ccc;
     opacity:0;
     transition: 0.5s;
 }
@@ -207,16 +259,10 @@
 #pickWalletDialog {
     position: absolute;
     z-index: -1;
-    background-color: #fefefe;
     left: 312px;
     width: 400px;
     bottom: 150px;
     top:150px;
-    padding: 5px;
-    border: 1px solid #c4cddb;
-    border-top-color: #d3dbde;
-    border-bottom-color: #bfc9dc;
-    box-shadow: 0 1px 1px #ccc;
     opacity:0;
     transition: 0.5s;
     overflow-y: scroll;

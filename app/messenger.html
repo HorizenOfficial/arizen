@@ -10,6 +10,7 @@
 </head>
 <body>
 
+<!-- ============================== SIDENAV BEGIN ============================== -->
 <div id="mySidenav" class="sidenav">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
     <a href="wallet.html">Wallet</a>
@@ -22,11 +23,13 @@
     </div>
     <a id="about" href="#" onclick="aboutDialog()">About</a>
 </div>
+<!-- ============================== SIDENAV END ============================== -->
 
-<div id="darkContainer">
-</div>
+<!-- ============================== DARK CONTAINER ============================== -->
+<div id="darkContainer"></div>
 
-<div id="addContactDialog">
+<!-- ============================== ADD CONTACT DIALOG BEGIN ============================================= -->
+<div id="addContactDialog" class="dialog">
     <div class="right">
         <a href="javascript:void(0)" class="closeAddContactDialog " onclick="closeDialog('addContactDialog')">&times</a>
     </div>
@@ -49,8 +52,10 @@
         </div>
     </div>
 </div>
+<!-- ============================== ADD CONTACT DIALOG END ============================================= -->
 
-<div id="deleteContactDialog">
+<!-- ============================ DELETE CONTACT DIALOG BEGIN ========================================= -->
+<div id="deleteContactDialog" class="dialog">
     <div class="right">
         <a href="javascript:void(0)" class="closeAddContactDialog " onclick="closeDialog('deleteContactDialog')">&times</a>
     </div>
@@ -73,8 +78,10 @@
         </div>
     </div>
 </div>
+<!-- ============================ DELETE CONTACT DIALOG END ========================================= -->
 
-<div id="aboutDialog">
+<!-- ============================ ABOUT DIALOG BEGIN ========================================= -->
+<div id="aboutDialog" class="dialog">
     <div class="right">
         <a href="javascript:void(0)" class="closeAddWalletDialog " onclick="closeAboutDialog()">&times</a>
     </div>
@@ -86,6 +93,8 @@
     <div id="aboutContent" class="padding25">
     </div>
 </div>
+<!-- ============================ ABOUT DIALOG END ========================================= -->
+
 
 <div id="topHeader" class="topHeader">
     <a class="opennav" onclick="openNav()">

@@ -99,7 +99,6 @@ body {
     transition: all 1.4s;
 }
 
-
 #about{
     position:absolute;
     top: 650px;
@@ -125,8 +124,8 @@ body {
     float:left;
     margin: 0 auto;
     padding: 10px 10px 10px 10px;
-    left:0px;
-    right:0px;
+    left:0;
+    right:0;
     height:19px;
     border: 1px solid #c4cddb;
     border-top-color: #bfc9dc;
@@ -200,6 +199,15 @@ body {
     border-bottom: 3px solid #f88900;
 }
 
+.dialog{
+    background-color: #fefefe;
+    border: 1px solid #c4cddb;
+    border-top-color: #d3dbde;
+    border-bottom-color: #bfc9dc;
+    box-shadow: 0 1px 1px #ccc;
+    padding: 5px;
+}
+
 #aboutDialog {
     position: absolute;
     z-index: -1;
@@ -208,11 +216,6 @@ body {
     width: 700px;
     height: 250px;
     top:170px;
-    padding: 5px;
-    border: 1px solid #c4cddb;
-    border-top-color: #d3dbde;
-    border-bottom-color: #bfc9dc;
-    box-shadow: 0 1px 1px #ccc;
     opacity:0;
     transition: 0.5s;
 }

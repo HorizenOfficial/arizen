@@ -110,25 +110,44 @@ function closeDialog(clasname) {
     document.getElementById(clasname).style.opacity = "0";
 }
 
-function printWalletListToPickDialog(walletList, wNames){
+function printWallet(wId, wName, wBalance, wAddress, verbose=true) {
+    let walletClass = "";
+    let walletTitle = "";
+    let walletBalance;
+    let walletAddress = "";
+    let walletEnd = "</div>";
+    if (wName === "Messenger Wallet") {
+        walletClass = "<div class=\"walletListItem walletListItemChat\">";
+        walletTitle = "<span class=\"walletListItemAddress\">Messenger Wallet</span>";
+    } else {
+        if ((wId % 2) === 0) {
+            walletClass = "<div class=\"walletListItem walletListItemOdd\">";
+        } else {
+            walletClass = "<div class=\"walletListItem\">";
+        }
+        walletTitle = "<span class=\"walletListItemAddress walletListItemTitle\">"+ wName +"</span>";
+    }
+    walletBalance = "<div class=\"right\"><span class=\"walletListItemAddress walletListItemBalance\">"+ wBalance +"</span> ZEN</div>";
+    if (verbose) {
+        walletAddress = "<span class=\"walletListItemAddress\"><b>Actual address</b> znbcGtStHjZdfWsRhZdZsffaetZZeDfv524  <a href=\"javascript:void(0)\" class=\"walletListItemDetails\">Details</a></span>";
+    }
+    return walletClass+walletTitle+walletBalance+walletAddress+walletEnd;
+}
+
+function printWalletList(walletList, wNames, element, verbose=false) {
     let walletListText;
     walletListText = "";
     for (let i = 0; i < walletList.length; i++) {
-        if ((i%2) == 0)
-        {
-            walletListText += "<div class=\"walletListItem walletListItemOdd\">";
-        } else {
-            walletListText += "<div class=\"walletListItem\">";
-        }
-        walletListText += "<span class=\"walletListItemAddress walletListItemTitle\">"+ wNames[walletList[i].id] +"</span>";
-        walletListText += "<div class=\"right\"><span class=\"walletListItemAddress walletListItemBalance\">"+ walletList[i].balance +"</span> ZEN</div>";
-        walletListText += "</div>";
+        walletListText += printWallet(i, wNames[walletList[i].id], walletList[i].balance, walletList[i].address, verbose);
     }
-    document.getElementById("pickWalletDialogContent").innerHTML = walletListText;
+    document.getElementById(element).innerHTML = walletListText;
 }
 
 function renderWallet(walletList, wNames) {
-    printWalletListToPickDialog(walletList, wNames);
+    printWalletList(walletList, wNames, "pickWalletDialogContent", false);
+    printWalletList(walletList, wNames, "walletList", true);
+    printWalletList(walletList, wNames, "walletListReceive", true);
+
 }
 
 
