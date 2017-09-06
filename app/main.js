@@ -15,6 +15,7 @@ const crypto = require("crypto");
 const bitcoin = require("bitcoinjs-lib");
 const bip32utils = require("bip32-utils");
 const zencashjs = require("zencashjs");
+const sql = require('sql.js');
 const updater = require("electron-simple-updater");
 updater.init({
     checkUpdateOnStart: true, autoDownload: true,
@@ -24,8 +25,13 @@ updater.init({
 // Keep a global reference of the window object, if you don"t, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
-let loggedIn = false;
-let walletDecrypted;
+let userInfo = {
+    loggedIn: false,
+    login: "",
+    pass: "",
+    walletDb: [],
+    dbChanged: false
+}
 
 function getLoginPath() {
     return getRootConfigPath() + "users.arizen";
@@ -76,13 +82,11 @@ function encryptWallet(login, password, inputBytes) {
 
 function decryptWallet(login, password) {
     let i = login.length;
-    let inputBytes = fs.readFileSync(getWalletPath() + "wallet.dat." + login);
+    let inputBytes = fs.readFileSync(getWalletPath() + login + ".awd");
     let recoveredLogin = inputBytes.slice(0, i).toString("utf8");
-    let re = /\x30\x81\xD3\x02\x01\x01\x04\x20(.{32})/gm;
-    let privateKeys;
+    let outputBytes = [];
 
     if (login === recoveredLogin) {
-        let outputBytes = [];
         let iv = inputBytes.slice(0, i + 64);
         i += 64;
         let salt = inputBytes.slice(i, i + 64);
@@ -94,19 +98,12 @@ function decryptWallet(login, password) {
         let decipher = crypto.createDecipheriv("aes-256-gcm", key, iv);
 
         decipher.setAuthTag(tag);
-        outputBytes = decipher.update(encrypted);
-        /* FIXME: handle error */
+        outputBytes = decipher.update(encrypted, "binary", "binary");
+        // FIXME: handle error
         outputBytes += decipher.final();
-        
-        privateKeys = outputBytes.match(re);
-        privateKeys = privateKeys.map(function (x) {
-          x = x.replace('\x30\x81\xD3\x02\x01\x01\x04\x20', '');
-          x = Buffer.from(x, 'latin1').toString('hex');
-          return x;
-        });
     }
     
-    return privateKeys;
+    return outputBytes;
 }
 
 /* wallet generation from kendricktan */
@@ -130,12 +127,24 @@ function generateNewWallet(login, password) {
         return chain.derive(x).keyPair.toWIF();
     });
 
-    let saveBfr = Buffer.from(privateKeys[0]);
-    for (i = 1; i <= 42; i += 1) {
-        saveBfr = Buffer.concat([saveBfr, Buffer.from(privateKeys[i])])
+    let pk;
+    let pubKey;
+    let db = new sql.Database();
+    // Run a query without reading the results
+    db.run("CREATE TABLE wallet (id integer, pk text, addr text, lastbalance real);");
+    for (i = 0; i <= 42; i += 1) {
+        pk = zencashjs.address.WIFToPrivKey(privateKeys[i]);
+        pubKey = zencashjs.address.privKeyToPubKey(pk, true);
+        db.run("INSERT INTO wallet VALUES (?,?,?,?)", [i + 1, pk, zencashjs.address.pubKeyToAddr(pubKey), 0]);
     }
 
-    fs.writeFileSync(getWalletPath() + "wallet.dat." + login, encryptWallet(login, password, saveBfr));
+    let data = db.export();
+    let walletEncrypted = encryptWallet(login, password, data);
+    fs.writeFileSync(getWalletPath() + login + ".awd", walletEncrypted, function (err) {
+        if (err) {
+            return console.log(err);
+        }
+    });
 }
 
 function createWindow() {
@@ -280,6 +289,18 @@ app.on("activate", function () {
 
 app.on("before-quit", function () {
     console.log("quitting");
+    
+    if (true === userInfo.loggedIn && true === userInfo.dbChanged)
+    {
+        userInfo.dbChanged = false;
+        let data = userInfo.walletDb.export();
+        let walletEncrypted = encryptWallet(userInfo.login, userInfo.pass, data);
+        fs.writeFileSync(path + login + ".awd", walletEncrypted, function (err) {
+            if (err) {
+                return console.log(err);
+            }
+        });
+    }
     //fs.removeSync(getTmpPath());
     // dialog.showMessageBox({
     //     type: "question",
@@ -332,8 +353,35 @@ ipcMain.on("write-login-info", function (event, login, pass, wallet) {
     if (wallet !== "") {
         if (fs.existsSync(wallet)) {
             let walletBytes = fs.readFileSync(wallet, "binary");
-            let walletEncrypted = encryptWallet(login, pass, walletBytes);
-            fs.writeFileSync(path + "wallet.dat." + login, walletEncrypted, function (err) {
+            let re = /\x30\x81\xD3\x02\x01\x01\x04\x20(.{32})/gm;
+            let privateKeys = walletBytes.match(re);
+            privateKeys = privateKeys.map(function (x) {
+              x = x.replace('\x30\x81\xD3\x02\x01\x01\x04\x20', '');
+              x = Buffer.from(x, 'latin1').toString('hex');
+              return x;
+            });
+
+            let pk;
+            let pubKey;
+            //Create the database
+            let db = new sql.Database();
+            // Run a query without reading the results
+            db.run("CREATE TABLE wallet (id integer, pk text, addr text, lastbalance real);");
+
+            for (let i = 0; i < privateKeys.length; i += 1) {
+                // If not 64 length, probs WIF format
+                if (privateKeys[i].length !== 64) {
+                    pk = zencashjs.address.WIFToPrivKey(privateKeys[i]);
+                } else {
+                    pk = privateKeys[i];
+                }
+                pubKey = zencashjs.address.privKeyToPubKey(pk, true);
+                db.run("INSERT INTO wallet VALUES (?,?,?,?)", [i + 1, pk, zencashjs.address.pubKeyToAddr(pubKey), 0]);
+            }
+
+            let data = db.export();
+            let walletEncrypted = encryptWallet(login, pass, data);
+            fs.writeFileSync(path + login + ".awd", walletEncrypted, function (err) {
                 if (err) {
                     return console.log(err);
                 }
@@ -347,58 +395,65 @@ ipcMain.on("write-login-info", function (event, login, pass, wallet) {
 ipcMain.on("verify-login-info", function (event, login, pass) {
     let path = getLoginPath();
     let data = JSON.parse(fs.readFileSync(path, "utf8"));
-    let resp;
     let user = data.users.filter(function (user) {
         return user.login === login;
     });
+    let resp = {
+        response: "ERR"
+    };
 
     if (user.length === 1 && user[0].login === login) {
         if (passwordHash.verify(pass, user[0].password)) {
-            walletDecrypted = decryptWallet(login, pass);
-            if (walletDecrypted.length > 0) {
-                loggedIn = true;
+            let walletBytes = decryptWallet(login, pass);
+            if (walletBytes.length > 0) {
+                userInfo.loggedIn = true;
+                userInfo.login = login;
+                userInfo.pass = pass;
+                userInfo.walletDb = new sql.Database(walletBytes);
                 resp = {
-                    response: "OK"
-                };
-            } else {
-                loggedIn = false;
-                resp = {
-                    response: "ERR"
+                    response: "OK",
+                    user: login
                 };
             }
-        } else {
-            loggedIn = false;
-            resp = {
-                response: "ERR"
-            };
         }
-    } else {
-        loggedIn = false;
-        resp = {
-            response: "ERR"
-        };
     }
     event.sender.send("verify-login-response", JSON.stringify(resp));
 });
 
-ipcMain.on("check-login-info", function (event, login, pass) {
+ipcMain.on("check-login-info", function (event) {
     let resp;
 
-    if (loggedIn) {
+    if (userInfo.loggedIn) {
         resp = {
-            response: "OK"
+            response: "OK",
+            user: userInfo.login
         };
     } else {
         resp = {
-            response: "ERR"
+            response: "ERR",
+            user: ""
         };
     }
     event.sender.send("check-login-response", JSON.stringify(resp));
 });
 
 ipcMain.on("do-logout", function (event) {
-    loggedIn = false;
-    walletDecrypted = [];
+    if (true === userInfo.dbChanged)
+    {
+        userInfo.dbChanged = false;
+        let data = userInfo.walletDb.export();
+        let walletEncrypted = encryptWallet(userInfo.login, userInfo.pass, data);
+        fs.writeFileSync(path + login + ".awd", walletEncrypted, function (err) {
+            if (err) {
+                return console.log(err);
+            }
+        });
+    }
+    userInfo.login = "";
+    userInfo.pass = "";
+    userInfo.walletDb = [];
+    userInfo.loggedIn = false;
+    
 });
 
 ipcMain.on("exit-from-menu", function (event) {
@@ -416,30 +471,23 @@ ipcMain.on("get-wallets", function (event) {
     let pubKey;
     let zenAddr;
 
-    resp = {
-        response: "OK",
-        wallets: [],
-        total: 0
-    };
-    for (let i = 0, priv; i < walletDecrypted.length; i += 1) {
-        // If not 64 length, probs WIF format
-        if (walletDecrypted[i].length !== 64) {
-            pk = zencashjs.address.WIFToPrivKey(walletDecrypted[i]);
-            pkWif = walletDecrypted[i];
-        } else {
-            pk = walletDecrypted[i];
-            pkWif = zencashjs.address.privKeyToWIF(pk, true);
+
+    if (userInfo.loggedIn) {
+        let sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet");
+        resp = {
+            response: "OK",
+            wallets: sqlRes[0].values,
+            total: 0
+        };
+        for (let i = 0; i < resp.wallets.length; i += 1) {
+            resp.total += resp.wallets[i][3];
         }
-        pubKey = zencashjs.address.privKeyToPubKey(pk, true);
-        zenAddr = zencashjs.address.pubKeyToAddr(pubKey);
-        resp.wallets.push({
-            addr: zenAddr,
-            priv: pk,
-            wif: pkWif,
-            cbalance: 0,
-            ubalance: 0
-        });
-        resp.total += resp.wallets[i].cbalance;
+    } else {
+        resp = {
+            response: "ERR",
+            wallets: [],
+            total: 0
+        };
     }
 
     event.sender.send("get-wallets-response", JSON.stringify(resp));

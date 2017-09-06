@@ -162,8 +162,8 @@ ipcRenderer.on("get-wallets-response", function (event, resp) {
     if (walletElem.children.length > 0) {
         walletElem.innerHTML = walletElem.children[0].outerHTML;
         for (let i = 0; i < data.wallets.length; i += 1) {
-            walletElem.innerHTML += '<div class="walletListItem"><span class="walletListItemAddress">' + data.wallets[i].addr
-                                 +'</span><span class="walletListItemBalance">' + data.wallets[i].cbalance + '</span></div>';
+            walletElem.innerHTML += '<div class="walletListItem"><span class="walletListItemAddress">' + data.wallets[i][2]
+                                 +'</span><span class="walletListItemBalance">' + data.wallets[i][3] + '</span></div>';
             if (i % 2 == 0) {
                 walletElem.children[i].className += " walletListItemOdd";
             }
