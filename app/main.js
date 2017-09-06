@@ -4,7 +4,7 @@
 "use strict";
 
 const electron = require("electron");
-const {app, Menu, ipcMain} = require("electron");
+const {app, Menu, ipcMain, dialog} = require("electron");
 const BrowserWindow = electron.BrowserWindow;
 const path = require("path");
 const url = require("url");
@@ -106,6 +106,43 @@ function decryptWallet(login, password) {
     return outputBytes;
 }
 
+function importWalletDat(login, pass, wallet) {
+    let walletBytes = fs.readFileSync(wallet, "binary");
+    let re = /\x30\x81\xD3\x02\x01\x01\x04\x20(.{32})/gm;
+    let privateKeys = walletBytes.match(re);
+    privateKeys = privateKeys.map(function (x) {
+      x = x.replace('\x30\x81\xD3\x02\x01\x01\x04\x20', '');
+      x = Buffer.from(x, 'latin1').toString('hex');
+      return x;
+    });
+
+    let pk;
+    let pubKey;
+    //Create the database
+    let db = new sql.Database();
+    // Run a query without reading the results
+    db.run("CREATE TABLE wallet (id integer, pk text, addr text, lastbalance real);");
+
+    for (let i = 0; i < privateKeys.length; i += 1) {
+        // If not 64 length, probs WIF format
+        if (privateKeys[i].length !== 64) {
+            pk = zencashjs.address.WIFToPrivKey(privateKeys[i]);
+        } else {
+            pk = privateKeys[i];
+        }
+        pubKey = zencashjs.address.privKeyToPubKey(pk, true);
+        db.run("INSERT INTO wallet VALUES (?,?,?,?)", [i + 1, pk, zencashjs.address.pubKeyToAddr(pubKey), 0]);
+    }
+
+    let data = db.export();
+    let walletEncrypted = encryptWallet(login, pass, data);
+    fs.writeFileSync(getWalletPath() + login + ".awd", walletEncrypted, function (err) {
+        if (err) {
+            return console.log(err);
+        }
+    });
+}
+
 /* wallet generation from kendricktan */
 function generateNewWallet(login, password) {
     let i;
@@ -158,6 +195,7 @@ function createWindow() {
                         console.log("Backuping wallet is not implemented.");
                         //dialog.showOpenDialog(getFileLocationOpts("Import eleos-wallets.tar"), function (path) {
                         //});
+                        //dialog.showSaveDialog([browserWindow, ]options[, callback])
                     }
                 },
                 {
@@ -166,9 +204,20 @@ function createWindow() {
                 {
                     label: "Import wallet",
                     click() {
-                        console.log("Importing wallet is not implemented.");
-                        //dialog.showSaveDialog(getSaveLocationOpts("Save Eleos wallets", "eleos-wallets.tar"), function (path) {
-                        //);
+                        if (userInfo.loggedIn) {
+                            dialog.showOpenDialog({title: "Import wallet.dat", filters: [{name: 'Wallet', extensions: ['dat']}]}, function (filePaths) {
+                                if (filePaths) dialog.showMessageBox({
+                                    type: "warning",
+                                    message: "This will replace you actual wallet. Are you sure?",
+                                    buttons: ["Yes", "No"],
+                                    title:"Replace wallet?"}, function (response) {
+                                        if (response == 0) {
+                                            importWalletDat(userInfo.login, userInfo.pass, filePaths[0]);
+                                        }
+                                    })
+                                });
+                            }
+                        
                     }
                 },
                 {
@@ -352,40 +401,7 @@ ipcMain.on("write-login-info", function (event, login, pass, wallet) {
     }
     if (wallet !== "") {
         if (fs.existsSync(wallet)) {
-            let walletBytes = fs.readFileSync(wallet, "binary");
-            let re = /\x30\x81\xD3\x02\x01\x01\x04\x20(.{32})/gm;
-            let privateKeys = walletBytes.match(re);
-            privateKeys = privateKeys.map(function (x) {
-              x = x.replace('\x30\x81\xD3\x02\x01\x01\x04\x20', '');
-              x = Buffer.from(x, 'latin1').toString('hex');
-              return x;
-            });
-
-            let pk;
-            let pubKey;
-            //Create the database
-            let db = new sql.Database();
-            // Run a query without reading the results
-            db.run("CREATE TABLE wallet (id integer, pk text, addr text, lastbalance real);");
-
-            for (let i = 0; i < privateKeys.length; i += 1) {
-                // If not 64 length, probs WIF format
-                if (privateKeys[i].length !== 64) {
-                    pk = zencashjs.address.WIFToPrivKey(privateKeys[i]);
-                } else {
-                    pk = privateKeys[i];
-                }
-                pubKey = zencashjs.address.privKeyToPubKey(pk, true);
-                db.run("INSERT INTO wallet VALUES (?,?,?,?)", [i + 1, pk, zencashjs.address.pubKeyToAddr(pubKey), 0]);
-            }
-
-            let data = db.export();
-            let walletEncrypted = encryptWallet(login, pass, data);
-            fs.writeFileSync(path + login + ".awd", walletEncrypted, function (err) {
-                if (err) {
-                    return console.log(err);
-                }
-            });
+            importWalletDat(login, pass, wallet);
         }
     } else {
         generateNewWallet(login, pass);
