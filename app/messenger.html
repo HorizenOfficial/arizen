@@ -6,9 +6,11 @@
     <link rel="stylesheet" href="resources/styles.css">
     <link rel="stylesheet" href="resources/messenger.css">
     <script src="common.js"></script>
+    <script src="test_data.js"></script>
     <script src="messenger.js"></script>
 </head>
-<body>
+<body onload="renderContact(contacts)">
+
 
 <!-- ============================== SIDENAV BEGIN ============================== -->
 <div id="mySidenav" class="sidenav">
@@ -111,6 +113,7 @@
         </div>
     </div>
     <div id="contactList">
+        <!--
         <div class="contact contactOdd" title="Address: znbcHyStHjZdfWhZdZs5124fddggswf9481">TheJedi <span class="contactName">- Luke Skywalker</span></div>
         <div class="contact" title="Address: znbcHyStHjZdfWhZdZs5124fddggswf9481">LittleAni <span class="contactName">- Dart Vader</span></div>
         <div class="contact contactOdd" title="Address: znbcHyStHjZdfWhZdZs5124fddggswf9481">Captain <span class="contactName">- James Tiberius Kirk</span></div>
@@ -118,6 +121,7 @@
         <div class="contact contactOdd" title="Address: znbcHyStHjZdfWhZdZs5124fddggswf9481">Ghost <span class="contactName">- John Snow</span></div>
         <div class="contact " title="Address: znbcHyStHjZdfWhZdZs5124fddggswf9481">Gunslinger <span class="contactName">- Roland Deschain of Gilead</span></div>
         <div class="contact contactOdd" title="Address: znbcHyStHjZdfWhZdZs5124fddggswf9481">Ironman <span class="contactName">- Anthony Stark</span></div>
+        -->
     </div>
     <div>
         <button class="buttons addContactButton" onclick="addContactDialog()">Add Contact</button>
