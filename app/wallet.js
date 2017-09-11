@@ -102,6 +102,24 @@ function pickWalletDialog() {
     document.getElementById("pickWalletDialog").style.opacity = "1";
 }
 
+function walletDetailsDialog(id, walletList, wNames) {
+    document.getElementById("darkContainer").style.transition = "0.5s";
+    document.getElementById("darkContainer").style.zIndex = "1";
+    document.getElementById("darkContainer").style.opacity = "0.7";
+    document.getElementById("walletDetailsDialog").style.zIndex = "2";
+    document.getElementById("walletDetailsDialog").style.opacity = "1";
+    document.getElementById("walletDetailsDialogContent").innerHTML = "";
+    let j = 1;
+    for (let i = walletList.length; i >= 0; i--) {
+        if (walletList[i].id === id) {
+            document.getElementById("walletDetailsDialogContent").innerHTML += printWallet(j, walletList[i].address, walletList[i].balance,"", false);
+            j++;
+        }
+    }
+
+}
+
+
 function closeDialog(clasname) {
     document.getElementById("darkContainer").style.transition = "0s";
     document.getElementById("darkContainer").style.opacity = "0";
@@ -118,7 +136,7 @@ function printWallet(wId, wName, wBalance, wAddress, verbose=true) {
     let walletEnd = "</div>";
     if (wName === "Messenger Wallet") {
         walletClass = "<div class=\"walletListItem walletListItemChat\">";
-        walletTitle = "<span class=\"walletListItemAddress\">Messenger Wallet</span>";
+        walletTitle = "<span class=\"walletListItemTitleChat\">Messenger Wallet</span>";
     } else {
         if ((wId % 2) === 0) {
             walletClass = "<div class=\"walletListItem walletListItemOdd\">";
@@ -127,18 +145,32 @@ function printWallet(wId, wName, wBalance, wAddress, verbose=true) {
         }
         walletTitle = "<span class=\"walletListItemAddress walletListItemTitle\">"+ wName +"</span>";
     }
-    walletBalance = "<div class=\"right\"><span class=\"walletListItemAddress walletListItemBalance\">"+ wBalance +"</span> ZEN</div>";
+    walletBalance = "<span class=\"walletListItemAddress walletListItemBalance\">"+ wBalance +"</span> ZEN";
     if (verbose) {
-        walletAddress = "<span class=\"walletListItemAddress\"><b>Actual address</b> znbcGtStHjZdfWsRhZdZsffaetZZeDfv524  <a href=\"javascript:void(0)\" class=\"walletListItemDetails\">Details</a></span>";
+        walletAddress = "<span class=\"walletListItemAddress\"><b>Actual address</b> "+ wAddress +"</span><a href=\"javascript:void(0)\" class=\"walletListItemDetails\" onclick=\"walletDetailsDialog("+wId+")\">Details</a>";
     }
     return walletClass+walletTitle+walletBalance+walletAddress+walletEnd;
 }
 
+function isUnique(walletId, ids) {
+    for (let i= 0; i < ids.length; i++) {
+        if (ids[i] === walletId) {
+            return false;
+        }
+    }
+    return true;
+}
+
 function printWalletList(walletList, wNames, element, verbose=false) {
     let walletListText;
+    let ids = [];
     walletListText = "";
-    for (let i = 0; i < walletList.length; i++) {
-        walletListText += printWallet(i, wNames[walletList[i].id], walletList[i].balance, walletList[i].address, verbose);
+    for (let i = walletList.length-1; i >= 0; i--) {
+        console.log(isUnique(walletList[i].id, ids));
+        if (isUnique(walletList[i].id, ids)) {
+            walletListText += printWallet(ids.length, wNames[walletList[i].id], walletList[i].balance, walletList[i].address, verbose, walletList);
+            ids.push(walletList[i].id);
+        }
     }
     document.getElementById(element).innerHTML = walletListText;
 }
@@ -147,7 +179,6 @@ function renderWallet(walletList, wNames) {
     printWalletList(walletList, wNames, "pickWalletDialogContent", false);
     printWalletList(walletList, wNames, "walletList", true);
     printWalletList(walletList, wNames, "walletListReceive", true);
-
 }
 
 
