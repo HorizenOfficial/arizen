@@ -172,7 +172,7 @@
 
 .walletListItemAddress {
     display:inline-block;
-    width:95%;
+    width:85%;
 }
 
 .walletListItemBalance{
@@ -183,6 +183,16 @@
 
 .walletListItemTitle{
     color: #f88900;
+    width:60%;
+    display: inline-block;
+    font-weight: 800;
+    font-size: 1em;
+}
+
+.walletListItemTitleChat{
+    color: #fefefe;
+    width:60%;
+    display: inline-block;
     font-weight: 800;
     font-size: 1em;
 }
@@ -292,6 +302,44 @@
     transparent 75%,
     transparent)
 }
+
+#walletDetailsDialog {
+    position: absolute;
+    z-index: -1;
+    left: 312px;
+    width: 400px;
+    bottom: 150px;
+    top:150px;
+    opacity:0;
+    transition: 0.5s;
+    overflow-y: scroll;
+}
+
+#walletDetailsDialog::-webkit-scrollbar-track
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: #FeFeFe;
+}
+
+#walletDetailsDialog::-webkit-scrollbar
+{
+    width: 10px;
+    background-color: #FeFeFe;
+}
+
+#walletDetailsDialog::-webkit-scrollbar-thumb
+{
+    background-color: #F90;
+    background-image: -webkit-linear-gradient(45deg,
+    rgba(255, 255, 255, .2) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, .2) 50%,
+    rgba(255, 255, 255, .2) 75%,
+    transparent 75%,
+    transparent)
+}
+
 
 
 .generateWalletButton{
