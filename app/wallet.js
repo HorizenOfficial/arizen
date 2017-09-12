@@ -102,13 +102,37 @@ function pickWalletDialog() {
     document.getElementById("pickWalletDialog").style.opacity = "1";
 }
 
-function walletDetailsDialog(id, walletList, wNames) {
+function getNonZeroBalance(walletList) {
+    let non_zero = [];
+    for (let i = 0; i < walletList.length; i++) {
+        if (walletList[i].balance > 0) {
+            non_zero.push(walletList[i]);
+        }
+    }
+    non_zero.sort(function(a,b) {
+        return b.balance - a.balance;
+    });
+    return non_zero;
+}
+
+function getZeroBalance(walletList) {
+    let zero = [];
+    for (let i = walletList.length - 1; i >= 0; i--) {
+        if (walletList[i].balance === 0) {
+            zero.push(walletList[i]);
+        }
+    }
+    return zero;
+}
+
+function walletDetailsDialog(id, walletListStr) {
     document.getElementById("darkContainer").style.transition = "0.5s";
     document.getElementById("darkContainer").style.zIndex = "1";
     document.getElementById("darkContainer").style.opacity = "0.7";
     document.getElementById("walletDetailsDialog").style.zIndex = "2";
     document.getElementById("walletDetailsDialog").style.opacity = "1";
     document.getElementById("walletDetailsDialogContent").innerHTML = "";
+    let walletList = JSON.parse(walletListStr.replace(/'/g,/"/));
     let j = 1;
     for (let i = walletList.length; i >= 0; i--) {
         if (walletList[i].id === id) {
@@ -116,7 +140,6 @@ function walletDetailsDialog(id, walletList, wNames) {
             j++;
         }
     }
-
 }
 
 
@@ -128,7 +151,7 @@ function closeDialog(clasname) {
     document.getElementById(clasname).style.opacity = "0";
 }
 
-function printWallet(wId, wName, wBalance, wAddress, verbose=true) {
+function printWallet(wId, wName, wBalance, wAddress, walletList, verbose=true) {
     let walletClass = "";
     let walletTitle = "";
     let walletBalance;
@@ -147,7 +170,7 @@ function printWallet(wId, wName, wBalance, wAddress, verbose=true) {
     }
     walletBalance = "<span class=\"walletListItemAddress walletListItemBalance\">"+ wBalance +"</span> ZEN";
     if (verbose) {
-        walletAddress = "<span class=\"walletListItemAddress\"><b>Actual address</b> "+ wAddress +"</span><a href=\"javascript:void(0)\" class=\"walletListItemDetails\" onclick=\"walletDetailsDialog("+wId+")\">Details</a>";
+        walletAddress = "<span class=\"walletListItemAddress\"><b>Actual address</b> "+ wAddress +"</span><a href=\"javascript:void(0)\" class=\"walletListItemDetails\" onclick=\"walletDetailsDialog("+wId+", " + JSON.stringify(walletList).replace(/"/g,"'") + ")\">Details</a>";
     }
     return walletClass+walletTitle+walletBalance+walletAddress+walletEnd;
 }
@@ -163,13 +186,20 @@ function isUnique(walletId, ids) {
 
 function printWalletList(walletList, wNames, element, verbose=false) {
     let walletListText;
+    let non_zero = getNonZeroBalance(walletList);
+    let zero = getZeroBalance(walletList);
     let ids = [];
     walletListText = "";
-    for (let i = walletList.length-1; i >= 0; i--) {
-        console.log(isUnique(walletList[i].id, ids));
-        if (isUnique(walletList[i].id, ids)) {
-            walletListText += printWallet(ids.length, wNames[walletList[i].id], walletList[i].balance, walletList[i].address, verbose, walletList);
-            ids.push(walletList[i].id);
+    for (let i = 0; i < non_zero.length; i++) {
+        if (isUnique(non_zero[i].id, ids)) {
+            walletListText += printWallet(ids.length, wNames[non_zero[i].id], non_zero[i].balance, non_zero[i].address,  non_zero, verbose);
+            ids.push(non_zero[i].id);
+        }
+    }
+    for (let i = 0; i < zero.length; i++) {
+        if (isUnique(zero[i].id, ids)) {
+            walletListText += printWallet(ids.length, wNames[zero[i].id], zero[i].balance, zero[i].address, zero, verbose);
+            ids.push(zero[i].id);
         }
     }
     document.getElementById(element).innerHTML = walletListText;

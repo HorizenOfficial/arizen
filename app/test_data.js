@@ -1,14 +1,14 @@
 let walletNames = ["My First Wallet", "My Second Wallet", "New Car", "Messenger Wallet"];
 
-let wallets = [ {id : 0, address: "znbcGtStHjZdfWsRhZdZsffaetZZeDfv524", balance:"110.0000"},
-                {id : 0, address: "znbcGtStHjZdfWsRhZdZsffaetZZeDfv525", balance:"110.0000"},
-                {id : 0, address: "znbcGtStHjZdfWsRhZdZsffaetZZeDfv526", balance:"110.0000"},
-                {id : 1, address: "znbcGtStHjZdfWsRhZdZsffaetZZeDfv527", balance:"110.0000"},
-                {id : 1, address: "znbcGtStHjZdfWsRhZdZsffaetZZeDfv528", balance:"110.0000"},
-                {id : 2, address: "znbcGtStHjZdfWsRhZdZsffaetZZeDfv520", balance:"110.0000"},
-                {id : 2, address: "znbcGtStHjZdfWsRhZdZsffaetZZeDfv521", balance:"110.0000"},
-                {id : 2, address: "znbcGtStHjZdfWsRhZdZsffaetZZeDfv522", balance:"110.0000"},
-                {id : 3, address: "znbcGtStHjZdfWsRhZdZsffaetZZeDfv523", balance:"110.0000"}];
+let wallets = [ {id : 0, address: "znbcGtStHjZdfWsRhZdZsffaetZZeDfv524", balance: 110.00},
+                {id : 0, address: "znbcGtStHjZdfWsRhZdZsffaetZZeDfv525", balance: 11.000},
+                {id : 0, address: "znbcGtStHjZdfWsRhZdZsffaetZZeDfv526", balance: 20.000},
+                {id : 1, address: "znbcGtStHjZdfWsRhZdZsffaetZZeDfv527", balance: 50.000},
+                {id : 1, address: "znbcGtStHjZdfWsRhZdZsffaetZZeDfv528", balance: 16.000},
+                {id : 2, address: "znbcGtStHjZdfWsRhZdZsffaetZZeDfv520", balance: 0.0000},
+                {id : 2, address: "znbcGtStHjZdfWsRhZdZsffaetZZeDfv521", balance: 0.0000},
+                {id : 2, address: "znbcGtStHjZdfWsRhZdZsffaetZZeDfv522", balance: 0.0000},
+                {id : 3, address: "znbcGtStHjZdfWsRhZdZsffaetZZeDfv523", balance: 0.0000}];
 
 let contacts = [ {address:"znbcGtStHjZdfWsRhZdZsffaetZZeDfv123", nickname:"TheJedi", name:"Luke Skywalker"},
         {address:"znbcGtStHjZdfWsRhZdZsffaetZZeDfv123", nickname:"LittleAni", name:"Dart Vader"},
