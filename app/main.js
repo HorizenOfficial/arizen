@@ -33,6 +33,8 @@ let userInfo = {
     dbChanged: false
 }
 
+const dbstruct = "CREATE TABLE wallet (id integer, pk text, addr text, lastbalance real, name text);"
+
 function getLoginPath() {
     return getRootConfigPath() + "users.arizen";
 }
@@ -121,7 +123,7 @@ function importWalletDat(login, pass, wallet) {
     //Create the database
     let db = new sql.Database();
     // Run a query without reading the results
-    db.run("CREATE TABLE wallet (id integer, pk text, addr text, lastbalance real);");
+    db.run(dbstruct);
 
     for (let i = 0; i < privateKeys.length; i += 1) {
         // If not 64 length, probs WIF format
@@ -131,12 +133,35 @@ function importWalletDat(login, pass, wallet) {
             pk = privateKeys[i];
         }
         pubKey = zencashjs.address.privKeyToPubKey(pk, true);
-        db.run("INSERT INTO wallet VALUES (?,?,?,?)", [i + 1, pk, zencashjs.address.pubKeyToAddr(pubKey), 0]);
+        db.run("INSERT INTO wallet VALUES (?,?,?,?)", [i + 1, pk, zencashjs.address.pubKeyToAddr(pubKey), 0, ""]);
     }
 
     let data = db.export();
     let walletEncrypted = encryptWallet(login, pass, data);
     fs.writeFileSync(getWalletPath() + login + ".awd", walletEncrypted, function (err) {
+        if (err) {
+            return console.log(err);
+        }
+    });
+}
+
+function importWallet(filename, encrypt) {
+    let data;
+    if (encrypt === true) {
+        fs.copy(filename, getWalletPath() + userInfo.login + ".awd");
+        data = decryptWallet(login, pass);
+    } else {
+        data = fs.readFileSync(filename);
+    }
+    userInfo.walletDb = new sql.Database(walletBytes);
+}
+
+function exportWallet(filename, encrypt) {
+    let data = userInfo.walletDb.export();
+    if (encrypt === true) {
+        data = encryptWallet(userInfo.login, userInfo.pass, data);
+    }
+    fs.writeFileSync(filename, data, function (err) {
         if (err) {
             return console.log(err);
         }
@@ -168,11 +193,11 @@ function generateNewWallet(login, password) {
     let pubKey;
     let db = new sql.Database();
     // Run a query without reading the results
-    db.run("CREATE TABLE wallet (id integer, pk text, addr text, lastbalance real);");
+    db.run(dbstruct);
     for (i = 0; i <= 42; i += 1) {
         pk = zencashjs.address.WIFToPrivKey(privateKeys[i]);
         pubKey = zencashjs.address.privKeyToPubKey(pk, true);
-        db.run("INSERT INTO wallet VALUES (?,?,?,?)", [i + 1, pk, zencashjs.address.pubKeyToAddr(pubKey), 0]);
+        db.run("INSERT INTO wallet VALUES (?,?,?,?)", [i + 1, pk, zencashjs.address.pubKeyToAddr(pubKey), 0, ""]);
     }
 
     let data = db.export();
@@ -184,45 +209,175 @@ function generateNewWallet(login, password) {
     });
 }
 
-function createWindow() {
+function updateMenuAtLogin()
+{
     const template = [
         {
             label: "File",
             submenu: [
                 {
-                    label: "Backup wallet",
+                    label: "Backup encrypted wallet",
                     click() {
-                        console.log("Backuping wallet is not implemented.");
-                        //dialog.showOpenDialog(getFileLocationOpts("Import eleos-wallets.tar"), function (path) {
-                        //});
-                        //dialog.showSaveDialog([browserWindow, ]options[, callback])
+                        dialog.showSaveDialog({title: "Save wallet.awd", filters: [{name: 'Wallet', extensions: ['awd']}]}, function (filename) {
+                            if (typeof filename != "undefined" && filename !== ""){
+                                if (!fs.exists(filename)) {
+                                     dialog.showMessageBox({
+                                        type: "warning",
+                                        message: "Do you want to replace file?",
+                                        buttons: ["Yes", "No"],
+                                        title:"Replace wallet?"}, function (response) {
+                                        if (response == 0) {
+                                            exportWallet(filename, true);
+                                        }                                
+                                    });
+                                } else {
+                                    exportWallet(filename, true);
+                                }
+                            }
+                        });
                     }
-                },
-                {
+                },{
+                    label: "Backup unencrypted wallet",
+                    click() {
+                        dialog.showSaveDialog({title: "Save wallet.uawd", filters: [{name: 'Wallet', extensions: ['uawd']}]}, function (filename) {
+                            if (typeof filename != "undefined" && filename !== ""){
+                                if (!fs.exists(filename)) {
+                                     dialog.showMessageBox({
+                                        type: "warning",
+                                        message: "Do you want to replace file?",
+                                        buttons: ["Yes", "No"],
+                                        title:"Replace wallet?"}, function (response) {
+                                        if (response == 0) {
+                                            exportWallet(filename, false);
+                                        }                                
+                                    });
+                                } else {
+                                    exportWallet(filename, false);
+                                }
+                            }
+                        });
+                    }
+                },{
                     type: "separator"
-                },
-                {
-                    label: "Import wallet",
+                },{
+                    label: "Import ZEND wallet",
                     click() {
                         if (userInfo.loggedIn) {
                             dialog.showOpenDialog({title: "Import wallet.dat", filters: [{name: 'Wallet', extensions: ['dat']}]}, function (filePaths) {
                                 if (filePaths) dialog.showMessageBox({
                                     type: "warning",
-                                    message: "This will replace you actual wallet. Are you sure?",
+                                    message: "This will replace your actual wallet. Are you sure?",
                                     buttons: ["Yes", "No"],
                                     title:"Replace wallet?"}, function (response) {
                                         if (response == 0) {
                                             importWalletDat(userInfo.login, userInfo.pass, filePaths[0]);
                                         }
                                     })
-                                });
-                            }
-                        
+                            });
+                        }
                     }
+                },{
+                    label: "Import UNENCRYPTED Arizen wallet",
+                    click() {
+                        if (userInfo.loggedIn) {
+                            dialog.showOpenDialog({title: "Import wallet.uawd", filters: [{name: 'Wallet', extensions: ['uawd']}]}, function (filePaths) {
+                                if (filePaths) dialog.showMessageBox({
+                                    type: "warning",
+                                    message: "This will replace your actual wallet. Are you sure?",
+                                    buttons: ["Yes", "No"],
+                                    title:"Replace wallet?"}, function (response) {
+                                        if (response == 0) {
+                                            importWallet(filePaths[0], false);
+                                        }
+                                    })
+                            });
+                        }
+                    }
+                },{
+                    label: "Import ENCRYPTED Arizen wallet",
+                    click() {
+                        if (userInfo.loggedIn) {
+                            dialog.showOpenDialog({title: "Import wallet.awd", filters: [{name: 'Wallet', extensions: ['awd']}]}, function (filePaths) {
+                                if (filePaths) dialog.showMessageBox({
+                                    type: "warning",
+                                    message: "This will replace your actual wallet. Are you sure?",
+                                    buttons: ["Yes", "No"],
+                                    title:"Replace wallet?"}, function (response) {
+                                        if (response == 0) {
+                                            importWallet(filePaths[0], true);
+                                        }
+                                    })
+                            });
+                        }
+                    }
+                },{
+                    type: "separator"
+                },{
+                    label: "Exit",
+                    click() {
+                        app.quit();
+                    }
+                }
+            ]
+        },
+        {
+            label: "Edit",
+            submenu: [
+                {label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:"},
+                {label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:"},
+                {type: "separator"},
+                {label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:"},
+                {label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:"},
+                {label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:"},
+                {label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:"}
+            ]
+        }
+    ];
+
+    if (os.platform() === "darwin") {
+        template.unshift({
+            label: app.getName(),
+            submenu: [
+                {
+                    role: "about"
                 },
                 {
                     type: "separator"
                 },
+                {
+                    role: "services",
+                    submenu: []
+                },
+                {
+                    type: "separator"
+                },
+                {
+                    role: "hide"
+                },
+                {
+                    role: "hideothers"
+                },
+                {
+                    role: "unhide"
+                },
+                {
+                    type: "separator"
+                },
+                {
+                    role: "quit"
+                }
+            ]
+        });
+    }
+    const menu = Menu.buildFromTemplate(template);
+    Menu.setApplicationMenu(menu);
+}
+
+function updateMenuAtLogout() {
+    const template = [
+        {
+            label: "File",
+            submenu: [
                 {
                     label: "Exit",
                     click() {
@@ -282,6 +437,10 @@ function createWindow() {
     }
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
+}
+
+function createWindow() {
+    updateMenuAtLogout();
     win = new BrowserWindow({width: 1050, height: 730, resizable: false, icon: "resources/zen_icon.png"});
 
     if (fs.existsSync(getLoginPath())) {
@@ -342,15 +501,8 @@ app.on("before-quit", function () {
     if (true === userInfo.loggedIn && true === userInfo.dbChanged)
     {
         userInfo.dbChanged = false;
-        let data = userInfo.walletDb.export();
-        let walletEncrypted = encryptWallet(userInfo.login, userInfo.pass, data);
-        fs.writeFileSync(path + login + ".awd", walletEncrypted, function (err) {
-            if (err) {
-                return console.log(err);
-            }
-        });
+        exportWallet(getWalletPath() + userInfo.login + ".awd", true);
     }
-    //fs.removeSync(getTmpPath());
     // dialog.showMessageBox({
     //     type: "question",
     //     buttons: ["Yes", "No"],
@@ -426,6 +578,7 @@ ipcMain.on("verify-login-info", function (event, login, pass) {
                 userInfo.login = login;
                 userInfo.pass = pass;
                 userInfo.walletDb = new sql.Database(walletBytes);
+                updateMenuAtLogin();
                 resp = {
                     response: "OK",
                     user: login
@@ -454,16 +607,11 @@ ipcMain.on("check-login-info", function (event) {
 });
 
 ipcMain.on("do-logout", function (event) {
+    updateMenuAtLogout();
     if (true === userInfo.dbChanged)
     {
         userInfo.dbChanged = false;
-        let data = userInfo.walletDb.export();
-        let walletEncrypted = encryptWallet(userInfo.login, userInfo.pass, data);
-        fs.writeFileSync(path + login + ".awd", walletEncrypted, function (err) {
-            if (err) {
-                return console.log(err);
-            }
-        });
+        exportWallet(getWalletPath() + userInfo.login + ".awd", true);
     }
     userInfo.login = "";
     userInfo.pass = "";
@@ -490,6 +638,10 @@ ipcMain.on("get-wallets", function (event) {
 
     if (userInfo.loggedIn) {
         let sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet");
+        if (sqlRes[0].columns.includes("name") === false) {
+            userInfo.walletDb.exec("ALTER TABLE wallet ADD COLUMN name text DEFAULT ''")
+            sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet");
+        }
         resp = {
             response: "OK",
             wallets: sqlRes[0].values,
