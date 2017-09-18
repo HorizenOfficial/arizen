@@ -133,7 +133,7 @@ function importWalletDat(login, pass, wallet) {
             pk = privateKeys[i];
         }
         pubKey = zencashjs.address.privKeyToPubKey(pk, true);
-        db.run("INSERT INTO wallet VALUES (?,?,?,?)", [i + 1, pk, zencashjs.address.pubKeyToAddr(pubKey), 0, ""]);
+        db.run("INSERT INTO wallet VALUES (?,?,?,?,?)", [i + 1, pk, zencashjs.address.pubKeyToAddr(pubKey), 0, ""]);
     }
 
     let data = db.export();
@@ -197,7 +197,7 @@ function generateNewWallet(login, password) {
     for (i = 0; i <= 42; i += 1) {
         pk = zencashjs.address.WIFToPrivKey(privateKeys[i]);
         pubKey = zencashjs.address.privKeyToPubKey(pk, true);
-        db.run("INSERT INTO wallet VALUES (?,?,?,?)", [i + 1, pk, zencashjs.address.pubKeyToAddr(pubKey), 0, ""]);
+        db.run("INSERT INTO wallet VALUES (?,?,?,?,?)", [i + 1, pk, zencashjs.address.pubKeyToAddr(pubKey), 0, ""]);
     }
 
     let data = db.export();
@@ -630,14 +630,10 @@ ipcMain.on("exit-from-menu", function (event) {
 
 ipcMain.on("get-wallets", function (event) {
     let resp;
-    let pk;
-    let pkWif;
-    let pubKey;
-    let zenAddr;
-
+    let sqlRes;
 
     if (userInfo.loggedIn) {
-        let sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet");
+        sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet");
         if (sqlRes[0].columns.includes("name") === false) {
             userInfo.walletDb.exec("ALTER TABLE wallet ADD COLUMN name text DEFAULT ''")
             sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet");
@@ -659,4 +655,32 @@ ipcMain.on("get-wallets", function (event) {
     }
 
     event.sender.send("get-wallets-response", JSON.stringify(resp));
+});
+
+ipcMain.on("rename-wallet", function (event, address, name) {
+    let resp;
+    let sqlRes;
+
+    if (userInfo.loggedIn) {
+        sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet WHERE addr = '" + address + "'");
+        if (sqlRes.length > 0) {
+            userInfo.walletDb.exec("UPDATE wallet SET name = '" + name + "' WHERE addr = '" + address + "'");
+            userInfo.dbChanged = true;
+            resp = {
+                response: "OK",
+                msg: "address " + address + " set to " + name
+            };
+        } else {
+            resp = {
+                response: "ERR",
+                msg: "address not found"
+            };
+        }
+    } else {
+        resp = {
+            response: "ERR",
+            msg: "not logged in"
+        };
+    }
+    event.sender.send("rename-wallet-response", JSON.stringify(resp));
 });
