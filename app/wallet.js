@@ -216,6 +216,11 @@ function getWallets() {
     ipcRenderer.send("get-wallets");
 }
 
+/* FIXME: @nonghost name usage */
+function addressNameTest() {
+    ipcRenderer.send("rename-wallet", "znc4M7DLcwShfoQuF18YB55QwphLhCVKeoi", "nove jmeno");
+}
+
 ipcRenderer.on("get-wallets-response", function (event, resp) {
     let walletElem = document.getElementById("walletList");
     let data = JSON.parse(resp);
@@ -231,6 +236,13 @@ ipcRenderer.on("get-wallets-response", function (event, resp) {
         }
         document.getElementById("walletFooterBalance").innerHTML = data.total;
     }
+});
+
+ipcRenderer.on("rename-wallet-response", function (event, resp) {
+    let data = JSON.parse(resp);
+
+    /* FIXME: @nonghost name response OK/ERR */
+    console.log(data.msg); 
 });
 
 getWallets();
