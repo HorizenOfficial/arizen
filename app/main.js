@@ -33,7 +33,7 @@ let userInfo = {
     dbChanged: false
 }
 
-const dbStructWallet = "CREATE TABLE wallet (id integer, pk text, addr text, lastbalance real, name text);"
+const dbStructWallet = "CREATE TABLE wallet (id INTEGER PRIMARY KEY AUTOINCREMENT, pk text, addr text, lastbalance real, name text);"
 const dbStructContacts = "CREATE TABLE contacts (id integer, addr text, name text, nick text);"
 const zenApi = "https://explorer.zensystem.io/insight-api-zen/";
 
@@ -135,7 +135,7 @@ function importWalletDat(login, pass, wallet) {
             pk = privateKeys[i];
         }
         pubKey = zencashjs.address.privKeyToPubKey(pk, true);
-        db.run("INSERT INTO wallet VALUES (?,?,?,?,?)", [i + 1, pk, zencashjs.address.pubKeyToAddr(pubKey), 0, ""]);
+        db.run("INSERT INTO wallet VALUES (?,?,?,?,?)", [null, pk, zencashjs.address.pubKeyToAddr(pubKey), 0, ""]);
     }
 
     let data = db.export();
@@ -199,7 +199,7 @@ function generateNewWallet(login, password) {
     for (i = 0; i <= 42; i += 1) {
         pk = zencashjs.address.WIFToPrivKey(privateKeys[i]);
         pubKey = zencashjs.address.privKeyToPubKey(pk, true);
-        db.run("INSERT INTO wallet VALUES (?,?,?,?,?)", [i + 1, pk, zencashjs.address.pubKeyToAddr(pubKey), 0, ""]);
+        db.run("INSERT INTO wallet VALUES (?,?,?,?,?)", [null, pk, zencashjs.address.pubKeyToAddr(pubKey), 0, ""]);
     }
 
     let data = db.export();
@@ -209,6 +209,34 @@ function generateNewWallet(login, password) {
             return console.log(err);
         }
     });
+}
+
+function generateNewAddress() {
+    let pk;
+    let pubKey;
+    let addr;
+    let seedHex = passwordHash.generate(userInfo.pass, {
+        "algorithm": "sha512",
+        "saltLength": 32
+    }).split("$")[3];
+
+    // chains
+    let hdNode = bitcoin.HDNode.fromSeedHex(seedHex);
+    let chain = new bip32utils.Chain(hdNode);
+
+    chain.next();
+
+    // Get private keys from them
+    let privateKeys = chain.getAll().map(function (x) {
+        return chain.derive(x).keyPair.toWIF();
+    });
+
+    pk = zencashjs.address.WIFToPrivKey(privateKeys[0]);
+    addr = zencashjs.address.pubKeyToAddr(zencashjs.address.privKeyToPubKey(pk, true));
+    userInfo.walletDb.run("INSERT INTO wallet VALUES (?,?,?,?,?)", [null, pk, addr, 0, ""]);
+    userInfo.dbChanged = true;
+
+    return addr;
 }
 
 function updateMenuAtLogin()
