@@ -33,7 +33,9 @@ let userInfo = {
     dbChanged: false
 }
 
-const dbstruct = "CREATE TABLE wallet (id integer, pk text, addr text, lastbalance real, name text);"
+const dbStructWallet = "CREATE TABLE wallet (id integer, pk text, addr text, lastbalance real, name text);"
+const dbStructContacts = "CREATE TABLE contacts (id integer, addr text, name text, nick text);"
+const zenApi = "https://explorer.zensystem.io/insight-api-zen/";
 
 function getLoginPath() {
     return getRootConfigPath() + "users.arizen";
@@ -123,7 +125,7 @@ function importWalletDat(login, pass, wallet) {
     //Create the database
     let db = new sql.Database();
     // Run a query without reading the results
-    db.run(dbstruct);
+    db.run(dbStructWallet);
 
     for (let i = 0; i < privateKeys.length; i += 1) {
         // If not 64 length, probs WIF format
@@ -193,7 +195,7 @@ function generateNewWallet(login, password) {
     let pubKey;
     let db = new sql.Database();
     // Run a query without reading the results
-    db.run(dbstruct);
+    db.run(dbStructWallet);
     for (i = 0; i <= 42; i += 1) {
         pk = zencashjs.address.WIFToPrivKey(privateKeys[i]);
         pubKey = zencashjs.address.privKeyToPubKey(pk, true);
@@ -629,11 +631,13 @@ ipcMain.on("exit-from-menu", function (event) {
 });
 
 ipcMain.on("get-wallets", function (event) {
+    let request = require('request');
     let resp;
     let sqlRes;
 
     if (userInfo.loggedIn) {
         sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet");
+        /* update wallet 0.1 if necessary */
         if (sqlRes[0].columns.includes("name") === false) {
             userInfo.walletDb.exec("ALTER TABLE wallet ADD COLUMN name text DEFAULT ''")
             sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet");
@@ -645,6 +649,23 @@ ipcMain.on("get-wallets", function (event) {
         };
         for (let i = 0; i < resp.wallets.length; i += 1) {
             resp.total += resp.wallets[i][3];
+            request.get(zenApi + "addr/" + resp.wallets[i][2], function(err, res, body) {
+                if (err) {
+                    console.log("balance update failed");
+                } else if (res && res.statusCode === 200) {
+                    let data = JSON.parse(body);
+                    if (resp.wallets[i][3] !== data.balance) {
+                        userInfo.walletDb.exec("UPDATE wallet SET lastbalance = " + data.balance + " WHERE addr = '" + data.addrStr + "'");
+                        userInfo.dbChanged = true;
+                        let update = {
+                            response: "OK",
+                            wallet: data.addrStr,
+                            balance: data.balance
+                        }
+                        event.sender.send("update-wallet-balance", JSON.stringify(update));
+                    }
+                }
+            });
         }
     } else {
         resp = {

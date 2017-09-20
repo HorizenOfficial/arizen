@@ -238,6 +238,13 @@ ipcRenderer.on("get-wallets-response", function (event, resp) {
     }
 });
 
+ipcRenderer.on("update-wallet-balance", function (event, resp) {
+    let data = JSON.parse(resp);
+
+    /* FIXME @nonghost wallet balance has no ID */
+    console.log("wallet: " + data.wallet + "balance updated to " + data.balance);
+});
+
 ipcRenderer.on("rename-wallet-response", function (event, resp) {
     let data = JSON.parse(resp);
 
