@@ -1,3 +1,8 @@
+// @flow
+/*jshint esversion: 6 */
+/*jslint node: true */
+"use strict";
+
 function clearMessageValue(){
     if (document.getElementById("sendToAddress").value === "Message") {
         document.getElementById("sendToAddress").value = "";
@@ -61,14 +66,14 @@ function printContact(cId, contact) {
     } else {
         contactClass = "<div class=\"contact\" title=\"Address: "+ contact.address +"\">";
     }
-    contactName = contact.nickname +" <span class=\"contactName\">- "+ contact.name +"</span>";
+    contactName = contact.nickname + "<span class=\"contactName\">- "+ contact.name +"</span>";
     return contactClass+contactName+contactEnd;
 }
 
 function printContactList(contactList, element) {
     let contactListText;
     contactListText = "";
-    for (let i = 0; i < contactList.length; i++) {
+    for(let i = 0; i < contactList.length; i++) {
         contactListText += printContact(i, contactList[i]);
     }
     document.getElementById(element).innerHTML = contactListText;

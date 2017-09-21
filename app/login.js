@@ -5,6 +5,8 @@
 
 const electron = require("electron");
 const {ipcRenderer} = electron;
+
+// FIXME: Unused variables
 const minLoginLen = 4;
 const minPasswdLen = 8;
 
