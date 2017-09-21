@@ -29,14 +29,17 @@
     "desktop",
     "electron"
   ],
-  "author": {
-    "name": "@lukas, @nonghost and @k4chn1k",
-    "email": [
-      "lukas@zensystem.io",
-      "neduchal@gmail.com",
-      "k4chn1k@gmail.com"
-    ]
-  },
+  "author": "ZEN team",
+  "contributors": [{
+    "name": "@lukas",
+    "email": "lukas@zensystem.io"
+  },{
+    "name": "@nonghost",
+    "email": "neduchal@gmail.com"
+  },{
+    "name": "@k4chn1k",
+    "email": "k4chn1k@gmail.com"
+  }],
   "license": "MIT",
   "engines": {
     "node": ">=6.0"
