@@ -48,7 +48,7 @@ function aboutDialog() {
     document.getElementById("sidenavIMG").style.transition = "0s";
     document.getElementById("sidenavIMG").style.opacity = "0";
     document.getElementById("aboutContent").innerHTML = "Arizen version: " + pckg.version + "\<br\>";
-    document.getElementById("aboutContent").innerHTML += "Authors: " + pckg.author + "\<br\>";
+    document.getElementById("aboutContent").innerHTML += "Authors: " + pckg.contributors.name + "," + pckg.contributors.email + "\<br\>";
     document.getElementById("aboutContent").innerHTML += "License: " + pckg.license;
     document.getElementById("darkContainer").style.transition = "0.5s";
     document.getElementById("darkContainer").style.zIndex = "1";
