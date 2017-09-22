@@ -7,7 +7,9 @@
     "postinstall": "electron-builder install-app-deps",
     "start": "npm install && electron ./app",
     "pack": "build --dir",
-    "dist": "build"
+    "dist": "build",
+    "publish": "publish",
+    "release": "npm run dist && npm run publish"
   },
   "homepage": "https://zensystem.io",
   "repository": {
@@ -16,6 +18,9 @@
   },
   "bugs": {
     "url": "https://github.com/zencashofficial/arizen/issues"
+  },
+  "updater":{
+    "url": "https://raw.githubusercontent.com/ZencashOfficial/arizen/master/updates.json"
   },
   "keywords": [
     "zen",
