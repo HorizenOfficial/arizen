@@ -182,6 +182,13 @@ body {
     color: #f88900;
 }
 
+.refreshButton{
+    padding: 8px 15px;
+    width: 10%;
+    margin-left: 38%;
+}
+
+
 .wallet_inputs{
     margin-left: 5%;
     padding: 10px 10px;
@@ -193,6 +200,8 @@ body {
     border-bottom: 1px solid #888888;
     transition: all 0.4s;
 }
+
+
 
 .wallet_inputs:focus {
     border:none;
