@@ -168,7 +168,7 @@ function printWallet(wId, wName, wBalance, wAddress, walletList, verbose=true) {
         }
         walletTitle = "<span class=\"walletListItemAddress walletListItemTitle\">"+ wName +"</span>";
     }
-    walletBalance = "<span class=\"walletListItemAddress walletListItemBalance\">"+ wBalance +"</span> ZEN";
+    walletBalance = "<span id=\"balance_" + wAddress + "\"class=\"walletListItemAddress walletListItemBalance\">"+ wBalance +"</span> ZEN";
     if (verbose) {
         walletAddress = "<span class=\"walletListItemAddress\"><b>Actual address</b> "+ wAddress +"</span><a href=\"javascript:void(0)\" class=\"walletListItemDetails\" onclick=\"walletDetailsDialog("+wId+", " + JSON.stringify(walletList).replace(/"/g,"'") + ")\">Details</a>";
     }
