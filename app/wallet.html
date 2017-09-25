@@ -70,8 +70,7 @@
 <!-- ============================== PICK WALLET DIALOG BEGIN ============================================= -->
 <div id="walletDetailsDialog" class="dialog">
     <div class="right">
-        <a href="javascript:void(0)" class="closeAddWalletDialog "
-           onclick="closeDialog('walletDetailsDialog')">&times</a>
+        <a href="javascript:void(0)" class="closeAddWalletDialog " onclick="closeDialog('walletDetailsDialog')">&times</a>
     </div>
     <div class="center">
         <div class="sectionTitle">
@@ -101,6 +100,7 @@
 <!-- ================================ ABOUT DIALOG END ================================================-->
 
 
+
 <div id="topHeader" class="topHeader">
     <a class="opennav" onclick="openNav()">
         &nbsp;&#9776;
@@ -125,11 +125,8 @@
                 List of Wallets
             </div>
             <div class="right">
-                <button class="buttons balancesButtonShow" onclick="hideBalances()" id="hideZeroBalancesButton">Show
-                    Zero Balances
-                </button>
-                <button class="buttons addWalletButton" onclick="addWalletDialog()" id="addWalletButton">New Wallet
-                </button>
+                <button class="buttons balancesButtonShow" onclick="hideBalances()" id="hideZeroBalancesButton">Show Zero Balances</button>
+                <button class="buttons addWalletButton" onclick="addWalletDialog()" id="addWalletButton">New Wallet</button>
             </div>
             <div id="walletList">
             </div>
@@ -145,19 +142,16 @@
 
         <div id="send" class="send" style="display:none">
             <label class="wallet_labels" for="sendFromAddress">&nbsp;From:</label><br/>
-            <span id="sendFromAddressText"></span><input id="sendFromAddress" class="buttons addWalletButton"
-                                                         name="btWalletButton" type="button" value="Select" tabindex="4"
-                                                         onclick="pickWalletDialog()"/>
+            <span id="sendFromAddressText"></span><input id="sendFromAddress" class="buttons addWalletButton" name="btWalletButton" type="button" value="Select" tabindex="4" onclick="pickWalletDialog()"/>
             <br>
             <label class="wallet_labels" for="sendToAddress">&nbsp;To:</label><br/>
-            <input id="sendToAddress" class="wallet_inputs" align="right" value="address" onfocus="clearValue()"
-                   onblur="setValueIfEmpty()">
+            <input id="sendToAddress" class="wallet_inputs" align="right" value="address" onfocus="clearValue()" onblur="setValueIfEmpty()">
             <br>
             <label class="wallet_labels" for="coinAmount">&nbsp;Amount:</label><br/>
             <input id="coinAmount" class="wallet_inputs" align="right" value="0.00000000" onchange="changeAmount()">
             <br>
             <div class="center">
-                <button class="buttons sendButton" onclick="send()">Send now</button>
+                <button class="buttons sendButton" onclick="send()">Send now </button>
             </div>
         </div>
     </div>
@@ -172,7 +166,7 @@
 </div>
 
 <div id="walletFooter">
-    Total balance: <span id="walletFooterBalance" style="font-weight: bold;">0</span> ZEN
+    Total balance: <span id="walletFooterBalance" style="font-weight: bold;">0</span>ZEN
 </div>
 
 </body>
