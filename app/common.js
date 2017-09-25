@@ -77,3 +77,8 @@ function logout() {
 function exitApp() {
     ipcRenderer.send("exit-from-menu");
 }
+
+function openHomepageInDefaultBrowser(){
+    let pckg = require("../package.json");
+    electron.shell.openExternal(pckg.homepage)
+}

@@ -4,8 +4,8 @@
 "use strict";
 
 const electron = require("electron");
-const {app, Menu, ipcMain, dialog} = require("electron");
 const BrowserWindow = electron.BrowserWindow;
+const {app, Menu, ipcMain, dialog} = require("electron");
 const path = require("path");
 const url = require("url");
 const os = require("os");
@@ -523,7 +523,7 @@ function createWindow() {
 
     // Open the DevTools.
     // FIXME: comment this for release versions!
-    //win.webContents.openDevTools();
+    // win.webContents.openDevTools();
 
     //win.loadURL("file://" + __dirname + "/index.html");
 

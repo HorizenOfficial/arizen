@@ -22,7 +22,7 @@
     <a href="#" onclick="logout()">Logout</a>
     <a href="#" onclick="exitApp()">Exit</a>
     <div class="center">
-        <img id="sidenavIMG" src="resources/zen_icon.png" width="200px"/>
+        <img id="sidenavIMG" onclick="openHomepageInDefaultBrowser()" src="resources/zen_icon.png" width="200px"/>
     </div>
     <a id="about" href="#" onclick="aboutDialog()">About</a>
 </div>
@@ -106,8 +106,7 @@
         &nbsp;&#9776;
     </a>
     <!-- same as in register.html -->
-    <img style="padding-left:475px; vertical-align: middle;" src="resources/zen_icon.png" width="25px"/>
-
+    <img style="padding-left:475px; vertical-align: middle;" onclick="openHomepageInDefaultBrowser()" src="resources/zen_icon.png" width="25px"/>
     <button class="buttons refreshButton" onclick="refreshWallet()" id=refreshWalletButton">Refresh</button>
 </div>
 
