@@ -47,9 +47,13 @@ function aboutDialog() {
     document.getElementById("sidenavIMG").style.transitionDelay = "0s";
     document.getElementById("sidenavIMG").style.transition = "0s";
     document.getElementById("sidenavIMG").style.opacity = "0";
-    document.getElementById("aboutContent").innerHTML = "Arizen version: " + pckg.version + "\<br\>";
-    document.getElementById("aboutContent").innerHTML += "Authors: " + pckg.contributors.name + "," + pckg.contributors.email + "\<br\>";
-    document.getElementById("aboutContent").innerHTML += "License: " + pckg.license;
+    document.getElementById("aboutContent").innerHTML += "\<b\>Arizen version: \</b\>" + pckg.version + "\<br\>";
+    document.getElementById("aboutContent").innerHTML += "\<b\>License: \</b\>" + pckg.license + "\<br\>";
+    let authors = "\<b\>Authors:\</b>\<br\>";
+    pckg.contributors.forEach(function (person) {
+        authors += person.name + ", " + person.email + "\<br\>";
+    });
+    document.getElementById("aboutContent").innerHTML += authors;
     document.getElementById("darkContainer").style.transition = "0.5s";
     document.getElementById("darkContainer").style.zIndex = "1";
     document.getElementById("darkContainer").style.opacity = "0.7";
@@ -73,22 +77,3 @@ function logout() {
 function exitApp() {
     ipcRenderer.send("exit-from-menu");
 }
-
-//
-// function getRootConfigPath() {
-//     let rootPath;
-//     if (os.platform() === "win32" || os.platform() === "darwin") {
-//         rootPath = app.getPath("appData") + "/" + "Arizen/";
-//     }
-//     if (os.platform() === "linux") {
-//         rootPath = app.getPath("home") + "/" + "./arizen/";
-//     }
-//     return rootPath;
-// }
-//
-// function getLoginPath() {
-//     let rootPath = getRootConfigPath();
-//     return `${rootPath}loginInfo.txt`;
-// }
-//
-// module.exports = {getRootConfigPath, getLoginPath};

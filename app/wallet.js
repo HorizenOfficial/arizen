@@ -58,7 +58,7 @@ function changeAmount() {
     document.getElementById("coinAmount").value = Number(number).toFixed(8);
 }
 
-function clearValue(){
+function clearValue() {
     if (document.getElementById("sendToAddress").value === "address") {
         document.getElementById("sendToAddress").value = "";
     }
@@ -111,14 +111,14 @@ function getNonZeroBalance(walletList) {
             non_zero.push(walletList.wallets[i]);
         }
     }
-    non_zero.sort(function(a,b) {
+    non_zero.sort(function (a, b) {
         return b[3] - a[3];
     });
     return non_zero;
 }
 
 function getZeroBalance(walletList) {
-    console.log(walletList)
+    console.log(walletList);
     let zero = [];
     for (let i = walletList.wallets.length - 1; i >= 0; i--) {
         if (walletList.wallets[i][3] === 0) {
@@ -135,7 +135,7 @@ function walletDetailsDialog(id) {
     document.getElementById("walletDetailsDialog").style.zIndex = "2";
     document.getElementById("walletDetailsDialog").style.opacity = "1";
     document.getElementById("walletDetailsDialogContent").innerHTML = "";
-   /* let walletList = JSON.parse(walletListStr.replace(/'/g,/"/));
+    /*let walletList = JSON.parse(walletListStr.replace(/'/g,/"/));
     let j = 1;
     for (let i = walletList.length; i >= 0; i--) {
         if (walletList[i].id === id) {
@@ -154,7 +154,7 @@ function closeDialog(clasname) {
     document.getElementById(clasname).style.opacity = "0";
 }
 
-function printWallet(wId, wName, wBalance, wAddress, verbose=true) {
+function printWallet(wId, wName, wBalance, wAddress, verbose = true) {
     let walletClass = "";
     let walletTitle = "";
     let walletBalance;
@@ -169,17 +169,17 @@ function printWallet(wId, wName, wBalance, wAddress, verbose=true) {
         } else {
             walletClass = "<div class=\"walletListItem\">";
         }
-        walletTitle = "<span class=\"walletListItemAddress walletListItemTitle\">"+ wName +"</span>";
+        walletTitle = "<span class=\"walletListItemAddress walletListItemTitle\">" + wName + "</span>";
     }
-    walletBalance = "<span id=\"balance_" + wAddress + "\"class=\"walletListItemAddress walletListItemBalance\">"+ wBalance +"</span> ZEN";
+    walletBalance = "<span id=\"balance_" + wAddress + "\" class=\"walletListItemAddress walletListItemBalance\">" + wBalance + "</span> ZEN";
     if (verbose) {
-        walletAddress = "<span class=\"walletListItemAddress\"><b>Actual address</b> "+ wAddress +"</span><a href=\"javascript:void(0)\" class=\"walletListItemDetails\" onclick=\"walletDetailsDialog("+wId+")\">Details</a>";
+        walletAddress = "<span class=\"walletListItemAddress\"><b>Actual address </b> " + wAddress + "</span><a href=\"javascript:void(0)\" class=\"walletListItemDetails\" onclick=\"walletDetailsDialog(" + wId + ")\">Details</a>";
     }
-    return walletClass+walletTitle+walletBalance+walletAddress+walletEnd;
+    return walletClass + walletTitle + walletBalance + walletAddress + walletEnd;
 }
 
 function isUnique(walletId, ids) {
-    for (let i= 0; i < ids.length; i++) {
+    for (let i = 0; i < ids.length; i++) {
         if (ids[i] === walletId) {
             return false;
         }
@@ -187,7 +187,7 @@ function isUnique(walletId, ids) {
     return true;
 }
 
-function printWalletList(non_zero, zero, elem, verbose=true) {
+function printWalletList(non_zero, zero, elem, verbose = true) {
     let walletElem = document.getElementById(elem);
     let hide_balances = document.getElementById("hideZeroBalancesButton");
     let ids = [];
@@ -232,6 +232,7 @@ ipcRenderer.on("get-wallets-response", function (event, resp) {
     let non_zero = getNonZeroBalance(data);
     let zero = getZeroBalance(data);
 
+    showWallet();
     printWalletList(non_zero, zero, "pickWalletDialogContent", false);
     printWalletList(non_zero, zero, "walletList");
     printWalletList(non_zero, zero, "walletListReceive");
@@ -249,7 +250,7 @@ ipcRenderer.on("rename-wallet-response", function (event, resp) {
     let data = JSON.parse(resp);
 
     /* FIXME: @nonghost name response OK/ERR */
-    console.log(data.msg); 
+    console.log(data.msg);
 });
 
 getWallets();
