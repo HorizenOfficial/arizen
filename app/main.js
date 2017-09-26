@@ -16,6 +16,7 @@ const bitcoin = require("bitcoinjs-lib");
 const bip32utils = require("bip32-utils");
 const zencashjs = require("zencashjs");
 const sql = require("sql.js");
+const request = require("request");
 const updater = require("electron-simple-updater");
 updater.init({checkUpdateOnStart: true, autoDownload: true});
 attachUpdaterHandlers();
@@ -689,7 +690,6 @@ ipcMain.on("exit-from-menu", function (event) {
 });
 
 ipcMain.on("get-wallets", function (event) {
-    let request = require("request");
     let resp;
     let sqlRes;
 
@@ -763,4 +763,30 @@ ipcMain.on("rename-wallet", function (event, address, name) {
         };
     }
     event.sender.send("rename-wallet-response", JSON.stringify(resp));
+});
+
+ipcMain.on("get-transaction", function (event, txId, address) {
+    let resp;
+    let sqlRes;
+
+    if (userInfo.loggedIn) {
+        request.get(zenApi + "tx/" + txId, function (err, res, body) {
+            if (err) {
+                console.log("transaction readout failed");
+            } else if (res && res.statusCode === 200) {
+                event.sender.send("get-transaction-update", address, body);
+            }
+        });
+        resp = {
+            response: "OK",
+            msg: "request sent"
+        };
+    } else {
+        resp = {
+            response: "ERR",
+            msg: "not logged in"
+        };
+    }
+
+    event.sender.send("get-transaction-response", JSON.stringify(resp));
 });

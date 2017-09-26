@@ -75,13 +75,12 @@ function hideBalances() {
         document.getElementById("hideZeroBalancesButton").textContent = "Show Zero Balances";
         document.getElementById("hideZeroBalancesButton").classList.remove("balancesButtonHide");
         document.getElementById("hideZeroBalancesButton").classList.add("balancesButtonShow");
-        getWallets();
     } else {
         document.getElementById("hideZeroBalancesButton").textContent = "Hide Zero Balances";
         document.getElementById("hideZeroBalancesButton").classList.remove("balancesButtonShow");
         document.getElementById("hideZeroBalancesButton").classList.add("balancesButtonHide");
-        getWallets();
     }
+    getWallets();
 }
 
 function send() {
@@ -243,13 +242,12 @@ function printWalletList(non_zero, zero, elem, verbose = true) {
     }
 }
 
-
 function renderWallet(walletList, wNames) {
+    getWallets();
     /*printWalletList(walletList, wNames, "pickWalletDialogContent", false);
     printWalletList(walletList, wNames, "walletList", true);
     printWalletList(walletList, wNames, "walletListReceive", true);*/
 }
-
 
 function getWallets() {
     ipcRenderer.send("get-wallets");
@@ -286,4 +284,21 @@ ipcRenderer.on("rename-wallet-response", function (event, resp) {
     console.log(data.msg);
 });
 
-getWallets();
+function testTransaction() {
+    ipcRenderer.send("get-transaction", "3098e8b87b1a54a5d3e60b60e2c888547f17cb8e8504b1e70d6b6aca882b7413", "znYBWsMPdeUJfwbKbMdXNPVD9THysCgzFhu");
+}
+
+ipcRenderer.on("get-transaction-response", function (event, resp) {
+    let data = JSON.parse(resp);
+
+    /* FIXME: @nonghost response OK/ERR */
+    console.log(data.msg);
+});
+
+ipcRenderer.on("get-transaction-update", function (event, address, resp) {
+    let data = JSON.parse(resp);
+
+    /* FIXME: @nonghost response from api */
+    let amount = (data.vout[0].scriptPubKey.addresses[0] === address) ? data.vout[0].value : data.vout[1].value;
+    console.log("transaction from: " + data.vin[0].addr + " amount: " + amount + " fee: " + data.fees);
+});
