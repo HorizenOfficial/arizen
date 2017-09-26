@@ -719,7 +719,8 @@ ipcMain.on("get-wallets", function (event) {
                         let update = {
                             response: "OK",
                             wallet: data.addrStr,
-                            balance: data.balance
+                            balance: data.balance,
+                            transactions: data.transactions
                         };
                         event.sender.send("update-wallet-balance", JSON.stringify(update));
                     }
