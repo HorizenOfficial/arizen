@@ -178,6 +178,39 @@ function printWallet(wId, wName, wBalance, wAddress, verbose = true) {
     return walletClass + walletTitle + walletBalance + walletAddress + walletEnd;
 }
 
+function isMyAddress(address, wallets) {
+    // true/false
+}
+
+function getObjectFromTransaction(transaction) {
+    // convert transaction into address/amount list. the first item is vin address.
+}
+
+function getAmountForAddress(transaction, address) {
+    // get amount based on address
+}
+
+function printTransaction(transaction, wallets) {
+    let transactionClass = "";
+    let transactionAmount = "";
+    let transactionAddressFrom = "";
+    let transactionAddressTo = "";
+    let transactionEnd = "</div>";
+    let income = false;
+    if (income) {
+        transactionClass = "<div class\"transactionListItem transactionIn\">";
+        transactionAddressFrom = transaction.vin.address;
+        transactionAddressTo = transaction.vout.addresses;
+        //transactionAmount = transaction.vout.
+    } else {
+        transactionClass = "<div class\"transactionListItem transactionOut\">";
+        transactionAddressTo = transaction.vin.address;
+        transactionAddressFrom = transaction.vout.addresses.toString();
+    }
+
+    return transactionClass + transactionAddressFrom + transactionAddressTo + transactionEnd;
+}
+
 function isUnique(walletId, ids) {
     for (let i = 0; i < ids.length; i++) {
         if (ids[i] === walletId) {
