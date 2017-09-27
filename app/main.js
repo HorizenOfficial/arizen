@@ -791,3 +791,25 @@ ipcMain.on("get-transaction", function (event, txId, address) {
 
     event.sender.send("get-transaction-response", JSON.stringify(resp));
 });
+
+
+ipcMain.on("generate-wallet", function (event) {
+    let resp;
+    let newAddr;
+
+    if (userInfo.loggedIn) {
+        newAddr = generateNewAddress();
+        resp = {
+            response: "OK",
+            msg: newAddr
+        };
+    } else {
+        resp = {
+            response: "ERR",
+            msg: "not logged in"
+        };
+    }
+
+    event.sender.send("generate-wallet-response", JSON.stringify(resp));
+});
+
