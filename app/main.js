@@ -64,7 +64,7 @@ function getRootConfigPath() {
     if (os.platform() === "win32" || os.platform() === "darwin") {
         rootPath = app.getPath("appData") + "/Arizen/";
     } else if (os.platform() === "linux") {
-        rootPath = app.getPath("home") + "/" + "/.arizen/";
+        rootPath = app.getPath("home") + "/.arizen/";
         if (!fs.existsSync(rootPath)) {
             fs.mkdirSync(rootPath);
         }
@@ -273,7 +273,7 @@ function updateMenuAtLogin() {
                                         buttons: ["Yes", "No"],
                                         title: "Replace wallet?"
                                     }, function (response) {
-                                        if (response == 0) {
+                                        if (response === 0) {
                                             exportWallet(filename, true);
                                         }
                                     });
