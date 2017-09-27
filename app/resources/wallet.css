@@ -109,7 +109,7 @@
 
 #walletList::-webkit-scrollbar-track
 {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    /*-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);*/
     background-color: #FeFeFe;
 }
 
@@ -143,7 +143,6 @@
 
 #walletListReceive::-webkit-scrollbar-track
 {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
     background-color: #FeFeFe;
 }
 
@@ -260,8 +259,8 @@
     z-index: -1;
     left: 162px;
     width: 700px;
-    height: 250px;
-    top:170px;
+    height: 300px;
+    top:150px;
     opacity:0;
     transition: 0.5s;
 }
@@ -280,7 +279,6 @@
 
 #pickWalletDialog::-webkit-scrollbar-track
 {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
     background-color: #FeFeFe;
 }
 
