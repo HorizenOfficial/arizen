@@ -19,7 +19,7 @@
   "bugs": {
     "url": "https://github.com/zencashofficial/arizen/issues"
   },
-  "updater":{
+  "updater": {
     "url": "https://raw.githubusercontent.com/ZencashOfficial/arizen/master/updates.json"
   },
   "keywords": [
