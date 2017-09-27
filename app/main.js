@@ -32,8 +32,8 @@ let userInfo = {
     dbChanged: false
 };
 
-const dbStructWallet = "CREATE TABLE wallet (id INTEGER PRIMARY KEY AUTOINCREMENT, pk text, addr text, lastbalance real, name text);";
-const dbStructContacts = "CREATE TABLE contacts (id integer, addr text, name text, nick text);";
+const dbStructWallet = "CREATE TABLE wallet (id INTEGER PRIMARY KEY AUTOINCREMENT, pk TEXT, addr TEXT UNIQUE, lastbalance REAL, name TEXT);";
+const dbStructContacts = "CREATE TABLE contacts (id INTEGER PRIMARY KEY AUTOINCREMENT, addr TEXT UNIQUE, name TEXT, nick TEXT);";
 const zenApi = "https://explorer.zensystem.io/insight-api-zen/";
 
 function attachUpdaterHandlers() {
@@ -148,7 +148,7 @@ function importWalletDat(login, pass, wallet) {
             pk = privateKeys[i];
         }
         pubKey = zencashjs.address.privKeyToPubKey(pk, true);
-        db.run("INSERT INTO wallet VALUES (?,?,?,?,?)", [null, pk, zencashjs.address.pubKeyToAddr(pubKey), 0, ""]);
+        db.run("INSERT OR IGNORE INTO wallet VALUES (?,?,?,?,?)", [null, pk, zencashjs.address.pubKeyToAddr(pubKey), 0, ""]);
     }
 
     let data = db.export();
@@ -791,3 +791,25 @@ ipcMain.on("get-transaction", function (event, txId, address) {
 
     event.sender.send("get-transaction-response", JSON.stringify(resp));
 });
+
+
+ipcMain.on("generate-wallet", function (event) {
+    let resp;
+    let newAddr;
+
+    if (userInfo.loggedIn) {
+        newAddr = generateNewAddress();
+        resp = {
+            response: "OK",
+            msg: newAddr
+        };
+    } else {
+        resp = {
+            response: "ERR",
+            msg: "not logged in"
+        };
+    }
+
+    event.sender.send("generate-wallet-response", JSON.stringify(resp));
+});
+

@@ -284,6 +284,7 @@ ipcRenderer.on("rename-wallet-response", function (event, resp) {
     console.log(data.msg);
 });
 
+/* FIXME: @nonghost transaction info usage */
 function testTransaction() {
     ipcRenderer.send("get-transaction", "3098e8b87b1a54a5d3e60b60e2c888547f17cb8e8504b1e70d6b6aca882b7413", "znYBWsMPdeUJfwbKbMdXNPVD9THysCgzFhu");
 }
@@ -301,4 +302,15 @@ ipcRenderer.on("get-transaction-update", function (event, address, resp) {
     /* FIXME: @nonghost response from api */
     let amount = (data.vout[0].scriptPubKey.addresses[0] === address) ? data.vout[0].value : data.vout[1].value;
     console.log("transaction from: " + data.vin[0].addr + " amount: " + amount + " fee: " + data.fees);
+});
+
+function generateNewWallet() {
+    ipcRenderer.send("generate-wallet");
+}
+
+ipcRenderer.on("generate-wallet-response", function (event, resp) {
+    let data = JSON.parse(resp);
+
+    /* FIXME: @nonghost response OK/ERR, msg new address if OK */
+    console.log(data.msg);
 });
