@@ -82,3 +82,43 @@ function openHomepageInDefaultBrowser(){
     let pckg = require("../package.json");
     electron.shell.openExternal(pckg.homepage)
 }
+
+// function doNotify() {
+//     Notification.requestPermission().then(function(result) {
+//         if (result === 'denied') {
+//             console.log('Permission wasn\'t granted. Allow a retry.');
+//             return;
+//         }
+//         if (result === 'default') {
+//             console.log('The permission request was dismissed.');
+//             return;
+//         }
+//         // Do something with the granted permission.
+//         let myNotification = new Notification("Electron notification", {
+//             "body": "message of notification",
+//             "icon": "http://placekitten.com/g/300/300"
+//         });
+//     });
+//
+// }
+
+// const notifier = require("electron-notifications");
+
+function doNotify() {
+    // notifier.notify("Calendar", {
+    //     message: "Event begins in 10 minutes",
+    //     icon: "http://placekitten.com/g/300/300",
+    //     buttons: ["Dismiss", "Snooze"]
+    // });
+    new Notification("Calendar",{
+            message: "Event begins in 10 minutes",
+            icon: "http://placekitten.com/g/300/300",
+            buttons: ["Dismiss", "Snooze"]
+        });
+}
+
+function settingsDialog() {
+    // TODO: @nonghost create dialog for settings
+    // radiobutton - disable enable desktop notification, default = enable
+    doNotify(); // delete this - only test
+}

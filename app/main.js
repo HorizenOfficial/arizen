@@ -46,7 +46,7 @@ function attachUpdaterHandlers() {
     }
 
     function onUpdateDownloaded() {
-        // application force to update itself
+        // application forces to update itself
         updater.quitAndInstall();
     }
 }
@@ -524,7 +524,7 @@ function createWindow() {
 
     // Open the DevTools.
     // FIXME: comment this for release versions!
-    // win.webContents.openDevTools();
+    win.webContents.openDevTools();
 
     //win.loadURL("file://" + __dirname + "/index.html");
 

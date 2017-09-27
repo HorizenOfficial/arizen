@@ -1,6 +1,6 @@
 {
   "name": "Arizen",
-  "version": "v0.0.1-alpha",
+  "version": "v0.0.2-beta",
   "description": "Wallet for ZenCash (ZEN)",
   "main": "app/main.js",
   "scripts": {
@@ -35,16 +35,20 @@
     "electron"
   ],
   "author": "ZEN team",
-  "contributors": [{
-    "name": "@lukas",
-    "email": "lukas@zensystem.io"
-  },{
-    "name": "@nonghost",
-    "email": "neduchal@gmail.com"
-  },{
-    "name": "@k4chn1k",
-    "email": "k4chn1k@gmail.com"
-  }],
+  "contributors": [
+    {
+      "name": "@lukas",
+      "email": "lukas@zensystem.io"
+    },
+    {
+      "name": "@nonghost",
+      "email": "neduchal@gmail.com"
+    },
+    {
+      "name": "@k4chn1k",
+      "email": "k4chn1k@gmail.com"
+    }
+  ],
   "license": "MIT",
   "engines": {
     "node": ">=6.0"
@@ -56,9 +60,9 @@
       "type": "distribution"
     },
     "dmg": {
-      "backgroundColor": "#888888",
-      "icon": "build/icon.icns",
       "title": "${productName} ${version}",
+      "icon": "build/icon.icns",
+      "backgroundColor": "#888888",
       "contents": [
         {
           "x": 110,
@@ -88,6 +92,7 @@
   "dependencies": {
     "bip32-utils": "^0.10.0",
     "bitcoinjs-lib": "^3.1.1",
+    "electron-notifications": "^1.0.0",
     "electron-packager": "^8.7.1",
     "electron-simple-updater": "^1.2.1",
     "electron-tabs": "^0.7.1",
