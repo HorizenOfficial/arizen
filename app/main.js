@@ -265,8 +265,7 @@ function updateMenuAtLogin() {
                             title: "Save wallet.awd",
                             filters: [{name: "Wallet", extensions: ["awd"]}]
                         }, function (filename) {
-                            // FIXME: shouldnt here be filename !== "undefined" ?
-                            if (typeof filename != "undefined" && filename !== "") {
+                            if (typeof filename !== "undefined" && filename !== "") {
                                 if (!fs.exists(filename)) {
                                     dialog.showMessageBox({
                                         type: "warning",
@@ -291,8 +290,7 @@ function updateMenuAtLogin() {
                             title: "Save wallet.uawd",
                             filters: [{name: "Wallet", extensions: ["uawd"]}]
                         }, function (filename) {
-                            // FIXME: shouldnt here be filename !== "undefined" ?
-                            if (typeof filename != "undefined" && filename !== "") {
+                            if (typeof filename !== "undefined" && filename !== "") {
                                 if (!fs.exists(filename)) {
                                     dialog.showMessageBox({
                                         type: "warning",
