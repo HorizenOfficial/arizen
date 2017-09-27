@@ -134,14 +134,6 @@ function walletDetailsDialog(id) {
     document.getElementById("walletDetailsDialog").style.zIndex = "2";
     document.getElementById("walletDetailsDialog").style.opacity = "1";
     document.getElementById("walletDetailsDialogContent").innerHTML = "";
-    /*let walletList = JSON.parse(walletListStr.replace(/'/g,/"/));
-    let j = 1;
-    for (let i = walletList.length; i >= 0; i--) {
-        if (walletList[i].id === id) {
-            document.getElementById("walletDetailsDialogContent").innerHTML += printWallet(j, walletList[i].address, walletList[i].balance,"", false);
-            j++;
-        }
-    }*/
 }
 
 
@@ -172,7 +164,7 @@ function printWallet(wId, wName, wBalance, wAddress, verbose = true) {
     }
     walletBalance = "<span id=\"balance_" + wAddress + "\" class=\"walletListItemAddress walletListItemBalance\">" + wBalance + "</span> ZEN";
     if (verbose) {
-        walletAddress = "<span class=\"walletListItemAddress\"><b>Actual address </b> " + wAddress + "</span><a href=\"javascript:void(0)\" class=\"walletListItemDetails\" onclick=\"walletDetailsDialog(" + wId + ")\">Details</a>";
+        walletAddress = "<span class=\"walletListItemAddress\"><b>Address </b> " + wAddress + "</span><a href=\"javascript:void(0)\" class=\"walletListItemDetails\" onclick=\"walletDetailsDialog(" + wId + ")\">Details</a>";
     }
     return walletClass + walletTitle + walletBalance + walletAddress + walletEnd;
 }
@@ -242,15 +234,16 @@ function printWalletList(non_zero, zero, elem, verbose = true) {
     }
 }
 
-function renderWallet(walletList, wNames) {
+function renderWallet() {
     getWallets();
-    /*printWalletList(walletList, wNames, "pickWalletDialogContent", false);
-    printWalletList(walletList, wNames, "walletList", true);
-    printWalletList(walletList, wNames, "walletListReceive", true);*/
 }
 
 function getWallets() {
     ipcRenderer.send("get-wallets");
+}
+
+function getWalletWithName(name) {
+    // FIXME: @k4chn1k return all wallets with NAME from DB.
 }
 
 /* FIXME: @nonghost name usage */
