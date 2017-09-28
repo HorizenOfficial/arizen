@@ -42,7 +42,9 @@ function attachUpdaterHandlers() {
     updater.on("update-downloaded", onUpdateDownloaded);
 
     function onUpdateDownloading() {
-        document.body.classList.add("update-downloading");
+        if(document.body) {
+            document.body.classList.add("update-downloading");
+        }
     }
 
     function onUpdateDownloaded() {
