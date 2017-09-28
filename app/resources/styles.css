@@ -151,12 +151,11 @@ body {
     padding: 8px 15px;
     width: 32%;
     outline: none;
-    background-color: #f88900;
     color: #fefefe;
     font-size: 1em;
     transition: all 0.2s;
     border-radius: 5px;
-    background-image: -webkit-linear-gradient(90deg,
+    background: #f88900 -webkit-linear-gradient(90deg,
     rgba(255, 255, 255, .1) 0%,
     transparent 0%,
     transparent 50%,
