@@ -88,6 +88,14 @@ function getZenPath() {
     return zenPath;
 }
 
+function storeFile(filename, data) {
+    fs.writeFileSync(filename, data, function (err) {
+        if (err) {
+            return console.log(err);
+        }
+    });
+}
+
 function encryptWallet(login, password, inputBytes) {
     let iv = Buffer.concat([Buffer.from(login, "utf8"), crypto.randomBytes(64)]);
     let salt = crypto.randomBytes(64);
@@ -153,11 +161,7 @@ function importWalletDat(login, pass, wallet) {
 
     let data = db.export();
     let walletEncrypted = encryptWallet(login, pass, data);
-    fs.writeFileSync(getWalletPath() + login + ".awd", walletEncrypted, function (err) {
-        if (err) {
-            return console.log(err);
-        }
-    });
+    storeFile(getWalletPath() + login + ".awd", walletEncrypted);
 }
 
 function importWallet(filename, encrypt) {
@@ -176,15 +180,10 @@ function exportWallet(filename, encrypt) {
     if (encrypt === true) {
         data = encryptWallet(userInfo.login, userInfo.pass, data);
     }
-    fs.writeFileSync(filename, data, function (err) {
-        if (err) {
-            return console.log(err);
-        }
-    });
+    storeFile(filename, data);
 }
 
-/* wallet generation from kendricktan */
-function generateNewWallet(login, password) {
+function generateNewAddress(count) {
     let i;
     let seedHex = passwordHash.generate(password, {
         "algorithm": "sha512",
@@ -195,7 +194,7 @@ function generateNewWallet(login, password) {
     let hdNode = bitcoin.HDNode.fromSeedHex(seedHex);
     let chain = new bip32utils.Chain(hdNode);
 
-    for (i = 0; i < 42; i += 1) {
+    for (i = 0; i < count; i += 1) {
         chain.next();
     }
 
@@ -204,9 +203,16 @@ function generateNewWallet(login, password) {
         return chain.derive(x).keyPair.toWIF();
     });
 
+    return privateKeys;
+}
+
+/* wallet generation from kendricktan */
+function generateNewWallet(login, password) {
     let pk;
     let pubKey;
     let db = new sql.Database();
+    let privateKeys = generateNewAddress(42);
+
     // Run a query without reading the results
     db.run(dbStructWallet);
     for (i = 0; i <= 42; i += 1) {
@@ -217,32 +223,14 @@ function generateNewWallet(login, password) {
 
     let data = db.export();
     let walletEncrypted = encryptWallet(login, password, data);
-    fs.writeFileSync(getWalletPath() + login + ".awd", walletEncrypted, function (err) {
-        if (err) {
-            return console.log(err);
-        }
-    });
+    storeFile(getWalletPath() + login + ".awd", walletEncrypted);
 }
 
-function generateNewAddress() {
+function getNewAddress() {
     let pk;
     let pubKey;
     let addr;
-    let seedHex = passwordHash.generate(userInfo.pass, {
-        "algorithm": "sha512",
-        "saltLength": 32
-    }).split("$")[3];
-
-    // chains
-    let hdNode = bitcoin.HDNode.fromSeedHex(seedHex);
-    let chain = new bip32utils.Chain(hdNode);
-
-    chain.next();
-
-    // Get private keys from them
-    let privateKeys = chain.getAll().map(function (x) {
-        return chain.derive(x).keyPair.toWIF();
-    });
+    let privateKeys = generateNewAddress(1);
 
     pk = zencashjs.address.WIFToPrivKey(privateKeys[0]);
     addr = zencashjs.address.pubKeyToAddr(zencashjs.address.privKeyToPubKey(pk, true));
@@ -529,11 +517,7 @@ ipcMain.on("write-login-info", function (event, login, pass, wallet) {
             }]
         };
     }
-    fs.writeFileSync(path, JSON.stringify(data), function (err) {
-        if (err) {
-            return console.log(err);
-        }
-    });
+    storeFile(path, JSON.stringify(data));
 
     path = getWalletPath();
     if (!fs.existsSync(path)) {
@@ -723,7 +707,7 @@ ipcMain.on("generate-wallet", function (event) {
     let newAddr;
 
     if (userInfo.loggedIn) {
-        newAddr = generateNewAddress();
+        newAddr = getNewAddress();
         resp = {
             response: "OK",
             msg: newAddr
