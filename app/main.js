@@ -675,6 +675,33 @@ ipcMain.on("rename-wallet", function (event, address, name) {
     event.sender.send("rename-wallet-response", JSON.stringify(resp));
 });
 
+ipcMain.on("get-wallet-by-name", function (event, name) {
+    let resp;
+    let sqlRes;
+
+    if (userInfo.loggedIn) {
+        sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet WHERE name = '" + name + "'");
+        if (sqlRes.length > 0) {
+            resp = {
+                response: "OK",
+                wallets: sqlRes[0].values,
+                msg: "found: " + sqlRes.length
+            };
+        } else {
+            resp = {
+                response: "ERR",
+                msg: "name not found"
+            };
+        }
+    } else {
+        resp = {
+            response: "ERR",
+            msg: "not logged in"
+        };
+    }
+    event.sender.send("get-wallet-by-name-response", JSON.stringify(resp));
+});
+
 ipcMain.on("get-transaction", function (event, txId, address) {
     let resp;
     let sqlRes;

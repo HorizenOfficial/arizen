@@ -243,7 +243,7 @@ function getWallets() {
 }
 
 function getWalletWithName(name) {
-    // FIXME: @k4chn1k return all wallets with NAME from DB.
+    ipcRenderer.send("get-wallet-by-name", name);
 }
 
 /* FIXME: @nonghost name usage */
@@ -274,6 +274,13 @@ ipcRenderer.on("rename-wallet-response", function (event, resp) {
     let data = JSON.parse(resp);
 
     /* FIXME: @nonghost name response OK/ERR */
+    console.log(data.msg);
+});
+
+ipcRenderer.on("get-wallet-by-name-response", function (event, resp) {
+    let data = JSON.parse(resp);
+
+    /* FIXME: @nonghost if response=OK data.wallets else data.msg */
     console.log(data.msg);
 });
 
