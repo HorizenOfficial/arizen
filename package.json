@@ -91,26 +91,27 @@
   },
   "dependencies": {
     "bip32-utils": "^0.10.0",
-    "bitcoinjs-lib": "^3.1.1",
-    "electron-notifications": "^1.0.0",
-    "electron-packager": "^8.7.1",
+    "bitcoinjs-lib": "^3.2.0",
+    "electron-packager": "^9.1.0",
     "electron-simple-updater": "^1.2.1",
-    "electron-tabs": "^0.7.1",
+    "electron-tabs": "^0.7.2",
     "errors": "^0.3.0",
-    "fs-extra": "^4.0.1",
+    "fs-extra": "^4.0.2",
+    "npm": "^5.4.2",
     "password-hash": "^1.2.2",
-    "zencashjs": "^1.1.5-a"
+    "zencashjs": "^1.1.6-a"
   },
   "devDependencies": {
-    "electron": "latest",
-    "electron-builder": "^19.28.4",
-    "electron-builder-squirrel-windows": "^19.25.0",
-    "flow-bin": "^0.50.0",
+    "ajv": "^5.2.3",
+    "electron": "^1.7.8",
+    "electron-builder": "^19.32.0",
+    "electron-builder-squirrel-windows": "^19.32.0",
+    "flow-bin": "^0.55.0",
     "sql.js": "^0.4.0"
   },
   "optionalDependencies": {
+    "electron-installer-debian": "^0.6.0",
     "electron-installer-dmg": "latest",
-    "electron-installer-windows": "^0.2.0",
-    "electron-installer-debian": "^0.5.2"
+    "electron-installer-windows": "^0.2.0"
   }
 }
