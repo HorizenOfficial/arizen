@@ -97,5 +97,6 @@ function doNotify(title, message, duration = 2) {
 function settingsDialog() {
     // TODO: @nonghost create dialog for settings
     // radiobutton - disable/enable desktop notification, default = enable, where to store settings?
-    doNotify("ZEN", "Awesome Arizen walleet"); // delete this - only test
+    // TODO: delete this - only test
+    doNotify("ZEN", "Awesome Arizen wallet");
 }

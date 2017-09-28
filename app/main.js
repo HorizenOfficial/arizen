@@ -278,7 +278,7 @@ function exportWalletArizen(ext, encrypt) {
                     buttons: ["Yes", "No"],
                     title: "Replace wallet?"
                 }, function (response) {
-                    if (response == 0) {
+                    if (response === 0) {
                         exportWallet(filename, encrypt);
                     }
                 });
