@@ -87,29 +87,40 @@ function send() {
     return 0;
 }
 
-function addWalletDialog() {
+function showDarkContainer() {
     document.getElementById("darkContainer").style.transition = "0.5s";
     document.getElementById("darkContainer").style.zIndex = "1";
     document.getElementById("darkContainer").style.opacity = "0.7";
+}
+
+function addWalletDialog() {
+    showDarkContainer();
     document.getElementById("addWalletDialog").style.zIndex = "2";
     document.getElementById("addWalletDialog").style.opacity = "1";
 }
 
 function pickWalletDialog() {
-    document.getElementById("darkContainer").style.transition = "0.5s";
-    document.getElementById("darkContainer").style.zIndex = "1";
-    document.getElementById("darkContainer").style.opacity = "0.7";
+    showDarkContainer();
     document.getElementById("pickWalletDialog").style.zIndex = "2";
     document.getElementById("pickWalletDialog").style.opacity = "1";
 }
 
-function getNonZeroBalance(walletList) {
-    let non_zero = [];
+function checkZeroList(walletList, zero=true) {
+    let list = [];
     for (let i = 0; i < walletList.wallets.length; i++) {
-        if (walletList.wallets[i][3] > 0) {
-            non_zero.push(walletList.wallets[i]);
+        if ((zero) && (walletList.wallets[i][3] === 0)) {
+            list.push(walletList.wallets[i]);
+        }
+        if ((!zero) && (walletList.wallets[i][3] > 0)) {
+            list.push(walletList.wallets[i]);
         }
     }
+    return list;
+}
+
+function getNonZeroBalance(walletList) {
+    let non_zero = [];
+    non_zero = checkZeroList(walletList,false);
     non_zero.sort(function (a, b) {
         return b[3] - a[3];
     });
@@ -119,18 +130,12 @@ function getNonZeroBalance(walletList) {
 function getZeroBalance(walletList) {
     console.log(walletList);
     let zero = [];
-    for (let i = walletList.wallets.length - 1; i >= 0; i--) {
-        if (walletList.wallets[i][3] === 0) {
-            zero.push(walletList.wallets[i]);
-        }
-    }
+    zero = checkZeroList(walletList,true);
     return zero;
 }
 
 function walletDetailsDialog(id) {
-    document.getElementById("darkContainer").style.transition = "0.5s";
-    document.getElementById("darkContainer").style.zIndex = "1";
-    document.getElementById("darkContainer").style.opacity = "0.7";
+    showDarkContainer();
     document.getElementById("walletDetailsDialog").style.zIndex = "2";
     document.getElementById("walletDetailsDialog").style.opacity = "1";
     document.getElementById("walletDetailsDialogContent").innerHTML = "";
@@ -211,27 +216,28 @@ function isUnique(walletId, ids) {
     return true;
 }
 
-function printWalletList(non_zero, zero, elem, verbose = true) {
+function printList(list, elem, ids, verbose) {
     let walletElem = document.getElementById(elem);
-    let hide_balances = document.getElementById("hideZeroBalancesButton");
-    let ids = [];
-    walletElem.innerHTML = "";
-    for (let i = 0; i < non_zero.length; i++) {
+    for (let i = 0; i < list.length; i++) {
 
-        if (isUnique(non_zero[i][2], ids)) {
-            walletElem.innerHTML += printWallet(i, non_zero[i][4], non_zero[i][3], non_zero[i][2], verbose);
-            ids.push(non_zero[i][2]);
+        if (isUnique(list[i][2], ids)) {
+            walletElem.innerHTML += printWallet(i, list[i][4], list[i][3], list[i][2], verbose);
+            ids.push(list[i][2]);
         }
     }
+    return ids;
+}
+
+function printWalletList(non_zero, zero, elem, verbose = true) {
+    let walletElem = document.getElementById(elem);
+    walletElem.innerHTML = "";
+    let hide_balances = document.getElementById("hideZeroBalancesButton");
+    let ids = [];
+    ids = printList(non_zero, elem, ids, verbose);
     if ((elem === "walletList") && (hide_balances.textContent === "Show Zero Balances")) {
         return;
     }
-    for (let i = 0; i < zero.length; i++) {
-        if (isUnique(zero[i][2], ids)) {
-            walletElem.innerHTML += printWallet(i, zero[i][4], zero[i][3], zero[i][2], verbose);
-            ids.push(zero[i][2]);
-        }
-    }
+    printList(zero, elem, ids, verbose);
 }
 
 function renderWallet() {
