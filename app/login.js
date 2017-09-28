@@ -6,20 +6,6 @@
 const electron = require("electron");
 const {ipcRenderer} = electron;
 
-// FIXME: Unused variables
-const minLoginLen = 4;
-const minPasswdLen = 8;
-
-/*
-function checkLoginInfo() {
-    if (document.getElementById("username").value.length >= minLoginLen && document.getElementById("pswd").value.length >= minPasswdLen)
-    {
-        document.getElementById("btSubmit").disabled = false;
-    } else {
-        document.getElementById("btSubmit").disabled = true;
-    }
-}*/
-
 function doLogin() {
         ipcRenderer.send("verify-login-info", document.getElementById("username").value, document.getElementById("pswd").value);
 }
