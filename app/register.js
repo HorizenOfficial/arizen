@@ -32,16 +32,19 @@ function doRegister() {
     console.log("Registration was successful - redirecting to wallet.html");
 }
 
+function changeClass(objectid, newClass, oldClass) {
+    /* FIXME: use classList.replace when electron uses chrome 61 */
+    document.getElementById(objectid).classList.add(newClass);
+    document.getElementById(objectid).classList.remove(oldClass);
+}
+
 function checkLogin() {
     // validate the length
-    if (document.getElementById("username").value.length < minLoginLen) {
-        document.getElementById("usrnm_length_info").classList.add("invalid");
-        document.getElementById("usrnm_length_info").classList.remove("valid");
-        usr = false;
+    usr = (document.getElementById("username").value.length < minLoginLen);
+    if (usr) {
+        changeClass("usrnm_length_info", "invalid", "valid");
     } else {
-        document.getElementById("usrnm_length_info").classList.add("valid");
-        document.getElementById("usrnm_length_info").classList.remove("invalid");
-        usr = true;
+        changeClass("usrnm_length_info", "valid", "invalid");
     }
     checkLoginInfo();
 }
@@ -50,71 +53,53 @@ function checkPasswd() {
     let pswd_val = document.getElementById("pswd").value;
 
     // validate the length
-    if (pswd_val.length < minPasswdLen) {
-        document.getElementById("length_info").classList.add("invalid");
-        document.getElementById("length_info").classList.remove("valid");
-        len = false;
+    len = (pswd_val.length >= minPasswdLen);
+    if (len) {
+        changeClass("length_info", "valid", "invalid");
     } else {
-        document.getElementById("length_info").classList.add("valid");
-        document.getElementById("length_info").classList.remove("invalid");
-        len = true;
+        changeClass("length_info", "invalid", "valid");
     }
 
     // validate letter
-    if (pswd_val.match(/[A-z]/)) {
-        document.getElementById("letter_info").classList.add("valid");
-        document.getElementById("letter_info").classList.remove("invalid");
-        lett = true;
+    lett = pswd_val.match(/[A-z]/);
+    if (lett) {
+        changeClass("letter_info", "valid", "invalid");
     } else {
-        document.getElementById("letter_info").classList.add("invalid");
-        document.getElementById("letter_info").classList.remove("valid");
-        lett = false;
+        changeClass("letter_info", "invalid", "valid");
     }
 
     // validate capital letter
-    if (pswd_val.match(/[A-Z]/)) {
-        document.getElementById("capital_info").classList.add("valid");
-        document.getElementById("capital_info").classList.remove("invalid");
-        capl = true;
+    capl = pswd_val.match(/[A-Z]/);
+    if (capl) {
+        changeClass("capital_info", "valid", "invalid");
     } else {
-        document.getElementById("capital_info").classList.add("invalid");
-        document.getElementById("capital_info").classList.remove("valid");
-        capl = false;
+        changeClass("capital_info", "invalid", "valid");
     }
 
     // validate number
-    if (pswd_val.match(/\d/)) {
-        document.getElementById("number_info").classList.add("valid");
-        document.getElementById("number_info").classList.remove("invalid");
-        num = true;
+    num = pswd_val.match(/\d/);
+    if (num) {
+        changeClass("number_info", "valid", "invalid");
     } else {
-        document.getElementById("number_info").classList.add("invalid");
-        document.getElementById("number_info").classList.remove("valid");
-        num = false;
+        changeClass("number_info", "invalid", "valid");
     }
 
     // validate special character
-    if (pswd_val.match(/[-!$%^&*()_+|~=`{}\[\]:";"<>?,.\/@#]/)) {
-        document.getElementById("special_info").classList.add("valid");
-        document.getElementById("special_info").classList.remove("invalid");
-        spec = true;
+    spec = pswd_val.match(/[-!$%^&*()_+|~=`{}\[\]:";"<>?,.\/@#]/);
+    if (spec) {
+        changeClass("special_info", "valid", "invalid");
     } else {
-        document.getElementById("special_info").classList.add("invalid");
-        document.getElementById("special_info").classList.remove("valid");
-        spec = false;
+        changeClass("special_info", "invalid", "valid");
     }
     checkLoginInfo();
 }
 
 function checkPasswdAgain() {
-    if (document.getElementById("pswd").value === document.getElementById("pswd_again").value) {
-        document.getElementById("identical_info").classList.add("valid");
-        document.getElementById("identical_info").classList.remove("invalid");
-        ide = true;
+    ide = (document.getElementById("pswd").value === document.getElementById("pswd_again").value);
+    if (ide) {
+        changeClass("identical_info", "valid", "invalid");
     } else {
-        document.getElementById("identical_info").classList.add("invalid");
-        document.getElementById("identical_info").classList.remove("valid");
-        ide = false;
+        changeClass("identical_info", "invalid", "valid");
     }
     checkLoginInfo();
 }
