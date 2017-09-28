@@ -75,19 +75,6 @@ function getRootConfigPath() {
     return rootPath;
 }
 
-function getZenPath() {
-    let zenPath;
-    if (os.platform() === "win32" || os.platform() === "darwin") {
-        zenPath = app.getPath("appData") + "/Zen/";
-    } else if (os.platform() === "linux") {
-        zenPath = app.getPath("home") + "/.zen/";
-    } else {
-        console.log("Unidentified OS.");
-        app.exit(0);
-    }
-    return zenPath;
-}
-
 function storeFile(filename, data) {
     fs.writeFileSync(filename, data, function (err) {
         if (err) {
@@ -183,7 +170,7 @@ function exportWallet(filename, encrypt) {
     storeFile(filename, data);
 }
 
-function generateNewAddress(count) {
+function generateNewAddress(count, password) {
     let i;
     let seedHex = passwordHash.generate(password, {
         "algorithm": "sha512",
@@ -208,10 +195,11 @@ function generateNewAddress(count) {
 
 /* wallet generation from kendricktan */
 function generateNewWallet(login, password) {
+    let i;
     let pk;
     let pubKey;
     let db = new sql.Database();
-    let privateKeys = generateNewAddress(42);
+    let privateKeys = generateNewAddress(42, password);
 
     // Run a query without reading the results
     db.run(dbStructWallet);
@@ -228,9 +216,8 @@ function generateNewWallet(login, password) {
 
 function getNewAddress() {
     let pk;
-    let pubKey;
     let addr;
-    let privateKeys = generateNewAddress(1);
+    let privateKeys = generateNewAddress(1, userInfo.pass);
 
     pk = zencashjs.address.WIFToPrivKey(privateKeys[0]);
     addr = zencashjs.address.pubKeyToAddr(zencashjs.address.privKeyToPubKey(pk, true));
@@ -594,7 +581,7 @@ ipcMain.on("exit-from-menu", function (event) {
     // On macOS it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q
     if (process.platform !== "darwin") {
-        app.quit()
+        app.quit();
     }
 });
 
@@ -704,7 +691,6 @@ ipcMain.on("get-wallet-by-name", function (event, name) {
 
 ipcMain.on("get-transaction", function (event, txId, address) {
     let resp;
-    let sqlRes;
 
     if (userInfo.loggedIn) {
         request.get(zenApi + "tx/" + txId, function (err, res, body) {
