@@ -119,8 +119,7 @@ function checkZeroList(walletList, zero=true) {
 }
 
 function getNonZeroBalance(walletList) {
-    let non_zero = [];
-    non_zero = checkZeroList(walletList,false);
+    let non_zero = checkZeroList(walletList, false);
     non_zero.sort(function (a, b) {
         return b[3] - a[3];
     });
@@ -129,9 +128,7 @@ function getNonZeroBalance(walletList) {
 
 function getZeroBalance(walletList) {
     console.log(walletList);
-    let zero = [];
-    zero = checkZeroList(walletList,true);
-    return zero;
+    return checkZeroList(walletList, true);
 }
 
 function walletDetailsDialog(id) {

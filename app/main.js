@@ -60,7 +60,7 @@ function getWalletPath() {
 }
 
 function getRootConfigPath() {
-    let rootPath;
+    let rootPath = "";
     if (os.platform() === "win32" || os.platform() === "darwin") {
         rootPath = app.getPath("appData") + "/Arizen/";
     } else if (os.platform() === "linux") {
@@ -112,7 +112,7 @@ function decryptWallet(login, password) {
 
         decipher.setAuthTag(tag);
         outputBytes = decipher.update(encrypted, "binary", "binary");
-        // FIXME: handle error
+        // FIXME: handle error - Error:(116, 24) Flow: Buffer. This type cannot be added to string
         outputBytes += decipher.final();
     }
     return outputBytes;
@@ -327,7 +327,7 @@ function updateMenuAtLogin() {
                 }, {
                     type: "separator"
                 }, {
-                    label: "Import ZEND wallet",
+                    label: "Import ZEND wallet.dat",
                     click() {
                         if (userInfo.loggedIn) {
                             dialog.showOpenDialog({

@@ -97,6 +97,7 @@
     "electron-tabs": "^0.7.2",
     "errors": "^0.3.0",
     "fs-extra": "^4.0.2",
+    "node": "^8.3.0",
     "npm": "^5.4.2",
     "password-hash": "^1.2.2",
     "zencashjs": "^1.1.6-a"
