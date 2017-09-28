@@ -161,15 +161,14 @@ function importWalletDat(login, pass, wallet) {
 }
 
 function importWallet(filename, encrypt) {
-    // FIXME: login, pass walletBytes are not defined ???
     let data;
     if (encrypt === true) {
         fs.copy(filename, getWalletPath() + userInfo.login + ".awd");
-        data = decryptWallet(login, pass);
+        data = decryptWallet(userInfo.login, userInfo.pass);
     } else {
         data = fs.readFileSync(filename);
     }
-    userInfo.walletDb = new sql.Database(walletBytes);
+    userInfo.walletDb = new sql.Database(data);
 }
 
 function exportWallet(filename, encrypt) {
@@ -253,6 +252,88 @@ function generateNewAddress() {
     return addr;
 }
 
+function setDarwin(template) {
+    if (os.platform() === "darwin") {
+        template.unshift({
+            label: app.getName(),
+            submenu: [
+                {
+                    role: "about"
+                },
+                {
+                    type: "separator"
+                },
+                {
+                    role: "services",
+                    submenu: []
+                },
+                {
+                    type: "separator"
+                },
+                {
+                    role: "hide"
+                },
+                {
+                    role: "hideothers"
+                },
+                {
+                    role: "unhide"
+                },
+                {
+                    type: "separator"
+                },
+                {
+                    role: "quit"
+                }
+            ]
+        });
+    }
+}
+
+function exportWalletArizen(ext, encrypt) {
+    dialog.showSaveDialog({
+        title: "Save wallet." + ext,
+        filters: [{name: "Wallet", extensions: [ext]}]
+    }, function(filename) {
+        if (typeof filename !== "undefined" && filename !== "") {
+            if (!fs.exists(filename)) {
+                dialog.showMessageBox({
+                    type: "warning",
+                    message: "Do you want to replace file?",
+                    buttons: ["Yes", "No"],
+                    title: "Replace wallet?"
+                }, function (response) {
+                    if (response == 0) {
+                        exportWallet(filename, encrypt);
+                    }
+                });
+            } else {
+                exportWallet(filename, encrypt);
+            }
+        }
+    });
+}
+
+function importWalletArizen(ext, encrypted) {
+    if (userInfo.loggedIn) {
+        dialog.showOpenDialog({
+            title: "Import wallet." + ext,
+            filters: [{name: "Wallet", extensions: [ext]}]
+        }, function(filePaths) {
+            if (filePaths) dialog.showMessageBox({
+                type: "warning",
+                message: "This will replace your actual wallet. Are you sure?",
+                buttons: ["Yes", "No"],
+                title: "Replace wallet?"
+            }, function (response) {
+                if (response === 0) {
+                    importWallet(filePaths[0], encrypted);
+                }
+            });
+        });
+    }
+}
+
 function updateMenuAtLogin() {
     const template = [
         {
@@ -261,54 +342,12 @@ function updateMenuAtLogin() {
                 {
                     label: "Backup encrypted wallet",
                     click() {
-                        dialog.showSaveDialog({
-                            title: "Save wallet.awd",
-                            filters: [{name: "Wallet", extensions: ["awd"]}]
-                        }, function (filename) {
-                            // FIXME: shouldnt here be filename !== "undefined" ?
-                            if (typeof filename != "undefined" && filename !== "") {
-                                if (!fs.exists(filename)) {
-                                    dialog.showMessageBox({
-                                        type: "warning",
-                                        message: "Do you want to replace file?",
-                                        buttons: ["Yes", "No"],
-                                        title: "Replace wallet?"
-                                    }, function (response) {
-                                        if (response == 0) {
-                                            exportWallet(filename, true);
-                                        }
-                                    });
-                                } else {
-                                    exportWallet(filename, true);
-                                }
-                            }
-                        });
+                        exportWalletArizen("awd", true);
                     }
                 }, {
                     label: "Backup unencrypted wallet",
                     click() {
-                        dialog.showSaveDialog({
-                            title: "Save wallet.uawd",
-                            filters: [{name: "Wallet", extensions: ["uawd"]}]
-                        }, function (filename) {
-                            // FIXME: shouldnt here be filename !== "undefined" ?
-                            if (typeof filename != "undefined" && filename !== "") {
-                                if (!fs.exists(filename)) {
-                                    dialog.showMessageBox({
-                                        type: "warning",
-                                        message: "Do you want to replace file?",
-                                        buttons: ["Yes", "No"],
-                                        title: "Replace wallet?"
-                                    }, function (response) {
-                                        if (response === 0) {
-                                            exportWallet(filename, false);
-                                        }
-                                    });
-                                } else {
-                                    exportWallet(filename, false);
-                                }
-                            }
-                        });
+                        exportWalletArizen("uawd", false);
                     }
                 }, {
                     type: "separator"
@@ -336,44 +375,12 @@ function updateMenuAtLogin() {
                 }, {
                     label: "Import UNENCRYPTED Arizen wallet",
                     click() {
-                        if (userInfo.loggedIn) {
-                            dialog.showOpenDialog({
-                                title: "Import wallet.uawd",
-                                filters: [{name: "Wallet", extensions: ["uawd"]}]
-                            }, function (filePaths) {
-                                if (filePaths) dialog.showMessageBox({
-                                    type: "warning",
-                                    message: "This will replace your actual wallet. Are you sure?",
-                                    buttons: ["Yes", "No"],
-                                    title: "Replace wallet?"
-                                }, function (response) {
-                                    if (response === 0) {
-                                        importWallet(filePaths[0], false);
-                                    }
-                                });
-                            });
-                        }
+                        importWalletArizen("uawd", false);
                     }
                 }, {
                     label: "Import ENCRYPTED Arizen wallet",
                     click() {
-                        if (userInfo.loggedIn) {
-                            dialog.showOpenDialog({
-                                title: "Import wallet.awd",
-                                filters: [{name: "Wallet", extensions: ["awd"]}]
-                            }, function (filePaths) {
-                                if (filePaths) dialog.showMessageBox({
-                                    type: "warning",
-                                    message: "This will replace your actual wallet. Are you sure?",
-                                    buttons: ["Yes", "No"],
-                                    title: "Replace wallet?"
-                                }, function (response) {
-                                    if (response === 0) {
-                                        importWallet(filePaths[0], true);
-                                    }
-                                });
-                            });
-                        }
+                        importWalletArizen("awd", true);
                     }
                 }, {
                     type: "separator"
@@ -399,43 +406,8 @@ function updateMenuAtLogin() {
         }
     ];
 
-    if (os.platform() === "darwin") {
-        template.unshift({
-            label: app.getName(),
-            submenu: [
-                {
-                    role: "about"
-                },
-                {
-                    type: "separator"
-                },
-                {
-                    role: "services",
-                    submenu: []
-                },
-                {
-                    type: "separator"
-                },
-                {
-                    role: "hide"
-                },
-                {
-                    role: "hideothers"
-                },
-                {
-                    role: "unhide"
-                },
-                {
-                    type: "separator"
-                },
-                {
-                    role: "quit"
-                }
-            ]
-        });
-    }
-    const menu = Menu.buildFromTemplate(template);
-    Menu.setApplicationMenu(menu);
+    setDarwin(template);
+    Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 
 function updateMenuAtLogout() {
@@ -450,58 +422,11 @@ function updateMenuAtLogout() {
                     }
                 }
             ]
-        },
-        {
-            label: "Edit",
-            submenu: [
-                {label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:"},
-                {label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:"},
-                {type: "separator"},
-                {label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:"},
-                {label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:"},
-                {label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:"},
-                {label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:"}
-            ]
         }
     ];
 
-    if (os.platform() === "darwin") {
-        template.unshift({
-            label: app.getName(),
-            submenu: [
-                {
-                    role: "about"
-                },
-                {
-                    type: "separator"
-                },
-                {
-                    role: "services",
-                    submenu: []
-                },
-                {
-                    type: "separator"
-                },
-                {
-                    role: "hide"
-                },
-                {
-                    role: "hideothers"
-                },
-                {
-                    role: "unhide"
-                },
-                {
-                    type: "separator"
-                },
-                {
-                    role: "quit"
-                }
-            ]
-        });
-    }
-    const menu = Menu.buildFromTemplate(template);
-    Menu.setApplicationMenu(menu);
+    setDarwin(template);
+    Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 
 function createWindow() {
@@ -697,7 +622,7 @@ ipcMain.on("get-wallets", function (event) {
         sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet");
         /* update wallet 0.1 if necessary */
         if (sqlRes[0].columns.includes("name") === false) {
-            userInfo.walletDb.exec("ALTER TABLE wallet ADD COLUMN name text DEFAULT ''");
+            userInfo.walletDb.exec("ALTER TABLE wallet ADD COLUMN name TEXT DEFAULT ''");
             sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet");
         }
         resp = {
