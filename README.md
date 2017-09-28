@@ -18,7 +18,7 @@
 - [ ] light SPV client
 - [x] automatically download updates
 - [ ] bug-free
-- [ ] desktop notifications
+- [x] desktop notifications
 
 
 ![Screenshot](https://i.imgur.com/Cc14AP2.png)
