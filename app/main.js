@@ -75,17 +75,12 @@ function getRootConfigPath() {
     return rootPath;
 }
 
-function getZenPath() {
-    let zenPath;
-    if (os.platform() === "win32" || os.platform() === "darwin") {
-        zenPath = app.getPath("appData") + "/Zen/";
-    } else if (os.platform() === "linux") {
-        zenPath = app.getPath("home") + "/.zen/";
-    } else {
-        console.log("Unidentified OS.");
-        app.exit(0);
-    }
-    return zenPath;
+function storeFile(filename, data) {
+    fs.writeFileSync(filename, data, function (err) {
+        if (err) {
+            return console.log(err);
+        }
+    });
 }
 
 function encryptWallet(login, password, inputBytes) {
@@ -153,23 +148,18 @@ function importWalletDat(login, pass, wallet) {
 
     let data = db.export();
     let walletEncrypted = encryptWallet(login, pass, data);
-    fs.writeFileSync(getWalletPath() + login + ".awd", walletEncrypted, function (err) {
-        if (err) {
-            return console.log(err);
-        }
-    });
+    storeFile(getWalletPath() + login + ".awd", walletEncrypted);
 }
 
 function importWallet(filename, encrypt) {
-    // FIXME: login, pass walletBytes are not defined ???
     let data;
     if (encrypt === true) {
         fs.copy(filename, getWalletPath() + userInfo.login + ".awd");
-        data = decryptWallet(login, pass);
+        data = decryptWallet(userInfo.login, userInfo.pass);
     } else {
         data = fs.readFileSync(filename);
     }
-    userInfo.walletDb = new sql.Database(walletBytes);
+    userInfo.walletDb = new sql.Database(data);
 }
 
 function exportWallet(filename, encrypt) {
@@ -177,15 +167,10 @@ function exportWallet(filename, encrypt) {
     if (encrypt === true) {
         data = encryptWallet(userInfo.login, userInfo.pass, data);
     }
-    fs.writeFileSync(filename, data, function (err) {
-        if (err) {
-            return console.log(err);
-        }
-    });
+    storeFile(filename, data);
 }
 
-/* wallet generation from kendricktan */
-function generateNewWallet(login, password) {
+function generateNewAddress(count, password) {
     let i;
     let seedHex = passwordHash.generate(password, {
         "algorithm": "sha512",
@@ -196,7 +181,7 @@ function generateNewWallet(login, password) {
     let hdNode = bitcoin.HDNode.fromSeedHex(seedHex);
     let chain = new bip32utils.Chain(hdNode);
 
-    for (i = 0; i < 42; i += 1) {
+    for (i = 0; i < count; i += 1) {
         chain.next();
     }
 
@@ -205,9 +190,17 @@ function generateNewWallet(login, password) {
         return chain.derive(x).keyPair.toWIF();
     });
 
+    return privateKeys;
+}
+
+/* wallet generation from kendricktan */
+function generateNewWallet(login, password) {
+    let i;
     let pk;
     let pubKey;
     let db = new sql.Database();
+    let privateKeys = generateNewAddress(42, password);
+
     // Run a query without reading the results
     db.run(dbStructWallet);
     for (i = 0; i <= 42; i += 1) {
@@ -218,32 +211,13 @@ function generateNewWallet(login, password) {
 
     let data = db.export();
     let walletEncrypted = encryptWallet(login, password, data);
-    fs.writeFileSync(getWalletPath() + login + ".awd", walletEncrypted, function (err) {
-        if (err) {
-            return console.log(err);
-        }
-    });
+    storeFile(getWalletPath() + login + ".awd", walletEncrypted);
 }
 
-function generateNewAddress() {
+function getNewAddress() {
     let pk;
-    let pubKey;
     let addr;
-    let seedHex = passwordHash.generate(userInfo.pass, {
-        "algorithm": "sha512",
-        "saltLength": 32
-    }).split("$")[3];
-
-    // chains
-    let hdNode = bitcoin.HDNode.fromSeedHex(seedHex);
-    let chain = new bip32utils.Chain(hdNode);
-
-    chain.next();
-
-    // Get private keys from them
-    let privateKeys = chain.getAll().map(function (x) {
-        return chain.derive(x).keyPair.toWIF();
-    });
+    let privateKeys = generateNewAddress(1, userInfo.pass);
 
     pk = zencashjs.address.WIFToPrivKey(privateKeys[0]);
     addr = zencashjs.address.pubKeyToAddr(zencashjs.address.privKeyToPubKey(pk, true));
@@ -251,6 +225,88 @@ function generateNewAddress() {
     userInfo.dbChanged = true;
 
     return addr;
+}
+
+function setDarwin(template) {
+    if (os.platform() === "darwin") {
+        template.unshift({
+            label: app.getName(),
+            submenu: [
+                {
+                    role: "about"
+                },
+                {
+                    type: "separator"
+                },
+                {
+                    role: "services",
+                    submenu: []
+                },
+                {
+                    type: "separator"
+                },
+                {
+                    role: "hide"
+                },
+                {
+                    role: "hideothers"
+                },
+                {
+                    role: "unhide"
+                },
+                {
+                    type: "separator"
+                },
+                {
+                    role: "quit"
+                }
+            ]
+        });
+    }
+}
+
+function exportWalletArizen(ext, encrypt) {
+    dialog.showSaveDialog({
+        title: "Save wallet." + ext,
+        filters: [{name: "Wallet", extensions: [ext]}]
+    }, function(filename) {
+        if (typeof filename !== "undefined" && filename !== "") {
+            if (!fs.exists(filename)) {
+                dialog.showMessageBox({
+                    type: "warning",
+                    message: "Do you want to replace file?",
+                    buttons: ["Yes", "No"],
+                    title: "Replace wallet?"
+                }, function (response) {
+                    if (response == 0) {
+                        exportWallet(filename, encrypt);
+                    }
+                });
+            } else {
+                exportWallet(filename, encrypt);
+            }
+        }
+    });
+}
+
+function importWalletArizen(ext, encrypted) {
+    if (userInfo.loggedIn) {
+        dialog.showOpenDialog({
+            title: "Import wallet." + ext,
+            filters: [{name: "Wallet", extensions: [ext]}]
+        }, function(filePaths) {
+            if (filePaths) dialog.showMessageBox({
+                type: "warning",
+                message: "This will replace your actual wallet. Are you sure?",
+                buttons: ["Yes", "No"],
+                title: "Replace wallet?"
+            }, function (response) {
+                if (response === 0) {
+                    importWallet(filePaths[0], encrypted);
+                }
+            });
+        });
+    }
 }
 
 function updateMenuAtLogin() {
@@ -261,52 +317,12 @@ function updateMenuAtLogin() {
                 {
                     label: "Backup encrypted wallet",
                     click() {
-                        dialog.showSaveDialog({
-                            title: "Save wallet.awd",
-                            filters: [{name: "Wallet", extensions: ["awd"]}]
-                        }, function (filename) {
-                            if (typeof filename !== "undefined" && filename !== "") {
-                                if (!fs.exists(filename)) {
-                                    dialog.showMessageBox({
-                                        type: "warning",
-                                        message: "Do you want to replace file?",
-                                        buttons: ["Yes", "No"],
-                                        title: "Replace wallet?"
-                                    }, function (response) {
-                                        if (response === 0) {
-                                            exportWallet(filename, true);
-                                        }
-                                    });
-                                } else {
-                                    exportWallet(filename, true);
-                                }
-                            }
-                        });
+                        exportWalletArizen("awd", true);
                     }
                 }, {
                     label: "Backup unencrypted wallet",
                     click() {
-                        dialog.showSaveDialog({
-                            title: "Save wallet.uawd",
-                            filters: [{name: "Wallet", extensions: ["uawd"]}]
-                        }, function (filename) {
-                            if (typeof filename !== "undefined" && filename !== "") {
-                                if (!fs.exists(filename)) {
-                                    dialog.showMessageBox({
-                                        type: "warning",
-                                        message: "Do you want to replace file?",
-                                        buttons: ["Yes", "No"],
-                                        title: "Replace wallet?"
-                                    }, function (response) {
-                                        if (response === 0) {
-                                            exportWallet(filename, false);
-                                        }
-                                    });
-                                } else {
-                                    exportWallet(filename, false);
-                                }
-                            }
-                        });
+                        exportWalletArizen("uawd", false);
                     }
                 }, {
                     type: "separator"
@@ -334,44 +350,12 @@ function updateMenuAtLogin() {
                 }, {
                     label: "Import UNENCRYPTED Arizen wallet",
                     click() {
-                        if (userInfo.loggedIn) {
-                            dialog.showOpenDialog({
-                                title: "Import wallet.uawd",
-                                filters: [{name: "Wallet", extensions: ["uawd"]}]
-                            }, function (filePaths) {
-                                if (filePaths) dialog.showMessageBox({
-                                    type: "warning",
-                                    message: "This will replace your actual wallet. Are you sure?",
-                                    buttons: ["Yes", "No"],
-                                    title: "Replace wallet?"
-                                }, function (response) {
-                                    if (response === 0) {
-                                        importWallet(filePaths[0], false);
-                                    }
-                                });
-                            });
-                        }
+                        importWalletArizen("uawd", false);
                     }
                 }, {
                     label: "Import ENCRYPTED Arizen wallet",
                     click() {
-                        if (userInfo.loggedIn) {
-                            dialog.showOpenDialog({
-                                title: "Import wallet.awd",
-                                filters: [{name: "Wallet", extensions: ["awd"]}]
-                            }, function (filePaths) {
-                                if (filePaths) dialog.showMessageBox({
-                                    type: "warning",
-                                    message: "This will replace your actual wallet. Are you sure?",
-                                    buttons: ["Yes", "No"],
-                                    title: "Replace wallet?"
-                                }, function (response) {
-                                    if (response === 0) {
-                                        importWallet(filePaths[0], true);
-                                    }
-                                });
-                            });
-                        }
+                        importWalletArizen("awd", true);
                     }
                 }, {
                     type: "separator"
@@ -397,43 +381,8 @@ function updateMenuAtLogin() {
         }
     ];
 
-    if (os.platform() === "darwin") {
-        template.unshift({
-            label: app.getName(),
-            submenu: [
-                {
-                    role: "about"
-                },
-                {
-                    type: "separator"
-                },
-                {
-                    role: "services",
-                    submenu: []
-                },
-                {
-                    type: "separator"
-                },
-                {
-                    role: "hide"
-                },
-                {
-                    role: "hideothers"
-                },
-                {
-                    role: "unhide"
-                },
-                {
-                    type: "separator"
-                },
-                {
-                    role: "quit"
-                }
-            ]
-        });
-    }
-    const menu = Menu.buildFromTemplate(template);
-    Menu.setApplicationMenu(menu);
+    setDarwin(template);
+    Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 
 function updateMenuAtLogout() {
@@ -448,58 +397,11 @@ function updateMenuAtLogout() {
                     }
                 }
             ]
-        },
-        {
-            label: "Edit",
-            submenu: [
-                {label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:"},
-                {label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:"},
-                {type: "separator"},
-                {label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:"},
-                {label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:"},
-                {label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:"},
-                {label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:"}
-            ]
         }
     ];
 
-    if (os.platform() === "darwin") {
-        template.unshift({
-            label: app.getName(),
-            submenu: [
-                {
-                    role: "about"
-                },
-                {
-                    type: "separator"
-                },
-                {
-                    role: "services",
-                    submenu: []
-                },
-                {
-                    type: "separator"
-                },
-                {
-                    role: "hide"
-                },
-                {
-                    role: "hideothers"
-                },
-                {
-                    role: "unhide"
-                },
-                {
-                    type: "separator"
-                },
-                {
-                    role: "quit"
-                }
-            ]
-        });
-    }
-    const menu = Menu.buildFromTemplate(template);
-    Menu.setApplicationMenu(menu);
+    setDarwin(template);
+    Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 
 function createWindow() {
@@ -602,11 +504,7 @@ ipcMain.on("write-login-info", function (event, login, pass, wallet) {
             }]
         };
     }
-    fs.writeFileSync(path, JSON.stringify(data), function (err) {
-        if (err) {
-            return console.log(err);
-        }
-    });
+    storeFile(path, JSON.stringify(data));
 
     path = getWalletPath();
     if (!fs.existsSync(path)) {
@@ -683,7 +581,7 @@ ipcMain.on("exit-from-menu", function (event) {
     // On macOS it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q
     if (process.platform !== "darwin") {
-        app.quit()
+        app.quit();
     }
 });
 
@@ -695,7 +593,7 @@ ipcMain.on("get-wallets", function (event) {
         sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet");
         /* update wallet 0.1 if necessary */
         if (sqlRes[0].columns.includes("name") === false) {
-            userInfo.walletDb.exec("ALTER TABLE wallet ADD COLUMN name text DEFAULT ''");
+            userInfo.walletDb.exec("ALTER TABLE wallet ADD COLUMN name TEXT DEFAULT ''");
             sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet");
         }
         resp = {
@@ -764,9 +662,35 @@ ipcMain.on("rename-wallet", function (event, address, name) {
     event.sender.send("rename-wallet-response", JSON.stringify(resp));
 });
 
-ipcMain.on("get-transaction", function (event, txId, address) {
+ipcMain.on("get-wallet-by-name", function (event, name) {
     let resp;
     let sqlRes;
+
+    if (userInfo.loggedIn) {
+        sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet WHERE name = '" + name + "'");
+        if (sqlRes.length > 0) {
+            resp = {
+                response: "OK",
+                wallets: sqlRes[0].values,
+                msg: "found: " + sqlRes.length
+            };
+        } else {
+            resp = {
+                response: "ERR",
+                msg: "name not found"
+            };
+        }
+    } else {
+        resp = {
+            response: "ERR",
+            msg: "not logged in"
+        };
+    }
+    event.sender.send("get-wallet-by-name-response", JSON.stringify(resp));
+});
+
+ipcMain.on("get-transaction", function (event, txId, address) {
+    let resp;
 
     if (userInfo.loggedIn) {
         request.get(zenApi + "tx/" + txId, function (err, res, body) {
@@ -796,7 +720,7 @@ ipcMain.on("generate-wallet", function (event) {
     let newAddr;
 
     if (userInfo.loggedIn) {
-        newAddr = generateNewAddress();
+        newAddr = getNewAddress();
         resp = {
             response: "OK",
             msg: newAddr
