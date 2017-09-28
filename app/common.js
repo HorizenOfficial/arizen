@@ -5,6 +5,7 @@
 
 const electron = require("electron");
 const {ipcRenderer} = electron;
+const pckg = require("../package.json");
 
 ipcRenderer.send("check-login-info");
 
@@ -42,7 +43,6 @@ function closeNav() {
 }
 
 function aboutDialog() {
-    let pckg = require("../package.json");
     document.getElementById("mySidenav").style.width = "0";
     document.getElementById("sidenavIMG").style.transitionDelay = "0s";
     document.getElementById("sidenavIMG").style.transition = "0s";
@@ -78,7 +78,24 @@ function exitApp() {
     ipcRenderer.send("exit-from-menu");
 }
 
-function openHomepageInDefaultBrowser(){
-    let pckg = require("../package.json");
+function openHomepageInDefaultBrowser() {
     electron.shell.openExternal(pckg.homepage)
+}
+
+function doNotify(title, message, duration = 2) {
+    let notif = new Notification(title, {
+        body: message,
+        icon: "resources/zen_icon.png",
+        duration: duration
+    });
+
+    notif.onclick = () => {
+        notif.close();
+    }
+}
+
+function settingsDialog() {
+    // TODO: @nonghost create dialog for settings
+    // radiobutton - disable/enable desktop notification, default = enable, where to store settings?
+    doNotify("ZEN", "Awesome Arizen walleet"); // delete this - only test
 }
