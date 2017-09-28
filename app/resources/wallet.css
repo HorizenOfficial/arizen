@@ -121,15 +121,14 @@
 
 #walletList::-webkit-scrollbar-thumb
 {
-    background-color: #F90;
-    background-image: -webkit-linear-gradient(45deg,
+    background: #F90 -webkit-linear-gradient(45deg,
     rgba(255, 255, 255, .2) 25%,
     transparent 25%,
     transparent 50%,
     rgba(255, 255, 255, .2) 50%,
     rgba(255, 255, 255, .2) 75%,
     transparent 75%,
-    transparent)
+    transparent);
 }
 
 
@@ -154,15 +153,14 @@
 
 #walletListReceive::-webkit-scrollbar-thumb
 {
-    background-color: #F90;
-    background-image: -webkit-linear-gradient(45deg,
+    background: #F90 -webkit-linear-gradient(45deg,
     rgba(255, 255, 255, .2) 25%,
     transparent 25%,
     transparent 50%,
     rgba(255, 255, 255, .2) 50%,
     rgba(255, 255, 255, .2) 75%,
     transparent 75%,
-    transparent)
+    transparent);
 }
 
 .walletListItem {
@@ -211,8 +209,7 @@
 }
 
 .walletListItemChat{
-    background-color: #F90;
-    background-image: -webkit-linear-gradient(45deg,
+    background: #F90 -webkit-linear-gradient(45deg,
     rgba(255, 255, 255, .2) 25%,
     transparent 25%,
     transparent 50%,
@@ -290,15 +287,14 @@
 
 #pickWalletDialog::-webkit-scrollbar-thumb
 {
-    background-color: #F90;
-    background-image: -webkit-linear-gradient(45deg,
+    background: #F90 -webkit-linear-gradient(45deg,
     rgba(255, 255, 255, .2) 25%,
     transparent 25%,
     transparent 50%,
     rgba(255, 255, 255, .2) 50%,
     rgba(255, 255, 255, .2) 75%,
     transparent 75%,
-    transparent)
+    transparent);
 }
 
 #walletDetailsDialog {
@@ -315,8 +311,7 @@
 
 #walletDetailsDialog::-webkit-scrollbar-track
 {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-    background-color: #FeFeFe;
+   background-color: #FeFeFe;
 }
 
 #walletDetailsDialog::-webkit-scrollbar
@@ -327,15 +322,14 @@
 
 #walletDetailsDialog::-webkit-scrollbar-thumb
 {
-    background-color: #F90;
-    background-image: -webkit-linear-gradient(45deg,
+    background: #F90 -webkit-linear-gradient(45deg,
     rgba(255, 255, 255, .2) 25%,
     transparent 25%,
     transparent 50%,
     rgba(255, 255, 255, .2) 50%,
     rgba(255, 255, 255, .2) 75%,
     transparent 75%,
-    transparent)
+    transparent);
 }
 
 

@@ -1,7 +1,6 @@
 /* Messenger*/
 
-
-#contactsContainer{
+#contactsContainer {
     position: absolute;
     float: left;
     margin: 5px 5px 5px auto;
@@ -19,7 +18,7 @@
     color: #888888;
 }
 
-.contact{
+.contact {
     color: #f88900;
     font-size: 1em;
     margin: 3px;
@@ -27,52 +26,48 @@
     padding-bottom: 3px;
 }
 
-.contactName{
+.contactName {
     color: #888888;
     font-size: 1em;
 }
 
-.contactOdd{
+.contactOdd {
     background: #eeeeee;
 }
 
-#contactList{
-    height:510px;
+#contactList {
+    height: 510px;
     overflow-y: scroll;
 }
 
-#contactList::-webkit-scrollbar-track
-{
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+#contactList::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
     background-color: #FeFeFe;
 }
 
-#contactList::-webkit-scrollbar
-{
+#contactList::-webkit-scrollbar {
     width: 10px;
     background-color: #FeFeFe;
 }
 
-#contactList::-webkit-scrollbar-thumb
-{
-    background-color: #cccccc;
-    background-image: -webkit-linear-gradient(45deg,
+#contactList::-webkit-scrollbar-thumb {
+    background: #cccccc -webkit-linear-gradient(45deg,
     rgba(255, 255, 255, .2) 25%,
     transparent 25%,
     transparent 50%,
     rgba(255, 255, 255, .2) 50%,
     rgba(255, 255, 255, .2) 75%,
     transparent 75%,
-    transparent)
+    transparent);
 }
 
-.addContactButton{
+.addContactButton {
     width: 130px;
 }
 
-#conversationContainer{
-    position:absolute;
-    margin: 5px 0px 5px auto;
+#conversationContainer {
+    position: absolute;
+    margin: 5px 0 5px auto;
     padding: 5px 5px;
     left: 348px;
     right: 5px;
@@ -87,11 +82,10 @@
     box-shadow: 0 1px 1px #ccc;
 }
 
-#ConversationContainerContact{
+#ConversationContainerContact {
     height: 21px;
     font-size: 1.0em;
 }
-
 
 #ConversationContainerMessages {
     height: 485px;
@@ -112,13 +106,12 @@
     background: #fefefe;
 }
 
-.messengerContact{
-    padding-top: 0px;
-    padding-bottom: 0px;
+.messengerContact {
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
-
-.messenger_input{
+.messenger_input {
     margin-left: 0;
     float: left;
     margin-right: 0;
@@ -126,9 +119,9 @@
     width: 560px;
     height: 15px;
     box-shadow: 0 1px 1px #aaa;
- }
+}
 
-.messenger_input:focus{
+.messenger_input:focus {
     margin-left: 0;
     float: left;
     margin-right: 0;
@@ -138,7 +131,7 @@
     border-bottom: 1px #f88900 solid;
 }
 
-.messenger_button{
+.messenger_button {
     padding-top: 8px;
     padding-bottom: 12px;
     margin-left: 0;
@@ -189,10 +182,10 @@
     width: 0;
     border-width: 10px 10px 0;
     border-style: solid;
-    border-color: #f88900 transparent ;
+    border-color: #f88900 transparent;
 }
 
-.messageMyInfo{
+.messageMyInfo {
     margin-top: 10px;
     margin-bottom: 10px;
     padding-right: 30px;
@@ -200,7 +193,7 @@
     color: #f88900;
 }
 
-.messageContactInfo{
+.messageContactInfo {
     margin-top: 10px;
     margin-bottom: 10px;
     padding-left: 10px;
@@ -208,30 +201,25 @@
     color: #888888;
 }
 
-
-#ConversationContainerMessages::-webkit-scrollbar-track
-{
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+#ConversationContainerMessages::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
     background-color: #FeFeFe;
 }
 
-#ConversationContainerMessages::-webkit-scrollbar
-{
+#ConversationContainerMessages::-webkit-scrollbar {
     width: 10px;
     background-color: #FeFeFe;
 }
 
-#ConversationContainerMessages::-webkit-scrollbar-thumb
-{
-    background-color: #F90;
-    background-image: -webkit-linear-gradient(45deg,
+#ConversationContainerMessages::-webkit-scrollbar-thumb {
+    background: #F90 -webkit-linear-gradient(45deg,
     rgba(255, 255, 255, .2) 25%,
     transparent 25%,
     transparent 50%,
     rgba(255, 255, 255, .2) 50%,
     rgba(255, 255, 255, .2) 75%,
     transparent 75%,
-    transparent)
+    transparent);
 }
 
 #addContactDialog {
@@ -240,19 +228,17 @@
     left: 162px;
     width: 700px;
     height: 350px;
-    top:100px;
-    opacity:0;
+    top: 100px;
+    opacity: 0;
     transition: 0.5s;
 }
 
-
-
-.padding50{
+.padding50 {
     padding: 50px;
 }
 
-.saveContactButton{
-    margin-top:30px;
+.saveContactButton {
+    margin-top: 30px;
 }
 
 .closeAddContactDialog {
@@ -260,29 +246,28 @@
     top: 0;
     right: 15px;
     font-size: 30px;
-    color:#888888;
+    color: #888888;
     text-decoration: none;
 }
 
-
 .closeAddContactDialog:hover {
-    color:#f88900;
+    color: #f88900;
 }
 
 #contactPreferences {
     position: absolute;
-    bottom: 10px ;
+    bottom: 10px;
     right: 15px;
     font-size: 0.9em;
 }
 
-.contactPreferencesClass{
-    color:#888888;
+.contactPreferencesClass {
+    color: #888888;
     text-decoration: none;
 }
 
 .contactPreferencesClass:hover {
-    color:#f88900;
+    color: #f88900;
 }
 
 #deleteContactDialog {
@@ -291,7 +276,7 @@
     left: 162px;
     width: 700px;
     height: 350px;
-    top:100px;
-    opacity:0;
+    top: 100px;
+    opacity: 0;
     transition: 0.5s;
 }
