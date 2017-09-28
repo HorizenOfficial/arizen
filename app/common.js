@@ -5,6 +5,7 @@
 
 const electron = require("electron");
 const {ipcRenderer} = electron;
+const pckg = require("../package.json");
 
 ipcRenderer.send("check-login-info");
 
@@ -42,7 +43,6 @@ function closeNav() {
 }
 
 function aboutDialog() {
-    let pckg = require("../package.json");
     document.getElementById("mySidenav").style.width = "0";
     document.getElementById("sidenavIMG").style.transitionDelay = "0s";
     document.getElementById("sidenavIMG").style.transition = "0s";
@@ -79,7 +79,6 @@ function exitApp() {
 }
 
 function openHomepageInDefaultBrowser(){
-    let pckg = require("../package.json");
     electron.shell.openExternal(pckg.homepage)
 }
 
