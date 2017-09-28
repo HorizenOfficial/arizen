@@ -317,6 +317,9 @@ function generateNewWallet() {
 ipcRenderer.on("generate-wallet-response", function (event, resp) {
     let data = JSON.parse(resp);
 
-    /* FIXME: @nonghost response OK/ERR, msg new address if OK */
-    console.log(data.msg);
+    if (data.response === "OK")
+    {
+        /* FIXME: @nonghost fix action */
+        document.getElementById("newWalletAddress").value = data.msg;
+    }
 });
