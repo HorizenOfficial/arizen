@@ -587,6 +587,29 @@ ipcMain.on("exit-from-menu", function (event) {
     }
 });
 
+function updateBalance(address, oldBalance, event) {
+    request.get(zenApi + "addr/" + address, function (err, res, body) {
+        if (err) {
+            console.log("balance update failed");
+            setTimeout(updateBalance, 5000, address, oldBalance, event);
+        } else if (res && res.statusCode === 200) {
+            let data = JSON.parse(body);
+            if (oldBalance !== data.balance) {
+                userInfo.walletDb.exec("UPDATE wallet SET lastbalance = " + data.balance + " WHERE addr = '" + data.addrStr + "'");
+                userInfo.dbChanged = true;
+                let update = {
+                    response: "OK",
+                    wallet: data.addrStr,
+                    balance: data.balance,
+                    transactions: data.transactions
+                };
+                event.sender.send("update-wallet-balance", JSON.stringify(update));
+            }
+            //setTimeout(updateBalance, 60000, data.addrStr, data.balance, event); 
+        }
+    });
+}
+
 ipcMain.on("get-wallets", function (event) {
     let resp;
     let sqlRes;
@@ -605,25 +628,7 @@ ipcMain.on("get-wallets", function (event) {
         };
         for (let i = 0; i < resp.wallets.length; i += 1) {
             resp.total += resp.wallets[i][3];
-            // FIXME: JSHint >>> Function declared within loops referencing an outer scooped variable may lead to confusing semantics (W083) >>  function(err, res, body) { ...
-            request.get(zenApi + "addr/" + resp.wallets[i][2], function (err, res, body) {
-                if (err) {
-                    console.log("balance update failed");
-                } else if (res && res.statusCode === 200) {
-                    let data = JSON.parse(body);
-                    if (resp.wallets[i][3] !== data.balance) {
-                        userInfo.walletDb.exec("UPDATE wallet SET lastbalance = " + data.balance + " WHERE addr = '" + data.addrStr + "'");
-                        userInfo.dbChanged = true;
-                        let update = {
-                            response: "OK",
-                            wallet: data.addrStr,
-                            balance: data.balance,
-                            transactions: data.transactions
-                        };
-                        event.sender.send("update-wallet-balance", JSON.stringify(update));
-                    }
-                }
-            });
+            updateBalance(resp.wallets[i][2], resp.wallets[i][3], event);
         }
     } else {
         resp = {
