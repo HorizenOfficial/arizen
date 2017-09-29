@@ -114,6 +114,5 @@ function settingsDialog() {
     document.getElementById("darkContainer").style.opacity = "0.7";
     document.getElementById("settingsDialog").style.zIndex = "2";
     document.getElementById("settingsDialog").style.opacity = "1";
-    // radiobutton - disable/enable desktop notification, default = enable, where to store settings?
-    //doNotify("ZEN", "Awesome Arizen wallet");
+    // TODO: radiobutton - disable/enable desktop notification, default = enable, where to store settings?
 }

@@ -10,6 +10,7 @@ let wallets = [{id : 0, address: "znbcGtStHjZdfWsRhZdZsffaetZZeDfv524", balance:
         {id : 0, address: "znbcGtStHjZdfWsRhZdZsffaetZZeDfv526", balance: 20.000},
         {id : 1, address: "znbcGtStHjZdfWsRhZdZsffaetZZeDfv527", balance: 50.000},
         {id : 1, address: "znbcGtStHjZdfWsRhZdZsffaetZZeDfv528", balance: 16.000},
+        {id : 1, address: "zsyF68hcYYNLPj5i4PfQJ1kUY6nsFnZkc82", balance: 1086.000},
         {id : 2, address: "znbcGtStHjZdfWsRhZdZsffaetZZeDfv520", balance: 0.0000},
         {id : 2, address: "znbcGtStHjZdfWsRhZdZsffaetZZeDfv521", balance: 0.0000},
         {id : 2, address: "znbcGtStHjZdfWsRhZdZsffaetZZeDfv522", balance: 0.0000},

@@ -122,6 +122,7 @@ function decryptWallet(login, password) {
 
 function importWalletDat(login, pass, wallet) {
     let walletBytes = fs.readFileSync(wallet, "binary");
+    // FIXME - unexpected x after \
     let re = /\x30\x81\xD3\x02\x01\x01\x04\x20(.{32})/gm;
     let privateKeys = walletBytes.match(re);
     privateKeys = privateKeys.map(function (x) {
@@ -446,11 +447,7 @@ app.on("ready", createWindow);
 
 // Quit when all windows are closed.
 app.on("window-all-closed", function () {
-    // On macOS it is common for applications and their menu bar
-    // to stay active until the user quits explicitly with Cmd + Q
-    if (process.platform !== "darwin") {
-        app.quit();
-    }
+    app.quit();
 });
 
 app.on("activate", function () {
@@ -580,11 +577,7 @@ ipcMain.on("do-logout", function (event) {
 });
 
 ipcMain.on("exit-from-menu", function (event) {
-    // On macOS it is common for applications and their menu bar
-    // to stay active until the user quits explicitly with Cmd + Q
-    if (process.platform !== "darwin") {
-        app.quit();
-    }
+    app.quit();
 });
 
 function updateBalance(address, oldBalance, event) {
@@ -604,6 +597,7 @@ function updateBalance(address, oldBalance, event) {
                     transactions: data.transactions
                 };
                 event.sender.send("update-wallet-balance", JSON.stringify(update));
+                doNotify("Balance updated", (data.balance - oldBalance).toString());
             }
             //setTimeout(updateBalance, 60000, data.addrStr, data.balance, event); 
         }
@@ -741,4 +735,3 @@ ipcMain.on("generate-wallet", function (event) {
 
     event.sender.send("generate-wallet-response", JSON.stringify(resp));
 });
-
