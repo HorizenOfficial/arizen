@@ -138,11 +138,15 @@ function walletDetailsDialog(id) {
     document.getElementById("walletDetailsDialogContent").innerHTML = "";
 }
 
+function closeAllWalletsDialogs() {
+    closeDialog("walletDetailsDialog");
+    closeDialog("addWalletDialog");
+    closeDialog("pickWalletDialog");
+    closeNav();
+}
 
 function closeDialog(clasname) {
-    document.getElementById("darkContainer").style.transition = "0s";
-    document.getElementById("darkContainer").style.opacity = "0";
-    document.getElementById("darkContainer").style.zIndex = "-1";
+    closeDarkContainer();
     document.getElementById(clasname).style.zIndex = "-1";
     document.getElementById(clasname).style.opacity = "0";
 }
@@ -316,7 +320,9 @@ ipcRenderer.on("generate-wallet-response", function (event, resp) {
 
     if (data.response === "OK")
     {
-        /* FIXME: @nonghost fix action */
         document.getElementById("newWalletAddress").value = data.msg;
+        let wAdress = data.msg;
+        let wName = document.getElementById("newWalletName").value;
+        // FIXME: @k4chn1k Save generated address and name to DB (save-wallet)
     }
 });
