@@ -57,6 +57,12 @@ function saveContact() {
     closeDialog("addContactDialog");
 }
 
+function closeAllMessengerDialogs() {
+    closeDialog("addContactDialog");
+    closeDialog("deleteContactDialog");
+    closeNav();
+}
+
 function printContact(cId, contact) {
     let contactClass = "";
     let contactName;

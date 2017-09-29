@@ -22,6 +22,12 @@ ipcRenderer.on("check-login-response", function (event, resp) {
     }
 });
 
+function closeDarkContainer() {
+    document.getElementById("darkContainer").style.transition = "0s";
+    document.getElementById("darkContainer").style.opacity = "0";
+    document.getElementById("darkContainer").style.zIndex = "-1";
+}
+
 function openNav() {
     document.getElementById("mySidenav").style.width = "250px";
     document.getElementById("darkContainer").style.transition = "1.4s";
@@ -34,9 +40,7 @@ function openNav() {
 
 function closeNav() {
     document.getElementById("mySidenav").style.width = "0";
-    document.getElementById("darkContainer").style.transition = "0s";
-    document.getElementById("darkContainer").style.opacity = "0";
-    document.getElementById("darkContainer").style.zIndex = "-1";
+    closeDarkContainer();
     document.getElementById("sidenavIMG").style.transitionDelay = "0s";
     document.getElementById("sidenavIMG").style.transition = "0s";
     document.getElementById("sidenavIMG").style.opacity = "0";
@@ -62,17 +66,13 @@ function aboutDialog() {
 }
 
 function closeAboutDialog() {
-    document.getElementById("darkContainer").style.transition = "0s";
-    document.getElementById("darkContainer").style.opacity = "0";
-    document.getElementById("darkContainer").style.zIndex = "-1";
+    closeDarkContainer();
     document.getElementById("aboutDialog").style.zIndex = "-1";
     document.getElementById("aboutDialog").style.opacity = "0";
 }
 
 function closeSettingsDialog() {
-    document.getElementById("darkContainer").style.transition = "0s";
-    document.getElementById("darkContainer").style.opacity = "0";
-    document.getElementById("darkContainer").style.zIndex = "-1";
+    closeDarkContainer();
     document.getElementById("settingsDialog").style.zIndex = "-1";
     document.getElementById("settingsDialog").style.opacity = "0";
 }
@@ -104,7 +104,6 @@ function doNotify(title, message, duration = 2) {
 }
 
 function settingsDialog() {
-    // TODO: @nonghost create dialog for settings
     document.getElementById("mySidenav").style.width = "0";
     document.getElementById("sidenavIMG").style.transitionDelay = "0s";
     document.getElementById("sidenavIMG").style.transition = "0s";
@@ -116,7 +115,5 @@ function settingsDialog() {
     document.getElementById("settingsDialog").style.zIndex = "2";
     document.getElementById("settingsDialog").style.opacity = "1";
     // radiobutton - disable/enable desktop notification, default = enable, where to store settings?
-    // TODO: delete this - only test
-
-    doNotify("ZEN", "Awesome Arizen wallet");
+    //doNotify("ZEN", "Awesome Arizen wallet");
 }
