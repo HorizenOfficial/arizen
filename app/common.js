@@ -69,6 +69,15 @@ function closeAboutDialog() {
     document.getElementById("aboutDialog").style.opacity = "0";
 }
 
+function closeSettingsDialog() {
+    document.getElementById("darkContainer").style.transition = "0s";
+    document.getElementById("darkContainer").style.opacity = "0";
+    document.getElementById("darkContainer").style.zIndex = "-1";
+    document.getElementById("settingsDialog").style.zIndex = "-1";
+    document.getElementById("settingsDialog").style.opacity = "0";
+}
+
+
 function logout() {
     ipcRenderer.send("do-logout");
     location.href = "./login.html";
@@ -96,7 +105,18 @@ function doNotify(title, message, duration = 2) {
 
 function settingsDialog() {
     // TODO: @nonghost create dialog for settings
+    document.getElementById("mySidenav").style.width = "0";
+    document.getElementById("sidenavIMG").style.transitionDelay = "0s";
+    document.getElementById("sidenavIMG").style.transition = "0s";
+    document.getElementById("sidenavIMG").style.opacity = "0";
+
+    document.getElementById("darkContainer").style.transition = "0.5s";
+    document.getElementById("darkContainer").style.zIndex = "1";
+    document.getElementById("darkContainer").style.opacity = "0.7";
+    document.getElementById("settingsDialog").style.zIndex = "2";
+    document.getElementById("settingsDialog").style.opacity = "1";
     // radiobutton - disable/enable desktop notification, default = enable, where to store settings?
     // TODO: delete this - only test
+
     doNotify("ZEN", "Awesome Arizen wallet");
 }

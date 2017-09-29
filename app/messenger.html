@@ -28,7 +28,7 @@
 <!-- ============================== SIDENAV END ============================== -->
 
 <!-- ============================== DARK CONTAINER ============================== -->
-<div id="darkContainer"></div>
+<div id="darkContainer" onclick="closeNav()"></div>
 
 <!-- ============================== ADD CONTACT DIALOG BEGIN ============================================= -->
 <div id="addContactDialog" class="dialog">
@@ -96,6 +96,22 @@
     </div>
 </div>
 <!-- ============================ ABOUT DIALOG END ========================================= -->
+
+<!-- ============================ SETTINGS DIALOG BEGIN ========================================= -->
+<div id="settingsDialog" class="dialog">
+    <div class="right">
+        <a href="javascript:void(0)" class="closeAddWalletDialog " onclick="closeSettingsDialog()">&times</a>
+    </div>
+    <div class="center">
+        <div class="sectionTitle">
+            Arizen Settings
+        </div>
+    </div>
+    <div id="settingsContent" class="padding25">
+    </div>
+</div>
+<!-- ============================ SETTINGS DIALOG END ========================================= -->
+
 
 
 <div id="topHeader" class="topHeader">
