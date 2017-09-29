@@ -317,12 +317,12 @@ function updateMenuAtLogin() {
             label: "File",
             submenu: [
                 {
-                    label: "Backup encrypted wallet",
+                    label: "Backup ENCRYPTED wallet",
                     click() {
                         exportWalletArizen("awd", true);
                     }
                 }, {
-                    label: "Backup unencrypted wallet",
+                    label: "Backup UNENCRYPTED wallet",
                     click() {
                         exportWalletArizen("uawd", false);
                     }
