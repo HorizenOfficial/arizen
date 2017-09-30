@@ -91,18 +91,6 @@ function openHomepageInDefaultBrowser() {
     electron.shell.openExternal(pckg.homepage)
 }
 
-function doNotify(title, message, duration = 2) {
-    let notif = new Notification(title, {
-        body: message,
-        icon: "resources/zen_icon.png",
-        duration: duration
-    });
-
-    notif.onclick = () => {
-        notif.close();
-    }
-}
-
 function settingsDialog() {
     document.getElementById("mySidenav").style.width = "0";
     document.getElementById("sidenavIMG").style.transitionDelay = "0s";

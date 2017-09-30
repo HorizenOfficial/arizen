@@ -168,7 +168,7 @@ function printWallet(wId, wName, wBalance, wAddress, verbose = true) {
         }
         walletTitle = "<span class=\"walletListItemAddress walletListItemTitle\">" + wName + "</span>";
     }
-    walletBalance = "<span id=\"balance_" + wAddress + "\" class=\"walletListItemAddress walletListItemBalance\">" + wBalance + "</span> ZEN";
+    walletBalance = "<span id=\"balance_" + wAddress + "\" class=\"walletListItemAddress walletListItemBalance\"><b>" + Number(wBalance).toFixed(8) + "</b></span> ZEN";
     if (verbose) {
         walletAddress = "<span class=\"walletListItemAddress\"><b>Address </b> " + wAddress + "</span><a href=\"javascript:void(0)\" class=\"walletListItemDetails\" onclick=\"walletDetailsDialog(" + wId + ")\">Details</a>";
     }
@@ -267,7 +267,7 @@ ipcRenderer.on("get-wallets-response", function (event, resp) {
     printWalletList(non_zero, zero, "pickWalletDialogContent", false);
     printWalletList(non_zero, zero, "walletList");
     printWalletList(non_zero, zero, "walletListReceive");
-    document.getElementById("walletFooterBalance").innerHTML = data.total;
+    document.getElementById("walletFooterBalance").innerHTML = Number(data.total).toFixed(8);
 });
 
 ipcRenderer.on("update-wallet-balance", function (event, resp) {
@@ -275,6 +275,7 @@ ipcRenderer.on("update-wallet-balance", function (event, resp) {
 
     /* FIXME @nonghost wallet balance has no ID */
     console.log("wallet: " + data.wallet + "balance updated to " + data.balance);
+    doNotify("Balance has been updated", "New balance: " + data.balance + " " + data.wallet);
 });
 
 ipcRenderer.on("rename-wallet-response", function (event, resp) {
@@ -326,3 +327,15 @@ ipcRenderer.on("generate-wallet-response", function (event, resp) {
         // FIXME: @k4chn1k Save generated address and name to DB (save-wallet)
     }
 });
+
+function doNotify(title, message, duration = 2) {
+    let notif = new Notification(title, {
+        body: message,
+        icon: "resources/zen_icon.png",
+        duration: duration
+    });
+
+    notif.onclick = () => {
+        notif.close();
+    }
+}

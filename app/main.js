@@ -597,7 +597,6 @@ function updateBalance(address, oldBalance, event) {
                     transactions: data.transactions
                 };
                 event.sender.send("update-wallet-balance", JSON.stringify(update));
-                doNotify("Balance updated", (data.balance - oldBalance).toString());
             }
             //setTimeout(updateBalance, 60000, data.addrStr, data.balance, event); 
         }
