@@ -166,7 +166,16 @@ function printWallet(wId, wName, wBalance, wAddress, verbose = true) {
         } else {
             walletClass = "<div class=\"walletListItem\">";
         }
-        walletTitle = "<span class=\"walletListItemAddress walletListItemTitle\">" + wName + "</span>";
+        if (verbose) {
+            walletTitle = "<span class=\"walletListItemAddress walletListItemTitle\">" + wName + "</span>";
+        } else {
+            if (wName !== "") {
+                walletTitle = "<span class=\"walletListItemAddress walletListItemTitle\">" + wName + "</span>";
+            } else {
+                walletTitle = "<span class=\"walletListItemAddress walletListItemTitle\"> " + wAddress + "</span>";
+            }
+        }
+        
     }
     walletBalance = "<span id=\"balance_" + wAddress + "\" class=\"walletListItemAddress walletListItemBalance\"><b>" + Number(wBalance).toFixed(8) + "</b></span> ZEN";
     if (verbose) {
