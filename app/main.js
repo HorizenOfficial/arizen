@@ -114,8 +114,8 @@ function decryptWallet(login, password) {
 
         decipher.setAuthTag(tag);
         outputBytes = decipher.update(encrypted, "binary", "binary");
-        // FIXME: handle error - Error:(116, 24) Flow: Buffer. This type cannot be added to string
-        outputBytes += decipher.final();
+        // FIXME: handle error
+        outputBytes += decipher.final("binary");
     }
     return outputBytes;
 }
