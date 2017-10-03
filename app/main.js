@@ -161,6 +161,7 @@ function importWallet(filename, encrypt) {
         data = decryptWallet(userInfo.login, userInfo.pass);
     } else {
         data = fs.readFileSync(filename);
+        userInfo.dbChanged = true;
     }
     userInfo.walletDb = new sql.Database(data);
 }
