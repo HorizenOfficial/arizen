@@ -313,7 +313,7 @@ ipcRenderer.on("get-transaction-update", function (event, address, resp) {
 });
 
 function generateNewWallet() {
-    ipcRenderer.send("generate-wallet");
+    ipcRenderer.send("generate-wallet", document.getElementById("newWalletName").value);
 }
 
 ipcRenderer.on("generate-wallet-response", function (event, resp) {
@@ -324,7 +324,6 @@ ipcRenderer.on("generate-wallet-response", function (event, resp) {
         document.getElementById("newWalletAddress").value = data.msg;
         let wAdress = data.msg;
         let wName = document.getElementById("newWalletName").value;
-        // FIXME: @k4chn1k Save generated address and name to DB (save-wallet)
     }
 });
 
