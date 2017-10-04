@@ -176,6 +176,7 @@
     display:inline-block;
     width:28%;
     text-align: right;
+    font-weight: bold;
 }
 
 .walletListItemTitle{
@@ -206,6 +207,10 @@
 
 .walletListItemOdd{
     background: #eeeeee;
+}
+
+.walletListItemZero{
+    display: none;
 }
 
 .walletListItemChat{
