@@ -114,8 +114,8 @@ function decryptWallet(login, password) {
 
         decipher.setAuthTag(tag);
         outputBytes = decipher.update(encrypted, "binary", "binary");
-        // FIXME: handle error - Error:(116, 24) Flow: Buffer. This type cannot be added to string
-        outputBytes += decipher.final();
+        // FIXME: handle error
+        outputBytes += decipher.final("binary");
     }
     return outputBytes;
 }
@@ -161,6 +161,7 @@ function importWallet(filename, encrypt) {
         data = decryptWallet(userInfo.login, userInfo.pass);
     } else {
         data = fs.readFileSync(filename);
+        userInfo.dbChanged = true;
     }
     userInfo.walletDb = new sql.Database(data);
 }
@@ -217,14 +218,14 @@ function generateNewWallet(login, password) {
     storeFile(getWalletPath() + login + ".awd", walletEncrypted);
 }
 
-function getNewAddress() {
+function getNewAddress(name) {
     let pk;
     let addr;
     let privateKeys = generateNewAddress(1, userInfo.pass);
 
     pk = zencashjs.address.WIFToPrivKey(privateKeys[0]);
     addr = zencashjs.address.pubKeyToAddr(zencashjs.address.privKeyToPubKey(pk, true));
-    userInfo.walletDb.run("INSERT INTO wallet VALUES (?,?,?,?,?)", [null, pk, addr, 0, ""]);
+    userInfo.walletDb.run("INSERT INTO wallet VALUES (?,?,?,?,?)", [null, pk, addr, 0, name]);
     userInfo.dbChanged = true;
 
     return addr;
@@ -715,12 +716,12 @@ ipcMain.on("get-transaction", function (event, txId, address) {
 });
 
 
-ipcMain.on("generate-wallet", function (event) {
+ipcMain.on("generate-wallet", function (event, name) {
     let resp;
     let newAddr;
 
     if (userInfo.loggedIn) {
-        newAddr = getNewAddress();
+        newAddr = getNewAddress(name);
         resp = {
             response: "OK",
             msg: newAddr
