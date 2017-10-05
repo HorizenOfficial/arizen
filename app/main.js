@@ -608,7 +608,7 @@ ipcMain.on("get-wallets", function (event) {
     let sqlRes;
 
     if (userInfo.loggedIn) {
-        sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet");
+        sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet ORDER BY lastbalance DESC, id DESC");
         /* update wallet 0.1 if necessary */
         if (sqlRes[0].columns.includes("name") === false) {
             userInfo.walletDb.exec("ALTER TABLE wallet ADD COLUMN name TEXT DEFAULT ''");
