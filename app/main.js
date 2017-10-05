@@ -33,6 +33,7 @@ let userInfo = {
 };
 
 const dbStructWallet = "CREATE TABLE wallet (id INTEGER PRIMARY KEY AUTOINCREMENT, pk TEXT, addr TEXT UNIQUE, lastbalance REAL, name TEXT);";
+// FIXME: dbStructContacts is unused
 const dbStructContacts = "CREATE TABLE contacts (id INTEGER PRIMARY KEY AUTOINCREMENT, addr TEXT UNIQUE, name TEXT, nick TEXT);";
 const zenApi = "https://explorer.zensystem.io/insight-api-zen/";
 
@@ -189,12 +190,10 @@ function generateNewAddress(count, password) {
         chain.next();
     }
 
-    // Get private keys from them
-    let privateKeys = chain.getAll().map(function (x) {
+    // Get private keys from them - return privateKeys
+    return chain.getAll().map(function (x) {
         return chain.derive(x).keyPair.toWIF();
     });
-
-    return privateKeys;
 }
 
 /* wallet generation from kendricktan */
@@ -485,6 +484,7 @@ app.on("before-quit", function () {
 ipcMain.on("write-login-info", function (event, login, pass, wallet) {
     let path = getLoginPath();
     let data;
+    //let passHash: { algorithm: string, saltLength: number };
     let passHash = passwordHash.generate(pass, {
         "algorithm": "sha512",
         "saltLength": 32
@@ -565,7 +565,7 @@ ipcMain.on("check-login-info", function (event) {
     event.sender.send("check-login-response", JSON.stringify(resp));
 });
 
-ipcMain.on("do-logout", function (event) {
+ipcMain.on("do-logout", function () {
     updateMenuAtLogout();
     if (true === userInfo.dbChanged) {
         userInfo.dbChanged = false;
@@ -577,7 +577,7 @@ ipcMain.on("do-logout", function (event) {
     userInfo.loggedIn = false;
 });
 
-ipcMain.on("exit-from-menu", function (event) {
+ipcMain.on("exit-from-menu", function () {
     app.quit();
 });
 

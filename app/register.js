@@ -105,18 +105,17 @@ function checkPasswdAgain() {
 }
 
 function selectColumn(username, pswd, pswd_again) {
+    let username_info = "none";
+    let pswd_info = "none";
+    let pswd_identical_info = "none";
     if (username === true) {
-        document.getElementById("username_info").style.display = "block";
-        document.getElementById("pswd_info").style.display = "none";
-        document.getElementById("pswd_identical_info").style.display = "none";
+        username_info = "block";
     } else if (pswd === true) {
-        document.getElementById("username_info").style.display = "none";
-        document.getElementById("pswd_info").style.display = "block";
-        document.getElementById("pswd_identical_info").style.display = "none";
+        pswd_info = "block";
     } else if (pswd_again === true) {
-        document.getElementById("username_info").style.display = "none";
-        document.getElementById("pswd_info").style.display = "none";
-        document.getElementById("pswd_identical_info").style.display = "block";
+        pswd_identical_info = "block";
     }
-
+    document.getElementById("username_info").style.display = username_info;
+    document.getElementById("pswd_info").style.display = pswd_info;
+    document.getElementById("pswd_identical_info").style.display = pswd_identical_info;
 }

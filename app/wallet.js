@@ -191,7 +191,6 @@ function printWallet(wId, wName, wBalance, wAddress, verbose = true) {
                 walletTitle = "<span class=\"walletListItemAddress walletListItemTitle\"> " + wAddress + "</span>";
             }
         }
-        
     }
     walletBalance = "<span id=\"balance_" + wAddress + "\" class=\"walletListItemAddress walletListItemBalance\"><b>" + Number(wBalance).toFixed(8) + "</b></span> ZEN";
     if (verbose) {
@@ -272,7 +271,7 @@ function renderWallet() {
 
 function refreshWallet() {
     ipcRenderer.send("refresh-wallet");
-}   
+}
 
 function getWalletWithName(name) {
     ipcRenderer.send("get-wallet-by-name", name);
@@ -295,7 +294,6 @@ ipcRenderer.on("get-wallets-response", function (event, resp) {
     let walletBalance;
     let walletAddress = "";
     let walletEnd = "</div>";
-    
     showWallet();
     for (let i = 0, j = 1; i < data.wallets.length; i += 1) {
         wId = data.wallets[i][0];
@@ -307,7 +305,7 @@ ipcRenderer.on("get-wallets-response", function (event, resp) {
         if (wBalance === 0) {
             walletClass += " walletListItemZero";
         } else {
-            if (j == 2) {
+            if (j === 2) {
                 j = 0;
                 walletClass += " walletListItemOdd";
             }
@@ -320,7 +318,6 @@ ipcRenderer.on("get-wallets-response", function (event, resp) {
         } else {
             walletTitle = "<span class=\"walletListItemAddress walletListItemTitle\"> " + wAddress + "</span>";
         }
-        
         walletBalance = "<span name=\"balance_" + wAddress + "\" class=\"walletListItemAddress walletListItemBalance\">" + Number(wBalance).toFixed(8) + "</span> ZEN";
         walletAddress = "<span class=\"walletListItemAddress\"><b>Address </b> " + wAddress + "</span><a href=\"javascript:void(0)\" class=\"walletListItemDetails\" onclick=\"walletDetailsDialog(" + wId + ")\">Details</a>";
         document.getElementById("walletList").innerHTML += walletClass + walletName + walletBalance + walletAddress + walletEnd;
