@@ -77,7 +77,7 @@ function hideBalances() {
                 document.getElementById("walletList").childNodes[i].classList.add("walletListItemZero");
             } else {
                 document.getElementById("walletList").childNodes[i].classList.remove("walletListItemOdd");
-                if (j == 2) {
+                if (j === 2) {
                     j = 0;
                     document.getElementById("walletList").childNodes[i].classList.add("walletListItemOdd");
                 }
@@ -91,7 +91,7 @@ function hideBalances() {
         for (let i = 0; i < document.getElementById("walletList").childElementCount; i += 1) {
             document.getElementById("walletList").childNodes[i].classList.remove("walletListItemZero");
             document.getElementById("walletList").childNodes[i].classList.remove("walletListItemOdd");
-            if (i % 2 == 0) document.getElementById("walletList").childNodes[i].classList.add("walletListItemOdd");
+            if (i % 2 === 0) document.getElementById("walletList").childNodes[i].classList.add("walletListItemOdd");
         }
         document.getElementById("hideZeroBalancesButton").textContent = "Hide Zero Balances";
         document.getElementById("hideZeroBalancesButton").classList.remove("balancesButtonShow");
@@ -395,12 +395,12 @@ ipcRenderer.on("generate-wallet-response", function (event, resp) {
         let list = document.getElementById("walletList").childNodes;
         while (document.getElementById("walletList").childNodes[i].childNodes[1].innerText !== "0.00000000") {
             i++;
-        };
+        }
         let wAddress = data.msg;
         let wName = document.getElementById("newWalletName").value;
-        let walletName = "";
+        let walletName;
         let walletBalance;
-        let walletAddress = "";
+        let walletAddress;
         let elemName = "block_" + wAddress;
 
         walletName = "<span class=\"walletListItemAddress walletListItemTitle\">" + wName + "</span>";

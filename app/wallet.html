@@ -43,13 +43,12 @@
         </div>
     </div>
     <div class="padding25">
-        <label class="wallet_labels" for="newWalletAddress">&nbsp;Address</label><br/>
-        <input id="newWalletAddress" class="wallet_inputs wallet_inputs_shorter" value="will be generated" readonly><button class="buttons generateWalletButton" onclick="generateNewWallet()">Generate</button><br/>
-        <label class="wallet_labels" for="newWalletName">&nbsp;Name</label><br/>
-        <input id="newWalletName" class="wallet_inputs" value="">
-        <br>
+        <label class="wallet_labels" for="newWalletName">&nbsp;Name (optional):</label>
+        <input id="newWalletName" class="wallet_inputs" value=""><br/>
+        <label class="wallet_labels" for="newWalletAddress">&nbsp;Address:</label>
+        <input id="newWalletAddress" class="wallet_inputs" value="will be generated" readonly><br/>
         <div class="right">
-            <button class="buttons generateWalletButton" onclick="saveNewWallet()">Save new wallet</button>
+            <button class="buttons generateWalletButton" onclick="generateNewWallet()">Generate</button>
         </div>
     </div>
 </div>
@@ -112,6 +111,7 @@
             Arizen Settings
         </div>
     </div>
+    <!--TODO: notification yes/no (default yes), string - url to insight explorer (show default)-->
     <div id="settingsContent" class="padding25">
     </div>
 </div>

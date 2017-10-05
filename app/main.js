@@ -429,7 +429,7 @@ function createWindow() {
 
     // Open the DevTools.
     // FIXME: comment this for release versions!
-    win.webContents.openDevTools();
+    // win.webContents.openDevTools();
 
     //win.loadURL("file://" + __dirname + "/index.html");
 
