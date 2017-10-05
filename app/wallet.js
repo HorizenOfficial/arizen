@@ -302,9 +302,8 @@ ipcRenderer.on("get-wallets-response", function (event, resp) {
     let walletBalance;
     let walletAddress = "";
     let walletEnd = "</div>";
-    
     showWallet();
-    document.getElementById("walletList").innerHTML = "";   
+    document.getElementById("walletList").innerHTML = "";
     for (let i = 0, j = 1; i < data.wallets.length; i += 1) {
         wAddress = data.wallets[i][2];
         wBalance = data.wallets[i][3];
@@ -314,7 +313,7 @@ ipcRenderer.on("get-wallets-response", function (event, resp) {
         if (wBalance === 0) {
             walletClass += " walletListItemZero";
         } else {
-            if (j == 2) {
+            if (j === 2) {
                 j = 0;
                 walletClass += " walletListItemOdd";
             }
