@@ -147,11 +147,19 @@ function getZeroBalance(walletList) {
     return checkZeroList(walletList, true);
 }
 
-function walletDetailsDialog(id) {
+function walletDetailsDialog(address, balance, name) {
     showDarkContainer();
     document.getElementById("walletDetailsDialog").style.zIndex = "2";
     document.getElementById("walletDetailsDialog").style.opacity = "1";
     document.getElementById("walletDetailsDialogContent").innerHTML = "";
+    if (name !== "") {
+        document.getElementById("walletDetailsDialogContent").innerHTML += "<div class=\"walletDetailsItemLabel\">Name: </div> <div class=\"right\"> <div class=\"walletDetailsItem\">" + name + "</div></div>";
+    } else {
+        document.getElementById("walletDetailsDialogContent").innerHTML += "<div class=\"walletDetailsItemLabel\">Name: </div> <div class=\"right\"> <div class=\"walletDetailsItem\">Not defined</div></div>";
+    }
+    document.getElementById("walletDetailsDialogContent").innerHTML += "<div class=\"walletDetailsItemLabel\">Address:</div> <div class=\"right\"> <div class=\"walletDetailsItem\">"+address+"</div></div>";
+    document.getElementById("walletDetailsDialogContent").innerHTML += "<div class=\"walletDetailsItemLabel\">Balance:</div> <div class=\"right\"> <div class=\"walletDetailsItem walletDetailsItemBalance\">"+Number(balance).toFixed(8)+"</div></div>";
+    document.getElementById("walletDetailsDialogContent").innerHTML += "<button class=\"buttons walletDetailsRenameButton\">Rename wallet</button>";
 }
 
 function closeAllWalletsDialogs() {
@@ -166,10 +174,10 @@ function closeDialog(clasname) {
     document.getElementById(clasname).style.zIndex = "-1";
     document.getElementById(clasname).style.opacity = "0";
 }
-
 function printWallet(wId, wName, wBalance, wAddress, verbose = true) {
     let walletClass = "";
     let walletTitle = "";
+
     let walletBalance;
     let walletAddress = "";
     let walletEnd = "</div>";
@@ -319,7 +327,7 @@ ipcRenderer.on("get-wallets-response", function (event, resp) {
             walletTitle = "<span class=\"walletListItemAddress walletListItemTitle\"> " + wAddress + "</span>";
         }
         walletBalance = "<span name=\"balance_" + wAddress + "\" class=\"walletListItemAddress walletListItemBalance\">" + Number(wBalance).toFixed(8) + "</span> ZEN";
-        walletAddress = "<span class=\"walletListItemAddress\"><b>Address </b> " + wAddress + "</span><a href=\"javascript:void(0)\" class=\"walletListItemDetails\" onclick=\"walletDetailsDialog(" + wId + ")\">Details</a>";
+        walletAddress = "<span class=\"walletListItemAddress\"><b>Address </b> " + wAddress + "</span><a href=\"javascript:void(0)\" class=\"walletListItemDetails\" onclick=\"walletDetailsDialog('" + wAddress + "', '"+ wBalance +"' , '"+ wName+"')\">Details</a>";
         document.getElementById("walletList").innerHTML += walletClass + walletName + walletBalance + walletAddress + walletEnd;
         document.getElementById("pickWalletDialogContent").innerHTML += walletClass + walletTitle + walletBalance + walletEnd;
     }

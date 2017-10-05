@@ -167,6 +167,30 @@
     padding: 5px;
 }
 
+.walletDetailsItem{
+    padding: 5px;
+    color: #f88900;
+    display:block;
+    font-weight: 800;
+    font-size: 1em;
+}
+
+.walletDetailsItemLabel{
+    padding: 5px;
+    color: #888888;
+    display:block;
+    font-weight: 800;
+    font-size: 1em;
+}
+
+.walletDetailsItemBalance{
+    padding: 5px;
+    color: #f88900;
+    display:block;
+    font-weight: 800;
+    font-size: 2em;
+}
+
 .walletListItemAddress {
     display:inline-block;
     width:85%;
@@ -225,6 +249,12 @@
     color: #fefefe;
 }
 
+.walletDetailsRenameButton{
+    position:absolute;
+    bottom : 20px;
+    left: 20px;
+    width: 35%;
+}
 
 
 /* Right Pannel */
@@ -270,8 +300,8 @@
 #pickWalletDialog {
     position: absolute;
     z-index: -1;
-    left: 312px;
-    width: 400px;
+    left: 162px;
+    width: 700px;
     bottom: 150px;
     top:150px;
     opacity:0;
@@ -305,8 +335,8 @@
 #walletDetailsDialog {
     position: absolute;
     z-index: -1;
-    left: 312px;
-    width: 400px;
+    left: 262px;
+    width: 500px;
     bottom: 150px;
     top:150px;
     opacity:0;
