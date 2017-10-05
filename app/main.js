@@ -599,7 +599,6 @@ function updateBalance(address, oldBalance, event) {
                 };
                 event.sender.send("update-wallet-balance", JSON.stringify(update));
             }
-            //setTimeout(updateBalance, 60000, data.addrStr, data.balance, event); 
         }
     });
 }
@@ -633,6 +632,17 @@ ipcMain.on("get-wallets", function (event) {
     }
 
     event.sender.send("get-wallets-response", JSON.stringify(resp));
+});
+
+ipcMain.on("refresh-wallet", function (event) {
+    let sqlRes;
+
+    if (userInfo.loggedIn) {
+        sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet");
+        for (let i = 0; i < sqlRes[0].values.length; i += 1) {
+            updateBalance(sqlRes[0].values[i][2], sqlRes[0].values[i][3], event);
+        }
+    }
 });
 
 ipcMain.on("rename-wallet", function (event, address, name) {
@@ -714,7 +724,6 @@ ipcMain.on("get-transaction", function (event, txId, address) {
 
     event.sender.send("get-transaction-response", JSON.stringify(resp));
 });
-
 
 ipcMain.on("generate-wallet", function (event, name) {
     let resp;
