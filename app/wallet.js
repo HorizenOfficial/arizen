@@ -153,14 +153,38 @@ function walletDetailsDialog(address, balance, name) {
     document.getElementById("walletDetailsDialog").style.opacity = "1";
     document.getElementById("walletDetailsDialogContent").innerHTML = "";
     if (name !== "") {
-        document.getElementById("walletDetailsDialogContent").innerHTML += "<div class=\"walletDetailsItemLabel\">Name: </div> <div class=\"right\"> <div class=\"walletDetailsItem\">" + name + "</div></div>";
+        document.getElementById("walletDetailsDialogContent").innerHTML += "<label class=\"walletDetailsItemLabel\" for=\"walletName\">Name: </label> <div class=\"right\"><input id=\"walletName\" class=\"wallet_inputs\" align=\"right\" value=\""+ name +"\"></div>";
     } else {
-        document.getElementById("walletDetailsDialogContent").innerHTML += "<div class=\"walletDetailsItemLabel\">Name: </div> <div class=\"right\"> <div class=\"walletDetailsItem\">Not defined</div></div>";
+        document.getElementById("walletDetailsDialogContent").innerHTML += "<label class=\"walletDetailsItemLabel\" for=\"walletName\">Name: </label> <div class=\"right\"><input id=\"walletName\" class=\"wallet_inputs\" align=\"right\" value=\"Not defined\"></div>";
     }
     document.getElementById("walletDetailsDialogContent").innerHTML += "<div class=\"walletDetailsItemLabel\">Address:</div> <div class=\"right\"> <div class=\"walletDetailsItem\">"+address+"</div></div>";
     document.getElementById("walletDetailsDialogContent").innerHTML += "<div class=\"walletDetailsItemLabel\">Balance:</div> <div class=\"right\"> <div class=\"walletDetailsItem walletDetailsItemBalance\">"+Number(balance).toFixed(8)+"</div></div>";
     document.getElementById("walletDetailsDialogContent").innerHTML += "<button class=\"buttons walletDetailsRenameButton\">Rename wallet</button>";
 }
+
+function parseTransactionAddresses(rawTransaction) {
+    let addresses = Array();
+    // TODO: parse addresses from rawTransaction (in/out)
+    // output: LIST [in/out, address]
+}
+
+/**
+ * Find user address in transaction with information about income/outcome
+ * @param rawTransactionAddresses - transaction object
+ * @param wallets - wallet list
+ * @return address - pair [in/out, address]
+ */
+function findUserAddress(rawTransaction, wallets) {
+   let trAddresses = parseTransactionAddresses(rawTransaction);
+   trAddresses.forEach(function(address, index){
+       wallets.forEach(function(wallet, wIndex){
+           if (address[1] === wallet[2]) {
+               return address;
+           }
+       });
+   });
+}
+
 
 function closeAllWalletsDialogs() {
     closeDialog("walletDetailsDialog");
@@ -349,8 +373,12 @@ ipcRenderer.on("update-wallet-balance", function (event, resp) {
 
 ipcRenderer.on("rename-wallet-response", function (event, resp) {
     let data = JSON.parse(resp);
-
-    /* FIXME: @nonghost name response OK/ERR */
+    // FIXME: @lukas What to do in the case when notifications are OFF.
+    if (data.response === "OK") {
+        doNotify("Wallet name has been updated", data.msg);
+    } else {
+        doNotify("Rename wallet error", data.msg);
+    }
     console.log(data.msg);
 });
 
