@@ -153,9 +153,9 @@ function walletDetailsDialog(address, balance, name) {
     document.getElementById("walletDetailsDialog").style.opacity = "1";
     document.getElementById("walletDetailsDialogContent").innerHTML = "";
     if (name !== "") {
-        document.getElementById("walletDetailsDialogContent").innerHTML += "<div class=\"walletDetailsItemLabel\">Name: </div> <div class=\"right\"> <div class=\"walletDetailsItem\">" + name + "</div></div>";
+        document.getElementById("walletDetailsDialogContent").innerHTML += "<label class=\"walletDetailsItemLabel\" for=\"walletName\">Name: </label> <div class=\"right\"><input id=\"walletName\" class=\"wallet_inputs\" align=\"right\" value=\""+ name +"\"></div>";
     } else {
-        document.getElementById("walletDetailsDialogContent").innerHTML += "<div class=\"walletDetailsItemLabel\">Name: </div> <div class=\"right\"> <div class=\"walletDetailsItem\">Not defined</div></div>";
+        document.getElementById("walletDetailsDialogContent").innerHTML += "<label class=\"walletDetailsItemLabel\" for=\"walletName\">Name: </label> <div class=\"right\"><input id=\"walletName\" class=\"wallet_inputs\" align=\"right\" value=\"Not defined\"></div>";
     }
     document.getElementById("walletDetailsDialogContent").innerHTML += "<div class=\"walletDetailsItemLabel\">Address:</div> <div class=\"right\"> <div class=\"walletDetailsItem\">"+address+"</div></div>";
     document.getElementById("walletDetailsDialogContent").innerHTML += "<div class=\"walletDetailsItemLabel\">Balance:</div> <div class=\"right\"> <div class=\"walletDetailsItem walletDetailsItemBalance\">"+Number(balance).toFixed(8)+"</div></div>";
@@ -207,16 +207,27 @@ function printWallet(wId, wName, wBalance, wAddress, verbose = true) {
     return walletClass + walletTitle + walletBalance + walletAddress + walletEnd;
 }
 
-function isMyAddress(address, wallets) {
-    // true/false
+function parseTransactionAddresses(rawTransaction) {
+    let addresses = Array();
+    // TODO: parse addresses from rawTransaction (in/out)
+    // output: LIST [in/out, address]
 }
 
-function getObjectFromTransaction(transaction) {
-    // convert transaction into address/amount list. the first item is vin address.
-}
-
-function getAmountForAddress(transaction, address) {
-    // get amount based on address
+/**
+ * Find user address in transaction with information about income/outcome
+ * @param rawTransaction - transaction object
+ * @param wallets - wallet list
+ * @return address - pair [in/out, address]
+ */
+function findUserAddress(rawTransaction, wallets) {
+    let trAddresses = parseTransactionAddresses(rawTransaction);
+    trAddresses.forEach(function(address, index){
+        wallets.forEach(function(wallet, wIndex){
+            if (address[1] === wallet[2]) {
+                return address;
+            }
+        });
+    });
 }
 
 function printTransaction(transaction, wallets) {
@@ -225,15 +236,14 @@ function printTransaction(transaction, wallets) {
     let transactionAddressFrom = "";
     let transactionAddressTo = "";
     let transactionEnd = "</div>";
-    let income = false;
-    if (income) {
+    let address = findUserAddress(transaction, wallets);
+    if (address[0] === "in") {
         transactionClass = "<div class\"transactionListItem transactionIn\">";
-        transactionAddressFrom = transaction.vin.address;
+        transactionAddressFrom = address[1];
         transactionAddressTo = transaction.vout.addresses;
-        //transactionAmount = transaction.vout.
     } else {
         transactionClass = "<div class\"transactionListItem transactionOut\">";
-        transactionAddressTo = transaction.vin.address;
+        transactionAddressTo = address[1];
         transactionAddressFrom = transaction.vout.addresses.toString();
     }
 
@@ -290,6 +300,11 @@ function addressNameTest() {
     ipcRenderer.send("rename-wallet", "znc4M7DLcwShfoQuF18YB55QwphLhCVKeoi", "nove jmeno");
 }
 
+function pickWallet(address) {
+    document.getElementById("sendFromAddressText").innerHTML = address;
+    closeDialog("pickWalletDialog");
+}
+
 ipcRenderer.on("get-wallets-response", function (event, resp) {
     let data = JSON.parse(resp);
     let wId;
@@ -308,6 +323,7 @@ ipcRenderer.on("get-wallets-response", function (event, resp) {
         wAddress = data.wallets[i][2];
         wBalance = data.wallets[i][3];
         wName = data.wallets[i][4];
+        let walletPick = "";
 
         walletClass = "<div name=\"block_" + wAddress + "\" class=\"walletListItem";
         if (wBalance === 0) {
@@ -323,13 +339,16 @@ ipcRenderer.on("get-wallets-response", function (event, resp) {
         walletName = "<span class=\"walletListItemAddress walletListItemTitle\">" + wName + "</span>";
         if (wName !== "") {
             walletTitle = "<span class=\"walletListItemAddress walletListItemTitle\">" + wName + "</span>";
+            walletPick = "<div onclick=\"pickWallet('"+wName+"')\">";
         } else {
             walletTitle = "<span class=\"walletListItemAddress walletListItemTitle\"> " + wAddress + "</span>";
+            walletPick = "<div onclick=\"pickWallet('"+wAddress+"')\">";
         }
         walletBalance = "<span name=\"balance_" + wAddress + "\" class=\"walletListItemAddress walletListItemBalance\">" + Number(wBalance).toFixed(8) + "</span> ZEN";
         walletAddress = "<span class=\"walletListItemAddress\"><b>Address </b> " + wAddress + "</span><a href=\"javascript:void(0)\" class=\"walletListItemDetails\" onclick=\"walletDetailsDialog('" + wAddress + "', '"+ wBalance +"' , '"+ wName+"')\">Details</a>";
         document.getElementById("walletList").innerHTML += walletClass + walletName + walletBalance + walletAddress + walletEnd;
-        document.getElementById("pickWalletDialogContent").innerHTML += walletClass + walletTitle + walletBalance + walletEnd;
+
+        document.getElementById("pickWalletDialogContent").innerHTML += walletPick + walletClass + walletTitle + walletBalance + walletEnd + "</div>";
     }
     document.getElementById("walletFooterBalance").innerHTML = Number(data.total).toFixed(8);
 });
@@ -349,8 +368,12 @@ ipcRenderer.on("update-wallet-balance", function (event, resp) {
 
 ipcRenderer.on("rename-wallet-response", function (event, resp) {
     let data = JSON.parse(resp);
-
-    /* FIXME: @nonghost name response OK/ERR */
+    // FIXME: @lukas What to do in the case when notifications are OFF.
+    if (data.response === "OK") {
+        doNotify("Wallet name has been updated", data.msg);
+    } else {
+        doNotify("Rename wallet error", data.msg);
+    }
     console.log(data.msg);
 });
 
@@ -368,8 +391,12 @@ function testTransaction() {
 
 ipcRenderer.on("get-transaction-response", function (event, resp) {
     let data = JSON.parse(resp);
-
-    /* FIXME: @nonghost response OK/ERR */
+    // FIXME: @lukas What to do in the case when notifications are OFF.
+    if (data.response === "OK") {
+        doNotify("Transaction", data.msg);
+    } else {
+        doNotify("Transaction ERROR", data.msg);
+    }
     console.log(data.msg);
 });
 
@@ -404,7 +431,7 @@ ipcRenderer.on("generate-wallet-response", function (event, resp) {
 
         walletName = "<span class=\"walletListItemAddress walletListItemTitle\">" + wName + "</span>";
         walletBalance = "<span name=\"balance_" + wAddress + "\" class=\"walletListItemAddress walletListItemBalance\">" + Number(0).toFixed(8) + "</span> ZEN";
-        walletAddress = "<span class=\"walletListItemAddress\"><b>Address </b> " + wAddress + "</span><a href=\"javascript:void(0)\" class=\"walletListItemDetails\" onclick=\"walletDetailsDialog(" + wAddress + ")\">Details</a>";
+        walletAddress = "<span class=\"walletListItemAddress\"><b>Address </b> " + wAddress + "</span><a href=\"javascript:void(0)\" class=\"walletListItemDetails\" onclick=\"walletDetailsDialog('" + wAddress + "', '0' , '"+ wName+"')\">Details</a>";
         let newItem = document.createElement("div");
         newItem.innerHTML = walletName + walletBalance + walletAddress;
         newItem.classList.add("walletListItem");
