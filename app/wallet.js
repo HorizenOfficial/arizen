@@ -314,6 +314,11 @@ function addressNameTest() {
     ipcRenderer.send("rename-wallet", "znc4M7DLcwShfoQuF18YB55QwphLhCVKeoi", "nove jmeno");
 }
 
+function pickWallet(address) {
+    document.getElementById("sendFromAddressText").innerHTML = address;
+    closeDialog("pickWalletDialog");
+}
+
 ipcRenderer.on("get-wallets-response", function (event, resp) {
     let data = JSON.parse(resp);
     let wId;
@@ -332,6 +337,7 @@ ipcRenderer.on("get-wallets-response", function (event, resp) {
         wAddress = data.wallets[i][2];
         wBalance = data.wallets[i][3];
         wName = data.wallets[i][4];
+        let walletPick = "";
 
         walletClass = "<div name=\"block_" + wAddress + "\" class=\"walletListItem";
         if (wBalance === 0) {
@@ -347,13 +353,16 @@ ipcRenderer.on("get-wallets-response", function (event, resp) {
         walletName = "<span class=\"walletListItemAddress walletListItemTitle\">" + wName + "</span>";
         if (wName !== "") {
             walletTitle = "<span class=\"walletListItemAddress walletListItemTitle\">" + wName + "</span>";
+            walletPick = "<div onclick=\"pickWallet('"+wName+"')\">";
         } else {
             walletTitle = "<span class=\"walletListItemAddress walletListItemTitle\"> " + wAddress + "</span>";
+            walletPick = "<div onclick=\"pickWallet('"+wAddress+"')\">";
         }
         walletBalance = "<span name=\"balance_" + wAddress + "\" class=\"walletListItemAddress walletListItemBalance\">" + Number(wBalance).toFixed(8) + "</span> ZEN";
         walletAddress = "<span class=\"walletListItemAddress\"><b>Address </b> " + wAddress + "</span><a href=\"javascript:void(0)\" class=\"walletListItemDetails\" onclick=\"walletDetailsDialog('" + wAddress + "', '"+ wBalance +"' , '"+ wName+"')\">Details</a>";
         document.getElementById("walletList").innerHTML += walletClass + walletName + walletBalance + walletAddress + walletEnd;
-        document.getElementById("pickWalletDialogContent").innerHTML += walletClass + walletTitle + walletBalance + walletEnd;
+
+        document.getElementById("pickWalletDialogContent").innerHTML += walletPick + walletClass + walletTitle + walletBalance + walletEnd + "</div>";
     }
     document.getElementById("walletFooterBalance").innerHTML = Number(data.total).toFixed(8);
 });
@@ -432,7 +441,7 @@ ipcRenderer.on("generate-wallet-response", function (event, resp) {
 
         walletName = "<span class=\"walletListItemAddress walletListItemTitle\">" + wName + "</span>";
         walletBalance = "<span name=\"balance_" + wAddress + "\" class=\"walletListItemAddress walletListItemBalance\">" + Number(0).toFixed(8) + "</span> ZEN";
-        walletAddress = "<span class=\"walletListItemAddress\"><b>Address </b> " + wAddress + "</span><a href=\"javascript:void(0)\" class=\"walletListItemDetails\" onclick=\"walletDetailsDialog(" + wAddress + ")\">Details</a>";
+        walletAddress = "<span class=\"walletListItemAddress\"><b>Address </b> " + wAddress + "</span><a href=\"javascript:void(0)\" class=\"walletListItemDetails\" onclick=\"walletDetailsDialog('" + wAddress + "', '0' , '"+ wName+"')\">Details</a>";
         let newItem = document.createElement("div");
         newItem.innerHTML = walletName + walletBalance + walletAddress;
         newItem.classList.add("walletListItem");
