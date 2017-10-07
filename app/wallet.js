@@ -162,30 +162,6 @@ function walletDetailsDialog(address, balance, name) {
     document.getElementById("walletDetailsDialogContent").innerHTML += "<button class=\"buttons walletDetailsRenameButton\">Rename wallet</button>";
 }
 
-function parseTransactionAddresses(rawTransaction) {
-    let addresses = Array();
-    // TODO: parse addresses from rawTransaction (in/out)
-    // output: LIST [in/out, address]
-}
-
-/**
- * Find user address in transaction with information about income/outcome
- * @param rawTransactionAddresses - transaction object
- * @param wallets - wallet list
- * @return address - pair [in/out, address]
- */
-function findUserAddress(rawTransaction, wallets) {
-   let trAddresses = parseTransactionAddresses(rawTransaction);
-   trAddresses.forEach(function(address, index){
-       wallets.forEach(function(wallet, wIndex){
-           if (address[1] === wallet[2]) {
-               return address;
-           }
-       });
-   });
-}
-
-
 function closeAllWalletsDialogs() {
     closeDialog("walletDetailsDialog");
     closeDialog("addWalletDialog");
@@ -231,16 +207,27 @@ function printWallet(wId, wName, wBalance, wAddress, verbose = true) {
     return walletClass + walletTitle + walletBalance + walletAddress + walletEnd;
 }
 
-function isMyAddress(address, wallets) {
-    // true/false
+function parseTransactionAddresses(rawTransaction) {
+    let addresses = Array();
+    // TODO: parse addresses from rawTransaction (in/out)
+    // output: LIST [in/out, address]
 }
 
-function getObjectFromTransaction(transaction) {
-    // convert transaction into address/amount list. the first item is vin address.
-}
-
-function getAmountForAddress(transaction, address) {
-    // get amount based on address
+/**
+ * Find user address in transaction with information about income/outcome
+ * @param rawTransaction - transaction object
+ * @param wallets - wallet list
+ * @return address - pair [in/out, address]
+ */
+function findUserAddress(rawTransaction, wallets) {
+    let trAddresses = parseTransactionAddresses(rawTransaction);
+    trAddresses.forEach(function(address, index){
+        wallets.forEach(function(wallet, wIndex){
+            if (address[1] === wallet[2]) {
+                return address;
+            }
+        });
+    });
 }
 
 function printTransaction(transaction, wallets) {
@@ -249,15 +236,14 @@ function printTransaction(transaction, wallets) {
     let transactionAddressFrom = "";
     let transactionAddressTo = "";
     let transactionEnd = "</div>";
-    let income = false;
-    if (income) {
+    let address = findUserAddress(transaction, wallets);
+    if (address[0] === "in") {
         transactionClass = "<div class\"transactionListItem transactionIn\">";
-        transactionAddressFrom = transaction.vin.address;
+        transactionAddressFrom = address[1];
         transactionAddressTo = transaction.vout.addresses;
-        //transactionAmount = transaction.vout.
     } else {
         transactionClass = "<div class\"transactionListItem transactionOut\">";
-        transactionAddressTo = transaction.vin.address;
+        transactionAddressTo = address[1];
         transactionAddressFrom = transaction.vout.addresses.toString();
     }
 
@@ -405,8 +391,12 @@ function testTransaction() {
 
 ipcRenderer.on("get-transaction-response", function (event, resp) {
     let data = JSON.parse(resp);
-
-    /* FIXME: @nonghost response OK/ERR */
+    // FIXME: @lukas What to do in the case when notifications are OFF.
+    if (data.response === "OK") {
+        doNotify("Transaction", data.msg);
+    } else {
+        doNotify("Transaction ERROR", data.msg);
+    }
     console.log(data.msg);
 });
 
