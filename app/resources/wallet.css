@@ -397,3 +397,13 @@
     border-bottom: 1px solid #888888;
 }
 
+#receiveAddressText{
+    display: inline-block;
+    width: 70%;
+    margin-left: 5%;
+    margin-right: 1%;
+    color: #f88900;
+    font-size: 0.8em;
+    border-bottom: 1px solid #888888;
+}
+

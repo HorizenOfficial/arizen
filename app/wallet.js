@@ -42,21 +42,26 @@ function showWallet() {
     setButtonInactive("receiveButtonMenu");
 }
 
-function changeAmount() {
-    let number = document.getElementById("coinAmount").value;
+function changeAmount(elem) {
+    let number = document.getElementById(elem).value;
     /* Input value is Not A Number*/
     if (Number.isNaN(Number(number))) {
-        document.getElementById("coinAmount").value = Number(0).toFixed(8);
+        document.getElementById(elem).value = Number(0).toFixed(8);
         return;
     }
     /* Number has to be greater or equal to zero */
     if (number < 0) {
-        document.getElementById("coinAmount").value = Number(0).toFixed(8);
+        document.getElementById(elem).value = Number(0).toFixed(8);
         return;
     }
-    console.log(number);
-    document.getElementById("coinAmount").value = Number(number).toFixed(8);
+    document.getElementById(elem).value = Number(number).toFixed(8);
 }
+
+
+function generateQR() {
+    // TODO: generate QR code with info from receiveAddressText and receiveCoinAmount
+}
+
 
 function clearValue() {
     if (document.getElementById("sendToAddress").value === "address") {
@@ -115,10 +120,11 @@ function addWalletDialog() {
     document.getElementById("addWalletDialog").style.opacity = "1";
 }
 
-function pickWalletDialog() {
+function pickWalletDialog(elem) {
     showDarkContainer();
     document.getElementById("pickWalletDialog").style.zIndex = "2";
     document.getElementById("pickWalletDialog").style.opacity = "1";
+    document.getElementById("pickWalletDialogElem").innerHTML = elem;
 }
 
 function checkZeroList(walletList, zero=true) {
@@ -301,7 +307,8 @@ function addressNameTest() {
 }
 
 function pickWallet(address) {
-    document.getElementById("sendFromAddressText").innerHTML = address;
+    let elem = document.getElementById("pickWalletDialogElem").innerHTML;
+    document.getElementById(elem + "Text").innerHTML = address;
     closeDialog("pickWalletDialog");
 }
 
