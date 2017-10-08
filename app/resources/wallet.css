@@ -264,8 +264,8 @@
     position: absolute;
     margin: 5px 5px 5px auto;
     padding: 5px 5px;
-    right:0px;
-    width:  48%;
+    right: 0;
+    width: 48%;
     top: 40px;
     bottom: 40px;
     border: 1px solid #c4cddb;

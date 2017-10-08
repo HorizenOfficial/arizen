@@ -168,12 +168,12 @@
             <input id="sendToAddress" class="wallet_inputs" align="right" value="address" onfocus="clearValue()" onblur="setValueIfEmpty()">
             <br>
             <label class="wallet_labels" for="coinFee">&nbsp;Fee:</label><br/>
-            <input id="coinFee" class="wallet_inputs" align="right" value="default" readonly>
+            <input id="coinFee" class="wallet_inputs" align="right" value="0.00010000" onchange="changeAmount('coinFee')">
             <label class="wallet_labels" for="coinAmount">&nbsp;Amount:</label><br/>
             <input id="coinAmount" class="wallet_inputs" align="right" value="0.00000000" onchange="changeAmount('coinAmount')">
             <br>
             <div class="center">
-                <button class="buttons sendButton" onclick="send()">Send now </button>
+                <button class="buttons sendButton" onclick="send()">Send now!</button>
             </div>
         </div>
     </div>
