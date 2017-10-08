@@ -25,7 +25,6 @@ function checkLoginInfo() {
 }
 
 function doRegister() {
-    // FIXME: check functionality !!!
     ipcRenderer.send("write-login-info", document.getElementById("username").value, document.getElementById("pswd").value,
         (document.getElementById("btWallet").files.length > 0) ? document.getElementById("btWallet").files[0].path : ""
     );
@@ -41,7 +40,7 @@ function changeClass(objectid, newClass, oldClass) {
 
 function checkLogin() {
     // validate the length
-    usr = (document.getElementById("username").value.length < minLoginLen);
+    usr = (document.getElementById("username").value.length >= minLoginLen);
     if (usr) {
         changeClass("usrnm_length_info", "invalid", "valid");
     } else {
