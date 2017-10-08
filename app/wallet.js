@@ -47,12 +47,12 @@ function showWallet() {
 
 function changeAmount(elem) {
     let number = document.getElementById(elem).value;
-    /* Input value is Not A Number*/
+    // Input value is Not A Number
     if (Number.isNaN(Number(number))) {
         document.getElementById(elem).value = Number(0).toFixed(8);
         return;
     }
-    /* Number has to be greater or equal to zero */
+    // Number has to be greater or equal to zero
     if (number < 0) {
         document.getElementById(elem).value = Number(0).toFixed(8);
         return;
@@ -60,11 +60,9 @@ function changeAmount(elem) {
     document.getElementById(elem).value = Number(number).toFixed(8);
 }
 
-
 function generateQR() {
     // TODO: generate QR code with info from receiveAddressText and receiveCoinAmount
 }
-
 
 function clearValue() {
     if (document.getElementById("sendToAddress").value === "address") {
@@ -110,7 +108,7 @@ function hideBalances() {
 function send() {
     const fromAddress = document.getElementById("sendFromAddressText").textContent;
     const toAddress = document.getElementById("sendToAddress").value;
-    let fee = document.getElementById("coinFee").value;
+    const fee = document.getElementById("coinFee").value;
     const amount = document.getElementById("coinAmount").value;
     // FIXME - get it from settings
     const zenApi = "https://explorer.zensystem.io/insight-api-zen/";
@@ -119,41 +117,34 @@ function send() {
     console.log(fee);
     console.log(amount);
 
-    // Convert to satoshis
+    // Convert to satoshi
     let amountInSatoshi = Math.round(amount * 100000000);
-    if (fee === "default"){
-        fee = 0.0001;
-    }
     let feeInSatoshi = Math.round(fee * 100000000);
 
-
-    // Reset zen send progress
-    // Alert messages too
     let errString = "";
-
     if (fromAddress.length !== 35) {
-        // TODO: handle error
-        errString += "\n\n"
+        errString += "Bad format of source address!";
+        errString += "\n\n";
     }
 
     if (toAddress.length !== 35) {
-        // TODO: handle error
-        errString += "\n\n"
+        errString += "Bad format of destination address!";
+        errString += "\n\n";
     }
 
-    if (typeof parseInt(amount) !== "number" || amount === "") {
-        // TODO: handle error
-        errString += "\n\n"
+    if (typeof parseInt(amount, 10) !== "number" || amount === "") {
+        errString += "Amount is NOT number!";
+        errString += "\n\n";
     }
 
     if (amountInSatoshi <= 0){
-        // TODO: handle error
-        errString += "\n\n"
+        errString += "Amount has to be greater than zero!";
+        errString += "\n\n";
     }
 
-    if (typeof parseInt(feeInSatoshi) !== "number" || amount === ""){
-        // TODO: handle error
-        errString += "\n\n"
+    if (typeof parseInt(feeInSatoshi, 10) !== "number" || amount === ""){
+        errString += "Fee is NOT number!";
+        errString += "\n\n";
     }
 
     // Alert errors
@@ -208,7 +199,7 @@ function send() {
                                     history = history.concat( {
                                         txid: tx_data[i].txid,
                                         vout: tx_data[i].vout,
-                                        scriptPubKey: tx_data[i].scriptPubKey,
+                                        scriptPubKey: tx_data[i].scriptPubKey
                                     });
 
                                     // How many satoshis do we have so far
