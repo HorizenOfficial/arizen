@@ -103,4 +103,6 @@ function settingsDialog() {
     document.getElementById("settingsDialog").style.zIndex = "2";
     document.getElementById("settingsDialog").style.opacity = "1";
     // TODO: radiobutton - disable/enable desktop notification, default = enable, where to store settings?
+    document.getElementById("settingsDialog").innerHTML += "<label for=\"settingsNotifications\">Desktop notifications</label><input type=\"checkbox\" id=\"settingsNotifications\" name=\"notifications\">";
+    document.getElementById("settingsDialog").innerHTML += "<button class=\"buttons walletDetailsRenameButton\" onclick=\"saveSettings()\">Save settings</button>";
 }
