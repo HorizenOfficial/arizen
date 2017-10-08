@@ -3,6 +3,8 @@
 /*jslint node: true */
 "use strict";
 
+const zencashjs = require("zencashjs");
+
 function setButtonActive(className) {
     document.getElementById(className).style.backgroundColor = "transparent";
     document.getElementById(className).style.border = "1px #f88900 solid";
@@ -100,7 +102,150 @@ function hideBalances() {
 }
 
 function send() {
-    return 0;
+    let fromAddress = document.getElementById("sendFromAddressText").textContent;
+    let toAddress = document.getElementById("sendToAddress").value;
+    let fee = document.getElementById("coinFee").value;
+    let amount = document.getElementById("coinAmount").value;
+
+    console.log(fromAddress);
+    console.log(toAddress);
+    console.log(fee);
+    console.log(amount);
+
+    // Convert to satoshis
+    let amountInSatoshi = Math.round(amount * 100000000);
+    if (fee === "default"){
+        fee = 0.0001;
+    }
+    let feeInSatoshi = Math.round(fee * 100000000);
+
+
+    // Reset zen send progress
+    // Alert messages too
+    let errString = "";
+
+    if (fromAddress.length !== 35) {
+        // TODO: handle error
+        errString += "\n\n"
+    }
+
+    if (toAddress.length !== 35) {
+        // TODO: handle error
+        errString += "\n\n"
+    }
+
+    if (typeof parseInt(amount) !== "number" || amount === "") {
+        // TODO: handle error
+        errString += "\n\n"
+    }
+
+    if (amountInSatoshi <= 0){
+        // TODO: handle error
+        errString += "\n\n"
+    }
+
+    if (typeof parseInt(feeInSatoshi) !== "number" || amount === ""){
+        // TODO: handle error
+        errString += "\n\n"
+    }
+
+    // Alert errors
+    if (errString !== ""){
+        alert(errString);
+    }
+
+    // TODO: implement this, where to get privateKey?
+    //
+    // const myPrivateKey = zencashjs.address.WIFToPrivKey();
+    //
+    // // Get previous transactions
+    // const prevTxURL = urlAppend(this.props.settings.insightAPI, 'addr/') + senderAddress + '/utxo'
+    // const infoURL = urlAppend(this.props.settings.insightAPI, 'status?q=getInfo')
+    // const sendRawTxURL = urlAppend(this.props.settings.insightAPI, 'tx/send')
+    //
+    // // Building our transaction TXOBJ How many satoshis do we have so far
+    // var satoshisSoFar = 0
+    // var history = []
+    // var recipients = [{address: recipientAddress, satoshis: satoshisToSend}]
+    //
+    // // Get previous unspent transactions
+    // cordovaHTTP.get(prevTxURL, {}, {}, function(tx_resp){
+    //     this.setProgressValue(25)
+    //
+    //     const tx_data = JSON.parse(tx_resp.data)
+    //
+    //     // Get blockheight and hash
+    //     cordovaHTTP.get(infoURL, {}, {}, function(info_resp){
+    //         this.setProgressValue(50)
+    //         const info_data = JSON.parse(info_resp.data)
+    //
+    //         const blockHeight = info_data.info.blocks - 300
+    //         const blockHashURL = urlAppend(this.props.settings.insightAPI, 'block-index/') + blockHeight
+    //
+    //         // Get block hash
+    //         cordovaHTTP.get(blockHashURL, {}, {}, function(response_bhash){
+    //             this.setProgressValue(75)
+    //
+    //             const blockHash = JSON.parse(response_bhash.data).blockHash
+    //
+    //             // Iterate through each utxo
+    //             // append it to history
+    //             for (var i = 0; i < tx_data.length; i++){
+    //                 if (tx_data[i].confirmations === 0) {
+    //                     continue;
+    //                 }
+    //
+    //                 history = history.concat({
+    //                     txid: tx_data[i].txid,
+    //                     vout: tx_data[i].vout,
+    //                     scriptPubKey: tx_data[i].scriptPubKey,
+    //                 });
+    //
+    //                 // How many satoshis do we have so far
+    //                 satoshisSoFar = satoshisSoFar + tx_data[i].satoshis;
+    //                 if (satoshisSoFar >= satoshisToSend + satoshisfeesToSend){
+    //                     break;
+    //                 }
+    //             }
+    //
+    //             // If we don't have enough address
+    //             // fail and tell user
+    //             if (satoshisSoFar < satoshisToSend + satoshisfeesToSend){
+    //                 alert(TRANSLATIONS[CUR_LANG].SendPage.notEnoughZEN)
+    //                 this.setProgressValue(0)
+    //                 return
+    //             }
+    //
+    //             // If we don't have exact amount
+    //             // Refund remaining to current address
+    //             if (satoshisSoFar !== satoshisToSend + satoshisfeesToSend){
+    //                 var refundSatoshis = satoshisSoFar - satoshisToSend - satoshisfeesToSend
+    //                 recipients = recipients.concat({address: senderAddress, satoshis: refundSatoshis})
+    //             }
+    //
+    //             // Create transaction
+    //             var txObj = zencashjs.transaction.createRawTx(history, recipients, blockHeight, blockHash)
+    //
+    //             // Sign each history transcation
+    //             for (var i = 0; i < history.length; i ++){
+    //                 txObj = zencashjs.transaction.signTx(txObj, i, senderPrivateKey, true)
+    //             }
+    //
+    //             // Convert it to hex string
+    //             const txHexString = zencashjs.transaction.serializeTx(txObj)
+    //
+    //             // Post it to the api
+    //             cordovaHTTP.post(sendRawTxURL, {rawtx: txHexString}, {}, function(sendtx_resp){
+    //                 const tx_resp_data = JSON.parse(sendtx_resp.data)
+    //
+    //                 this.setState({
+    //                     progressValue: 100,
+    //                     sendTxid: tx_resp_data.txid
+    //                 })
+    //             }.bind(this), (err) => { alert('ERROR: ' + JSON.stringify(err)); this.setProgressValue(0) })
+    //         }.bind(this), (err) => { alert('ERROR: ' + JSON.stringify(err)); this.setProgressValue(0) })
+    //     }.bind(this), (err) => { alert('ERROR: ' + JSON.stringify(err)); this.setProgressValue(0) })
+    // }.bind(this), (err) => { alert('ERROR: ' + JSON.stringify(err)); this.setProgressValue(0) })
 }
 
 function showDarkContainer() {
@@ -119,32 +264,6 @@ function pickWalletDialog() {
     showDarkContainer();
     document.getElementById("pickWalletDialog").style.zIndex = "2";
     document.getElementById("pickWalletDialog").style.opacity = "1";
-}
-
-function checkZeroList(walletList, zero=true) {
-    let list = [];
-    for (let i = 0; i < walletList.wallets.length; i++) {
-        if ((zero) && (walletList.wallets[i][3] === 0)) {
-            list.push(walletList.wallets[i]);
-        }
-        if ((!zero) && (walletList.wallets[i][3] > 0)) {
-            list.push(walletList.wallets[i]);
-        }
-    }
-    return list;
-}
-
-function getNonZeroBalance(walletList) {
-    let non_zero = checkZeroList(walletList, false);
-    non_zero.sort(function (a, b) {
-        return b[3] - a[3];
-    });
-    return non_zero;
-}
-
-function getZeroBalance(walletList) {
-    console.log(walletList);
-    return checkZeroList(walletList, true);
 }
 
 function walletDetailsDialog(address, balance, name) {
@@ -174,6 +293,7 @@ function closeDialog(clasname) {
     document.getElementById(clasname).style.zIndex = "-1";
     document.getElementById(clasname).style.opacity = "0";
 }
+
 function printWallet(wId, wName, wBalance, wAddress, verbose = true) {
     let walletClass = "";
     let walletTitle = "";
@@ -221,33 +341,16 @@ function parseTransactionAddresses(rawTransaction) {
  */
 function findUserAddress(rawTransaction, wallets) {
     let trAddresses = parseTransactionAddresses(rawTransaction);
-    trAddresses.forEach(function(address, index){
-        wallets.forEach(function(wallet, wIndex){
-            if (address[1] === wallet[2]) {
-                return address;
-            }
+    // FIXME: what to return if trAddresses is undefined ?
+    if(trAddresses !== undefined) {
+        trAddresses.forEach(function(address, index){
+            wallets.forEach(function(wallet, wIndex){
+                if (address[1] === wallet[2]) {
+                    return address;
+                }
+            });
         });
-    });
-}
-
-function printTransaction(transaction, wallets) {
-    let transactionClass = "";
-    let transactionAmount = "";
-    let transactionAddressFrom = "";
-    let transactionAddressTo = "";
-    let transactionEnd = "</div>";
-    let address = findUserAddress(transaction, wallets);
-    if (address[0] === "in") {
-        transactionClass = "<div class\"transactionListItem transactionIn\">";
-        transactionAddressFrom = address[1];
-        transactionAddressTo = transaction.vout.addresses;
-    } else {
-        transactionClass = "<div class\"transactionListItem transactionOut\">";
-        transactionAddressTo = address[1];
-        transactionAddressFrom = transaction.vout.addresses.toString();
     }
-
-    return transactionClass + transactionAddressFrom + transactionAddressTo + transactionEnd;
 }
 
 function isUnique(walletId, ids) {
@@ -271,18 +374,6 @@ function printList(list, elem, ids, verbose) {
     return ids;
 }
 
-function printWalletList(non_zero, zero, elem, verbose = true) {
-    let walletElem = document.getElementById(elem);
-    walletElem.innerHTML = "";
-    let hide_balances = document.getElementById("hideZeroBalancesButton");
-    let ids = [];
-    ids = printList(non_zero, elem, ids, verbose);
-    if ((elem === "walletList") && (hide_balances.textContent === "Show Zero Balances")) {
-        return;
-    }
-    printList(zero, elem, ids, verbose);
-}
-
 function renderWallet() {
     ipcRenderer.send("get-wallets");
 }
@@ -291,10 +382,12 @@ function refreshWallet() {
     ipcRenderer.send("refresh-wallet");
 }
 
+// TODO: implement or not ?
 function getWalletWithName(name) {
     ipcRenderer.send("get-wallet-by-name", name);
 }
 
+// TODO: implement or not ?
 /* FIXME: @nonghost name usage */
 function addressNameTest() {
     ipcRenderer.send("rename-wallet", "znc4M7DLcwShfoQuF18YB55QwphLhCVKeoi", "nove jmeno");
@@ -303,6 +396,22 @@ function addressNameTest() {
 function pickWallet(address) {
     document.getElementById("sendFromAddressText").innerHTML = address;
     closeDialog("pickWalletDialog");
+}
+
+function generateNewWallet() {
+    ipcRenderer.send("generate-wallet", document.getElementById("newWalletName").value);
+}
+
+function doNotify(title, message, duration = 2) {
+    let notif = new Notification(title, {
+        body: message,
+        icon: "resources/zen_icon.png",
+        duration: duration
+    });
+
+    notif.onclick = () => {
+        notif.close();
+    }
 }
 
 ipcRenderer.on("get-wallets-response", function (event, resp) {
@@ -384,11 +493,6 @@ ipcRenderer.on("get-wallet-by-name-response", function (event, resp) {
     console.log(data.msg);
 });
 
-/* FIXME: @nonghost transaction info usage */
-function testTransaction() {
-    ipcRenderer.send("get-transaction", "3098e8b87b1a54a5d3e60b60e2c888547f17cb8e8504b1e70d6b6aca882b7413", "znYBWsMPdeUJfwbKbMdXNPVD9THysCgzFhu");
-}
-
 ipcRenderer.on("get-transaction-response", function (event, resp) {
     let data = JSON.parse(resp);
     // FIXME: @lukas What to do in the case when notifications are OFF.
@@ -407,10 +511,6 @@ ipcRenderer.on("get-transaction-update", function (event, address, resp) {
     let amount = (data.vout[0].scriptPubKey.addresses[0] === address) ? data.vout[0].value : data.vout[1].value;
     console.log("transaction from: " + data.vin[0].addr + " amount: " + amount + " fee: " + data.fees);
 });
-
-function generateNewWallet() {
-    ipcRenderer.send("generate-wallet", document.getElementById("newWalletName").value);
-}
 
 ipcRenderer.on("generate-wallet-response", function (event, resp) {
     let data = JSON.parse(resp);
@@ -441,14 +541,71 @@ ipcRenderer.on("generate-wallet-response", function (event, resp) {
     }
 });
 
-function doNotify(title, message, duration = 2) {
-    let notif = new Notification(title, {
-        body: message,
-        icon: "resources/zen_icon.png",
-        duration: duration
-    });
 
-    notif.onclick = () => {
-        notif.close();
-    }
-}
+
+
+
+// --------------------------------------------------------------------------------------------------------
+// // FIXME: check if unused
+// function checkZeroList(walletList, zero=true) {
+//     let list = [];
+//     for (let i = 0; i < walletList.wallets.length; i++) {
+//         if ((zero) && (walletList.wallets[i][3] === 0)) {
+//             list.push(walletList.wallets[i]);
+//         }
+//         if ((!zero) && (walletList.wallets[i][3] > 0)) {
+//             list.push(walletList.wallets[i]);
+//         }
+//     }
+//     return list;
+// }
+//
+// function getNonZeroBalance(walletList) {
+//     let non_zero = checkZeroList(walletList, false);
+//     non_zero.sort(function (a, b) {
+//         return b[3] - a[3];
+//     });
+//     return non_zero;
+// }
+//
+// function getZeroBalance(walletList) {
+//     console.log(walletList);
+//     return checkZeroList(walletList, true);
+// }
+//
+// function printTransaction(transaction, wallets) {
+//     let transactionClass = "";
+//     let transactionAmount = "";
+//     let transactionAddressFrom = "";
+//     let transactionAddressTo = "";
+//     let transactionEnd = "</div>";
+//     let address = findUserAddress(transaction, wallets);
+//     if (address[0] === "in") {
+//         transactionClass = "<div class\"transactionListItem transactionIn\">";
+//         transactionAddressFrom = address[1];
+//         transactionAddressTo = transaction.vout.addresses;
+//     } else {
+//         transactionClass = "<div class\"transactionListItem transactionOut\">";
+//         transactionAddressTo = address[1];
+//         transactionAddressFrom = transaction.vout.addresses.toString();
+//     }
+//
+//     return transactionClass + transactionAddressFrom + transactionAddressTo + transactionEnd;
+// }
+//
+// function printWalletList(non_zero, zero, elem, verbose = true) {
+//     let walletElem = document.getElementById(elem);
+//     walletElem.innerHTML = "";
+//     let hide_balances = document.getElementById("hideZeroBalancesButton");
+//     let ids = [];
+//     ids = printList(non_zero, elem, ids, verbose);
+//     if ((elem === "walletList") && (hide_balances.textContent === "Show Zero Balances")) {
+//         return;
+//     }
+//     printList(zero, elem, ids, verbose);
+// }
+//
+// /* FIXME: @nonghost transaction info usage */
+// function testTransaction() {
+//     ipcRenderer.send("get-transaction", "3098e8b87b1a54a5d3e60b60e2c888547f17cb8e8504b1e70d6b6aca882b7413", "znYBWsMPdeUJfwbKbMdXNPVD9THysCgzFhu");
+// }
