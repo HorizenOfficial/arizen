@@ -4,6 +4,7 @@
 "use strict";
 
 const zencashjs = require("zencashjs");
+const request = require("request");
 
 function setButtonActive(className) {
     document.getElementById(className).style.backgroundColor = "transparent";
@@ -107,11 +108,12 @@ function hideBalances() {
 }
 
 function send() {
-    let fromAddress = document.getElementById("sendFromAddressText").textContent;
-    let toAddress = document.getElementById("sendToAddress").value;
+    const fromAddress = document.getElementById("sendFromAddressText").textContent;
+    const toAddress = document.getElementById("sendToAddress").value;
     let fee = document.getElementById("coinFee").value;
-    let amount = document.getElementById("coinAmount").value;
-
+    const amount = document.getElementById("coinAmount").value;
+    // FIXME - get it from settings
+    const zenApi = "https://explorer.zensystem.io/insight-api-zen/";
     console.log(fromAddress);
     console.log(toAddress);
     console.log(fee);
@@ -157,100 +159,105 @@ function send() {
     // Alert errors
     if (errString !== ""){
         alert(errString);
-    }
+    }else{
+        // FIXME: where to get key
+        const privateKey = zencashjs.address.WIFToPrivKey("FIXME HERE");
 
-    // TODO: implement this, where to get privateKey?
-    //
-    // const myPrivateKey = zencashjs.address.WIFToPrivKey();
-    //
-    // // Get previous transactions
-    // const prevTxURL = urlAppend(this.props.settings.insightAPI, 'addr/') + senderAddress + '/utxo'
-    // const infoURL = urlAppend(this.props.settings.insightAPI, 'status?q=getInfo')
-    // const sendRawTxURL = urlAppend(this.props.settings.insightAPI, 'tx/send')
-    //
-    // // Building our transaction TXOBJ How many satoshis do we have so far
-    // var satoshisSoFar = 0
-    // var history = []
-    // var recipients = [{address: recipientAddress, satoshis: satoshisToSend}]
-    //
-    // // Get previous unspent transactions
-    // cordovaHTTP.get(prevTxURL, {}, {}, function(tx_resp){
-    //     this.setProgressValue(25)
-    //
-    //     const tx_data = JSON.parse(tx_resp.data)
-    //
-    //     // Get blockheight and hash
-    //     cordovaHTTP.get(infoURL, {}, {}, function(info_resp){
-    //         this.setProgressValue(50)
-    //         const info_data = JSON.parse(info_resp.data)
-    //
-    //         const blockHeight = info_data.info.blocks - 300
-    //         const blockHashURL = urlAppend(this.props.settings.insightAPI, 'block-index/') + blockHeight
-    //
-    //         // Get block hash
-    //         cordovaHTTP.get(blockHashURL, {}, {}, function(response_bhash){
-    //             this.setProgressValue(75)
-    //
-    //             const blockHash = JSON.parse(response_bhash.data).blockHash
-    //
-    //             // Iterate through each utxo
-    //             // append it to history
-    //             for (var i = 0; i < tx_data.length; i++){
-    //                 if (tx_data[i].confirmations === 0) {
-    //                     continue;
-    //                 }
-    //
-    //                 history = history.concat({
-    //                     txid: tx_data[i].txid,
-    //                     vout: tx_data[i].vout,
-    //                     scriptPubKey: tx_data[i].scriptPubKey,
-    //                 });
-    //
-    //                 // How many satoshis do we have so far
-    //                 satoshisSoFar = satoshisSoFar + tx_data[i].satoshis;
-    //                 if (satoshisSoFar >= satoshisToSend + satoshisfeesToSend){
-    //                     break;
-    //                 }
-    //             }
-    //
-    //             // If we don't have enough address
-    //             // fail and tell user
-    //             if (satoshisSoFar < satoshisToSend + satoshisfeesToSend){
-    //                 alert(TRANSLATIONS[CUR_LANG].SendPage.notEnoughZEN)
-    //                 this.setProgressValue(0)
-    //                 return
-    //             }
-    //
-    //             // If we don't have exact amount
-    //             // Refund remaining to current address
-    //             if (satoshisSoFar !== satoshisToSend + satoshisfeesToSend){
-    //                 var refundSatoshis = satoshisSoFar - satoshisToSend - satoshisfeesToSend
-    //                 recipients = recipients.concat({address: senderAddress, satoshis: refundSatoshis})
-    //             }
-    //
-    //             // Create transaction
-    //             var txObj = zencashjs.transaction.createRawTx(history, recipients, blockHeight, blockHash)
-    //
-    //             // Sign each history transcation
-    //             for (var i = 0; i < history.length; i ++){
-    //                 txObj = zencashjs.transaction.signTx(txObj, i, senderPrivateKey, true)
-    //             }
-    //
-    //             // Convert it to hex string
-    //             const txHexString = zencashjs.transaction.serializeTx(txObj)
-    //
-    //             // Post it to the api
-    //             cordovaHTTP.post(sendRawTxURL, {rawtx: txHexString}, {}, function(sendtx_resp){
-    //                 const tx_resp_data = JSON.parse(sendtx_resp.data)
-    //
-    //                 this.setState({
-    //                     progressValue: 100,
-    //                     sendTxid: tx_resp_data.txid
-    //                 })
-    //             }.bind(this), (err) => { alert('ERROR: ' + JSON.stringify(err)); this.setProgressValue(0) })
-    //         }.bind(this), (err) => { alert('ERROR: ' + JSON.stringify(err)); this.setProgressValue(0) })
-    //     }.bind(this), (err) => { alert('ERROR: ' + JSON.stringify(err)); this.setProgressValue(0) })
-    // }.bind(this), (err) => { alert('ERROR: ' + JSON.stringify(err)); this.setProgressValue(0) })
+        // Get previous transactions
+        const prevTxURL = zenApi + "addr/" + fromAddress + "/utxo";
+        const infoURL = zenApi + "status?q=getInfo";
+        const sendRawTxURL = zenApi + "tx/send";
+
+        // Building our transaction TXOBJ
+        // Calculate maximum ZEN satoshis that we have
+        let satoshisSoFar = 0;
+        let history = [];
+        let recipients = [{address: toAddress, satoshis: amountInSatoshi}];
+
+        request.get(prevTxURL, function (tx_resp) {
+            if (tx_resp.err) {
+                // TODO: handle error
+                // console.log("balance update failed");
+            } else if (tx_resp.res && tx_resp.res.statusCode === 200) {
+                let tx_data = JSON.parse(tx_resp.data);
+
+                request.get(infoURL, function (info_resp) {
+                    if (info_resp.err) {
+                        // TODO: handle error
+                        // console.log("balance update failed");
+                    } else if (info_resp.res && info_resp.res.statusCode === 200) {
+                        let info_data = JSON.parse(info_resp.data);
+                        const blockHeight = info_data.info.blocks - 300;
+                        const blockHashURL = zenApi + "block-index/" + blockHeight;
+
+                        // Get block hash
+                        request.get(blockHashURL, function (bhash_resp) {
+                            if (bhash_resp.err) {
+                                // TODO: handle error
+                                // console.log("balance update failed");
+                            } else if (bhash_resp.res && bhash_resp.res.statusCode === 200) {
+                                const blockHash = JSON.parse(bhash_resp.data).blockHash;
+
+                                // Iterate through each utxo
+                                // append it to history
+                                for (let i = 0; i < tx_data.length; i++) {
+                                    if (tx_data[i].confirmations === 0) {
+                                        continue;
+                                    }
+
+                                    history = history.concat( {
+                                        txid: tx_data[i].txid,
+                                        vout: tx_data[i].vout,
+                                        scriptPubKey: tx_data[i].scriptPubKey,
+                                    });
+
+                                    // How many satoshis do we have so far
+                                    satoshisSoFar = satoshisSoFar + tx_data[i].satoshis;
+                                    if (satoshisSoFar >= amountInSatoshi + feeInSatoshi) {
+                                        break;
+                                    }
+                                }
+
+                                // If we don't have enough address - fail and tell it to the user
+                                if (satoshisSoFar < amountInSatoshi + feeInSatoshi) {
+                                    // TODO: handle error
+                                    // alert(TRANSLATIONS[CUR_LANG].SendPage.notEnoughZEN);
+                                    // return
+                                }
+
+                                // If we don't have exact amount - refund remaining to current address
+                                if (satoshisSoFar !== (amountInSatoshi + feeInSatoshi)) {
+                                    let refundSatoshis = satoshisSoFar - amountInSatoshi - feeInSatoshi;
+                                    recipients = recipients.concat({address: fromAddress, satoshis: refundSatoshis})
+                                }
+
+                                // Create transaction
+                                let txObj = zencashjs.transaction.createRawTx(history, recipients, blockHeight, blockHash);
+
+                                // Sign each history transcation
+                                for (let i = 0; i < history.length; i ++) {
+                                    txObj = zencashjs.transaction.signTx(txObj, i, privateKey, true)
+                                }
+
+                                // Convert it to hex string
+                                const txHexString = zencashjs.transaction.serializeTx(txObj);
+
+                                // TODO: complete sendRawTxURL - response is TXID
+                                // cordovaHTTP.post(sendRawTxURL, {rawtx: txHexString}, {}, function(sendtx_resp){
+                                //     const tx_resp_data = JSON.parse(sendtx_resp.data);
+                                //
+                                //     this.setState({
+                                //         progressValue: 100,
+                                //         sendTxid: tx_resp_data.txid
+                                //     })
+                                // });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
 }
 
 function showDarkContainer() {
