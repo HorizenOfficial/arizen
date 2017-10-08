@@ -1,11 +1,12 @@
 /* Left panel */
 .leftWallet{
-    position: relative;
+    position: absolute;
     float: left;
     margin: 5px 5px 5px 5px;
     padding: 5px 5px;
     width: 48.2%;
-    height: 600px;
+    top:40px;
+    bottom: 40px;
     border: 1px solid #c4cddb;
     border-top-color: #d3dbde;
     border-bottom-color: #bfc9dc;
@@ -260,12 +261,13 @@
 /* Right Pannel */
 
 .rightTxHistory{
-    position: relative;
-    float: right;
+    position: absolute;
     margin: 5px 5px 5px auto;
     padding: 5px 5px;
+    right:0px;
     width:  48%;
-    height: 600px;
+    top: 40px;
+    bottom: 40px;
     border: 1px solid #c4cddb;
     border-top-color: #d3dbde;
     border-bottom-color: #bfc9dc;
@@ -273,8 +275,6 @@
     box-shadow: 0 1px 1px #ccc;
     color: #0d1006;
 }
-
-
 
 .rightTxHistoryTitle{
     padding: 12px 15px;
