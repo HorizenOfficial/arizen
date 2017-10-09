@@ -92,6 +92,7 @@ function openHomepageInDefaultBrowser() {
 }
 
 function settingsDialog() {
+    ipcRenderer.send("get-settings");
     document.getElementById("mySidenav").style.width = "0";
     document.getElementById("sidenavIMG").style.transitionDelay = "0s";
     document.getElementById("sidenavIMG").style.transition = "0s";
@@ -102,7 +103,34 @@ function settingsDialog() {
     document.getElementById("darkContainer").style.opacity = "0.7";
     document.getElementById("settingsDialog").style.zIndex = "2";
     document.getElementById("settingsDialog").style.opacity = "1";
-    // TODO: radiobutton - disable/enable desktop notification, default = enable, where to store settings?
-    document.getElementById("settingsDialog").innerHTML += "<label for=\"settingsNotifications\">Desktop notifications</label><input type=\"checkbox\" id=\"settingsNotifications\" name=\"notifications\">";
+    document.getElementById("settingsDialog").innerHTML = "<label for=\"settingsNotifications\">Desktop notifications</label><input type=\"checkbox\" id=\"settingsNotifications\" name=\"notifications\"><br>";
+    document.getElementById("settingsDialog").innerHTML += "<label for=\"settingsNotifications\">Explorer API</label><input type=\"text\" id=\"settingsExplorer\" name=\"explorerApi\">";
     document.getElementById("settingsDialog").innerHTML += "<button class=\"buttons walletDetailsRenameButton\" onclick=\"saveSettings()\">Save settings</button>";
+}
+
+ipcRenderer.on("get-settings-response", function (event, resp) {
+    let data = JSON.parse(resp);
+    let elem;
+
+    if (data.response === "OK") {
+        data.settings.forEach(function(node) {
+            elem = document.getElementById(node[1]);
+            if (elem.type === "text") {
+                elem.value = node[2];
+            } else if (elem.type === "checkbox") {
+                elem.checked = (node[2] === "1");
+            } else {
+                console.log("unknown elem type");
+            }
+        }, this);
+    } else {
+        console.log(data.msg);
+    }
+});
+
+function saveSettings() {
+    console.log(document.getElementById("settingsNotifications").checked ? "enabled" : "disabled");
+    console.log(document.getElementById("settingsExplorer").value);
+    console.log("saved");
+    /* TODO: send to main */
 }
