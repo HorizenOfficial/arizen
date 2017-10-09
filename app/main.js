@@ -428,7 +428,7 @@ function createWindow() {
 
     // Open the DevTools.
     // FIXME: comment this for release versions!
-    win.webContents.openDevTools();
+    //win.webContents.openDevTools();
 
     //win.loadURL("file://" + __dirname + "/index.html");
 
@@ -779,6 +779,29 @@ ipcMain.on("get-settings", function (event) {
     }
 
     event.sender.send("get-settings-response", JSON.stringify(resp));
+});
+
+ipcMain.on("save-settings", function (event, settings) {
+    let data = JSON.parse(settings);
+    let resp;
+
+    if (userInfo.loggedIn) {
+        data.forEach(function(element) {
+            userInfo.walletDb.run("UPDATE settings SET value = ? WHERE name = ?", [element.value, element.name]);
+        }, this);
+        userInfo.dbChanged = true;
+        resp = {
+            response: "OK",
+            msg: "saved"
+        };
+    } else {
+        resp = {
+            response: "ERR",
+            msg: "not logged in"
+        };
+    }
+
+    event.sender.send("save-settings-response", JSON.stringify(resp));
 });
 
 function checkSendParameters(fromAddress, toAddress, fee, amount){

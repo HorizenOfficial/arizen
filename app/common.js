@@ -129,8 +129,22 @@ ipcRenderer.on("get-settings-response", function (event, resp) {
 });
 
 function saveSettings() {
-    console.log(document.getElementById("settingsNotifications").checked ? "enabled" : "disabled");
-    console.log(document.getElementById("settingsExplorer").value);
-    console.log("saved");
-    /* TODO: send to main */
+    let settings = [
+        {
+            name: "settingsNotifications",
+            value: document.getElementById("settingsNotifications").checked ? "1" : "0",
+        },   
+        {
+            name: "settingsExplorer",
+            value: document.getElementById("settingsExplorer").value
+        }
+    ];
+    ipcRenderer.send("save-settings", JSON.stringify(settings));
 }
+
+ipcRenderer.on("save-settings-response", function (event, resp) {
+    let data = JSON.parse(resp);
+
+    /* FIXME: @nonghost on ok close window */
+    console.log(data.msg);
+});
