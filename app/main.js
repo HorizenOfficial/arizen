@@ -37,6 +37,8 @@ const dbStructWallet = "CREATE TABLE wallet (id INTEGER PRIMARY KEY AUTOINCREMEN
 const dbStructContacts = "CREATE TABLE contacts (id INTEGER PRIMARY KEY AUTOINCREMENT, addr TEXT UNIQUE, name TEXT, nick TEXT);";
 const dbStructSettings = "CREATE TABLE settings (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE, value TEXT);";
 const zenApi = "https://explorer.zensystem.io/insight-api-zen/";
+// TODO: add zenExplorer to settings
+const zenExplorer = "https://explorer.zensystem.io/";
 
 function attachUpdaterHandlers() {
     // updater.on('update-available', onUpdateAvailable);
@@ -124,7 +126,6 @@ function decryptWallet(login, password) {
 
 function importWalletDat(login, pass, wallet) {
     let walletBytes = fs.readFileSync(wallet, "binary");
-    // FIXME - unexpected x after \
     let re = /\x30\x81\xD3\x02\x01\x01\x04\x20(.{32})/gm;
     let privateKeys = walletBytes.match(re);
     privateKeys = privateKeys.map(function (x) {
@@ -428,9 +429,7 @@ function createWindow() {
 
     // Open the DevTools.
     // FIXME: comment this for release versions!
-    //win.webContents.openDevTools();
-
-    //win.loadURL("file://" + __dirname + "/index.html");
+    // win.webContents.openDevTools();
 
     // Emitted when the window is closed.
     win.on("closed", function () {
@@ -927,10 +926,17 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
                                             dialog.showErrorBox("sendtx_err", sendtx_err);
                                         } else if(sendtx_resp && sendtx_resp.statusCode === 200) {
                                             const tx_resp_data = JSON.parse(sendtx_body);
+                                            // TODO: add "icon" to dialogs for macOS
                                             dialog.showMessageBox({
+                                                // icon: "./resources/zen_icon.png",
+                                                type: "question",
+                                                buttons: ["Yes", "No"],
                                                 title: "Sucess!",
-                                                type: "info",
-                                                message: "TXid: " + tx_resp_data.txid
+                                                message: "TXid:\n\n" + tx_resp_data.txid + "\n\nDo you want to open your transaction in explorer?"
+                                            }, function (response) {
+                                                if (response === 0) {
+                                                    electron.shell.openExternal(zenExplorer + "tx/" + tx_resp_data.txid);
+                                                }
                                             });
                                         }
                                     });
