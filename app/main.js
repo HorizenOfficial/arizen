@@ -35,7 +35,6 @@ let userInfo = {
 const dbStructWallet = "CREATE TABLE wallet (id INTEGER PRIMARY KEY AUTOINCREMENT, pk TEXT, addr TEXT UNIQUE, lastbalance REAL, name TEXT);";
 // FIXME: dbStructContacts is unused
 const dbStructContacts = "CREATE TABLE contacts (id INTEGER PRIMARY KEY AUTOINCREMENT, addr TEXT UNIQUE, name TEXT, nick TEXT);";
-// FIXME: dbStructSettings is unused
 const dbStructSettings = "CREATE TABLE settings (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE, value TEXT);";
 const zenApi = "https://explorer.zensystem.io/insight-api-zen/";
 
@@ -745,4 +744,39 @@ ipcMain.on("generate-wallet", function (event, name) {
     }
 
     event.sender.send("generate-wallet-response", JSON.stringify(resp));
+});
+
+ipcMain.on("get-settings", function (event) {
+    let resp;
+    let sqlRes;
+
+    sqlRes = userInfo.walletDb.exec("SELECT name FROM sqlite_master WHERE type='table' AND name='settings';");
+    if (sqlRes.length === 0) {
+        userInfo.walletDb.run(dbStructSettings);
+        userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsNotifications", "1"]);
+        userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsExplorer", zenApi]);
+        userInfo.dbChanged = true;
+    }
+
+    if (userInfo.loggedIn) {
+        sqlRes = userInfo.walletDb.exec("SELECT * FROM settings");
+        if (sqlRes.length > 0) {
+            resp = {
+                response: "OK",
+                settings: sqlRes[0].values
+            };
+        } else { 
+            resp = {
+                response: "ERR",
+                msg: "issue with db"
+            };
+        }
+    } else {
+        resp = {
+            response: "ERR",
+            msg: "not logged in"
+        };
+    }
+
+    event.sender.send("get-settings-response", JSON.stringify(resp));
 });
