@@ -151,8 +151,8 @@ function send() {
     if (errString !== ""){
         alert(errString);
     }else{
-        // FIXME: where to get key
-        const privateKey = zencashjs.address.WIFToPrivKey("FIXME HERE");
+        let sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet WHERE addr = '" + fromAddress + "'");
+        let privateKey = zencashjs.address.WIFToPrivKey(sqlRes[0].values[0][1]);
 
         // Get previous transactions
         const prevTxURL = zenApi + "addr/" + fromAddress + "/utxo";
