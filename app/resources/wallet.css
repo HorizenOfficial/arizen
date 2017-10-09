@@ -367,7 +367,40 @@
     transparent);
 }
 
+#transactionDetailsDialog {
+    position: absolute;
+    z-index: -1;
+    left: 262px;
+    width: 500px;
+    bottom: 150px;
+    top:150px;
+    opacity:0;
+    transition: 0.5s;
+    overflow-y: scroll;
+}
 
+#transactionDetailsDialog::-webkit-scrollbar-track
+{
+    background-color: #FeFeFe;
+}
+
+#transactionDetailsDialog::-webkit-scrollbar
+{
+    width: 10px;
+    background-color: #FeFeFe;
+}
+
+#transactionDetailsDialog::-webkit-scrollbar-thumb
+{
+    background: #F90 -webkit-linear-gradient(45deg,
+    rgba(255, 255, 255, .2) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, .2) 50%,
+    rgba(255, 255, 255, .2) 75%,
+    transparent 75%,
+    transparent);
+}
 
 .generateWalletButton{
     margin-top:30px;
@@ -405,5 +438,25 @@
     color: #f88900;
     font-size: 0.8em;
     border-bottom: 1px solid #888888;
+}
+
+.walletTransaction {
+    display: block;
+    width: 100%;
+    border-bottom: 1px solid #f88900;
+}
+
+.transactionItem {
+    color: #f88900;
+}
+
+.transactionIncome{
+    color: #00a820;
+    font-size: 1.9em;
+}
+
+.transactionOutcome {
+    color: #880000;
+    font-size: 1.9em;
 }
 

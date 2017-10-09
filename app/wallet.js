@@ -294,6 +294,7 @@ function walletDetailsDialog(address, balance, name) {
 }
 
 function closeAllWalletsDialogs() {
+    closeDialog("transactionDetailsDialog");
     closeDialog("walletDetailsDialog");
     closeDialog("addWalletDialog");
     closeDialog("pickWalletDialog");
@@ -553,18 +554,15 @@ function findUserAddress(rawTransaction, wallets) {
 
 function printTransactionElem(elem, txId, datetime, income, addressIn, addressOut, amount) {
     let transactionText = "<div class=\"walletTransaction\">";
-    transactionText += "<span class=\"transactionDatetime\">"+datetime+"</span>";
+    transactionText += "<span class=\"transactionItem\">"+datetime+"</span>";
     if (income) {
         transactionText += "<span class=\"transactionIncome\">" + amount + "</span>";
-        transactionText += "<span class=\"transactionAddress\">"+ addressIn +"</span>";
+        transactionText += "<span class=\"transactionItem\">"+ addressIn +"</span>";
     } else {
         transactionText += "<span class=\"transactionOutcome\">" + -amount + "</span>";
-        transactionText += "<span class=\"transactionAddress\">"+ addressOut +"</span>";
+        transactionText += "<span class=\"transactionItem\">"+ addressOut +"</span>";
     }
-    transactionText += "<div class=\"walletTransactionDetail\">";
-    // TODO create printing of detail
-    transactionText += "</div>";
-    transactionText += "<span class=\"transactionDatetime\">"+datetime+"</span>";
+    transactionText += "<button class=\"buttons walletDetailsRenameButton\" onclick=\"transactionDetailsDialog(\""+elem+"\", \""+ txId+"\", \""+datetime+"\", \""+income+"\", \""+addressIn+"\", \""+addressOut+"\", \""+amount+"\")\">Show transaction details</button>";
     transactionText += "</div>";
     document.getElementById(elem).innerHTML += transactionText;
 }
@@ -589,7 +587,28 @@ function printTransactionElem(elem, txId, datetime, income, addressIn, addressOu
     return transactionClass + transactionAddressFrom + transactionAddressTo + transactionEnd;
 }
 
+function transactionDetailsDialog(elem, txId, datetime, income, addressIn, addressOut, amount) {
+    showDarkContainer();
+    document.getElementById("transactionDetailsDialog").style.zIndex = "2";
+    document.getElementById("transactionDetailsDialog").style.opacity = "1";
+    document.getElementById("transactionDetailsDialogContent").innerHTML = "";
+    let transactionText = "<div class=\"walletTransaction\">";
+    transactionText += "<span class=\"transactionItem\">"+datetime+"</span>";
+    if (income) {
+        transactionText += "<span class=\"transactionIncome\">" + amount + "</span>";
+        transactionText += "<span class=\"transactionItem\">"+ addressIn +"</span>";
+    } else {
+        transactionText += "<span class=\"transactionOutcome\">" + -amount + "</span>";
+        transactionText += "<span class=\"transactionItem\">"+ addressOut +"</span>";
+    }
+    transactionText += "<div class=\"walletTransactionTxId\">"+ txId +"</div>";
+    transactionText += "<a href=\"https://explorer.zensystem.io/tx/"+ txId +"\" class=\"walletTransactionExplorer\">(Tx Explorer)</a>";
+    transactionText += "</div>";
+    transactionText += "<span class=\"transactionDatetime\">"+datetime+"</span>";
+    transactionText += "</div>";
 
+    document.getElementById("transactionDetailsDialogContent").innerHTML = transactionText;
+}
 
 
 // --------------------------------------------------------------------------------------------------------

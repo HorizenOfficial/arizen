@@ -12,7 +12,7 @@ body {
 }
 
 ::selection {
-    background: transparent;
+    background: #dddddd; /* WebKit/Blink Browsers */
 }
 
 .center{
