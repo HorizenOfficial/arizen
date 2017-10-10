@@ -58,6 +58,8 @@ function saveContact() {
 }
 
 function closeAllMessengerDialogs() {
+    closeDialog("settingsDialog");
+    closeDialog("aboutDialog");
     closeDialog("addContactDialog");
     closeDialog("deleteContactDialog");
     closeNav();

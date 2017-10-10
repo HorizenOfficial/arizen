@@ -51,6 +51,7 @@ function aboutDialog() {
     document.getElementById("sidenavIMG").style.transitionDelay = "0s";
     document.getElementById("sidenavIMG").style.transition = "0s";
     document.getElementById("sidenavIMG").style.opacity = "0";
+    document.getElementById("aboutContent").innerHTML = "";
     document.getElementById("aboutContent").innerHTML += "\<b\>Arizen version: \</b\>" + pckg.version + "\<br\>";
     document.getElementById("aboutContent").innerHTML += "\<b\>License: \</b\>" + pckg.license + "\<br\>";
     let authors = "\<b\>Authors:\</b>\<br\>";
@@ -103,9 +104,9 @@ function settingsDialog() {
     document.getElementById("darkContainer").style.opacity = "0.7";
     document.getElementById("settingsDialog").style.zIndex = "2";
     document.getElementById("settingsDialog").style.opacity = "1";
-    document.getElementById("settingsDialog").innerHTML = "<label for=\"settingsNotifications\">Desktop notifications</label><input type=\"checkbox\" id=\"settingsNotifications\" name=\"notifications\"><br>";
-    document.getElementById("settingsDialog").innerHTML += "<label for=\"settingsNotifications\">Explorer API</label><input type=\"text\" id=\"settingsExplorer\" name=\"explorerApi\">";
-    document.getElementById("settingsDialog").innerHTML += "<button class=\"buttons walletDetailsRenameButton\" onclick=\"saveSettings()\">Save settings</button>";
+    document.getElementById("settingsContent").innerHTML = "<label for=\"settingsNotifications\">Desktop notifications</label><input type=\"checkbox\" id=\"settingsNotifications\" name=\"notifications\"><br>";
+    document.getElementById("settingsContent").innerHTML += "<label for=\"settingsExplorer\">Explorer API</label><input type=\"text\" id=\"settingsExplorer\" class=\"wallet_inputs\" name=\"explorerApi\">";
+    document.getElementById("settingsContent").innerHTML += "<button class=\"buttons settingsSaveButton\" onclick=\"saveSettings()\">Save settings</button>";
 }
 
 ipcRenderer.on("get-settings-response", function (event, resp) {

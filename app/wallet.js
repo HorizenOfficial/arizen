@@ -156,6 +156,8 @@ function walletDetailsDialog(address, balance, name) {
 }
 
 function closeAllWalletsDialogs() {
+    closeDialog("settingsDialog");
+    closeDialog("aboutDialog");
     closeDialog("transactionDetailsDialog");
     closeDialog("walletDetailsDialog");
     closeDialog("addWalletDialog");
