@@ -597,11 +597,19 @@ function updateBalance(address, oldBalance, event) {
                 let update = {
                     response: "OK",
                     wallet: data.addrStr,
-                    balance: data.balance,
-                    transactions: data.transactions
+                    balance: data.balance
                 };
                 event.sender.send("update-wallet-balance", JSON.stringify(update));
             }
+            data.transactions.forEach(function(element) {
+                request.get(settings.explorer + settings.api + "tx/" + element, function (err, res, body) {
+                    if (err) {
+                        console.log("transaction readout failed");
+                    } else if (res && res.statusCode === 200) {
+                        event.sender.send("get-transaction-update", address, body);
+                    }
+                });
+            }, this);
         }
     });
 }

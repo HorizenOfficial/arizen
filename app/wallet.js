@@ -322,7 +322,7 @@ ipcRenderer.on("update-wallet-balance", function (event, resp) {
     doNotify("Balance has been updated", "New balance: " + data.balance + " " + data.wallet);
 
     // get all transactions (newest->oldest)
-    data.transactions.forEach(function(transaction, index) {
+    data.transactions.forEach(function(transaction) {
         ipcRenderer.send("get-transaction", transaction, data.wallet);
     });
 
@@ -363,17 +363,42 @@ ipcRenderer.on("get-transaction-update", function (event, address, resp) {
     let data = JSON.parse(resp);
 
     /* FIXME: @nonghost response from api */
+    let inAmount = 0;
     let amount = 0;
-    console.log("transaction from: " + data.vin[0].addr + " amount: " + amount + " fee: " + data.fees);
-    /*
-    let trAddresses = parseTransactionAddresses(data);
-    let income = findUserAddress(trAddresses, address);
-    if (income === "in") {
-        amount = (data.vout[0].scriptPubKey.addresses[0] === address) ? data.vout[0].value : data.vout[1].value;
-        printTransactionElem("transactionHistory", data.txid, data.time, income, address, trAddresses, amount);
-    } else {
-        printTransactionElem("transactionHistory", data.txid, data.time, income, address, trAddresses, -data.valueOut);
-    } */
+    let isSending = 0;
+    let vouts = [];
+    /* find my address in send transaction */
+    data.vin.forEach(function(element) {
+        /* my address is sending */
+        if (element.addr === address) {
+            isSending = 1;
+        }
+    }, this);
+    /* find my address in recv transaction */
+    data.vout.forEach(function(element) {
+        /* my address is receiving */
+        if (element.scriptPubKey.addresses[0] === address) {
+            if (isSending === 0) {
+                vouts.push(address);
+                amount = element.value;
+            } else {
+                amount = -1 * (data.valueOut - element.value);
+            }
+        } else {
+            /* dont show my address in transaction to */
+            vouts.push(element.scriptPubKey.addresses[0]);
+        }
+    }, this);
+    /* we are sending but amount is not set -> address hits 0 */
+    if (amount === 0 && isSending === 1)
+    {
+        amount = -1 * data.valueOut;
+    }
+    /* find unique input addresses */
+    let vins = [...new Set(data.vin.map(item => item.addr))];
+    console.log("transaction from: " + vins + " amount: " + inAmount + " amount2: " + amount + " fee: " + data.fees);
+    
+    printTransactionElem("transactionHistory", data.txid, data.time, address, vins, vouts, Number(amount).toFixed(8), data.confirmations);
 });
 
 ipcRenderer.on("generate-wallet-response", function (event, resp) {
@@ -453,10 +478,9 @@ function printTransactionList(data) {
     });
 }
 
-function printTransactionElem(elem, txId, datetime, myAddress, addresses, amount, confirmations) {
+function printTransactionElem(elem, txId, datetime, myAddress, addressesFrom, addressesTo, amount, confirmations) {
     let date = new Date(datetime*1000);
-    let addressesText = addresses.join();
-    let transactionText = "<div class=\"walletTransaction\" onclick=\"transactionDetailsDialog(\""+ txId+"\", \""+date.toString()+"\", \""+myAddress+"\", \""+addressesText+"\", \""+amount+"\", \""+ confirmations +"\")>";
+    let transactionText = "<div class=\"walletTransaction\" onclick=\"transactionDetailsDialog('"+ txId+"', '"+date.toString()+"', '"+myAddress+"', '"+addressesFrom+"', '" + addressesTo + "','"+amount+"', '"+ confirmations +"')\">";
     transactionText += "<div><span class=\"transactionItem\">"+date.toString() +"</span> - <span class=\"wallet_labels\">Confirmations</span> <span class=\"transactionItem\">"+ confirmations +"</span></div>";
     if (amount > 0) {
         transactionText += "<div class=\"transactionIncome\">" + amount + " ZEN</div>";
@@ -464,13 +488,13 @@ function printTransactionElem(elem, txId, datetime, myAddress, addresses, amount
         transactionText += "<div class=\"transactionOutcome\">" + amount + " ZEN</div>";
     }
     transactionText += "<span class=\"transactionItem\">"+ myAddress +"</span></div>";
-    transactionText += "<span>Confirmations</span> "+ confirmations;
     transactionText += "</div>";
     document.getElementById(elem).innerHTML += transactionText;
 }
 
-function transactionDetailsDialog(txId, datetime, myAddress, addressesText, amount, confirmations) {
-    let addresses = addressesText.split(",");
+function transactionDetailsDialog(txId, datetime, myAddress, addressesFrom, addressesTo, amount, confirmations) {
+    let addressesSend = addressesFrom.split(",");
+    let addressesRecv = addressesTo.split(",");
     showDarkContainer();
     document.getElementById("transactionDetailsDialog").style.zIndex = "2";
     document.getElementById("transactionDetailsDialog").style.opacity = "1";
@@ -486,10 +510,12 @@ function transactionDetailsDialog(txId, datetime, myAddress, addressesText, amou
     transactionText += "<div class=\"transactionItemLabel\">Transaction ID:</div>";
     transactionText += "<div class=\"center\"><a href=\"javascript:void(0)\" onclick=\"openUrl('https://explorer.zensystem.io/tx/"+ txId +"')\" class=\"walletListItemDetails transactionPadding\" target=\"_blank\">"+txId+"</a></div></div>";
     transactionText += "<div class=\"transactionItemLabel\">From:</div>";
-    transactionText += "<div class=\"center\"><div class=\"transactionItem\">"+ addresses[0] +"</div></div>";
+    for(let i = 0; i < addressesSend.length; i++ ) {
+        transactionText += "<div class=\"center\"><div class=\"transactionItem\">" + addressesSend[i] + "</div></div>";
+    }
     transactionText += "<div class=\"transactionItemLabel\">To:</div>";
-    for(let i = 1; i < addresses.length; i++ ) {
-        transactionText += "<div class=\"center\"><div class=\"transactionItem\">" + addresses[i] + "</div></div>";
+    for(let i = 0; i < addressesRecv.length; i++ ) {
+        transactionText += "<div class=\"center\"><div class=\"transactionItem\">" + addressesRecv[i] + "</div></div>";
     }
     transactionText += "<div class=\"transactionItemLabel\">Confirmations:</div>";
 
