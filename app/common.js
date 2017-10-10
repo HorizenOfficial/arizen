@@ -149,3 +149,19 @@ ipcRenderer.on("save-settings-response", function (event, resp) {
     /* FIXME: @nonghost on ok close window */
     console.log(data.msg);
 });
+
+function doNotify(title, message, duration = 2) {
+    ipcRenderer.send("show-notification", title, message, duration);
+}
+
+ipcRenderer.on("show-notification-response", function (event, title, message, duration) {
+    let notif = new Notification(title, {
+        body: message,
+        icon: "resources/zen_icon.png",
+        duration: duration
+    });
+
+    notif.onclick = () => {
+        notif.close();
+    }
+});

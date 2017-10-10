@@ -834,6 +834,14 @@ ipcMain.on("save-settings", function (event, settings) {
     event.sender.send("save-settings-response", JSON.stringify(resp));
 });
 
+ipcMain.on("show-notification", function (event, title, message, duration) {
+    if (settings.notifications === 1) {
+        event.sender.send("show-notification-response", title, message, duration);
+    } else {
+        console.log(title + ": " + message);
+    }
+});
+
 function checkSendParameters(fromAddress, toAddress, fee, amount){
     let errString = "";
     if (fromAddress.length !== 35) {

@@ -250,18 +250,6 @@ function generateNewWallet() {
     ipcRenderer.send("generate-wallet", document.getElementById("newWalletName").value);
 }
 
-function doNotify(title, message, duration = 2) {
-    let notif = new Notification(title, {
-        body: message,
-        icon: "resources/zen_icon.png",
-        duration: duration
-    });
-
-    notif.onclick = () => {
-        notif.close();
-    }
-}
-
 ipcRenderer.on("get-wallets-response", function (event, resp) {
     let data = JSON.parse(resp);
     let wId;
@@ -331,7 +319,6 @@ ipcRenderer.on("update-wallet-balance", function (event, resp) {
 
 ipcRenderer.on("rename-wallet-response", function (event, resp) {
     let data = JSON.parse(resp);
-    // FIXME: @lukas What to do in the case when notifications are OFF.
     if (data.response === "OK") {
         doNotify("Wallet name has been updated", data.msg);
     } else {
@@ -350,7 +337,6 @@ ipcRenderer.on("get-wallet-by-name-response", function (event, resp) {
 
 ipcRenderer.on("get-transaction-response", function (event, resp) {
     let data = JSON.parse(resp);
-    // FIXME: @lukas What to do in the case when notifications are OFF.
     if (data.response === "OK") {
         doNotify("Transaction", data.msg);
     } else {
