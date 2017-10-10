@@ -78,7 +78,6 @@ function closeSettingsDialog() {
     document.getElementById("settingsDialog").style.opacity = "0";
 }
 
-
 function logout() {
     ipcRenderer.send("do-logout");
     location.href = "./login.html";
@@ -89,7 +88,7 @@ function exitApp() {
 }
 
 function openHomepageInDefaultBrowser() {
-    electron.shell.openExternal(pckg.homepage)
+    ipcRenderer.send("open-explorer", pckg.homepage);
 }
 
 function settingsDialog() {
