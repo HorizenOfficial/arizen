@@ -348,7 +348,6 @@ ipcRenderer.on("get-transaction-response", function (event, resp) {
 ipcRenderer.on("get-transaction-update", function (event, address, resp) {
     let data = JSON.parse(resp);
 
-    /* FIXME: @nonghost response from api */
     let inAmount = 0;
     let amount = 0;
     let isSending = 0;
