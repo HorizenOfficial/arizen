@@ -133,7 +133,7 @@ function saveSettings() {
     let settings = [
         {
             name: "settingsNotifications",
-            value: document.getElementById("settingsNotifications").checked ? "1" : "0",
+            value: document.getElementById("settingsNotifications").checked ? "1" : "0"
         },   
         {
             name: "settingsExplorer",

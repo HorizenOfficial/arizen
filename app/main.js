@@ -41,19 +41,17 @@ const zenApi = "https://explorer.zensystem.io/insight-api-zen/";
 const zenExplorer = "https://explorer.zensystem.io/";
 
 function attachUpdaterHandlers() {
-    // updater.on('update-available', onUpdateAvailable);
-    updater.on("update-downloading", onUpdateDownloading);
     updater.on("update-downloaded", onUpdateDownloaded);
 
-    function onUpdateDownloading() {
-        if(document.body) {
-            document.body.classList.add("update-downloading");
-        }
-    }
-
     function onUpdateDownloaded() {
-        // application forces to update itself
-        updater.quitAndInstall();
+        dialog.showMessageBox({
+            type: "info",
+            title: "Update is here!",
+            message: "Exiting and installing new update ..."
+        }, function () {
+            // application forces to update itself
+            updater.quitAndInstall();
+        });
     }
 }
 
