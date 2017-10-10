@@ -18,6 +18,8 @@ const zencashjs = require("zencashjs");
 const sql = require("sql.js");
 const request = require("request");
 const updater = require("electron-simple-updater");
+const shell = require('electron').shell;
+
 updater.init({checkUpdateOnStart: true, autoDownload: true});
 attachUpdaterHandlers();
 
@@ -946,4 +948,11 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
             }
         });
     }
+});
+
+
+ipcMain.on("open-explorer", function (event, url) {
+    console.log("yop");
+    event.preventDefault();
+    shell.openExternal(url);
 });

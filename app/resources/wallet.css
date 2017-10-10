@@ -92,6 +92,7 @@
 
 .wallet_labels{
     width:10%;
+    color:#888888;
 }
 
 #containerLeftWallet {
@@ -370,8 +371,8 @@
 #transactionDetailsDialog {
     position: absolute;
     z-index: -1;
-    left: 262px;
-    width: 500px;
+    left: 162px;
+    width: 700px;
     bottom: 150px;
     top:150px;
     opacity:0;
@@ -446,8 +447,24 @@
     border-bottom: 1px solid #f88900;
 }
 
+.walletTransaction:hover {
+    display: block;
+    width: 100%;
+    border-bottom: 1px solid #f88900;
+    background: #dfdfdf;
+}
+
 .transactionItem {
     color: #f88900;
+}
+
+.transactionPadding {
+    padding-left: 50px;
+}
+
+.transactionItemLabel {
+    font-size: 1.1em;
+    font-weight: 800;
 }
 
 .transactionIncome{
@@ -460,3 +477,40 @@
     font-size: 1.9em;
 }
 
+#transactionHistory {
+    overflow-y: scroll;
+    height: 550px;
+}
+
+#transactionHistory::-webkit-scrollbar-track
+{
+    background-color: #FeFeFe;
+}
+
+#transactionHistory::-webkit-scrollbar
+{
+    width: 10px;
+    background-color: #FeFeFe;
+}
+
+#transactionHistory::-webkit-scrollbar-thumb
+{
+    background: #F90 -webkit-linear-gradient(45deg,
+    rgba(255, 255, 255, .2) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, .2) 50%,
+    rgba(255, 255, 255, .2) 75%,
+    transparent 75%,
+    transparent);
+}
+
+.transactionDetail {
+    width: 100%;
+    background: #dfdfdf;
+    margin-bottom: 15px;
+}
+
+.transactionConfirms {
+    font-size: 1.4em;
+}

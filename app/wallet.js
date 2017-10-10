@@ -365,6 +365,7 @@ ipcRenderer.on("get-transaction-update", function (event, address, resp) {
     /* FIXME: @nonghost response from api */
     let amount = 0;
     console.log("transaction from: " + data.vin[0].addr + " amount: " + amount + " fee: " + data.fees);
+    /*
     let trAddresses = parseTransactionAddresses(data);
     let income = findUserAddress(trAddresses, address);
     if (income === "in") {
@@ -372,7 +373,7 @@ ipcRenderer.on("get-transaction-update", function (event, address, resp) {
         printTransactionElem("transactionHistory", data.txid, data.time, income, address, trAddresses, amount);
     } else {
         printTransactionElem("transactionHistory", data.txid, data.time, income, address, trAddresses, -data.valueOut);
-    }
+    } */
 });
 
 ipcRenderer.on("generate-wallet-response", function (event, resp) {
@@ -435,57 +436,70 @@ function findUserAddress(trAddresses, address) {
     }
 }
 
-function printTransactionElem(elem, txId, datetime, income, myAddress, addresses, amount) {
-    let transactionText = "<div class=\"walletTransaction\">";
-    transactionText += "<span class=\"transactionItem\">"+datetime+"</span>";
-    transactionText += "<span class=\"transactionIncome\">" + amount + "</span>";
-    transactionText += "<span class=\"transactionItem\">"+ myAddress +"</span>";
-    transactionText += "<button class=\"buttons walletDetailsRenameButton\" onclick=\"transactionDetailsDialog(\""+elem+"\", \""+ txId+"\", \""+datetime+"\", \""+income+"\", \""+myAddress+"\", \""+addresses+"\", \""+amount+"\")\">Show transaction details</button>";
+function printTransactionList(data) {
+    //        data.transactions - raw transactions from api
+    //        data.addresses - my addresses [index coresponds with transactiond index]
+    document.getElementById("transactionDetailsDialogContent").innerHTML = "";
+    data.transactions.forEach(function(transaction, i) {
+        let trAddresses = parseTransactionAddresses(transaction);
+        let income = findUserAddress(trAddresses, data.addresses[i]);
+        let amount;
+        if (income === "in") {
+            amount = (data.vout[0].scriptPubKey.addresses[0] === data.addresses[i]) ? transaction.vout[0].value : transaction.vout[1].value;
+            printTransactionElem("transactionHistory", transaction.txid, transaction.time, data.addresses[i], trAddresses, amount, transaction.confirmations);
+        } else {
+            printTransactionElem("transactionHistory", transaction.txid, transaction.time, data.addresses[i], trAddresses, -transaction.valueOut, transaction.confirmations);
+        }
+    });
+}
+
+function printTransactionElem(elem, txId, datetime, myAddress, addresses, amount, confirmations) {
+    let date = new Date(datetime*1000);
+    let addressesText = addresses.join();
+    let transactionText = "<div class=\"walletTransaction\" onclick=\"transactionDetailsDialog(\""+ txId+"\", \""+date.toString()+"\", \""+myAddress+"\", \""+addressesText+"\", \""+amount+"\", \""+ confirmations +"\")>";
+    transactionText += "<div><span class=\"transactionItem\">"+date.toString() +"</span> - <span class=\"wallet_labels\">Confirmations</span> <span class=\"transactionItem\">"+ confirmations +"</span></div>";
+    if (amount > 0) {
+        transactionText += "<div class=\"transactionIncome\">" + amount + " ZEN</div>";
+    } else {
+        transactionText += "<div class=\"transactionOutcome\">" + amount + " ZEN</div>";
+    }
+    transactionText += "<span class=\"transactionItem\">"+ myAddress +"</span></div>";
+    transactionText += "<span>Confirmations</span> "+ confirmations;
     transactionText += "</div>";
     document.getElementById(elem).innerHTML += transactionText;
 }
 
-
- function printTransaction(transaction, wallets) {
-    let transactionClass = "";
-    let transactionAmount = "";
-    let transactionAddressFrom = "";
-    let transactionAddressTo = "";
-    let transactionEnd = "</div>";
-    let address = findUserAddress(transaction, wallets);
-    if (address[0] === "in") {
-        transactionClass = "<div class\"transactionListItem transactionIn\">";
-        transactionAddressFrom = address[1];
-        transactionAddressTo = transaction.vout.addresses;
-    } else {
-        transactionClass = "<div class\"transactionListItem transactionOut\">";
-        transactionAddressTo = address[1];
-        transactionAddressFrom = transaction.vout.addresses.toString();
-    }
-    return transactionClass + transactionAddressFrom + transactionAddressTo + transactionEnd;
-}
-
-function transactionDetailsDialog(elem, txId, datetime, income, addressIn, addressOut, amount) {
+function transactionDetailsDialog(txId, datetime, myAddress, addressesText, amount, confirmations) {
+    let addresses = addressesText.split(",");
     showDarkContainer();
     document.getElementById("transactionDetailsDialog").style.zIndex = "2";
     document.getElementById("transactionDetailsDialog").style.opacity = "1";
     document.getElementById("transactionDetailsDialogContent").innerHTML = "";
-    let transactionText = "<div class=\"walletTransaction\">";
-    transactionText += "<span class=\"transactionItem\">"+datetime+"</span>";
-    if (income) {
-        transactionText += "<span class=\"transactionIncome\">" + amount + "</span>";
-        transactionText += "<span class=\"transactionItem\">"+ addressIn +"</span>";
+    let transactionText = "";
+    transactionText += "<div class=\"transactionDetail\"><div class=\"center\"><span class=\"transactionItem\">"+ datetime +"</span></div>";
+    if (amount > 0) {
+        transactionText += "<div class=\"center\"><div class=\"transactionIncome\">" + amount + " ZEN</div></div>";
     } else {
-        transactionText += "<span class=\"transactionOutcome\">" + -amount + "</span>";
-        transactionText += "<span class=\"transactionItem\">"+ addressOut +"</span>";
+        transactionText += "<div class=\"center\"><div class=\"transactionOutcome\">" + amount + " ZEN</div></div>";
     }
-    transactionText += "<div class=\"walletTransactionTxId\">"+ txId +"</div>";
-    transactionText += "<a href=\"https://explorer.zensystem.io/tx/"+ txId +"\" class=\"walletTransactionExplorer\">(Tx Explorer)</a>";
-    transactionText += "</div>";
-    transactionText += "<span class=\"transactionDatetime\">"+datetime+"</span>";
-    transactionText += "</div>";
+    transactionText += "<div class=\"center\"><span class=\"transactionItem\">"+ myAddress +"</span></div></div>";
+    transactionText += "<div class=\"transactionItemLabel\">Transaction ID:</div>";
+    transactionText += "<div class=\"center\"><a href=\"javascript:void(0)\" onclick=\"openUrl('https://explorer.zensystem.io/tx/"+ txId +"')\" class=\"walletListItemDetails transactionPadding\" target=\"_blank\">"+txId+"</a></div></div>";
+    transactionText += "<div class=\"transactionItemLabel\">From:</div>";
+    transactionText += "<div class=\"center\"><div class=\"transactionItem\">"+ addresses[0] +"</div></div>";
+    transactionText += "<div class=\"transactionItemLabel\">To:</div>";
+    for(let i = 1; i < addresses.length; i++ ) {
+        transactionText += "<div class=\"center\"><div class=\"transactionItem\">" + addresses[i] + "</div></div>";
+    }
+    transactionText += "<div class=\"transactionItemLabel\">Confirmations:</div>";
+
+    transactionText += "<div class=\"center\"><div class=\"transactionItem transactionConfirms\">"+ confirmations +"</div></div>";
 
     document.getElementById("transactionDetailsDialogContent").innerHTML = transactionText;
+}
+
+function openUrl(url) {
+    ipcRenderer.send('open-explorer', url);
 }
 
 
