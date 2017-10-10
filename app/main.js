@@ -34,13 +34,16 @@ let userInfo = {
     dbChanged: false
 };
 
+let settings = {
+    notifications: 1,
+    explorer: "https://explorer.zensystem.io/",
+    api: "insight-api-zen/"
+};
+
 const dbStructWallet = "CREATE TABLE wallet (id INTEGER PRIMARY KEY AUTOINCREMENT, pk TEXT, addr TEXT UNIQUE, lastbalance REAL, name TEXT);";
 // FIXME: dbStructContacts is unused
 const dbStructContacts = "CREATE TABLE contacts (id INTEGER PRIMARY KEY AUTOINCREMENT, addr TEXT UNIQUE, name TEXT, nick TEXT);";
 const dbStructSettings = "CREATE TABLE settings (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE, value TEXT);";
-const zenApi = "https://explorer.zensystem.io/insight-api-zen/";
-// TODO: add zenExplorer to settings
-const zenExplorer = "https://explorer.zensystem.io/";
 
 function attachUpdaterHandlers() {
     updater.on("update-downloaded", onUpdateDownloaded);
@@ -582,7 +585,7 @@ ipcMain.on("exit-from-menu", function () {
 });
 
 function updateBalance(address, oldBalance, event) {
-    request.get(zenApi + "addr/" + address, function (err, res, body) {
+    request.get(settings.explorer + settings.api + "addr/" + address, function (err, res, body) {
         if (err) {
             console.log("balance update failed");
             setTimeout(updateBalance, 5000, address, oldBalance, event);
@@ -704,7 +707,7 @@ ipcMain.on("get-transaction", function (event, txId, address) {
     let resp;
 
     if (userInfo.loggedIn) {
-        request.get(zenApi + "tx/" + txId, function (err, res, body) {
+        request.get(settings.explorer + settings.api + "tx/" + txId, function (err, res, body) {
             if (err) {
                 console.log("transaction readout failed");
             } else if (res && res.statusCode === 200) {
@@ -752,19 +755,26 @@ ipcMain.on("get-settings", function (event) {
     sqlRes = userInfo.walletDb.exec("SELECT name FROM sqlite_master WHERE type='table' AND name='settings';");
     if (sqlRes.length === 0) {
         userInfo.walletDb.run(dbStructSettings);
-        userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsNotifications", "1"]);
-        userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsExplorer", zenApi]);
+        userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsNotifications", settings.notifications.toString(10)]);
+        userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsExplorer", settings.explorer]);
+        userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsApi", settings.api]);
         userInfo.dbChanged = true;
     }
 
     if (userInfo.loggedIn) {
         sqlRes = userInfo.walletDb.exec("SELECT * FROM settings");
         if (sqlRes.length > 0) {
+            if (sqlRes[0].values.length == 2) {
+                userInfo.walletDb.run("UPDATE settings SET value = ? WHERE name = ?", ["settingsExplorer", settings.explorer]);
+                userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsApi", settings.api]);
+                userInfo.dbChanged = true;
+                sqlRes = userInfo.walletDb.exec("SELECT * FROM settings");
+            }
             resp = {
                 response: "OK",
                 settings: sqlRes[0].values
             };
-        } else { 
+        } else {
             resp = {
                 response: "ERR",
                 msg: "issue with db"
@@ -847,6 +857,7 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
         let privateKey = sqlRes[0].values[0][1];
 
         // Get previous transactions
+        let zenApi = settings.explorer + settings.api;
         const prevTxURL = zenApi + "addr/" + fromAddress + "/utxo";
         const infoURL = zenApi + "status?q=getInfo";
         const sendRawTxURL = zenApi + "tx/send";
@@ -935,7 +946,7 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
                                                 message: "TXid:\n\n" + tx_resp_data.txid + "\n\nDo you want to open your transaction in explorer?"
                                             }, function (response) {
                                                 if (response === 0) {
-                                                    electron.shell.openExternal(zenExplorer + "tx/" + tx_resp_data.txid);
+                                                    electron.shell.openExternal(settings.explorer + "tx/" + tx_resp_data.txid);
                                                 }
                                             });
                                         }
@@ -950,9 +961,7 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
     }
 });
 
-
 ipcMain.on("open-explorer", function (event, url) {
-    console.log("yop");
     event.preventDefault();
     shell.openExternal(url);
 });
