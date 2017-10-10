@@ -396,7 +396,6 @@ ipcRenderer.on("get-transaction-update", function (event, address, resp) {
     }
     /* find unique input addresses */
     let vins = [...new Set(data.vin.map(item => item.addr))];
-    console.log("transaction from: " + vins + " amount: " + inAmount + " amount2: " + amount + " fee: " + data.fees);
     
     printTransactionElem("transactionHistory", data.txid, data.time, address, vins, vouts, Number(amount).toFixed(8), data.confirmations);
 });
