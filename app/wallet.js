@@ -320,6 +320,12 @@ ipcRenderer.on("update-wallet-balance", function (event, resp) {
         element.innerText = Number(data.balance).toFixed(8);
     }, this);
     doNotify("Balance has been updated", "New balance: " + data.balance + " " + data.wallet);
+
+    // get all transactions (newest->oldest)
+    data.transactions.forEach(function(transaction, index) {
+        ipcRenderer.send("get-transaction", transaction, data.wallet);
+    });
+
     /* FIXME: update total */
 });
 
@@ -357,8 +363,16 @@ ipcRenderer.on("get-transaction-update", function (event, address, resp) {
     let data = JSON.parse(resp);
 
     /* FIXME: @nonghost response from api */
-    let amount = (data.vout[0].scriptPubKey.addresses[0] === address) ? data.vout[0].value : data.vout[1].value;
+    let amount = 0
     console.log("transaction from: " + data.vin[0].addr + " amount: " + amount + " fee: " + data.fees);
+    let trAddresses = parseTransactionAddresses(data);
+    let income = findUserAddress(trAddresses, address);
+    if (income === "in") {
+        amount = (data.vout[0].scriptPubKey.addresses[0] === address) ? data.vout[0].value : data.vout[1].value;
+        printTransactionElem("transactionHistory", data.txid, data.time, income, address, trAddresses, amount);
+    } else {
+        printTransactionElem("transactionHistory", data.txid, data.time, income, address, trAddresses, data.valueOut);
+    }
 });
 
 ipcRenderer.on("generate-wallet-response", function (event, resp) {
@@ -390,10 +404,15 @@ ipcRenderer.on("generate-wallet-response", function (event, resp) {
     }
 });
 
-function parseTransactionAddresses(rawTransaction) {
+function parseTransactionAddresses(transaction) {
     let addresses = Array();
-    // TODO: parse addresses from rawTransaction (in/out)
-    // output: LIST [in/out, address]
+    addresses.push(transaction.vin.addr);
+    transaction.vout.forEach(function(vout, index) {
+       vout.scriptPubKey.addresses.forEach(function(address, index2) {
+          addresses.push(address);
+       });
+    });
+    return addresses;
 }
 
 /**
@@ -402,16 +421,16 @@ function parseTransactionAddresses(rawTransaction) {
  * @param wallets - wallet list
  * @return address - pair [in/out, address]
  */
-function findUserAddress(rawTransaction, wallets) {
-    let trAddresses = parseTransactionAddresses(rawTransaction);
+function findUserAddress(trAddresses, address) {
     // FIXME: what to return if trAddresses is undefined ?
     if(trAddresses !== undefined) {
-        trAddresses.forEach(function(address, index){
-            wallets.forEach(function(wallet, wIndex){
-                if (address[1] === wallet[2]) {
-                    return address;
+        trAddresses.forEach(function(txAddress, index){
+                if (txAddress === address) {
+                    if (index === 0) {
+                        return "out";
+                    }
+                    return "in";
                 }
-            });
         });
     }
 }
