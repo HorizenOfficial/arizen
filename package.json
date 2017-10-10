@@ -1,6 +1,6 @@
 {
   "name": "Arizen",
-  "version": "v0.0.2-beta",
+  "version": "v0.0.2",
   "description": "Wallet for ZenCash (ZEN)",
   "main": "app/main.js",
   "scripts": {
