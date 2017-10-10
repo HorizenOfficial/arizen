@@ -242,6 +242,12 @@ body {
     top:170px;
     opacity:0;
     transition: 0.5s;
+
+}
+
+#settingsDialog label {
+    font-size: 1.2em;
+    margin: 5px;
 }
 
 .closeAddWalletDialog {
@@ -258,3 +264,9 @@ body {
     color:#f88900;
 }
 
+.settingsSaveButton{
+    position:absolute;
+    bottom : 20px;
+    left: 20px;
+    width: 35%;
+}
