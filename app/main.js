@@ -235,6 +235,32 @@ function getNewAddress(name) {
     return addr;
 }
 
+function loadSettings() {
+    let sqlRes = userInfo.walletDb.exec("SELECT name FROM sqlite_master WHERE type='table' AND name='settings';");
+    if (sqlRes.length === 0) {
+        userInfo.walletDb.run(dbStructSettings);
+        userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsNotifications", settings.notifications.toString(10)]);
+        userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsExplorer", settings.explorer]);
+        userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsApi", settings.api]);
+        userInfo.dbChanged = true;
+    }
+
+    sqlRes = userInfo.walletDb.exec("SELECT * FROM settings");
+    if (sqlRes[0].values.length == 2) {
+        userInfo.walletDb.run("UPDATE settings SET value = ? WHERE name = ?", ["settingsExplorer", settings.explorer]);
+        userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsApi", settings.api]);
+        userInfo.dbChanged = true;
+        sqlRes = userInfo.walletDb.exec("SELECT * FROM settings");
+    }
+
+    sqlRes = userInfo.walletDb.exec("SELECT * FROM settings WHERE name = 'settingsNotifications'");
+    settings.notifications = Number(sqlRes[0].values[0][2]);
+    sqlRes = userInfo.walletDb.exec("SELECT * FROM settings WHERE name = 'settingsExplorer'");
+    settings.explorer = sqlRes[0].values[0][2];
+    sqlRes = userInfo.walletDb.exec("SELECT * FROM settings WHERE name = 'settingsApi'");
+    settings.api = sqlRes[0].values[0][2];
+}
+
 function setDarwin(template) {
     if (os.platform() === "darwin") {
         template.unshift({
@@ -540,6 +566,7 @@ ipcMain.on("verify-login-info", function (event, login, pass) {
                 userInfo.login = login;
                 userInfo.pass = pass;
                 userInfo.walletDb = new sql.Database(walletBytes);
+                loadSettings();
                 updateMenuAtLogin();
                 resp = {
                     response: "OK",
@@ -760,24 +787,9 @@ ipcMain.on("get-settings", function (event) {
     let resp;
     let sqlRes;
 
-    sqlRes = userInfo.walletDb.exec("SELECT name FROM sqlite_master WHERE type='table' AND name='settings';");
-    if (sqlRes.length === 0) {
-        userInfo.walletDb.run(dbStructSettings);
-        userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsNotifications", settings.notifications.toString(10)]);
-        userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsExplorer", settings.explorer]);
-        userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsApi", settings.api]);
-        userInfo.dbChanged = true;
-    }
-
     if (userInfo.loggedIn) {
         sqlRes = userInfo.walletDb.exec("SELECT * FROM settings");
         if (sqlRes.length > 0) {
-            if (sqlRes[0].values.length == 2) {
-                userInfo.walletDb.run("UPDATE settings SET value = ? WHERE name = ?", ["settingsExplorer", settings.explorer]);
-                userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsApi", settings.api]);
-                userInfo.dbChanged = true;
-                sqlRes = userInfo.walletDb.exec("SELECT * FROM settings");
-            }
             resp = {
                 response: "OK",
                 settings: sqlRes[0].values
@@ -807,6 +819,7 @@ ipcMain.on("save-settings", function (event, settings) {
             userInfo.walletDb.run("UPDATE settings SET value = ? WHERE name = ?", [element.value, element.name]);
         }, this);
         userInfo.dbChanged = true;
+        loadSettings();
         resp = {
             response: "OK",
             msg: "saved"
