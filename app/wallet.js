@@ -363,7 +363,7 @@ ipcRenderer.on("get-transaction-update", function (event, address, resp) {
     let data = JSON.parse(resp);
 
     /* FIXME: @nonghost response from api */
-    let amount = 0
+    let amount = 0;
     console.log("transaction from: " + data.vin[0].addr + " amount: " + amount + " fee: " + data.fees);
     let trAddresses = parseTransactionAddresses(data);
     let income = findUserAddress(trAddresses, address);
@@ -371,7 +371,7 @@ ipcRenderer.on("get-transaction-update", function (event, address, resp) {
         amount = (data.vout[0].scriptPubKey.addresses[0] === address) ? data.vout[0].value : data.vout[1].value;
         printTransactionElem("transactionHistory", data.txid, data.time, income, address, trAddresses, amount);
     } else {
-        printTransactionElem("transactionHistory", data.txid, data.time, income, address, trAddresses, data.valueOut);
+        printTransactionElem("transactionHistory", data.txid, data.time, income, address, trAddresses, -data.valueOut);
     }
 });
 
@@ -435,17 +435,12 @@ function findUserAddress(trAddresses, address) {
     }
 }
 
-function printTransactionElem(elem, txId, datetime, income, addressIn, addressOut, amount) {
+function printTransactionElem(elem, txId, datetime, income, myAddress, addresses, amount) {
     let transactionText = "<div class=\"walletTransaction\">";
     transactionText += "<span class=\"transactionItem\">"+datetime+"</span>";
-    if (income) {
-        transactionText += "<span class=\"transactionIncome\">" + amount + "</span>";
-        transactionText += "<span class=\"transactionItem\">"+ addressIn +"</span>";
-    } else {
-        transactionText += "<span class=\"transactionOutcome\">" + -amount + "</span>";
-        transactionText += "<span class=\"transactionItem\">"+ addressOut +"</span>";
-    }
-    transactionText += "<button class=\"buttons walletDetailsRenameButton\" onclick=\"transactionDetailsDialog(\""+elem+"\", \""+ txId+"\", \""+datetime+"\", \""+income+"\", \""+addressIn+"\", \""+addressOut+"\", \""+amount+"\")\">Show transaction details</button>";
+    transactionText += "<span class=\"transactionIncome\">" + amount + "</span>";
+    transactionText += "<span class=\"transactionItem\">"+ myAddress +"</span>";
+    transactionText += "<button class=\"buttons walletDetailsRenameButton\" onclick=\"transactionDetailsDialog(\""+elem+"\", \""+ txId+"\", \""+datetime+"\", \""+income+"\", \""+myAddress+"\", \""+addresses+"\", \""+amount+"\")\">Show transaction details</button>";
     transactionText += "</div>";
     document.getElementById(elem).innerHTML += transactionText;
 }
