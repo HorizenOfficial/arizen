@@ -281,44 +281,10 @@ ipcRenderer.on("get-wallet-by-name-response", function (event, resp) {
     console.log(data.msg);
 });
 
-ipcRenderer.on("get-transaction-update", function (event, address, resp) {
+ipcRenderer.on("get-transaction-update", function (event, resp) {
     let data = JSON.parse(resp);
-
-    let inAmount = 0;
-    let amount = 0;
-    let isSending = 0;
-    let vouts = [];
-    /* find my address in send transaction */
-    data.vin.forEach(function(element) {
-        /* my address is sending */
-        if (element.addr === address) {
-            isSending = 1;
-        }
-    }, this);
-    /* find my address in recv transaction */
-    data.vout.forEach(function(element) {
-        /* my address is receiving */
-        if (element.scriptPubKey.addresses[0] === address) {
-            if (isSending === 0) {
-                vouts.push(address);
-                amount = element.value;
-            } else {
-                amount = -1 * (data.valueOut - element.value);
-            }
-        } else {
-            /* dont show my address in transaction to */
-            vouts.push(element.scriptPubKey.addresses[0]);
-        }
-    }, this);
-    /* we are sending but amount is not set -> address hits 0 */
-    if (amount === 0 && isSending === 1)
-    {
-        amount = -1 * data.valueOut;
-    }
-    /* find unique input addresses */
-    let vins = [...new Set(data.vin.map(item => item.addr))];
     
-    printTransactionElem("transactionHistory", data.txid, data.time, address, vins, vouts, Number(amount).toFixed(8), data.confirmations);
+    printTransactionElem("transactionHistory", data.txid, data.time, data.address, data.vins, data.vouts, Number(data.amount).toFixed(8), data.confirmations);
 });
 
 ipcRenderer.on("generate-wallet-response", function (event, resp) {

@@ -612,6 +612,54 @@ ipcMain.on("exit-from-menu", function () {
     app.quit();
 });
 
+function parseTransactionResponse(transaction, address, event) {
+    let data = JSON.parse(transaction);
+    let inAmount = 0;
+    let amount = 0;
+    let isSending = 0;
+    let vouts = [];
+    /* find my address in send transaction */
+    data.vin.forEach(function(element) {
+        /* my address is sending */
+        if (element.addr === address) {
+            isSending = 1;
+        }
+    }, this);
+    /* find my address in recv transaction */
+    data.vout.forEach(function(element) {
+        /* my address is receiving */
+        if (element.scriptPubKey.addresses[0] === address) {
+            if (isSending === 0) {
+                vouts.push(address);
+                amount = element.value;
+            } else {
+                amount = -1 * (data.valueOut - element.value);
+            }
+        } else {
+            /* dont show my address in transaction to */
+            vouts.push(element.scriptPubKey.addresses[0]);
+        }
+    }, this);
+    /* we are sending but amount is not set -> address hits 0 */
+    if (amount === 0 && isSending === 1)
+    {
+        amount = -1 * data.valueOut;
+    }
+    /* find unique input addresses */
+    let vins = [...new Set(data.vin.map(item => item.addr))];
+
+    let resp = {
+        txid: data.txid,
+        time: data.time,
+        address: address, 
+        vins: vins,
+        vouts: vouts,
+        amount: amount,
+        confirmations: data.confirmations
+    }
+    event.sender.send("get-transaction-update", JSON.stringify(resp));
+}
+
 function updateBalance(address, oldBalance, event) {
     request.get(settings.explorer + settings.api + "addr/" + address, function (err, res, body) {
         if (err) {
@@ -636,7 +684,7 @@ function updateBalance(address, oldBalance, event) {
                     if (err) {
                         console.log("transaction readout failed");
                     } else if (res && res.statusCode === 200) {
-                        event.sender.send("get-transaction-update", address, body);
+                        parseTransactionResponse(body, address, event);
                     }
                 });
             }, this);
