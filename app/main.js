@@ -660,10 +660,10 @@ ipcMain.on("get-wallets", function (event) {
             wallets: sqlRes[0].values,
             total: 0
         };
-        for (let i = 0; i < resp.wallets.length; i += 1) {
-            resp.total += resp.wallets[i][3];
-            updateBalance(resp.wallets[i][2], resp.wallets[i][3], event);
-        }
+        resp.wallets.forEach(function(element) {
+            resp.total += element[3];
+            updateBalance(element[2], element[3], event);
+        }, this);
     } else {
         resp = {
             response: "ERR",
