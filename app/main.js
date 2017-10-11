@@ -246,10 +246,11 @@ function loadSettings() {
     }
 
     sqlRes = userInfo.walletDb.exec("SELECT * FROM settings");
-    if (sqlRes[0].values.length == 2) {
+    if (sqlRes[0].values.length === 2) {
         userInfo.walletDb.run("UPDATE settings SET value = ? WHERE name = ?", ["settingsExplorer", settings.explorer]);
         userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsApi", settings.api]);
         userInfo.dbChanged = true;
+        // FIXME: sqlRes is never used
         sqlRes = userInfo.walletDb.exec("SELECT * FROM settings");
     }
 
