@@ -170,62 +170,6 @@ function closeDialog(clasname) {
     document.getElementById(clasname).style.opacity = "0";
 }
 
-function printWallet(wId, wName, wBalance, wAddress, verbose = true) {
-    let walletClass = "";
-    let walletTitle = "";
-
-    let walletBalance;
-    let walletAddress = "";
-    let walletEnd = "</div>";
-    if (wName === "Messenger Wallet") {
-        walletClass = "<div class=\"walletListItem walletListItemChat\">";
-        walletTitle = "<span class=\"walletListItemTitleChat\">Messenger Wallet</span>";
-    } else {
-        if ((wId % 2) === 0) {
-            walletClass = "<div class=\"walletListItem walletListItemOdd\">";
-        } else {
-            walletClass = "<div class=\"walletListItem\">";
-        }
-        if (verbose) {
-            walletTitle = "<span class=\"walletListItemAddress walletListItemTitle\">" + wName + "</span>";
-        } else {
-            if (wName !== "") {
-                walletTitle = "<span class=\"walletListItemAddress walletListItemTitle\">" + wName + "</span>";
-            } else {
-                walletTitle = "<span class=\"walletListItemAddress walletListItemTitle\"> " + wAddress + "</span>";
-            }
-        }
-    }
-    walletBalance = "<span id=\"balance_" + wAddress + "\" class=\"walletListItemAddress walletListItemBalance\"><b>" + Number(wBalance).toFixed(8) + "</b></span> ZEN";
-    if (verbose) {
-        walletAddress = "<span class=\"walletListItemAddress\"><b>Address </b> " + wAddress + "</span><a href=\"javascript:void(0)\" class=\"walletListItemDetails\" onclick=\"walletDetailsDialog(" + wId + ")\">Details</a>";
-    }
-    return walletClass + walletTitle + walletBalance + walletAddress + walletEnd;
-}
-
-
-
-function isUnique(walletId, ids) {
-    for (let i = 0; i < ids.length; i++) {
-        if (ids[i] === walletId) {
-            return false;
-        }
-    }
-    return true;
-}
-
-function printList(list, elem, ids, verbose) {
-    let walletElem = document.getElementById(elem);
-    for (let i = 0; i < list.length; i++) {
-
-        if (isUnique(list[i][2], ids)) {
-            walletElem.innerHTML += printWallet(i, list[i][4], list[i][3], list[i][2], verbose);
-            ids.push(list[i][2]);
-        }
-    }
-    return ids;
-}
-
 function renderWallet() {
     ipcRenderer.send("get-wallets");
 }
@@ -311,9 +255,9 @@ ipcRenderer.on("update-wallet-balance", function (event, resp) {
     doNotify("Balance has been updated", "New balance: " + data.balance + " " + data.wallet);
 
     // get all transactions (newest->oldest)
-    data.transactions.forEach(function(transaction) {
+    /*data.transactions.forEach(function(transaction) {
         ipcRenderer.send("get-transaction", transaction, data.wallet);
-    });
+    });*/
 
     /* FIXME: update total */
 });
@@ -416,54 +360,6 @@ ipcRenderer.on("generate-wallet-response", function (event, resp) {
     }
 });
 
-function parseTransactionAddresses(transaction) {
-    let addresses = Array();
-    addresses.push(transaction.vin.addr);
-    transaction.vout.forEach(function(vout, index) {
-       vout.scriptPubKey.addresses.forEach(function(address, index2) {
-          addresses.push(address);
-       });
-    });
-    return addresses;
-}
-
-/**
- * Find user address in transaction with information about income/outcome
- * @param rawTransaction - transaction object
- * @param wallets - wallet list
- * @return address - pair [in/out, address]
- */
-function findUserAddress(trAddresses, address) {
-    // FIXME: what to return if trAddresses is undefined ?
-    if(trAddresses !== undefined) {
-        trAddresses.forEach(function(txAddress, index){
-                if (txAddress === address) {
-                    if (index === 0) {
-                        return "out";
-                    }
-                    return "in";
-                }
-        });
-    }
-}
-
-function printTransactionList(data) {
-    //        data.transactions - raw transactions from api
-    //        data.addresses - my addresses [index coresponds with transactiond index]
-    document.getElementById("transactionDetailsDialogContent").innerHTML = "";
-    data.transactions.forEach(function(transaction, i) {
-        let trAddresses = parseTransactionAddresses(transaction);
-        let income = findUserAddress(trAddresses, data.addresses[i]);
-        let amount;
-        if (income === "in") {
-            amount = (data.vout[0].scriptPubKey.addresses[0] === data.addresses[i]) ? transaction.vout[0].value : transaction.vout[1].value;
-            printTransactionElem("transactionHistory", transaction.txid, transaction.time, data.addresses[i], trAddresses, amount, transaction.confirmations);
-        } else {
-            printTransactionElem("transactionHistory", transaction.txid, transaction.time, data.addresses[i], trAddresses, -transaction.valueOut, transaction.confirmations);
-        }
-    });
-}
-
 function printTransactionElem(elem, txId, datetime, myAddress, addressesFrom, addressesTo, amount, confirmations) {
     let date = new Date(datetime * 1000);
     let dateStr = date.toString().substring(0, 24);
@@ -559,3 +455,118 @@ function transactionDetailsDialog(txId, datetime, myAddress, addressesFrom, addr
 // function testTransaction() {
 //     ipcRenderer.send("get-transaction", "3098e8b87b1a54a5d3e60b60e2c888547f17cb8e8504b1e70d6b6aca882b7413", "znYBWsMPdeUJfwbKbMdXNPVD9THysCgzFhu");
 // }
+
+/*
+function printTransactionList(data) {
+    //        data.transactions - raw transactions from api
+    //        data.addresses - my addresses [index coresponds with transactiond index]
+    document.getElementById("transactionDetailsDialogContent").innerHTML = "";
+    data.transactions.forEach(function(transaction, i) {
+        let trAddresses = parseTransactionAddresses(transaction);
+        let income = findUserAddress(trAddresses, data.addresses[i]);
+        let amount;
+        if (income === "in") {
+            amount = (data.vout[0].scriptPubKey.addresses[0] === data.addresses[i]) ? transaction.vout[0].value : transaction.vout[1].value;
+            printTransactionElem("transactionHistory", transaction.txid, transaction.time, data.addresses[i], trAddresses, amount, transaction.confirmations);
+        } else {
+            printTransactionElem("transactionHistory", transaction.txid, transaction.time, data.addresses[i], trAddresses, -transaction.valueOut, transaction.confirmations);
+        }
+    });
+}
+*/
+
+/*
+
+function parseTransactionAddresses(transaction) {
+    let addresses = Array();
+    addresses.push(transaction.vin.addr);
+    transaction.vout.forEach(function(vout, index) {
+       vout.scriptPubKey.addresses.forEach(function(address, index2) {
+          addresses.push(address);
+       });
+    });
+    return addresses;
+}
+*/
+/**
+ * Find user address in transaction with information about income/outcome
+ * @param rawTransaction - transaction object
+ * @param wallets - wallet list
+ * @return address - pair [in/out, address]
+ */
+/*
+function findUserAddress(trAddresses, address) {
+    // FIXME: what to return if trAddresses is undefined ?
+    if(trAddresses !== undefined) {
+        trAddresses.forEach(function(txAddress, index){
+                if (txAddress === address) {
+                    if (index === 0) {
+                        return "out";
+                    }
+                    return "in";
+                }
+        });
+    }
+}
+*/
+
+/*
+function isUnique(walletId, ids) {
+    for (let i = 0; i < ids.length; i++) {
+        if (ids[i] === walletId) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function printList(list, elem, ids, verbose) {
+    let walletElem = document.getElementById(elem);
+    for (let i = 0; i < list.length; i++) {
+
+        if (isUnique(list[i][2], ids)) {
+            walletElem.innerHTML += printWallet(i, list[i][4], list[i][3], list[i][2], verbose);
+            ids.push(list[i][2]);
+        }
+    }
+    return ids;
+}
+*/
+
+/*
+
+function printWallet(wId, wName, wBalance, wAddress, verbose = true) {
+    let walletClass = "";
+    let walletTitle = "";
+
+    let walletBalance;
+    let walletAddress = "";
+    let walletEnd = "</div>";
+    if (wName === "Messenger Wallet") {
+        walletClass = "<div class=\"walletListItem walletListItemChat\">";
+        walletTitle = "<span class=\"walletListItemTitleChat\">Messenger Wallet</span>";
+    } else {
+        if ((wId % 2) === 0) {
+            walletClass = "<div class=\"walletListItem walletListItemOdd\">";
+        } else {
+            walletClass = "<div class=\"walletListItem\">";
+        }
+        walletTitle = "<span class=\"walletListItemAddress walletListItemTitle\">";
+        if (verbose) {
+            walletTitle += wName;
+        } else {
+            if (wName !== "") {
+                walletTitle += wName;
+            } else {
+                walletTitle += wAddress;
+            }
+        }
+        walletTitle += "</span>";
+    }
+    walletBalance = "<span id=\"balance_" + wAddress + "\" class=\"walletListItemAddress walletListItemBalance\"><b>" + Number(wBalance).toFixed(8) + "</b></span> ZEN";
+    if (verbose) {
+        walletAddress = "<span class=\"walletListItemAddress\"><b>Address </b> " + wAddress + "</span><a href=\"javascript:void(0)\" class=\"walletListItemDetails\" onclick=\"walletDetailsDialog(" + wId + ")\">Details</a>";
+    }
+    return walletClass + walletTitle + walletBalance + walletAddress + walletEnd;
+}
+*/
