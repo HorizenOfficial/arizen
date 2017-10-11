@@ -281,16 +281,6 @@ ipcRenderer.on("get-wallet-by-name-response", function (event, resp) {
     console.log(data.msg);
 });
 
-ipcRenderer.on("get-transaction-response", function (event, resp) {
-    let data = JSON.parse(resp);
-    if (data.response === "OK") {
-        doNotify("Transaction", data.msg);
-    } else {
-        doNotify("Transaction ERROR", data.msg);
-    }
-    console.log(data.msg);
-});
-
 ipcRenderer.on("get-transaction-update", function (event, address, resp) {
     let data = JSON.parse(resp);
 

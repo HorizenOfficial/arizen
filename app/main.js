@@ -744,8 +744,6 @@ ipcMain.on("get-wallet-by-name", function (event, name) {
 });
 
 ipcMain.on("get-transaction", function (event, txId, address) {
-    let resp;
-
     if (userInfo.loggedIn) {
         request.get(settings.explorer + settings.api + "tx/" + txId, function (err, res, body) {
             if (err) {
@@ -754,18 +752,7 @@ ipcMain.on("get-transaction", function (event, txId, address) {
                 event.sender.send("get-transaction-update", address, body);
             }
         });
-        resp = {
-            response: "OK",
-            msg: "request sent"
-        };
-    } else {
-        resp = {
-            response: "ERR",
-            msg: "not logged in"
-        };
     }
-
-    event.sender.send("get-transaction-response", JSON.stringify(resp));
 });
 
 ipcMain.on("generate-wallet", function (event, name) {
