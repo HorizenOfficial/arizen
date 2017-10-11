@@ -6,27 +6,33 @@
     <link rel="stylesheet" href="resources/styles.css">
     <link rel="stylesheet" href="resources/messenger.css">
     <script src="common.js"></script>
+    <script src="test_data.js"></script>
     <script src="messenger.js"></script>
 </head>
-<body>
+<body onload="renderContact(contacts)">
 
+
+<!-- ============================== SIDENAV BEGIN ============================== -->
 <div id="mySidenav" class="sidenav">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
     <a href="wallet.html">Wallet</a>
-    <a href="#" onclick="manualUpdate()">Update</a>
+    <!--<a href="#" onclick="manualUpdate()">Update</a>-->
+    <a href="#" onclick="settingsDialog()">Settings</a>
     <p>&nbsp;</p>
     <a href="#" onclick="logout()">Logout</a>
     <a href="#" onclick="exitApp()">Exit</a>
     <div class="center">
         <img id="sidenavIMG" src="resources/zen_icon.png" width="200px"/>
     </div>
-    <a id="about" href="#" onclick="showVersion()">About</a>
+    <a id="about" href="#" onclick="aboutDialog()">About</a>
 </div>
+<!-- ============================== SIDENAV END ============================== -->
 
-<div id="darkContainer">
-</div>
+<!-- ============================== DARK CONTAINER ============================== -->
+<div id="darkContainer" onclick="closeAllMessengerDialogs()"></div>
 
-<div id="addContactDialog">
+<!-- ============================== ADD CONTACT DIALOG BEGIN ============================================= -->
+<div id="addContactDialog" class="dialog">
     <div class="right">
         <a href="javascript:void(0)" class="closeAddContactDialog " onclick="closeDialog('addContactDialog')">&times</a>
     </div>
@@ -49,8 +55,10 @@
         </div>
     </div>
 </div>
+<!-- ============================== ADD CONTACT DIALOG END ============================================= -->
 
-<div id="deleteContactDialog">
+<!-- ============================ DELETE CONTACT DIALOG BEGIN ========================================= -->
+<div id="deleteContactDialog" class="dialog">
     <div class="right">
         <a href="javascript:void(0)" class="closeAddContactDialog " onclick="closeDialog('deleteContactDialog')">&times</a>
     </div>
@@ -73,10 +81,12 @@
         </div>
     </div>
 </div>
+<!-- ============================ DELETE CONTACT DIALOG END ========================================= -->
 
-<div id="aboutDialog">
+<!-- ============================ ABOUT DIALOG BEGIN ========================================= -->
+<div id="aboutDialog" class="dialog">
     <div class="right">
-        <a href="javascript:void(0)" class="closeAddContactDialog " onclick="closeAboutDialog()">&times</a>
+        <a href="javascript:void(0)" class="closeAddWalletDialog " onclick="closeAboutDialog()">&times</a>
     </div>
     <div class="center">
         <div class="sectionTitle">
@@ -86,6 +96,22 @@
     <div id="aboutContent" class="padding25">
     </div>
 </div>
+<!-- ============================ ABOUT DIALOG END ========================================= -->
+
+<!-- ============================ SETTINGS DIALOG BEGIN ========================================= -->
+<div id="settingsDialog" class="dialog">
+    <div class="right">
+        <a href="javascript:void(0)" class="closeAddWalletDialog " onclick="closeSettingsDialog()">&times</a>
+    </div>
+    <div class="center">
+        <div class="sectionTitle">
+            Arizen Settings
+        </div>
+    </div>
+    <div id="settingsContent" class="padding25">
+    </div>
+</div>
+<!-- ============================ SETTINGS DIALOG END ========================================= -->
 
 
 
@@ -95,6 +121,8 @@
     </a>
     <!-- same as in register.html -->
     <img style="padding-left:475px; vertical-align: middle;" src="resources/zen_icon.png" width="25px"/>
+
+    <button class="buttons refreshButton" onclick="refreshMessenger()" id=refreshWalletButton">Refresh</button>
 </div>
 
 <div id="contactsContainer" class="contactsContainerClass">
@@ -104,6 +132,7 @@
         </div>
     </div>
     <div id="contactList">
+        <!--
         <div class="contact contactOdd" title="Address: znbcHyStHjZdfWhZdZs5124fddggswf9481">TheJedi <span class="contactName">- Luke Skywalker</span></div>
         <div class="contact" title="Address: znbcHyStHjZdfWhZdZs5124fddggswf9481">LittleAni <span class="contactName">- Dart Vader</span></div>
         <div class="contact contactOdd" title="Address: znbcHyStHjZdfWhZdZs5124fddggswf9481">Captain <span class="contactName">- James Tiberius Kirk</span></div>
@@ -111,6 +140,7 @@
         <div class="contact contactOdd" title="Address: znbcHyStHjZdfWhZdZs5124fddggswf9481">Ghost <span class="contactName">- John Snow</span></div>
         <div class="contact " title="Address: znbcHyStHjZdfWhZdZs5124fddggswf9481">Gunslinger <span class="contactName">- Roland Deschain of Gilead</span></div>
         <div class="contact contactOdd" title="Address: znbcHyStHjZdfWhZdZs5124fddggswf9481">Ironman <span class="contactName">- Anthony Stark</span></div>
+        -->
     </div>
     <div>
         <button class="buttons addContactButton" onclick="addContactDialog()">Add Contact</button>

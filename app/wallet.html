@@ -6,30 +6,36 @@
     <link rel="stylesheet" href="resources/styles.css">
     <link rel="stylesheet" href="resources/wallet.css">
     <script src="common.js"></script>
+    <script src="test_data.js"></script>
     <script src="wallet.js"></script>
 </head>
 <!-- Comment bellow should be uncommented (replace <body> tag) when it will be ready to beta testing (blink bug) -->
 <!--<body onload="document.body.style.display='none';">-->
-<body>
+<body onload="renderWallet()">
+
+<!-- ============================== SIDENAV BEGIN ============================== -->
 <div id="mySidenav" class="sidenav">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
     <a href="messenger.html">Messenger</a>
-    <a href="#" onclick="manualUpdate()">Update</a>
+    <!--<a href="#" onclick="manualUpdate()">Update</a>-->
+    <a href="#" onclick="settingsDialog()">Settings</a>
     <p>&nbsp;</p>
     <a href="#" onclick="logout()">Logout</a>
     <a href="#" onclick="exitApp()">Exit</a>
     <div class="center">
-        <img id="sidenavIMG" src="resources/zen_icon.png" width="200px"/>
+        <img id="sidenavIMG" onclick="openHomepageInDefaultBrowser()" src="resources/zen_icon.png" width="200px"/>
     </div>
     <a id="about" href="#" onclick="aboutDialog()">About</a>
 </div>
+<!-- ============================== SIDENAV END ============================== -->
 
-<div id="darkContainer">
-</div>
+<!-- ============================== DARK CONTAINER ============================== -->
+<div id="darkContainer" onclick="closeAllWalletsDialogs()"></div>
 
-<div id="addWalletDialog">
+<!-- ============================== ADD WALLET DIALOG BEGIN ============================================= -->
+<div id="addWalletDialog" class="dialog">
     <div class="right">
-        <a href="javascript:void(0)" class="closeAddWalletDialog " onclick="closeDialog()">&times</a>
+        <a href="javascript:void(0)" class="closeAddWalletDialog " onclick="closeDialog('addWalletDialog')">&times</a>
     </div>
     <div class="center">
         <div class="sectionTitle">
@@ -37,18 +43,69 @@
         </div>
     </div>
     <div class="padding25">
-        <label class="wallet_labels" for="newWalletAddress">&nbsp;Address</label><br/>
-        <input id="newWalletAddress" class="wallet_inputs" value="" readonly>
-        <br>
+        <label class="wallet_labels" for="newWalletName">&nbsp;Name (optional):</label>
+        <input id="newWalletName" class="wallet_inputs" value=""><br/>
+        <label class="wallet_labels" for="newWalletAddress">&nbsp;Address:</label>
+        <input id="newWalletAddress" class="wallet_inputs" value="will be generated" readonly><br/>
         <div class="right">
             <button class="buttons generateWalletButton" onclick="generateNewWallet()">Generate</button>
         </div>
     </div>
 </div>
+<!-- ================================ ADD WALLET DIALOG END =============================================== -->
 
-<div id="aboutDialog">
+<!-- ============================== PICK WALLET DIALOG BEGIN ============================================= -->
+<div id="pickWalletDialog" class="dialog">
     <div class="right">
-        <a href="javascript:void(0)" class="closeAddWalletDialog " onclick="closeAboutDialog()">&times</a>
+        <a href="javascript:void(0)" class="closeAddWalletDialog " onclick="closeDialog('pickWalletDialog')">&times</a>
+    </div>
+    <div class="center">
+        <div class="sectionTitle">
+            List of Wallets
+        </div>
+    </div>
+    <div id="pickWalletDialogElem" style="display:none;"></div>
+    <div id="pickWalletDialogContent" class="padding25">
+    </div>
+</div>
+<!-- ============================== ABOUT WALLET DIALOG END ==============================================-->
+
+<!-- ============================== WALLET DETAILS DIALOG BEGIN ============================================= -->
+<div id="walletDetailsDialog" class="dialog">
+    <div class="right">
+        <a href="javascript:void(0)" class="closeAddWalletDialog " onclick="closeDialog('walletDetailsDialog')">&times</a>
+    </div>
+    <div class="center">
+        <div class="sectionTitle">
+            Wallet Details
+        </div>
+    </div>
+    <div id="walletDetailsDialogContent" class="padding25">
+    </div>
+</div>
+<!-- ============================== WALLET DETAILS DIALOG END ==============================================-->
+
+<!-- ============================== TRANSACTION DETAILS DIALOG BEGIN ============================================= -->
+<div id="transactionDetailsDialog" class="dialog">
+    <div class="right">
+        <a href="javascript:void(0)" class="closeAddWalletDialog " onclick="closeDialog('transactionDetailsDialog')">&times</a>
+    </div>
+    <div class="center">
+        <div class="sectionTitle">
+            Transaction Details
+        </div>
+    </div>
+    <div id="transactionDetailsDialogContent" class="padding25">
+    </div>
+</div>
+<!-- ============================== TRANSACTION DETAILS DIALOG END ==============================================-->
+
+<!-- ================================ ABOUT DIALOG BEGIN ================================================-->
+<div id="aboutDialog" class="dialog">
+    <div class="right">
+        <a href="javascript:void(0)" class="closeAddWalletDialog " onclick="closeAboutDialog()">
+            &times
+        </a>
     </div>
     <div class="center">
         <div class="sectionTitle">
@@ -58,16 +115,30 @@
     <div id="aboutContent" class="padding25">
     </div>
 </div>
+<!-- ================================ ABOUT DIALOG END ================================================-->
 
-
-
+<!-- ============================ SETTINGS DIALOG BEGIN ========================================= -->
+<div id="settingsDialog" class="dialog">
+    <div class="right">
+        <a href="javascript:void(0)" class="closeAddWalletDialog " onclick="closeSettingsDialog()">&times</a>
+    </div>
+    <div class="center">
+        <div class="sectionTitle">
+            Arizen Settings
+        </div>
+    </div>
+    <div id="settingsContent" class="padding25">
+    </div>
+</div>
+<!-- ============================ SETTINGS DIALOG END ========================================= -->
 
 <div id="topHeader" class="topHeader">
     <a class="opennav" onclick="openNav()">
         &nbsp;&#9776;
     </a>
     <!-- same as in register.html -->
-    <img style="padding-left:475px; vertical-align: middle;" src="resources/zen_icon.png" width="25px"/>
+    <img style="padding-left:475px; vertical-align: middle;" onclick="openHomepageInDefaultBrowser()" src="resources/zen_icon.png" width="25px"/>
+    <button class="buttons refreshButton" onclick="refreshWallet()" id=refreshWalletButton">Refresh</button>
 </div>
 
 <div id="leftWallet" class="leftWallet">
@@ -88,101 +159,35 @@
                 <button class="buttons addWalletButton" onclick="addWalletDialog()" id="addWalletButton">New Wallet</button>
             </div>
             <div id="walletList">
-                <div class="walletListItem">
-                    <span class="walletListItemAddress walletListItemTitle">Address</span>
-                    <span class="walletListItemBalance walletListItemTitle">Balance</span>
-                </div>
-                <div class="walletListItem walletListItemOdd">
-                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
-                    <span class="walletListItemBalance">110.00000000</span>
-                </div>
-                <div class="walletListItem">
-                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
-                    <span class="walletListItemBalance">11.00000000</span>
-                </div>
-                <div class="walletListItem walletListItemOdd">
-                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
-                    <span class="walletListItemBalance">110.00000000</span>
-                </div>
-                <div class="walletListItem">
-                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
-                    <span class="walletListItemBalance">110.00000000</span>
-                </div>
-                <div class="walletListItem walletListItemOdd">
-                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
-                    <span class="walletListItemBalance">110.00000000</span>
-                </div>
-                <div class="walletListItem">
-                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
-                    <span class="walletListItemBalance">110.00000000</span>
-                </div>
-                <div class="walletListItem walletListItemOdd">
-                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
-                    <span class="walletListItemBalance">110.00000000</span>
-                </div>
             </div>
-
-
-
         </div>
 
         <div id="receive" class="receive" style="display:none">
-            <div class="sectionTitle">
-                List of Wallets
-            </div>
-            <div id="walletListReceive">
-                <div class="walletListItem">
-                    <span class="walletListItemAddress walletListItemTitle">Address</span>
-                    <span class="walletListItemBalance walletListItemTitle">Balance</span>
-                </div>
-                <div class="walletListItem walletListItemOdd">
-                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
-                    <span class="walletListItemBalance">110.00000000</span>
-                </div>
-                <div class="walletListItem">
-                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
-                    <span class="walletListItemBalance">11.00000000</span>
-                </div>
-                <div class="walletListItem walletListItemOdd">
-                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
-                    <span class="walletListItemBalance">110.00000000</span>
-                </div>
-                <div class="walletListItem">
-                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
-                    <span class="walletListItemBalance">110.00000000</span>
-                </div>
-                <div class="walletListItem walletListItemOdd">
-                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
-                    <span class="walletListItemBalance">110.00000000</span>
-                </div>
-                <div class="walletListItem">
-                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
-                    <span class="walletListItemBalance">110.00000000</span>
-                </div>
-                <div class="walletListItem walletListItemOdd">
-                    <span class="walletListItemAddress">znbcGtStHjZdfWsRhZdZsffaetZZeDfv524</span>
-                    <span class="walletListItemBalance">110.00000000</span>
-                </div>
+            <label class="wallet_labels" for="receiveAddress">&nbsp;To:</label><br/>
+            <span id="receiveAddressText"></span><input id="receiveAddress" class="buttons addWalletButton" name="btWalletButton" type="button" value="Select" tabindex="4" onclick="pickWalletDialog('receiveAddress')"/>
+            <br>
+            <label class="wallet_labels" for="receiveCoinAmount">&nbsp;Amount:</label><br/>
+            <input id="receiveCoinAmount" class="wallet_inputs" align="right" value="0.00000000" onchange="changeAmount('receiveCoinAmount')">
+            <br>
+            <div class="center">
+                <button class="buttons sendButton" onclick="generateQR()">Generate QR</button>
             </div>
         </div>
 
         <div id="send" class="send" style="display:none">
             <label class="wallet_labels" for="sendFromAddress">&nbsp;From:</label><br/>
-            <select id="sendFromAddress" class="wallet_inputs wallet_select" align="right">
-                <option value="null">WIP -> will be redesigned using JS</option>
-                <option value="null">Address 2</option>
-                <option value="null">Address 3</option>
-                <option value="null">Address 4</option>
-            </select>
+            <span id="sendFromAddressText"></span><input id="sendFromAddress" class="buttons addWalletButton" name="btWalletButton" type="button" value="Select" tabindex="4" onclick="pickWalletDialog('sendFromAddress')"/>
             <br>
             <label class="wallet_labels" for="sendToAddress">&nbsp;To:</label><br/>
             <input id="sendToAddress" class="wallet_inputs" align="right" value="address" onfocus="clearValue()" onblur="setValueIfEmpty()">
             <br>
+            <label class="wallet_labels" for="coinFee">&nbsp;Fee:</label><br/>
+            <input id="coinFee" class="wallet_inputs" align="right" value="0.00010000" onchange="changeAmount('coinFee')">
             <label class="wallet_labels" for="coinAmount">&nbsp;Amount:</label><br/>
-            <input id="coinAmount" class="wallet_inputs" align="right" value="0.00000000" onchange="changeAmount()">
+            <input id="coinAmount" class="wallet_inputs" align="right" value="0.00000000" onchange="changeAmount('coinAmount')">
             <br>
             <div class="center">
-                <button class="buttons sendButton" onclick="send()">Send now </button>
+                <button class="buttons sendButton" onclick="send()">Send now!</button>
             </div>
         </div>
     </div>
@@ -193,14 +198,14 @@
         <div class="rightTxHistoryTitle">
             Transaction History
         </div>
+        <div id="transactionHistory">
+        </div>
     </div>
 </div>
 
 <div id="walletFooter">
-    Total balance: <b>671 ZEN</b>
+    Total balance: <span id="walletFooterBalance" style="font-weight: bold;">0</span> ZEN
 </div>
-
-<script src="wallet.js"></script><!-- Has to be in header -->
 
 </body>
 </html>

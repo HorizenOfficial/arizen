@@ -12,7 +12,7 @@ body {
 }
 
 ::selection {
-    background: transparent;
+    background: #dddddd; /* WebKit/Blink Browsers */
 }
 
 .center{
@@ -99,7 +99,6 @@ body {
     transition: all 1.4s;
 }
 
-
 #about{
     position:absolute;
     top: 650px;
@@ -121,11 +120,12 @@ body {
 /* Footer */
 #walletFooter{
     position: absolute;
-    top:662px;
+    bottom:1px;
     float:left;
     margin: 0 auto;
     padding: 10px 10px 10px 10px;
-    width: 1028px;
+    left:0;
+    right:0;
     height:19px;
     border: 1px solid #c4cddb;
     border-top-color: #bfc9dc;
@@ -151,12 +151,11 @@ body {
     padding: 8px 15px;
     width: 32%;
     outline: none;
-    background-color: #f88900;
     color: #fefefe;
     font-size: 1em;
     transition: all 0.2s;
     border-radius: 5px;
-    background-image: -webkit-linear-gradient(90deg,
+    background: #f88900 -webkit-linear-gradient(90deg,
     rgba(255, 255, 255, .1) 0%,
     transparent 0%,
     transparent 50%,
@@ -182,6 +181,13 @@ body {
     color: #f88900;
 }
 
+.refreshButton{
+    padding: 4px 15px;
+    width: 10%;
+    margin-left: 37%;
+}
+
+
 .wallet_inputs{
     margin-left: 5%;
     padding: 10px 10px;
@@ -194,9 +200,24 @@ body {
     transition: all 0.4s;
 }
 
+.wallet_inputs_shorter{
+    width: 55%;
+}
+
+
+
 .wallet_inputs:focus {
     border:none;
     border-bottom: 3px solid #f88900;
+}
+
+.dialog{
+    background-color: #fefefe;
+    border: 1px solid #c4cddb;
+    border-top-color: #d3dbde;
+    border-bottom-color: #bfc9dc;
+    box-shadow: 0 1px 1px #ccc;
+    padding: 5px;
 }
 
 #aboutDialog {
@@ -207,14 +228,45 @@ body {
     width: 700px;
     height: 250px;
     top:170px;
-    padding: 5px;
-    border: 1px solid #c4cddb;
-    border-top-color: #d3dbde;
-    border-bottom-color: #bfc9dc;
-    box-shadow: 0 1px 1px #ccc;
     opacity:0;
     transition: 0.5s;
 }
 
+#settingsDialog {
+    position: absolute;
+    z-index: -1;
+    background-color: #fefefe;
+    left: 162px;
+    width: 700px;
+    height: 350px;
+    top:170px;
+    opacity:0;
+    transition: 0.5s;
+
+}
+
+#settingsDialog label {
+    font-size: 1.2em;
+    margin: 5px;
+}
+
+.closeAddWalletDialog {
+    position: absolute;
+    top: 0;
+    right: 15px;
+    font-size: 30px;
+    color:#888888;
+    text-decoration: none;
+}
 
 
+.closeAddWalletDialog:hover {
+    color:#f88900;
+}
+
+.settingsSaveButton{
+    position:absolute;
+    bottom : 20px;
+    left: 20px;
+    width: 35%;
+}

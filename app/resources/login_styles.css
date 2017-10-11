@@ -92,12 +92,11 @@ label {
     padding: 8px 15px;
     width: 50%;
     outline: none;
-    background-color: #f88900;
     color: #fefefe;
     font-size: 1em;
     transition: all 0.2s;
     border-radius: 5px;
-    background-image: -webkit-linear-gradient(90deg,
+    background: #f88900 -webkit-linear-gradient(90deg,
     rgba(255, 255, 255, .1) 0%,
     transparent 0%,
     transparent 50%,
@@ -183,6 +182,38 @@ label {
 }
 
 #pswd_info::before {
+    content: "\25C0";
+    color: #f88900;
+    position: absolute;
+    top: 45%;
+    left: -12px;
+    font-size: 14px;
+    line-height: 14px;
+    text-shadow: none;
+    display: block;
+}
+
+#login_pswd_info {
+    position: absolute;
+    bottom: 155px;
+    right: -292px;
+    width: 250px;
+    padding: 15px;
+    background: #fefefe;
+    font-size: .875em;
+    border: 1px solid #c4cddb;
+    border-top-color: #d3dbde;
+    border-bottom-color: #bfc9dc;
+    box-shadow: 0 1px 1px #ccc;
+}
+
+#login_pswd_info h4 {
+    margin: 0 0 10px 0;
+    padding: 0;
+    font-weight: normal;
+}
+
+#login_pswd_info::before {
     content: "\25C0";
     color: #f88900;
     position: absolute;

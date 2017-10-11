@@ -1,13 +1,15 @@
 {
   "name": "Arizen",
-  "version": "v0.0.1-alpha",
+  "version": "0.1.0-beta",
   "description": "Wallet for ZenCash (ZEN)",
   "main": "app/main.js",
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
     "start": "npm install && electron ./app",
     "pack": "build --dir",
-    "dist": "build"
+    "dist": "build",
+    "publish": "publish",
+    "release": "npm run dist && npm run publish"
   },
   "homepage": "https://zensystem.io",
   "repository": {
@@ -16,6 +18,9 @@
   },
   "bugs": {
     "url": "https://github.com/zencashofficial/arizen/issues"
+  },
+  "updater": {
+    "url": "https://raw.githubusercontent.com/ZencashOfficial/arizen/master/updates.json"
   },
   "keywords": [
     "zen",
@@ -29,7 +34,21 @@
     "desktop",
     "electron"
   ],
-  "author": "@lukas, @nonghost and @k4chn1k",
+  "author": "ZEN team",
+  "contributors": [
+    {
+      "name": "@lukas",
+      "email": "lukas@zensystem.io"
+    },
+    {
+      "name": "@nonghost",
+      "email": "neduchal@gmail.com"
+    },
+    {
+      "name": "@k4chn1k",
+      "email": "k4chn1k@gmail.com"
+    }
+  ],
   "license": "MIT",
   "engines": {
     "node": ">=6.0"
@@ -38,12 +57,12 @@
     "appId": "io.zensystem.arizen",
     "mac": {
       "category": "public.app-category.finance",
-      "type": "development"
+      "type": "distribution"
     },
     "dmg": {
-      "backgroundColor": "#888888",
-      "icon": "build/icon.icns",
       "title": "${productName} ${version}",
+      "icon": "build/icon.icns",
+      "backgroundColor": "#888888",
       "contents": [
         {
           "x": 110,
@@ -61,29 +80,39 @@
       "target": [
         "AppImage",
         "deb"
-      ]
+      ],
+      "icon": "build/",
+      "category": "Office"
     },
     "win": {
-      "target": "squirrel",
+      "target": "NSIS",
       "icon": "build/icon.ico"
     }
   },
   "dependencies": {
-    "electron-packager": "^8.7.1",
+    "bip32-utils": "^0.10.0",
+    "bitcoinjs-lib": "^3.2.0",
+    "electron-download": "^4.1.0",
+    "electron-packager": "^9.1.0",
     "electron-simple-updater": "^1.2.1",
-    "electron-tabs": "^0.7.1",
+    "electron-tabs": "^0.7.2",
     "errors": "^0.3.0",
-    "fs-extra": "^4.0.1",
-    "password-hash": "^1.2.2"
+    "fs-extra": "^4.0.2",
+    "npm": "^5.4.2",
+    "password-hash": "^1.2.2",
+    "zencashjs": "^1.1.6-a",
+    "sql.js": "^0.4.0"
   },
   "devDependencies": {
-    "electron": "latest",
-    "electron-builder": "^19.26.3",
-    "flow-bin": "^0.50.0"
+    "ajv": "^5.2.3",
+    "electron": "^1.8.1",
+    "electron-builder": "^19.32.2",
+    "electron-builder-squirrel-windows": "^19.32.0",
+    "flow-bin": "^0.56.0"
   },
   "optionalDependencies": {
-    "electron-installer-dmg": "latest",
-    "electron-installer-windows": "^0.2.0",
-    "electron-installer-debian": "^0.5.2"
+    "electron-installer-debian": "^0.6.0",
+    "electron-installer-dmg": "^0.2.1",
+    "electron-installer-windows": "^0.2.0"
   }
 }

@@ -1,3 +1,8 @@
+// @flow
+/*jshint esversion: 6 */
+/*jslint node: true */
+"use strict";
+
 function clearMessageValue(){
     if (document.getElementById("sendToAddress").value === "Message") {
         document.getElementById("sendToAddress").value = "";
@@ -52,3 +57,36 @@ function saveContact() {
     closeDialog("addContactDialog");
 }
 
+function closeAllMessengerDialogs() {
+    closeDialog("settingsDialog");
+    closeDialog("aboutDialog");
+    closeDialog("addContactDialog");
+    closeDialog("deleteContactDialog");
+    closeNav();
+}
+
+function printContact(cId, contact) {
+    let contactClass = "";
+    let contactName;
+    let contactEnd = "</div>";
+    if ((cId % 2) === 0) {
+        contactClass = "<div class=\"contact contactOdd\" title=\"Address: "+ contact.address +"\">";
+    } else {
+        contactClass = "<div class=\"contact\" title=\"Address: "+ contact.address +"\">";
+    }
+    contactName = contact.nickname + "<span class=\"contactName\">- "+ contact.name +"</span>";
+    return contactClass+contactName+contactEnd;
+}
+
+function printContactList(contactList, element) {
+    let contactListText;
+    contactListText = "";
+    for(let i = 0; i < contactList.length; i++) {
+        contactListText += printContact(i, contactList[i]);
+    }
+    document.getElementById(element).innerHTML = contactListText;
+}
+
+function renderContact(contactList) {
+    printContactList(contactList, "contactList");
+}

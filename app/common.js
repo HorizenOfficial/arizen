@@ -5,6 +5,7 @@
 
 const electron = require("electron");
 const {ipcRenderer} = electron;
+const pckg = require("../package.json");
 
 ipcRenderer.send("check-login-info");
 
@@ -21,9 +22,14 @@ ipcRenderer.on("check-login-response", function (event, resp) {
     }
 });
 
+function closeDarkContainer() {
+    document.getElementById("darkContainer").style.transition = "0s";
+    document.getElementById("darkContainer").style.opacity = "0";
+    document.getElementById("darkContainer").style.zIndex = "-1";
+}
+
 function openNav() {
     document.getElementById("mySidenav").style.width = "250px";
-    //document.getElementById("darkContainer").style.width = "100%";
     document.getElementById("darkContainer").style.transition = "1.4s";
     document.getElementById("darkContainer").style.zIndex = "1";
     document.getElementById("darkContainer").style.opacity = "0.7";
@@ -34,32 +40,25 @@ function openNav() {
 
 function closeNav() {
     document.getElementById("mySidenav").style.width = "0";
-    //document.getElementById("darkContainer").style.width = "0";
-    document.getElementById("darkContainer").style.transition = "0s";
-    document.getElementById("darkContainer").style.opacity = "0";
-    document.getElementById("darkContainer").style.zIndex = "-1";
+    closeDarkContainer();
     document.getElementById("sidenavIMG").style.transitionDelay = "0s";
     document.getElementById("sidenavIMG").style.transition = "0s";
     document.getElementById("sidenavIMG").style.opacity = "0";
 }
 
-// FIXME: remove?
-function showVersion() {
-    let pckg = require("./package.json");
-    console.log("Arizen version: " + pckg.version);
-    window.alert("Arizen version: " + pckg.version);
-}
-
 function aboutDialog() {
-    let pckg = require("./package.json");
     document.getElementById("mySidenav").style.width = "0";
     document.getElementById("sidenavIMG").style.transitionDelay = "0s";
     document.getElementById("sidenavIMG").style.transition = "0s";
     document.getElementById("sidenavIMG").style.opacity = "0";
-    document.getElementById("aboutContent").textContent = "Arizen version: " + pckg.version;
-    // TODO: add these two lines to the About section
-    // document.getElementById("aboutContent").textContent += "Authors: " + pckg.author <br>";
-    // document.getElementById("aboutContent").textContent += "License: " + pckg.license;
+    document.getElementById("aboutContent").innerHTML = "";
+    document.getElementById("aboutContent").innerHTML += "\<b\>Arizen version: \</b\>" + pckg.version + "\<br\>";
+    document.getElementById("aboutContent").innerHTML += "\<b\>License: \</b\>" + pckg.license + "\<br\>";
+    let authors = "\<b\>Authors:\</b>\<br\>";
+    pckg.contributors.forEach(function (person) {
+        authors += person.name + ", " + person.email + "\<br\>";
+    });
+    document.getElementById("aboutContent").innerHTML += authors;
     document.getElementById("darkContainer").style.transition = "0.5s";
     document.getElementById("darkContainer").style.zIndex = "1";
     document.getElementById("darkContainer").style.opacity = "0.7";
@@ -68,11 +67,15 @@ function aboutDialog() {
 }
 
 function closeAboutDialog() {
-    document.getElementById("darkContainer").style.transition = "0s";
-    document.getElementById("darkContainer").style.opacity = "0";
-    document.getElementById("darkContainer").style.zIndex = "-1";
+    closeDarkContainer();
     document.getElementById("aboutDialog").style.zIndex = "-1";
     document.getElementById("aboutDialog").style.opacity = "0";
+}
+
+function closeSettingsDialog() {
+    closeDarkContainer();
+    document.getElementById("settingsDialog").style.zIndex = "-1";
+    document.getElementById("settingsDialog").style.opacity = "0";
 }
 
 function logout() {
@@ -84,21 +87,82 @@ function exitApp() {
     ipcRenderer.send("exit-from-menu");
 }
 
-//
-// function getRootConfigPath() {
-//     let rootPath;
-//     if (os.platform() === "win32" || os.platform() === "darwin") {
-//         rootPath = app.getPath("appData") + "/" + "Arizen/";
-//     }
-//     if (os.platform() === "linux") {
-//         rootPath = app.getPath("home") + "/" + "./arizen/";
-//     }
-//     return rootPath;
-// }
-//
-// function getLoginPath() {
-//     let rootPath = getRootConfigPath();
-//     return `${rootPath}loginInfo.txt`;
-// }
-//
-// module.exports = {getRootConfigPath, getLoginPath};
+function openHomepageInDefaultBrowser() {
+    ipcRenderer.send("open-explorer", pckg.homepage);
+}
+
+function settingsDialog() {
+    ipcRenderer.send("get-settings");
+    document.getElementById("mySidenav").style.width = "0";
+    document.getElementById("sidenavIMG").style.transitionDelay = "0s";
+    document.getElementById("sidenavIMG").style.transition = "0s";
+    document.getElementById("sidenavIMG").style.opacity = "0";
+
+    document.getElementById("darkContainer").style.transition = "0.5s";
+    document.getElementById("darkContainer").style.zIndex = "1";
+    document.getElementById("darkContainer").style.opacity = "0.7";
+    document.getElementById("settingsDialog").style.zIndex = "2";
+    document.getElementById("settingsDialog").style.opacity = "1";
+    document.getElementById("settingsContent").innerHTML = "<label for=\"settingsNotifications\">Desktop notifications</label><input type=\"checkbox\" id=\"settingsNotifications\" name=\"notifications\"><br>";
+    document.getElementById("settingsContent").innerHTML += "<label for=\"settingsExplorer\">Explorer</label><br><input type=\"text\" id=\"settingsExplorer\" class=\"wallet_inputs\" name=\"explorer\"><br>";
+    document.getElementById("settingsContent").innerHTML += "<label for=\"settingsApi\">API</label><br><input type=\"text\" id=\"settingsApi\" class=\"wallet_inputs\" name=\"api\">";
+    document.getElementById("settingsContent").innerHTML += "<button class=\"buttons settingsSaveButton\" onclick=\"saveSettings()\">Save settings</button>";
+}
+
+ipcRenderer.on("get-settings-response", function (event, resp) {
+    let data = JSON.parse(resp);
+    let elem;
+
+    if (data.response === "OK") {
+        data.settings.forEach(function(node) {
+            elem = document.getElementById(node[1]);
+            if (elem.type === "text") {
+                elem.value = node[2];
+            } else if (elem.type === "checkbox") {
+                elem.checked = (node[2] === "1");
+            } else {
+                console.log("unknown elem type");
+            }
+        }, this);
+    } else {
+        console.log(data.msg);
+    }
+});
+
+function saveSettings() {
+    let settings = [
+        {
+            name: "settingsNotifications",
+            value: document.getElementById("settingsNotifications").checked ? "1" : "0"
+        },   
+        {
+            name: "settingsExplorer",
+            value: document.getElementById("settingsExplorer").value
+        }
+    ];
+    ipcRenderer.send("save-settings", JSON.stringify(settings));
+    closeSettingsDialog("settingsDialog");
+}
+
+ipcRenderer.on("save-settings-response", function (event, resp) {
+    let data = JSON.parse(resp);
+
+    /* FIXME: @nonghost on ok close window */
+    console.log(data.msg);
+});
+
+function doNotify(title, message, duration = 2) {
+    ipcRenderer.send("show-notification", title, message, duration);
+}
+
+ipcRenderer.on("show-notification-response", function (event, title, message, duration) {
+    let notif = new Notification(title, {
+        body: message,
+        icon: "resources/zen_icon.png",
+        duration: duration
+    });
+
+    notif.onclick = () => {
+        notif.close();
+    }
+});
