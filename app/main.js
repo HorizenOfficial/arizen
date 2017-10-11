@@ -620,12 +620,14 @@ function updateBalance(address, oldBalance, event) {
         } else if (res && res.statusCode === 200) {
             let data = JSON.parse(body);
             if (oldBalance !== data.balance) {
-                userInfo.walletDb.exec("UPDATE wallet SET lastbalance = " + data.balance + " WHERE addr = '" + data.addrStr + "'");
+                userInfo.walletDb.run("UPDATE wallet SET lastbalance = " + data.balance + " WHERE addr = '" + data.addrStr + "'");
                 userInfo.dbChanged = true;
+                let sqlRes = userInfo.walletDb.exec("SELECT total(lastbalance) FROM wallet");
                 let update = {
                     response: "OK",
                     wallet: data.addrStr,
-                    balance: data.balance
+                    balance: data.balance,
+                    total: sqlRes[0].values[0][0]
                 };
                 event.sender.send("update-wallet-balance", JSON.stringify(update));
             }

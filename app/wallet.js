@@ -259,7 +259,7 @@ ipcRenderer.on("update-wallet-balance", function (event, resp) {
         ipcRenderer.send("get-transaction", transaction, data.wallet);
     });*/
 
-    /* FIXME: update total */
+    document.getElementById("walletFooterBalance").innerHTML = Number(data.total).toFixed(8);
 });
 
 ipcRenderer.on("rename-wallet-response", function (event, resp) {
