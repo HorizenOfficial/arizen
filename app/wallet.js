@@ -464,8 +464,9 @@ function printTransactionList(data) {
 
 function printTransactionElem(elem, txId, datetime, myAddress, addressesFrom, addressesTo, amount, confirmations) {
     let date = new Date(datetime*1000);
+    let dateStr = date.toString().substring(0, 24);
     let transactionText = "<div class=\"walletTransaction\" onclick=\"transactionDetailsDialog('"+ txId+"', '"+date.toString()+"', '"+myAddress+"', '"+addressesFrom+"', '" + addressesTo + "','"+amount+"', '"+ confirmations +"')\">";
-    transactionText += "<div><span class=\"transactionItem\">"+date.toString() +"</span> - <span class=\"wallet_labels\">Confirmations</span> <span class=\"transactionItem\">"+ confirmations +"</span></div>";
+    transactionText += "<div><span class=\"transactionItem\">"+dateStr +"</span> - <span class=\"wallet_labels\">Confirmations</span> <span class=\"transactionItem\">"+ confirmations +"</span></div>";
     if (amount > 0) {
         transactionText += "<div class=\"transactionIncome\">" + amount + " ZEN</div>";
     } else {

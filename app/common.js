@@ -104,8 +104,8 @@ function settingsDialog() {
     document.getElementById("settingsDialog").style.zIndex = "2";
     document.getElementById("settingsDialog").style.opacity = "1";
     document.getElementById("settingsContent").innerHTML = "<label for=\"settingsNotifications\">Desktop notifications</label><input type=\"checkbox\" id=\"settingsNotifications\" name=\"notifications\"><br>";
-    document.getElementById("settingsContent").innerHTML += "<label for=\"settingsExplorer\">Explorer</label><input type=\"text\" id=\"settingsExplorer\" class=\"wallet_inputs\" name=\"explorer\"><br>";
-    document.getElementById("settingsContent").innerHTML += "<label for=\"settingsApi\">API</label><input type=\"text\" id=\"settingsApi\" class=\"wallet_inputs\" name=\"api\">";
+    document.getElementById("settingsContent").innerHTML += "<label for=\"settingsExplorer\">Explorer</label><br><input type=\"text\" id=\"settingsExplorer\" class=\"wallet_inputs\" name=\"explorer\"><br>";
+    document.getElementById("settingsContent").innerHTML += "<label for=\"settingsApi\">API</label><br><input type=\"text\" id=\"settingsApi\" class=\"wallet_inputs\" name=\"api\">";
     document.getElementById("settingsContent").innerHTML += "<button class=\"buttons settingsSaveButton\" onclick=\"saveSettings()\">Save settings</button>";
 }
 
@@ -141,6 +141,7 @@ function saveSettings() {
         }
     ];
     ipcRenderer.send("save-settings", JSON.stringify(settings));
+    closeSettingsDialog("settingsDialog");
 }
 
 ipcRenderer.on("save-settings-response", function (event, resp) {
