@@ -87,8 +87,12 @@ function exitApp() {
     ipcRenderer.send("exit-from-menu");
 }
 
+function openUrl(url) {
+    ipcRenderer.send('open-explorer', url);
+}
+
 function openHomepageInDefaultBrowser() {
-    ipcRenderer.send("open-explorer", pckg.homepage);
+    openUrl(pckg.homepage);
 }
 
 function settingsDialog() {

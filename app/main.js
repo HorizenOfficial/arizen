@@ -695,7 +695,9 @@ ipcMain.on("rename-wallet", function (event, address, name) {
             userInfo.dbChanged = true;
             resp = {
                 response: "OK",
-                msg: "address " + address + " set to " + name
+                msg: "address " + address + " set to " + name,
+                addr: address,
+                newname: name
             };
         } else {
             resp = {
