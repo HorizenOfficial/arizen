@@ -44,6 +44,7 @@ const dbStructWallet = "CREATE TABLE wallet (id INTEGER PRIMARY KEY AUTOINCREMEN
 // FIXME: dbStructContacts is unused
 const dbStructContacts = "CREATE TABLE contacts (id INTEGER PRIMARY KEY AUTOINCREMENT, addr TEXT UNIQUE, name TEXT, nick TEXT);";
 const dbStructSettings = "CREATE TABLE settings (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE, value TEXT);";
+const dbStructTransactions = "CREATE TABLE transactions (id INTEGER PRIMARY KEY AUTOINCREMENT, txid TEXT, time INTEGER, address TEXT, vins TEXT, vouts TEXT, amount REAL);";
 
 function attachUpdaterHandlers() {
     updater.on("update-downloaded", onUpdateDownloaded);
@@ -260,6 +261,26 @@ function loadSettings() {
     settings.explorer = sqlRes[0].values[0][2];
     sqlRes = userInfo.walletDb.exec("SELECT * FROM settings WHERE name = 'settingsApi'");
     settings.api = sqlRes[0].values[0][2];
+}
+
+function loadTransactions() {
+    let sqlRes = userInfo.walletDb.exec("SELECT name FROM sqlite_master WHERE type='table' AND name='transactions';");
+    if (sqlRes.length === 0) {
+        userInfo.walletDb.run(dbStructTransactions);
+        sqlRes = userInfo.walletDb.exec("SELECT addr FROM wallet;");
+        sqlRes[0].values.forEach(function(address) {
+            request.get(settings.explorer + settings.api + "addrs/" + address[0] + "/txs", function (err, res, body) {
+                if (err) {
+                    console.log("transaction readout failed");
+                } else if (res && res.statusCode === 200) {
+                    let data = JSON.parse(body);
+                    data.items.forEach(function(element) {
+                        parseTransactionResponse(JSON.stringify(element), address[0], null);
+                    }, this);
+                }
+            });
+        }, this);
+    }
 }
 
 function setDarwin(template) {
@@ -568,6 +589,7 @@ ipcMain.on("verify-login-info", function (event, login, pass) {
                 userInfo.pass = pass;
                 userInfo.walletDb = new sql.Database(walletBytes);
                 loadSettings();
+                loadTransactions();
                 updateMenuAtLogin();
                 resp = {
                     response: "OK",
@@ -648,16 +670,21 @@ function parseTransactionResponse(transaction, address, event) {
     /* find unique input addresses */
     let vins = [...new Set(data.vin.map(item => item.addr))];
 
-    let resp = {
-        txid: data.txid,
-        time: data.time,
-        address: address, 
-        vins: vins,
-        vouts: vouts,
-        amount: amount,
-        confirmations: data.confirmations
+    userInfo.walletDb.run("INSERT INTO transactions VALUES (?,?,?,?,?,?,?)", [null, data.txid, data.time, address, vins.join(","), vouts.join(","), amount]);
+    userInfo.dbChanged = true;
+
+    if (event !== null) {
+        let resp = {
+            txid: data.txid,
+            time: data.time,
+            address: address, 
+            vins: vins,
+            vouts: vouts,
+            amount: amount,
+            confirmations: data.confirmations
+        }
+        event.sender.send("get-transaction-update", JSON.stringify(resp));
     }
-    event.sender.send("get-transaction-update", JSON.stringify(resp));
 }
 
 function updateBalance(address, oldBalance, event) {
@@ -678,16 +705,16 @@ function updateBalance(address, oldBalance, event) {
                     total: sqlRes[0].values[0][0]
                 };
                 event.sender.send("update-wallet-balance", JSON.stringify(update));
+                data.transactions.forEach(function(element) {
+                    request.get(settings.explorer + settings.api + "tx/" + element, function (err, res, body) {
+                        if (err) {
+                            console.log("transaction readout failed");
+                        } else if (res && res.statusCode === 200) {
+                            parseTransactionResponse(body, address, event);
+                        }
+                    });
+                }, this);
             }
-            data.transactions.forEach(function(element) {
-                request.get(settings.explorer + settings.api + "tx/" + element, function (err, res, body) {
-                    if (err) {
-                        console.log("transaction readout failed");
-                    } else if (res && res.statusCode === 200) {
-                        parseTransactionResponse(body, address, event);
-                    }
-                });
-            }, this);
         }
     });
 }
@@ -706,8 +733,13 @@ ipcMain.on("get-wallets", function (event) {
         resp = {
             response: "OK",
             wallets: sqlRes[0].values,
+            transactions: [],
             total: 0
         };
+        sqlRes = userInfo.walletDb.exec("SELECT * FROM transactions ORDER BY time ASC");
+        if (sqlRes.length > 0) {
+            resp.transactions = sqlRes[0].values;
+        }
         resp.wallets.forEach(function(element) {
             resp.total += element[3];
             updateBalance(element[2], element[3], event);
@@ -716,6 +748,7 @@ ipcMain.on("get-wallets", function (event) {
         resp = {
             response: "ERR",
             wallets: [],
+            transactions: [],
             total: 0
         };
     }
