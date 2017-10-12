@@ -612,6 +612,54 @@ ipcMain.on("exit-from-menu", function () {
     app.quit();
 });
 
+function parseTransactionResponse(transaction, address, event) {
+    let data = JSON.parse(transaction);
+    let inAmount = 0;
+    let amount = 0;
+    let isSending = 0;
+    let vouts = [];
+    /* find my address in send transaction */
+    data.vin.forEach(function(element) {
+        /* my address is sending */
+        if (element.addr === address) {
+            isSending = 1;
+        }
+    }, this);
+    /* find my address in recv transaction */
+    data.vout.forEach(function(element) {
+        /* my address is receiving */
+        if (element.scriptPubKey.addresses[0] === address) {
+            if (isSending === 0) {
+                vouts.push(address);
+                amount = element.value;
+            } else {
+                amount = -1 * (data.valueOut - element.value);
+            }
+        } else {
+            /* dont show my address in transaction to */
+            vouts.push(element.scriptPubKey.addresses[0]);
+        }
+    }, this);
+    /* we are sending but amount is not set -> address hits 0 */
+    if (amount === 0 && isSending === 1)
+    {
+        amount = -1 * data.valueOut;
+    }
+    /* find unique input addresses */
+    let vins = [...new Set(data.vin.map(item => item.addr))];
+
+    let resp = {
+        txid: data.txid,
+        time: data.time,
+        address: address, 
+        vins: vins,
+        vouts: vouts,
+        amount: amount,
+        confirmations: data.confirmations
+    }
+    event.sender.send("get-transaction-update", JSON.stringify(resp));
+}
+
 function updateBalance(address, oldBalance, event) {
     request.get(settings.explorer + settings.api + "addr/" + address, function (err, res, body) {
         if (err) {
@@ -620,12 +668,14 @@ function updateBalance(address, oldBalance, event) {
         } else if (res && res.statusCode === 200) {
             let data = JSON.parse(body);
             if (oldBalance !== data.balance) {
-                userInfo.walletDb.exec("UPDATE wallet SET lastbalance = " + data.balance + " WHERE addr = '" + data.addrStr + "'");
+                userInfo.walletDb.run("UPDATE wallet SET lastbalance = " + data.balance + " WHERE addr = '" + data.addrStr + "'");
                 userInfo.dbChanged = true;
+                let sqlRes = userInfo.walletDb.exec("SELECT total(lastbalance) FROM wallet");
                 let update = {
                     response: "OK",
                     wallet: data.addrStr,
-                    balance: data.balance
+                    balance: data.balance,
+                    total: sqlRes[0].values[0][0]
                 };
                 event.sender.send("update-wallet-balance", JSON.stringify(update));
             }
@@ -634,7 +684,7 @@ function updateBalance(address, oldBalance, event) {
                     if (err) {
                         console.log("transaction readout failed");
                     } else if (res && res.statusCode === 200) {
-                        event.sender.send("get-transaction-update", address, body);
+                        parseTransactionResponse(body, address, event);
                     }
                 });
             }, this);
@@ -658,10 +708,10 @@ ipcMain.on("get-wallets", function (event) {
             wallets: sqlRes[0].values,
             total: 0
         };
-        for (let i = 0; i < resp.wallets.length; i += 1) {
-            resp.total += resp.wallets[i][3];
-            updateBalance(resp.wallets[i][2], resp.wallets[i][3], event);
-        }
+        resp.wallets.forEach(function(element) {
+            resp.total += element[3];
+            updateBalance(element[2], element[3], event);
+        }, this);
     } else {
         resp = {
             response: "ERR",
@@ -695,7 +745,9 @@ ipcMain.on("rename-wallet", function (event, address, name) {
             userInfo.dbChanged = true;
             resp = {
                 response: "OK",
-                msg: "address " + address + " set to " + name
+                msg: "address " + address + " set to " + name,
+                addr: address,
+                newname: name
             };
         } else {
             resp = {
@@ -740,8 +792,6 @@ ipcMain.on("get-wallet-by-name", function (event, name) {
 });
 
 ipcMain.on("get-transaction", function (event, txId, address) {
-    let resp;
-
     if (userInfo.loggedIn) {
         request.get(settings.explorer + settings.api + "tx/" + txId, function (err, res, body) {
             if (err) {
@@ -750,18 +800,7 @@ ipcMain.on("get-transaction", function (event, txId, address) {
                 event.sender.send("get-transaction-update", address, body);
             }
         });
-        resp = {
-            response: "OK",
-            msg: "request sent"
-        };
-    } else {
-        resp = {
-            response: "ERR",
-            msg: "not logged in"
-        };
     }
-
-    event.sender.send("get-transaction-response", JSON.stringify(resp));
 });
 
 ipcMain.on("generate-wallet", function (event, name) {
