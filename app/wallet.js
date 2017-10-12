@@ -3,9 +3,6 @@
 /*jslint node: true */
 "use strict";
 
-const zencashjs = require("zencashjs");
-const request = require("request");
-
 function setButtonActive(className) {
     document.getElementById(className).style.backgroundColor = "transparent";
     document.getElementById(className).style.border = "1px #f88900 solid";
@@ -143,7 +140,7 @@ function walletDetailsDialog(address, balance) {
     document.getElementById("walletDetailsDialog").style.zIndex = "2";
     document.getElementById("walletDetailsDialog").style.opacity = "1";
     document.getElementById("walletDetailsDialogContent").innerHTML = "";
-    name = document.getElementById("listName_" + address).innerText;
+    let name = document.getElementById("listName_" + address).innerText;
     if (name !== "") {
         document.getElementById("walletDetailsDialogContent").innerHTML += "<label class=\"walletDetailsItemLabel\" for=\"walletName\">Name: </label> <div class=\"right\"><input id=\"walletName\" class=\"wallet_inputs\" align=\"right\" value=\""+ name +"\"></div>";
     } else {
