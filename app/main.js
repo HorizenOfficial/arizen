@@ -703,15 +703,14 @@ function updateBalance(address, oldBalance, event) {
                     total: sqlRes[0].values[0][0]
                 };
                 event.sender.send("update-wallet-balance", JSON.stringify(update));
-                data.transactions.forEach(function(element) {
-                    request.get(settings.explorer + settings.api + "tx/" + element, function (err, res, body) {
-                        if (err) {
-                            console.log("transaction readout failed");
-                        } else if (res && res.statusCode === 200) {
-                            parseTransactionResponse(body, address, event);
-                        }
-                    });
-                }, this);
+                /* update latest transaction */
+                request.get(settings.explorer + settings.api + "tx/" + data.transactions[0], function (err, res, body) {
+                    if (err) {
+                        console.log("transaction readout failed");
+                    } else if (res && res.statusCode === 200) {
+                        parseTransactionResponse(body, address, event);
+                    }
+                });
             }
         }
     });
