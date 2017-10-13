@@ -3,9 +3,6 @@
 /*jslint node: true */
 "use strict";
 
-const zencashjs = require("zencashjs");
-const request = require("request");
-
 function setButtonActive(className) {
     document.getElementById(className).style.backgroundColor = "transparent";
     document.getElementById(className).style.border = "1px #f88900 solid";
@@ -143,7 +140,7 @@ function walletDetailsDialog(address, balance) {
     document.getElementById("walletDetailsDialog").style.zIndex = "2";
     document.getElementById("walletDetailsDialog").style.opacity = "1";
     document.getElementById("walletDetailsDialogContent").innerHTML = "";
-    name = document.getElementById("listName_" + address).innerText;
+    let name = document.getElementById("listName_" + address).innerText;
     if (name !== "") {
         document.getElementById("walletDetailsDialogContent").innerHTML += "<label class=\"walletDetailsItemLabel\" for=\"walletName\">Name: </label> <div class=\"right\"><input id=\"walletName\" class=\"wallet_inputs\" align=\"right\" value=\""+ name +"\"></div>";
     } else {
@@ -175,7 +172,6 @@ function renderWallet() {
 }
 
 function refreshWallet() {
-    document.getElementById("transactionHistory").innerHTML = "";
     ipcRenderer.send("refresh-wallet");
 }
 
@@ -241,6 +237,10 @@ ipcRenderer.on("get-wallets-response", function (event, resp) {
         document.getElementById("pickWalletDialogContent").innerHTML += walletPick + walletClass + walletTitle + walletBalance + "</div></div>";
     }
     document.getElementById("walletFooterBalance").innerHTML = Number(data.total).toFixed(8);
+
+    data.transactions.forEach(function(tx) {
+        printTransactionElem("transactionHistory", tx[1], tx[2], tx[3], tx[4], tx[5], Number(tx[6]).toFixed(8), 0);
+    }, this);
 });
 
 ipcRenderer.on("update-wallet-balance", function (event, resp) {
@@ -330,7 +330,8 @@ function printTransactionElem(elem, txId, datetime, myAddress, addressesFrom, ad
     transactionText += "\">" + amount + " ZEN</div>";
     transactionText += "<span class=\"transactionItem\">"+ myAddress +"</span></div>";
     transactionText += "</div>";
-    document.getElementById(elem).innerHTML += transactionText;
+    let oldHtml = document.getElementById(elem).innerHTML;
+    document.getElementById(elem).innerHTML = transactionText + oldHtml;
 }
 
 function transactionDetailsDialog(txId, datetime, myAddress, addressesFrom, addressesTo, amount, confirmations) {
