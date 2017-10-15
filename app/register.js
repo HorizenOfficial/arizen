@@ -42,9 +42,9 @@ function checkLogin() {
     // validate the length
     usr = (document.getElementById("username").value.length >= minLoginLen);
     if (usr) {
-        changeClass("usrnm_length_info", "invalid", "valid");
-    } else {
         changeClass("usrnm_length_info", "valid", "invalid");
+    } else {
+        changeClass("usrnm_length_info", "invalid", "valid");
     }
     checkLoginInfo();
 }
