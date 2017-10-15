@@ -212,7 +212,7 @@ ipcRenderer.on("get-wallets-response", function (event, resp) {
 
         walletClass = "<div name=\"block_" + wAddress + "\" class=\"walletListItem";
         if (wBalance === 0) {
-            walletClass += " walletListItemZero";
+           // walletClass += " walletListItemZero";
         } else {
             if (j === 2) {
                 j = 0;
@@ -350,7 +350,7 @@ function transactionDetailsDialog(txId, datetime, myAddress, addressesFrom, addr
     }
     transactionText += "<div class=\"center\"><span class=\"transactionItem\">"+ myAddress +"</span></div></div>";
     transactionText += "<div class=\"transactionItemLabel\">Transaction ID:</div>";
-    transactionText += "<div class=\"center\"><a href=\"javascript:void(0)\" onclick=\"openUrl('https://explorer.zensystem.io/tx/"+ txId +"')\" class=\"walletListItemDetails transactionPadding\" target=\"_blank\">"+txId+"</a></div></div>";
+    transactionText += "<div class=\"center\"><a href=\"javascript:void(0)\" onclick=\"openUrl('https://explorer.zensystem.io/tx/"+ txId +"')\" class=\"walletListItemDetails transactionExlorer\" target=\"_blank\">"+txId+"</a></div></div>";
     transactionText += "<div class=\"transactionItemLabel\">From:</div>";
     for(let i = 0; i < addressesSend.length; i++ ) {
         transactionText += "<div class=\"center\"><div class=\"transactionItem\">" + addressesSend[i] + "</div></div>";

@@ -238,15 +238,15 @@ body {
     background-color: #fefefe;
     left: 162px;
     width: 700px;
-    height: 350px;
-    top:170px;
+    height: 550px;
+    top:70px;
     opacity:0;
     transition: 0.5s;
 
 }
 
 #settingsDialog label {
-    font-size: 1.2em;
+    font-size: 1.1em;
     margin: 5px;
 }
 
@@ -269,4 +269,15 @@ body {
     bottom : 20px;
     left: 20px;
     width: 35%;
+}
+
+.settings_input{
+    width: 55%;
+    padding: 3px 3px;
+}
+
+.titleSettings{
+    color: #f88900;
+    font-weight: 800;
+    font-size: 1em;
 }

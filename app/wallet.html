@@ -164,7 +164,7 @@
 
         <div id="receive" class="receive" style="display:none">
             <label class="wallet_labels" for="receiveAddress">&nbsp;To:</label><br/>
-            <span id="receiveAddressText"></span><input id="receiveAddress" class="buttons addWalletButton" name="btWalletButton" type="button" value="Select" tabindex="4" onclick="pickWalletDialog('receiveAddress')"/>
+            <span id="receiveAddressText" class="wallet_inputs"></span><input id="receiveAddress" class="buttons addWalletButton" name="btWalletButton" type="button" value="Select" tabindex="4" onclick="pickWalletDialog('receiveAddress')"/>
             <br>
             <label class="wallet_labels" for="receiveCoinAmount">&nbsp;Amount:</label><br/>
             <input id="receiveCoinAmount" class="wallet_inputs" align="right" value="0.00000000" onchange="changeAmount('receiveCoinAmount')">
@@ -176,7 +176,7 @@
 
         <div id="send" class="send" style="display:none">
             <label class="wallet_labels" for="sendFromAddress">&nbsp;From:</label><br/>
-            <span id="sendFromAddressText"></span><input id="sendFromAddress" class="buttons addWalletButton" name="btWalletButton" type="button" value="Select" tabindex="4" onclick="pickWalletDialog('sendFromAddress')"/>
+            <span id="sendFromAddressText" class="wallet_inputs"></span><input id="sendFromAddress" class="buttons addWalletButton" name="btWalletButton" type="button" value="Select" tabindex="4" onclick="pickWalletDialog('sendFromAddress')"/>
             <br>
             <label class="wallet_labels" for="sendToAddress">&nbsp;To:</label><br/>
             <input id="sendToAddress" class="wallet_inputs" align="right" value="address" onfocus="clearValue()" onblur="setValueIfEmpty()">

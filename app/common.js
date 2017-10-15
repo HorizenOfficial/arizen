@@ -108,8 +108,12 @@ function settingsDialog() {
     document.getElementById("settingsDialog").style.zIndex = "2";
     document.getElementById("settingsDialog").style.opacity = "1";
     document.getElementById("settingsContent").innerHTML = "<label for=\"settingsNotifications\">Desktop notifications</label><input type=\"checkbox\" id=\"settingsNotifications\" name=\"notifications\"><br>";
-    document.getElementById("settingsContent").innerHTML += "<label for=\"settingsExplorer\">Explorer</label><br><input type=\"text\" id=\"settingsExplorer\" class=\"wallet_inputs\" name=\"explorer\"><br>";
-    document.getElementById("settingsContent").innerHTML += "<label for=\"settingsApi\">API</label><br><input type=\"text\" id=\"settingsApi\" class=\"wallet_inputs\" name=\"api\">";
+    document.getElementById("settingsContent").innerHTML += "<label for=\"settingsRefresh\">Auto-refresh</label><input type=\"number\" id=\"settingsRefresh\" class=\"wallet_inputs settings_input\"  name=\"refresh\" value=\"30\"> seconds<br>";
+    document.getElementById("settingsContent").innerHTML += "<label for=\"settingsTimeout\">Auto-refresh timeout</label><input type=\"number\" id=\"settingsTimeout\" class=\"wallet_inputs settings_input\" name=\"timeout\" value=\"10\"> seconds<br>";
+    document.getElementById("settingsContent").innerHTML += "<label for=\"settingsTransactions\">Transaction history items</label><input type=\"number\" id=\"settingsTransactions\" class=\"wallet_inputs settings_input\" name=\"transactions\" value='20'> items<br>";
+    document.getElementById("settingsContent").innerHTML += "<p class=\"titleSettings\">HELP for settings will be added soon.</p>";
+    document.getElementById("settingsContent").innerHTML += "<label for=\"settingsExplorer\">Explorer</label><br><input type=\"text\" id=\"settingsExplorer\" class=\"wallet_inputs settings_input\" name=\"explorer\"><br>";
+    document.getElementById("settingsContent").innerHTML += "<label for=\"settingsApi\">API</label><br><input type=\"text\" id=\"settingsApi\" class=\"wallet_inputs settings_input\" name=\"api\">";
     document.getElementById("settingsContent").innerHTML += "<button class=\"buttons settingsSaveButton\" onclick=\"saveSettings()\">Save settings</button>";
 }
 

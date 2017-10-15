@@ -426,9 +426,7 @@
     width: 70%;
     margin-left: 5%;
     margin-right: 1%;
-    color: #f88900;
     font-size: 0.8em;
-    border-bottom: 1px solid #888888;
 }
 
 #receiveAddressText{
@@ -436,9 +434,7 @@
     width: 70%;
     margin-left: 5%;
     margin-right: 1%;
-    color: #f88900;
     font-size: 0.8em;
-    border-bottom: 1px solid #888888;
 }
 
 .walletTransaction {
@@ -479,7 +475,7 @@
 
 #transactionHistory {
     overflow-y: scroll;
-    height: 550px;
+    height: 545px;
 }
 
 #transactionHistory::-webkit-scrollbar-track
@@ -513,4 +509,8 @@
 
 .transactionConfirms {
     font-size: 1.4em;
+}
+
+.transactionExplorer {
+    font-size: 0.8em;
 }
