@@ -239,7 +239,7 @@ ipcRenderer.on("get-wallets-response", function (event, resp) {
     document.getElementById("walletFooterBalance").innerHTML = Number(data.total).toFixed(8);
 
     data.transactions.forEach(function(tx) {
-        printTransactionElem("transactionHistory", tx[1], tx[2], tx[3], tx[4], tx[5], Number(tx[6]).toFixed(8), 0);
+        printTransactionElem("transactionHistory", tx[1], tx[2], tx[3], tx[4], tx[5], Number(tx[6]).toFixed(8), tx[7]);
     }, this);
 });
 
@@ -279,7 +279,7 @@ ipcRenderer.on("get-wallet-by-name-response", function (event, resp) {
 ipcRenderer.on("get-transaction-update", function (event, resp) {
     let data = JSON.parse(resp);
     
-    printTransactionElem("transactionHistory", data.txid, data.time, data.address, data.vins, data.vouts, Number(data.amount).toFixed(8), data.confirmations);
+    printTransactionElem("transactionHistory", data.txid, data.time, data.address, data.vins, data.vouts, Number(data.amount).toFixed(8), data.block);
 });
 
 ipcRenderer.on("generate-wallet-response", function (event, resp) {
@@ -311,11 +311,11 @@ ipcRenderer.on("generate-wallet-response", function (event, resp) {
     }
 });
 
-function printTransactionElem(elem, txId, datetime, myAddress, addressesFrom, addressesTo, amount, confirmations) {
+function printTransactionElem(elem, txId, datetime, myAddress, addressesFrom, addressesTo, amount, block) {
     let date = new Date(datetime * 1000);
     let dateStr = date.toString().substring(0, 24);
-    let transactionText = "<div class=\"walletTransaction\" onclick=\"transactionDetailsDialog('"+ txId+"', '"+date.toString()+"', '"+myAddress+"', '"+addressesFrom+"', '" + addressesTo + "','"+amount+"', '"+ confirmations +"')\">";
-    transactionText += "<div><span class=\"transactionItem\">"+dateStr +"</span> - <span class=\"wallet_labels\">Confirmations</span> <span class=\"transactionItem\">"+ confirmations +"</span></div>";
+    let transactionText = "<div class=\"walletTransaction\" onclick=\"transactionDetailsDialog('"+ txId+"', '"+date.toString()+"', '"+myAddress+"', '"+addressesFrom+"', '" + addressesTo + "','"+amount+"', '"+ block +"')\">";
+    transactionText += "<div><span class=\"transactionItem\">"+dateStr +"</span> - <span class=\"wallet_labels\">Block</span> <span class=\"transactionItem\">"+ block +"</span></div>";
     transactionText += "<div class=\"";
     if (amount > 0) {
         transactionText += "transactionIncome";
@@ -329,7 +329,7 @@ function printTransactionElem(elem, txId, datetime, myAddress, addressesFrom, ad
     document.getElementById(elem).innerHTML = transactionText + oldHtml;
 }
 
-function transactionDetailsDialog(txId, datetime, myAddress, addressesFrom, addressesTo, amount, confirmations) {
+function transactionDetailsDialog(txId, datetime, myAddress, addressesFrom, addressesTo, amount, block) {
     let addressesSend = addressesFrom.split(",");
     let addressesRecv = addressesTo.split(",");
     showDarkContainer();
@@ -354,9 +354,9 @@ function transactionDetailsDialog(txId, datetime, myAddress, addressesFrom, addr
     for(let i = 0; i < addressesRecv.length; i++ ) {
         transactionText += "<div class=\"center\"><div class=\"transactionItem\">" + addressesRecv[i] + "</div></div>";
     }
-    transactionText += "<div class=\"transactionItemLabel\">Confirmations:</div>";
+    transactionText += "<div class=\"transactionItemLabel\">Block height:</div>";
 
-    transactionText += "<div class=\"center\"><div class=\"transactionItem transactionConfirms\">"+ confirmations +"</div></div>";
+    transactionText += "<div class=\"center\"><div class=\"transactionItem transactionConfirms\">"+ block +"</div></div>";
 
     document.getElementById("transactionDetailsDialogContent").innerHTML = transactionText;
 }
