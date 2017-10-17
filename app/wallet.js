@@ -254,11 +254,6 @@ ipcRenderer.on("update-wallet-balance", function (event, resp) {
     }, this);
     doNotify("Balance has been updated", "New balance: " + data.balance + " " + data.wallet);
 
-    // get all transactions (newest->oldest)
-    /*data.transactions.forEach(function(transaction) {
-        ipcRenderer.send("get-transaction", transaction, data.wallet);
-    });*/
-
     document.getElementById("walletFooterBalance").innerHTML = Number(data.total).toFixed(8);
 });
 
