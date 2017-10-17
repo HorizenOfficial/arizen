@@ -212,7 +212,7 @@ ipcRenderer.on("get-wallets-response", function (event, resp) {
 
         walletClass = "<div name=\"block_" + wAddress + "\" class=\"walletListItem";
         if (wBalance === 0) {
-           // walletClass += " walletListItemZero";
+            walletClass += " walletListItemZero";
         } else {
             if (j === 2) {
                 j = 0;
