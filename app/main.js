@@ -37,7 +37,10 @@ let userInfo = {
 let settings = {
     notifications: 1,
     explorer: "https://explorer.zensystem.io/",
-    api: "insight-api-zen/"
+    api: "insight-api-zen/",
+    autorefresh: 30,
+    refreshTimeout: 10,
+    txHistory: 50
 };
 
 const dbStructWallet = "CREATE TABLE wallet (id INTEGER PRIMARY KEY AUTOINCREMENT, pk TEXT, addr TEXT UNIQUE, lastbalance REAL, name TEXT);";
@@ -252,6 +255,12 @@ function loadSettings() {
         userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsApi", settings.api]);
         userInfo.dbChanged = true;
     }
+    sqlRes = userInfo.walletDb.exec("SELECT * FROM settings");
+    if (sqlRes[0].values.length !== 6) {
+        userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsAutorefresh", settings.autorefresh]);
+        userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsRefreshTimeout", settings.refreshTimeout]);
+        userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsTxHistory", settings.txHistory]);
+    }
 
     sqlRes = userInfo.walletDb.exec("SELECT * FROM settings WHERE name = 'settingsNotifications'");
     settings.notifications = Number(sqlRes[0].values[0][2]);
@@ -259,6 +268,12 @@ function loadSettings() {
     settings.explorer = sqlRes[0].values[0][2];
     sqlRes = userInfo.walletDb.exec("SELECT * FROM settings WHERE name = 'settingsApi'");
     settings.api = sqlRes[0].values[0][2];
+    sqlRes = userInfo.walletDb.exec("SELECT * FROM settings WHERE name = 'settingsAutorefresh'");
+    settings.autorefresh = sqlRes[0].values[0][2];
+    sqlRes = userInfo.walletDb.exec("SELECT * FROM settings WHERE name = 'settingsRefreshTimeout'");
+    settings.refreshTimeout = sqlRes[0].values[0][2];
+    sqlRes = userInfo.walletDb.exec("SELECT * FROM settings WHERE name = 'settingsTxHistory'");
+    settings.txHistory = sqlRes[0].values[0][2];
 }
 
 function loadTransactions(event) {
@@ -414,6 +429,7 @@ function updateMenuAtLogin() {
                 }, {
                     type: "separator"
                 }, {
+                    /* FIXME: remove after test - not for production */
                     label: "Force transaction reload",
                     click() {
                         userInfo.walletDb.run("DROP TABLE transactions;");
