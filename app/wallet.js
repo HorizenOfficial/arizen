@@ -241,6 +241,10 @@ ipcRenderer.on("get-wallets-response", function (event, resp) {
     data.transactions.forEach(function(tx) {
         printTransactionElem("transactionHistory", tx[1], tx[2], tx[3], tx[4], tx[5], Number(tx[6]).toFixed(8), tx[7]);
     }, this);
+
+    if (data.autorefresh > 0) {
+        setTimeout(refreshWallet, data.autorefresh * 1000);
+    }
 });
 
 ipcRenderer.on("update-wallet-balance", function (event, resp) {
@@ -255,6 +259,17 @@ ipcRenderer.on("update-wallet-balance", function (event, resp) {
     doNotify("Balance has been updated", "New balance: " + data.balance + " " + data.wallet);
 
     document.getElementById("walletFooterBalance").innerHTML = Number(data.total).toFixed(8);
+});
+
+ipcRenderer.on("refresh-wallet-response", function (event, resp) {
+    let data = JSON.parse(resp);
+
+    if (data.response === "OK")
+    {
+        if (data.autorefresh > 0) {
+            setTimeout(refreshWallet, data.autorefresh * 1000);
+        }
+    }
 });
 
 ipcRenderer.on("rename-wallet-response", function (event, resp) {

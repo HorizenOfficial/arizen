@@ -108,7 +108,7 @@ function settingsDialog() {
     document.getElementById("settingsDialog").style.zIndex = "2";
     document.getElementById("settingsDialog").style.opacity = "1";
     document.getElementById("settingsContent").innerHTML = "<label for=\"settingsNotifications\">Desktop notifications</label><input type=\"checkbox\" id=\"settingsNotifications\" name=\"notifications\"><br>";
-    document.getElementById("settingsContent").innerHTML += "<label for=\"settingsAutorefresh\">Auto-refresh</label><input type=\"number\" id=\"settingsAutorefresh\" class=\"wallet_inputs settings_input\"  name=\"refresh\" value=\"30\" step=\"15\" min=\"15\"> seconds<br>";
+    document.getElementById("settingsContent").innerHTML += "<label for=\"settingsAutorefresh\">Auto-refresh</label><input type=\"number\" id=\"settingsAutorefresh\" class=\"wallet_inputs settings_input\"  name=\"refresh\" value=\"30\" step=\"15\" min=\"0\"> seconds<br>";
     document.getElementById("settingsContent").innerHTML += "<label for=\"settingsRefreshTimeout\">Auto-refresh timeout</label><input type=\"number\" id=\"settingsRefreshTimeout\" class=\"wallet_inputs settings_input\" name=\"timeout\" value=\"10\" step=\"5\" min=\"5\"> seconds<br>";
     document.getElementById("settingsContent").innerHTML += "<label for=\"settingsTxHistory\">Transaction history items</label><input type=\"number\" id=\"settingsTxHistory\" class=\"wallet_inputs settings_input\" name=\"transactions\" value=\"50\" step=\"5\" min=\"5\"> items<br>";
     document.getElementById("settingsContent").innerHTML += "<p class=\"titleSettings\">HELP for settings will be added soon.</p>";

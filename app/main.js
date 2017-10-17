@@ -755,7 +755,8 @@ ipcMain.on("get-wallets", function (event) {
             response: "OK",
             wallets: sqlRes[0].values,
             transactions: [],
-            total: 0
+            total: 0,
+            autorefresh: settings.autorefresh
         };
         sqlRes = userInfo.walletDb.exec("SELECT * FROM transactions ORDER BY time ASC");
         if (sqlRes.length > 0) {
@@ -770,7 +771,8 @@ ipcMain.on("get-wallets", function (event) {
             response: "ERR",
             wallets: [],
             transactions: [],
-            total: 0
+            total: 0,
+            autorefresh: 0
         };
     }
 
@@ -778,6 +780,7 @@ ipcMain.on("get-wallets", function (event) {
 });
 
 ipcMain.on("refresh-wallet", function (event) {
+    let resp;
     let sqlRes;
 
     if (userInfo.loggedIn) {
@@ -785,7 +788,18 @@ ipcMain.on("refresh-wallet", function (event) {
         for (let i = 0; i < sqlRes[0].values.length; i += 1) {
             updateBalance(sqlRes[0].values[i][2], sqlRes[0].values[i][3], event);
         }
+        resp = {
+            response: "OK",
+            autorefresh: settings.autorefresh
+        }
+    } else {
+        resp = {
+            response: "ERR",
+            autorefresh: 0
+        }
     }
+
+    event.sender.send("refresh-wallet-response", JSON.stringify(resp));    
 });
 
 ipcMain.on("rename-wallet", function (event, address, name) {
