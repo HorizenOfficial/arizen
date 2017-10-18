@@ -3,6 +3,16 @@
 /*jslint node: true */
 "use strict";
 
+document.addEventListener("keydown", escKeyDown, false);
+
+function escKeyDown(e) {
+    let keyCode = e.keyCode;
+    if(keyCode===27) {
+        closeAllMessengerDialogs();
+    }
+}
+
+
 function clearMessageValue(){
     if (document.getElementById("sendToAddress").value === "Message") {
         document.getElementById("sendToAddress").value = "";
