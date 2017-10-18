@@ -423,20 +423,10 @@
     color:#f88900;
 }
 
-#sendFromAddressText{
-    display: inline-block;
-    width: 70%;
-    margin-left: 5%;
-    margin-right: 1%;
-    font-size: 0.8em;
-}
 
-#receiveAddressText{
-    display: inline-block;
-    width: 70%;
-    margin-left: 5%;
-    margin-right: 1%;
-    font-size: 0.8em;
+.rightButton{
+    position: absolute;
+    right: 7.5%;
 }
 
 .walletTransaction {

@@ -163,8 +163,8 @@
         </div>
 
         <div id="receive" class="receive" style="display:none">
-            <label class="wallet_labels" for="receiveAddress">&nbsp;To:</label><br/>
-            <span id="receiveAddressText" class="wallet_inputs"></span><input id="receiveAddress" class="buttons addWalletButton" name="btWalletButton" type="button" value="Select" tabindex="4" onclick="pickWalletDialog('receiveAddress')"/>
+            <label class="wallet_labels" for="receiveAddress">&nbsp;To:</label><input id="receiveAddress" class="buttons addWalletButton rightButton" name="btWalletButton" type="button" value="Select" tabindex="4" onclick="pickWalletDialog('receiveAddress')"/><br/>
+            <input id="receiveAddressText" class="wallet_inputs" align="right" value="" onfocus="clearValue()" onblur="setValueIfEmpty()" />
             <br>
             <label class="wallet_labels" for="receiveCoinAmount">&nbsp;Amount:</label><br/>
             <input id="receiveCoinAmount" class="wallet_inputs" align="right" value="0.00000000" onchange="changeAmount('receiveCoinAmount')">
@@ -175,8 +175,8 @@
         </div>
 
         <div id="send" class="send" style="display:none">
-            <label class="wallet_labels" for="sendFromAddress">&nbsp;From:</label><br/>
-            <span id="sendFromAddressText" class="wallet_inputs"></span><input id="sendFromAddress" class="buttons addWalletButton" name="btWalletButton" type="button" value="Select" tabindex="4" onclick="pickWalletDialog('sendFromAddress')"/>
+            <label class="wallet_labels" for="sendFromAddress">&nbsp;From:</label><input id="sendFromAddress" class="buttons addWalletButton rightButton" name="btWalletButton" type="button" value="Select" tabindex="4" onclick="pickWalletDialog('sendFromAddress')"/><br/>
+            <input id="sendFromAddressText" class="wallet_inputs" align="right" value="" onfocus="clearValue()" onblur="setValueIfEmpty()" />
             <br>
             <label class="wallet_labels" for="sendToAddress">&nbsp;To:</label><br/>
             <input id="sendToAddress" class="wallet_inputs" align="right" value="address" onfocus="clearValue()" onblur="setValueIfEmpty()">
