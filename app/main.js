@@ -37,14 +37,17 @@ let userInfo = {
 let settings = {
     notifications: 1,
     explorer: "https://explorer.zensystem.io/",
-    api: "insight-api-zen/"
+    api: "insight-api-zen/",
+    autorefresh: 30,
+    refreshTimeout: 10,
+    txHistory: 50
 };
 
 const dbStructWallet = "CREATE TABLE wallet (id INTEGER PRIMARY KEY AUTOINCREMENT, pk TEXT, addr TEXT UNIQUE, lastbalance REAL, name TEXT);";
 // FIXME: dbStructContacts is unused
 const dbStructContacts = "CREATE TABLE contacts (id INTEGER PRIMARY KEY AUTOINCREMENT, addr TEXT UNIQUE, name TEXT, nick TEXT);";
 const dbStructSettings = "CREATE TABLE settings (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE, value TEXT);";
-const dbStructTransactions = "CREATE TABLE transactions (id INTEGER PRIMARY KEY AUTOINCREMENT, txid TEXT, time INTEGER, address TEXT, vins TEXT, vouts TEXT, amount REAL);";
+const dbStructTransactions = "CREATE TABLE transactions (id INTEGER PRIMARY KEY AUTOINCREMENT, txid TEXT, time INTEGER, address TEXT, vins TEXT, vouts TEXT, amount REAL, block INTEGER);";
 
 function attachUpdaterHandlers() {
     updater.on("update-downloaded", onUpdateDownloaded);
@@ -252,6 +255,12 @@ function loadSettings() {
         userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsApi", settings.api]);
         userInfo.dbChanged = true;
     }
+    sqlRes = userInfo.walletDb.exec("SELECT * FROM settings");
+    if (sqlRes[0].values.length !== 6) {
+        userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsAutorefresh", settings.autorefresh]);
+        userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsRefreshTimeout", settings.refreshTimeout]);
+        userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsTxHistory", settings.txHistory]);
+    }
 
     sqlRes = userInfo.walletDb.exec("SELECT * FROM settings WHERE name = 'settingsNotifications'");
     settings.notifications = Number(sqlRes[0].values[0][2]);
@@ -259,9 +268,15 @@ function loadSettings() {
     settings.explorer = sqlRes[0].values[0][2];
     sqlRes = userInfo.walletDb.exec("SELECT * FROM settings WHERE name = 'settingsApi'");
     settings.api = sqlRes[0].values[0][2];
+    sqlRes = userInfo.walletDb.exec("SELECT * FROM settings WHERE name = 'settingsAutorefresh'");
+    settings.autorefresh = sqlRes[0].values[0][2];
+    sqlRes = userInfo.walletDb.exec("SELECT * FROM settings WHERE name = 'settingsRefreshTimeout'");
+    settings.refreshTimeout = sqlRes[0].values[0][2];
+    sqlRes = userInfo.walletDb.exec("SELECT * FROM settings WHERE name = 'settingsTxHistory'");
+    settings.txHistory = sqlRes[0].values[0][2];
 }
 
-function loadTransactions() {
+function loadTransactions(event) {
     let sqlRes = userInfo.walletDb.exec("SELECT name FROM sqlite_master WHERE type='table' AND name='transactions';");
     if (sqlRes.length === 0) {
         userInfo.walletDb.run(dbStructTransactions);
@@ -273,7 +288,7 @@ function loadTransactions() {
                 } else if (res && res.statusCode === 200) {
                     let data = JSON.parse(body);
                     data.items.forEach(function(element) {
-                        parseTransactionResponse(JSON.stringify(element), address[0], null);
+                        parseTransactionResponse(JSON.stringify(element), address[0], event);
                     }, this);
                 }
             });
@@ -410,6 +425,15 @@ function updateMenuAtLogin() {
                     label: "Import ENCRYPTED Arizen wallet",
                     click() {
                         importWalletArizen("awd", true);
+                    }
+                }, {
+                    type: "separator"
+                }, {
+                    /* FIXME: remove after test - not for production */
+                    label: "Force transaction reload",
+                    click() {
+                        userInfo.walletDb.run("DROP TABLE transactions;");
+                        loadTransactions(null);
                     }
                 }, {
                     type: "separator"
@@ -587,7 +611,7 @@ ipcMain.on("verify-login-info", function (event, login, pass) {
                 userInfo.pass = pass;
                 userInfo.walletDb = new sql.Database(walletBytes);
                 loadSettings();
-                loadTransactions();
+                loadTransactions(event);
                 updateMenuAtLogin();
                 resp = {
                     response: "OK",
@@ -668,7 +692,7 @@ function parseTransactionResponse(transaction, address, event) {
     /* find unique input addresses */
     let vins = [...new Set(data.vin.map(item => item.addr))];
 
-    userInfo.walletDb.run("INSERT INTO transactions VALUES (?,?,?,?,?,?,?)", [null, data.txid, data.time, address, vins.join(","), vouts.join(","), amount]);
+    userInfo.walletDb.run("INSERT INTO transactions VALUES (?,?,?,?,?,?,?,?)", [null, data.txid, data.time, address, vins.join(","), vouts.join(","), amount, data.blockheight]);
     userInfo.dbChanged = true;
 
     if (event !== null) {
@@ -679,7 +703,7 @@ function parseTransactionResponse(transaction, address, event) {
             vins: vins,
             vouts: vouts,
             amount: amount,
-            confirmations: data.confirmations
+            block: data.blockheight
         }
         event.sender.send("get-transaction-update", JSON.stringify(resp));
     }
@@ -731,7 +755,8 @@ ipcMain.on("get-wallets", function (event) {
             response: "OK",
             wallets: sqlRes[0].values,
             transactions: [],
-            total: 0
+            total: 0,
+            autorefresh: settings.autorefresh
         };
         sqlRes = userInfo.walletDb.exec("SELECT * FROM transactions ORDER BY time ASC");
         if (sqlRes.length > 0) {
@@ -746,7 +771,8 @@ ipcMain.on("get-wallets", function (event) {
             response: "ERR",
             wallets: [],
             transactions: [],
-            total: 0
+            total: 0,
+            autorefresh: 0
         };
     }
 
@@ -754,6 +780,7 @@ ipcMain.on("get-wallets", function (event) {
 });
 
 ipcMain.on("refresh-wallet", function (event) {
+    let resp;
     let sqlRes;
 
     if (userInfo.loggedIn) {
@@ -761,7 +788,18 @@ ipcMain.on("refresh-wallet", function (event) {
         for (let i = 0; i < sqlRes[0].values.length; i += 1) {
             updateBalance(sqlRes[0].values[i][2], sqlRes[0].values[i][3], event);
         }
+        resp = {
+            response: "OK",
+            autorefresh: settings.autorefresh
+        }
+    } else {
+        resp = {
+            response: "ERR",
+            autorefresh: 0
+        }
     }
+
+    event.sender.send("refresh-wallet-response", JSON.stringify(resp));    
 });
 
 ipcMain.on("rename-wallet", function (event, address, name) {

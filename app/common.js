@@ -108,9 +108,9 @@ function settingsDialog() {
     document.getElementById("settingsDialog").style.zIndex = "2";
     document.getElementById("settingsDialog").style.opacity = "1";
     document.getElementById("settingsContent").innerHTML = "<label for=\"settingsNotifications\">Desktop notifications</label><input type=\"checkbox\" id=\"settingsNotifications\" name=\"notifications\"><br>";
-    document.getElementById("settingsContent").innerHTML += "<label for=\"settingsRefresh\">Auto-refresh</label><input type=\"number\" id=\"settingsRefresh\" class=\"wallet_inputs settings_input\"  name=\"refresh\" value=\"30\"> seconds<br>";
-    document.getElementById("settingsContent").innerHTML += "<label for=\"settingsTimeout\">Auto-refresh timeout</label><input type=\"number\" id=\"settingsTimeout\" class=\"wallet_inputs settings_input\" name=\"timeout\" value=\"10\"> seconds<br>";
-    document.getElementById("settingsContent").innerHTML += "<label for=\"settingsTransactions\">Transaction history items</label><input type=\"number\" id=\"settingsTransactions\" class=\"wallet_inputs settings_input\" name=\"transactions\" value='20'> items<br>";
+    document.getElementById("settingsContent").innerHTML += "<label for=\"settingsAutorefresh\">Auto-refresh</label><input type=\"number\" id=\"settingsAutorefresh\" class=\"wallet_inputs settings_input\"  name=\"refresh\" value=\"30\" step=\"15\" min=\"0\"> seconds<br>";
+    document.getElementById("settingsContent").innerHTML += "<label for=\"settingsRefreshTimeout\">Auto-refresh timeout</label><input type=\"number\" id=\"settingsRefreshTimeout\" class=\"wallet_inputs settings_input\" name=\"timeout\" value=\"10\" step=\"5\" min=\"5\"> seconds<br>";
+    document.getElementById("settingsContent").innerHTML += "<label for=\"settingsTxHistory\">Transaction history items</label><input type=\"number\" id=\"settingsTxHistory\" class=\"wallet_inputs settings_input\" name=\"transactions\" value=\"50\" step=\"5\" min=\"5\"> items<br>";
     document.getElementById("settingsContent").innerHTML += "<p class=\"titleSettings\">HELP for settings will be added soon.</p>";
     document.getElementById("settingsContent").innerHTML += "<label for=\"settingsExplorer\">Explorer</label><br><input type=\"text\" id=\"settingsExplorer\" class=\"wallet_inputs settings_input\" name=\"explorer\"><br>";
     document.getElementById("settingsContent").innerHTML += "<label for=\"settingsApi\">API</label><br><input type=\"text\" id=\"settingsApi\" class=\"wallet_inputs settings_input\" name=\"api\">";
@@ -124,7 +124,7 @@ ipcRenderer.on("get-settings-response", function (event, resp) {
     if (data.response === "OK") {
         data.settings.forEach(function(node) {
             elem = document.getElementById(node[1]);
-            if (elem.type === "text") {
+            if (elem.type === "text" || elem.type === "number") {
                 elem.value = node[2];
             } else if (elem.type === "checkbox") {
                 elem.checked = (node[2] === "1");
@@ -146,6 +146,22 @@ function saveSettings() {
         {
             name: "settingsExplorer",
             value: document.getElementById("settingsExplorer").value
+        },
+        {
+            name: "settingsApi",
+            value: document.getElementById("settingsApi").value
+        },
+        {
+            name: "settingsAutorefresh",
+            value: document.getElementById("settingsAutorefresh").value
+        },
+        {
+            name: "settingsRefreshTimeout",
+            value: document.getElementById("settingsRefreshTimeout").value
+        },
+        {
+            name: "settingsTxHistory",
+            value: document.getElementById("settingsTxHistory").value
         }
     ];
     ipcRenderer.send("save-settings", JSON.stringify(settings));
