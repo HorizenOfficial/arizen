@@ -6,6 +6,7 @@
 const electron = require("electron");
 const BrowserWindow = electron.BrowserWindow;
 const {app, Menu, ipcMain, dialog} = require("electron");
+const shell = require("electron").shell;
 const path = require("path");
 const url = require("url");
 const os = require("os");
@@ -18,7 +19,6 @@ const zencashjs = require("zencashjs");
 const sql = require("sql.js");
 const request = require("request");
 const updater = require("electron-simple-updater");
-const shell = require('electron').shell;
 
 updater.init({checkUpdateOnStart: true, autoDownload: true});
 attachUpdaterHandlers();
