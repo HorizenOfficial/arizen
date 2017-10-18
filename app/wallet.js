@@ -3,6 +3,16 @@
 /*jslint node: true */
 "use strict";
 
+document.addEventListener("keydown", escKeyDown, false);
+
+function escKeyDown(e) {
+    let keyCode = e.keyCode;
+    if(keyCode===27) {
+        closeAllWalletsDialogs();
+    }
+}
+
+
 function setButtonActive(className) {
     document.getElementById(className).style.backgroundColor = "transparent";
     document.getElementById(className).style.border = "1px #f88900 solid";

@@ -23,22 +23,23 @@
 
 .addWalletButton{
     padding: 4px 6px;
-    width: 18%;
+    width: 20%;
     outline: none;
     background-color: #f88900;
     color: #fefefe;
-    font-size: 0.8em;
+    font-size: 0.7em;
     transition: all 0.2s;
 }
 
 .balancesButtonHide{
+    margin-left:100px;
     padding: 4px 6px;
     width: 31%;
     outline: none;
     background-color: #f82000;
     border: 1px #f82000 solid;
     color: #fefefe;
-    font-size: 0.8em;
+    font-size: 0.7em;
     transition: all 0.2s;
 
 }
@@ -50,13 +51,14 @@
 }
 
 .balancesButtonShow{
+    margin-left:100px;
     padding: 4px 6px;
     width: 31%;
     outline: none;
     background-color: #00a820;
     border: 1px #00a820 solid;
     color: #fefefe;
-    font-size: 0.8em;
+    font-size: 0.7em;
     transition: all 0.2s;
 }
 
@@ -104,7 +106,7 @@
 
 #walletList{
     overflow-y: scroll;
-    height: 450px;
+    height: 455px;
     padding:5px;
     font-size: 0.8em;
 }
@@ -421,20 +423,10 @@
     color:#f88900;
 }
 
-#sendFromAddressText{
-    display: inline-block;
-    width: 70%;
-    margin-left: 5%;
-    margin-right: 1%;
-    font-size: 0.8em;
-}
 
-#receiveAddressText{
-    display: inline-block;
-    width: 70%;
-    margin-left: 5%;
-    margin-right: 1%;
-    font-size: 0.8em;
+.rightButton{
+    position: absolute;
+    right: 7.5%;
 }
 
 .walletTransaction {
