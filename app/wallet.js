@@ -366,7 +366,7 @@ function printTransactionElem(elem, txId, datetime, myAddress, addressesFrom, ad
     transactionText += "<span class=\"transactionItem\">"+ myAddress +"</span></div>";
     transactionText += "</div>";
     let oldHtml = document.getElementById(elem).innerHTML;
-    document.getElementById(elem).innerHTML = transactionText + oldHtml;
+    document.getElementById(elem).innerHTML = oldHtml + transactionText;
 }
 
 function transactionDetailsDialog(txId, datetime, myAddress, addressesFrom, addressesTo, amount, block) {
