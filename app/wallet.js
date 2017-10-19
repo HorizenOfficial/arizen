@@ -93,27 +93,18 @@ function setValueIfEmpty() {
 
 function hideBalances() {
     if (document.getElementById("hideZeroBalancesButton").textContent === "Hide Zero Balances") {
-        for (let i = 0, j = 1; i < document.getElementById("walletList").childElementCount; i += 1) {
-            if (document.getElementById("walletList").childNodes[i].childNodes[1].innerText === "0.00000000") {
-                document.getElementById("walletList").childNodes[i].classList.add("walletListItemZero");
-            } else {
-                document.getElementById("walletList").childNodes[i].classList.remove("walletListItemOdd");
-                if (j === 2) {
-                    j = 0;
-                    document.getElementById("walletList").childNodes[i].classList.add("walletListItemOdd");
-                }
-                j++;
+        document.getElementById("walletList").childNodes.forEach(function(element) {
+            if (element.childNodes[1].innerText === "0.00000000") {
+                element.classList.add("walletListItemZero");
             }
-        }
+        }, this);
         document.getElementById("hideZeroBalancesButton").textContent = "Show Zero Balances";
         document.getElementById("hideZeroBalancesButton").classList.remove("balancesButtonHide");
         document.getElementById("hideZeroBalancesButton").classList.add("balancesButtonShow");
     } else {
-        for (let i = 0; i < document.getElementById("walletList").childElementCount; i += 1) {
-            document.getElementById("walletList").childNodes[i].classList.remove("walletListItemZero");
-            document.getElementById("walletList").childNodes[i].classList.remove("walletListItemOdd");
-            if (i % 2 === 0) document.getElementById("walletList").childNodes[i].classList.add("walletListItemOdd");
-        }
+        document.getElementById("walletList").childNodes.forEach(function(element) {
+            element.classList.remove("walletListItemZero");
+        }, this);
         document.getElementById("hideZeroBalancesButton").textContent = "Hide Zero Balances";
         document.getElementById("hideZeroBalancesButton").classList.remove("balancesButtonShow");
         document.getElementById("hideZeroBalancesButton").classList.add("balancesButtonHide");
@@ -224,21 +215,16 @@ ipcRenderer.on("get-wallets-response", function (event, resp) {
 
     showWallet();
     document.getElementById("walletList").innerHTML = "";
-    for (let i = 0, j = 1; i < data.wallets.length; i += 1) {
+    for (let i = 0; i < data.wallets.length; i += 1) {
         wAddress = data.wallets[i][2];
         wBalance = data.wallets[i][3];
         wName = data.wallets[i][4];
         let walletPick = "";
 
         walletClass = "<div name=\"block_" + wAddress + "\" class=\"walletListItem";
-        if (wBalance === 0) {
-            walletClass += " walletListItemZero";
-        } else {
-            if (j === 2) {
-                j = 0;
-                walletClass += " walletListItemOdd";
-            }
-            j++;
+        /* wallet is ordered by amount */
+        if (i % 2 === 0) {
+            walletClass += " walletListItemOdd";
         }
         walletClass += "\">";
         walletName = "<span id=\"listName_"+ wAddress +"\" class=\"walletListItemAddress walletListItemTitle\">" + wName + "</span>";
@@ -337,7 +323,7 @@ ipcRenderer.on("generate-wallet-response", function (event, resp) {
     {
         let i = 0;
         let list = document.getElementById("walletList").childNodes;
-        while (document.getElementById("walletList").childNodes[i].childNodes[1].innerText !== "0.00000000") {
+        while (document.getElementById("walletList").childElementCount > i && document.getElementById("walletList").childNodes[i].childNodes[1].innerText !== "0.00000000") {
             i++;
         }
         let wAddress = data.msg;
@@ -353,9 +339,15 @@ ipcRenderer.on("generate-wallet-response", function (event, resp) {
         let newItem = document.createElement("div");
         newItem.innerHTML = walletName + walletBalance + walletAddress;
         newItem.classList.add("walletListItem");
+        if (i % 2 == 0) {
+            newItem.classList.add("walletListItemOdd");
+        }
         newItem.name = elemName;
         document.getElementById("walletList").insertBefore(newItem, list[i]);
         document.getElementById("newWalletAddress").value = wAddress;
+        for (i = i + 1; i < document.getElementById("walletList").childElementCount; i += 1) {
+            document.getElementById("walletList").childNodes[i].classList.toggle("walletListItemOdd");
+        }
     }
 });
 
