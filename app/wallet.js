@@ -192,7 +192,7 @@ function getWalletWithName(name) {
 
 function pickWallet(address) {
     let elem = document.getElementById("pickWalletDialogElem").innerHTML;
-    document.getElementById(elem + "Text").innerHTML = address;
+    document.getElementById(elem + "Text").value = address;
     closeDialog("pickWalletDialog");
 }
 
