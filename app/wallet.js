@@ -339,7 +339,7 @@ ipcRenderer.on("generate-wallet-response", function (event, resp) {
         let newItem = document.createElement("div");
         newItem.innerHTML = walletName + walletBalance + walletAddress;
         newItem.classList.add("walletListItem");
-        if (i % 2 == 0) {
+        if (i % 2 === 0) {
             newItem.classList.add("walletListItemOdd");
         }
         newItem.name = elemName;

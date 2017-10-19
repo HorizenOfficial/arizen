@@ -1106,6 +1106,9 @@ ipcMain.on("open-explorer", function (event, url) {
 
 ipcMain.on("generate-qr-code", function(event, address, amount){
     QRCode.toDataURL("zencash:"+ address + "?amount=" + amount, { errorCorrectionLevel: "H", scale: 6, color: {dark:"#000000ff", light: "#fefefeff"}}, function(err, url) {
+        if(err) {
+            console.log(err);
+        }
         event.sender.send("render-qr-code", url);
     });
 });
