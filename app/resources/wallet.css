@@ -31,10 +31,13 @@
     transition: all 0.2s;
 }
 
+.addWalletButtonWidth{
+    width: 36%;
+}
+
 .balancesButtonHide{
-    margin-left:100px;
     padding: 4px 6px;
-    width: 31%;
+    width: 61%;
     outline: none;
     background-color: #f82000;
     border: 1px #f82000 solid;
@@ -51,9 +54,8 @@
 }
 
 .balancesButtonShow{
-    margin-left:100px;
     padding: 4px 6px;
-    width: 31%;
+    width: 61%;
     outline: none;
     background-color: #00a820;
     border: 1px #00a820 solid;
@@ -69,6 +71,11 @@
     color: #00a820;
 }
 
+.rightButtons{
+    position: absolute;
+    right: 2%;
+    width: 55%;
+}
 
 .sendButton{
     margin: 15px;
