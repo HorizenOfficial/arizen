@@ -91,7 +91,7 @@
   },
   "dependencies": {
     "bip32-utils": "^0.10.0",
-    "bitcoinjs-lib": "^3.2.0",
+    "bitcoinjs-lib": "^3.2.1",
     "electron-download": "^4.1.0",
     "electron-packager": "^9.1.0",
     "electron-simple-updater": "^1.2.1",
@@ -100,6 +100,7 @@
     "fs-extra": "^4.0.2",
     "npm": "^5.5.1",
     "password-hash": "^1.2.2",
+    "qrcode": "^0.9.0",
     "sql.js": "^0.4.0",
     "zencashjs": "^1.1.6-a"
   },

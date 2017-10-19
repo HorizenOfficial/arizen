@@ -68,8 +68,16 @@ function changeAmount(elem) {
 }
 
 function generateQR() {
-    // TODO: generate QR code with info from receiveAddressText and receiveCoinAmount
+    let address = document.getElementById("receiveAddressText").value;
+    let amount = document.getElementById("receiveCoinAmount").value;
+    ipcRenderer.send("generate-qr-code", address, amount);
 }
+
+ipcRenderer.on("render-qr-code", function (event, url) {
+    let img = document.getElementById("qr_image");
+    img.src = url;
+});
+
 
 function clearValue() {
     if (document.getElementById("sendToAddress").value === "address") {
