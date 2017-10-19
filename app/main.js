@@ -38,8 +38,8 @@ let userInfo = {
 let settings = {
     notifications: 1,
     explorer: "https://explorer.zensystem.io/",
-    api: "insight-api-zen/",
-    autorefresh: 30,
+    api: "https://explorer.zensystem.io/insight-api-zen/",
+    autorefresh: 180,
     refreshTimeout: 10,
     txHistory: 50
 };
@@ -283,7 +283,7 @@ function loadTransactions(event) {
         userInfo.walletDb.run(dbStructTransactions);
         sqlRes = userInfo.walletDb.exec("SELECT addr FROM wallet;");
         sqlRes[0].values.forEach(function(address) {
-            request.get(settings.explorer + settings.api + "addrs/" + address[0] + "/txs", function (err, res, body) {
+            request.get(settings.api + "addrs/" + address[0] + "/txs", function (err, res, body) {
                 if (err) {
                     console.log("transaction readout failed");
                 } else if (res && res.statusCode === 200) {
@@ -711,7 +711,7 @@ function parseTransactionResponse(transaction, address, event) {
 }
 
 function updateBalance(address, oldBalance, event) {
-    request.get(settings.explorer + settings.api + "addr/" + address, function (err, res, body) {
+    request.get(settings.api + "addr/" + address, function (err, res, body) {
         if (err) {
             console.log("balance update failed");
             setTimeout(updateBalance, 5000, address, oldBalance, event);
@@ -729,7 +729,7 @@ function updateBalance(address, oldBalance, event) {
                 };
                 event.sender.send("update-wallet-balance", JSON.stringify(update));
                 /* update latest transaction */
-                request.get(settings.explorer + settings.api + "tx/" + data.transactions[0], function (err, res, body) {
+                request.get(settings.api + "tx/" + data.transactions[0], function (err, res, body) {
                     if (err) {
                         console.log("transaction readout failed");
                     } else if (res && res.statusCode === 200) {
@@ -862,7 +862,7 @@ ipcMain.on("get-wallet-by-name", function (event, name) {
 
 ipcMain.on("get-transaction", function (event, txId, address) {
     if (userInfo.loggedIn) {
-        request.get(settings.explorer + settings.api + "tx/" + txId, function (err, res, body) {
+        request.get(settings.api + "tx/" + txId, function (err, res, body) {
             if (err) {
                 console.log("transaction readout failed");
             } else if (res && res.statusCode === 200) {
@@ -995,7 +995,7 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
         let privateKey = sqlRes[0].values[0][1];
 
         // Get previous transactions
-        let zenApi = settings.explorer + settings.api;
+        let zenApi = settings.api;
         const prevTxURL = zenApi + "addr/" + fromAddress + "/utxo";
         const infoURL = zenApi + "status?q=getInfo";
         const sendRawTxURL = zenApi + "tx/send";
