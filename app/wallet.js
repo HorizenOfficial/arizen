@@ -122,7 +122,7 @@ function hideBalances() {
 
 function send() {
     ipcRenderer.send("send",
-        document.getElementById("sendFromAddressText").textContent,
+        document.getElementById("sendFromAddressText").value,
         document.getElementById("sendToAddress").value,
         document.getElementById("coinFee").value,
         document.getElementById("coinAmount").value);
