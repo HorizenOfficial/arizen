@@ -759,7 +759,7 @@ ipcMain.on("get-wallets", function (event) {
             total: 0,
             autorefresh: settings.autorefresh
         };
-        sqlRes = userInfo.walletDb.exec("SELECT * FROM transactions ORDER BY time ASC");
+        sqlRes = userInfo.walletDb.exec("SELECT * FROM transactions ORDER BY time ASC LIMIT " + settings.txHistory);
         if (sqlRes.length > 0) {
             resp.transactions = sqlRes[0].values;
         }
