@@ -140,11 +140,13 @@ function addWalletDialog() {
     document.getElementById("addWalletDialog").style.opacity = "1";
 }
 
-function pickWalletDialog(elem) {
+function pickWalletDialog(elem, show, hide) {
     showDarkContainer();
     document.getElementById("pickWalletDialog").style.zIndex = "2";
     document.getElementById("pickWalletDialog").style.opacity = "1";
     document.getElementById("pickWalletDialogElem").innerHTML = elem;
+    document.getElementById(show).style.display = "block";
+    document.getElementById(hide).style.display = "none";
 }
 
 function renameWallet() {
@@ -253,8 +255,21 @@ ipcRenderer.on("get-wallets-response", function (event, resp) {
         document.getElementById("walletList").innerHTML += walletClass + walletName + walletBalance + walletAddress + "</div>";
 
         document.getElementById("pickWalletDialogContent").innerHTML += walletPick + walletClass + walletTitle + walletBalance + "</div></div>";
+        document.getElementById("pickWalletDialogContentFull").innerHTML += walletPick + walletClass + walletTitle + walletBalance + "</div></div>";
     }
     document.getElementById("walletFooterBalance").innerHTML = Number(data.total).toFixed(8);
+
+    document.getElementById("walletList").childNodes.forEach(function(element) {
+        if (element.nodeName === "DIV") {
+            if (element.childNodes[1].innerText === "0.00000000") element.classList.add("walletListItemZero");
+        }
+    }, this);
+    
+    document.getElementById("pickWalletDialogContent").childNodes.forEach(function(element) {
+        if (element.nodeName === "DIV") {
+            if (element.childNodes[0].childNodes[1].innerText === "0.00000000") element.childNodes[0].classList.add("walletListItemZero");
+        }
+    }, this);
 
     data.transactions.forEach(function(tx) {
         printTransactionElem("transactionHistory", tx[1], tx[2], tx[3], tx[4], tx[5], Number(tx[6]).toFixed(8), tx[7]);
