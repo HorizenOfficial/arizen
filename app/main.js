@@ -973,8 +973,13 @@ function checkSendParameters(fromAddress, toAddress, fee, amount){
         errString += "\n\n";
     }
 
-    if (typeof parseInt(fee, 10) !== "number" || amount === ""){
+    if (typeof parseInt(fee, 10) !== "number" || fee === ""){
         errString += "Fee is NOT number!";
+        errString += "\n\n";
+    }
+
+    if (fee < 0){
+        errString += "Fee has to be greater or equal zero!";
         errString += "\n\n";
     }
 
