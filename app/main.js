@@ -954,12 +954,22 @@ ipcMain.on("show-notification", function (event, title, message, duration) {
 function checkSendParameters(fromAddress, toAddress, fee, amount){
     let errString = "";
     if (fromAddress.length !== 35) {
-        errString += "Bad format of source address!";
+        errString += "Bad length of source address!";
+        errString += "\n\n";
+    }
+
+    if (fromAddress.substring(0, 2) !== "zn") {
+        errString += "Bad source address prefix - have to be 'zn'!";
         errString += "\n\n";
     }
 
     if (toAddress.length !== 35) {
-        errString += "Bad format of destination address!";
+        errString += "Bad length of destination address!";
+        errString += "\n\n";
+    }
+
+    if (toAddress.substring(0, 2) !== "zn") {
+        errString += "Bad destination address prefix - have to be 'zn'!";
         errString += "\n\n";
     }
 
@@ -1056,7 +1066,9 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
                                 // If we don't have enough address - fail and tell it to the user
                                 if (satoshisSoFar < amountInSatoshi + feeInSatoshi) {
                                     console.log("You don't have so many funds!");
-                                    dialog.showErrorBox("You don't have so many funds!", "Total funds: " + (amountInSatoshi + feeInSatoshi));
+                                    dialog.showErrorBox("You don't have so many funds!", "You wanted to send: " +
+                                        Number((amountInSatoshi + feeInSatoshi) / 100000000).toFixed(8) + " ZEN, but your balance is only: " +
+                                        Number(satoshisSoFar / 100000000).toFixed(8) + " ZEN.");
                                 } else {
                                     // If we don't have exact amount - refund remaining to current address
                                     if (satoshisSoFar !== (amountInSatoshi + feeInSatoshi)) {
