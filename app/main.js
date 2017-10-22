@@ -163,6 +163,9 @@ function importWalletDat(login, pass, wallet) {
     let data = db.export();
     let walletEncrypted = encryptWallet(login, pass, data);
     storeFile(getWalletPath() + login + ".awd", walletEncrypted);
+
+    userInfo.walletDb = db;
+    loadSettings();
 }
 
 function importWallet(filename, encrypt) {
