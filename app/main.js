@@ -26,7 +26,7 @@ attachUpdaterHandlers();
 
 // Keep a global reference of the window object, if you don"t, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let win;
+let mainWindow;
 let userInfo = {
     loggedIn: false,
     login: "",
@@ -166,6 +166,8 @@ function importWalletDat(login, pass, wallet) {
 
     userInfo.walletDb = db;
     loadSettings();
+    mainWindow.webContents.send("zz-get-wallets");
+    loadTransactions(mainWindow.webContents);
 }
 
 function importWallet(filename, encrypt) {
@@ -280,7 +282,7 @@ function loadSettings() {
     settings.txHistory = sqlRes[0].values[0][2];
 }
 
-function loadTransactions(event) {
+function loadTransactions(webContents) {
     let sqlRes = userInfo.walletDb.exec("SELECT name FROM sqlite_master WHERE type='table' AND name='transactions';");
     if (sqlRes.length === 0) {
         userInfo.walletDb.run(dbStructTransactions);
@@ -292,7 +294,7 @@ function loadTransactions(event) {
                 } else if (res && res.statusCode === 200) {
                     let data = JSON.parse(body);
                     data.items.forEach(function(element) {
-                        parseTransactionResponse(JSON.stringify(element), address[0], event);
+                        parseTransactionResponse(JSON.stringify(element), address[0], webContents);
                     }, this);
                 }
             });
@@ -437,7 +439,7 @@ function updateMenuAtLogin() {
                     label: "Force transaction reload",
                     click() {
                         userInfo.walletDb.run("DROP TABLE transactions;");
-                        loadTransactions(null);
+                        loadTransactions(mainWindow.webContents);
                     }
                 }, {
                     type: "separator"
@@ -488,16 +490,16 @@ function updateMenuAtLogout() {
 
 function createWindow() {
     updateMenuAtLogout();
-    win = new BrowserWindow({width: 1050, height: 730, resizable: false, icon: "resources/zen_icon.png"});
+    mainWindow = new BrowserWindow({width: 1050, height: 730, resizable: false, icon: "resources/zen_icon.png"});
 
     if (fs.existsSync(getLoginPath())) {
-        win.loadURL(url.format({
+        mainWindow.loadURL(url.format({
             pathname: path.join(__dirname, "login.html"),
             protocol: "file:",
             slashes: true
         }));
     } else {
-        win.loadURL(url.format({
+        mainWindow.loadURL(url.format({
             pathname: path.join(__dirname, "register.html"),
             protocol: "file:",
             slashes: true
@@ -506,14 +508,14 @@ function createWindow() {
 
     // Open the DevTools.
     // FIXME: comment this for release versions!
-    // win.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
 
     // Emitted when the window is closed.
-    win.on("closed", function () {
+    mainWindow.on("closed", function () {
         // Dereference the window object, usually you would store windows
         // in an array if your app supports multi windows, this is the time
         // when you should delete the corresponding element.
-        win = null;
+        mainWindow = null;
     });
 }
 
@@ -530,7 +532,7 @@ app.on("window-all-closed", function () {
 app.on("activate", function () {
     // On macOS it"s common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (win === null) {
+    if (mainWindow === null) {
         createWindow();
         // checkAll();
     }
@@ -550,7 +552,7 @@ app.on("before-quit", function () {
     // }, function (response) {
     //     if (response === 0) {
     //         app.showExitPrompt = false;
-    //         win.close();
+    //         mainWindow.close();
     //     }
     // });
 });
@@ -615,7 +617,7 @@ ipcMain.on("verify-login-info", function (event, login, pass) {
                 userInfo.pass = pass;
                 userInfo.walletDb = new sql.Database(walletBytes);
                 loadSettings();
-                loadTransactions(event);
+                loadTransactions(mainWindow.webContents);
                 updateMenuAtLogin();
                 resp = {
                     response: "OK",
@@ -660,7 +662,7 @@ ipcMain.on("exit-from-menu", function () {
     app.quit();
 });
 
-function parseTransactionResponse(transaction, address, event) {
+function parseTransactionResponse(transaction, address, webContents) {
     let data = JSON.parse(transaction);
     let inAmount = 0;
     let amount = 0;
@@ -699,7 +701,7 @@ function parseTransactionResponse(transaction, address, event) {
     userInfo.walletDb.run("INSERT INTO transactions VALUES (?,?,?,?,?,?,?,?)", [null, data.txid, data.time, address, vins.join(","), vouts.join(","), amount, data.blockheight]);
     userInfo.dbChanged = true;
 
-    if (event !== null) {
+    if (webContents !== null) {
         let resp = {
             txid: data.txid,
             time: data.time,
@@ -709,7 +711,7 @@ function parseTransactionResponse(transaction, address, event) {
             amount: amount,
             block: data.blockheight
         }
-        event.sender.send("get-transaction-update", JSON.stringify(resp));
+        webContents.send("get-transaction-update", JSON.stringify(resp));
     }
 }
 
@@ -736,7 +738,7 @@ function updateBalance(address, oldBalance, event) {
                     if (err) {
                         console.log("transaction readout failed");
                     } else if (res && res.statusCode === 200) {
-                        parseTransactionResponse(body, address, event);
+                        parseTransactionResponse(body, address, event.sender);
                     }
                 });
             }
