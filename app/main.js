@@ -500,7 +500,7 @@ function createWindow() {
         }));
     } else {
         mainWindow.loadURL(url.format({
-            pathname: path.join(__dirname, "register.html"),
+            pathname: path.join(__dirname, "create_wallet.html"),
             protocol: "file:",
             slashes: true
         }));
