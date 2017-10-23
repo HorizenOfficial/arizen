@@ -24,12 +24,12 @@ function checkLoginInfo() {
     }
 }
 
-function doRegister() {
+function doCreateWallet() {
     ipcRenderer.send("write-login-info", document.getElementById("username").value, document.getElementById("pswd").value,
         (document.getElementById("btWallet").files.length > 0) ? document.getElementById("btWallet").files[0].path : ""
     );
     location.href = "./login.html";
-    console.log("Registration was successful - redirecting to wallet.html");
+    console.log("Wallet creation was successful - redirecting to wallet.html");
 }
 
 function changeClass(objectid, newClass, oldClass) {

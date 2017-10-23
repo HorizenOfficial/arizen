@@ -284,7 +284,7 @@ label {
 }
 
 /* Login.html only */
-.register_link{
+.create_wallet_link{
     color: #f88900;
     padding : 10px;
     margin: 10px;
@@ -292,7 +292,7 @@ label {
     text-decoration: none;
 }
 
-.register_link:hover{
+.create_wallet_link:hover{
     color: #0d1006;
     padding : 10px;
 }

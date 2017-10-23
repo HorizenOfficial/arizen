@@ -250,7 +250,6 @@ ipcRenderer.on("get-wallets-response", function (event, resp) {
             if (element.childNodes[1].innerText === "0.00000000") element.classList.add("walletListItemZero");
         }
     }, this);
-    
     document.getElementById("pickWalletDialogContent").childNodes.forEach(function(element) {
         if (element.nodeName === "DIV") {
             if (element.childNodes[0].childNodes[1].innerText === "0.00000000") element.childNodes[0].classList.add("walletListItemZero");
@@ -312,7 +311,6 @@ ipcRenderer.on("get-wallet-by-name-response", function (event, resp) {
 
 ipcRenderer.on("get-transaction-update", function (event, resp) {
     let data = JSON.parse(resp);
-    
     printTransactionElem("transactionHistory", data.txid, data.time, data.address, data.vins, data.vouts, Number(data.amount).toFixed(8), data.block);
 });
 
