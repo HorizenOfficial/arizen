@@ -1005,17 +1005,13 @@ function checkSendParameters(fromAddress, toAddress, fee, amount){
 
 ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
     event.sender.send("show-progress-bar");
-    /*
-        @lukas Progress bar update function:
-            event.sender.send("update-progress-bar", label, percent);
-
-        example:
-            event.sender.send("update-progress-bar", "Sending transaction", 65);
-    */
+    event.sender.send("update-progress-bar", "Checking inputs ...", 5);
     let errString = checkSendParameters(fromAddress, toAddress, fee, amount);
     if (errString !== ""){
+        event.sender.send("close-progress-bar");
         dialog.showErrorBox("Parameter check:", errString);
     }else{
+        event.sender.send("update-progress-bar", "Preparing data ...", 10);
         // Convert to satoshi
         let amountInSatoshi = Math.round(amount * 100000000);
         let feeInSatoshi = Math.round(fee * 100000000);
@@ -1034,14 +1030,18 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
         let history = [];
         let recipients = [{address: toAddress, satoshis: amountInSatoshi}];
 
+        event.sender.send("update-progress-bar", "Querying transaction history ...", 15);
         request.get(prevTxURL, function (tx_err, tx_resp, tx_body) {
             if (tx_err) {
+                event.sender.send("close-progress-bar");
                 console.log(tx_err);
                 dialog.showErrorBox("tx_err", tx_err);
             } else if (tx_resp && tx_resp.statusCode === 200) {
                 let tx_data = JSON.parse(tx_body);
+                event.sender.send("update-progress-bar", "Querying information ...", 30);
                 request.get(infoURL, function (info_err, info_resp, info_body) {
                     if (info_err) {
+                        event.sender.send("close-progress-bar");
                         console.log(info_err);
                         dialog.showErrorBox("info_err", info_err);
                     } else if (info_resp && info_resp.statusCode === 200) {
@@ -1050,13 +1050,16 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
                         const blockHashURL = zenApi + "block-index/" + blockHeight;
 
                         // Get block hash
+                        event.sender.send("update-progress-bar", "Querying block hashes ...", 45);
                         request.get(blockHashURL, function (bhash_err, bhash_resp, bhash_body) {
                             if (bhash_err) {
+                                event.sender.send("close-progress-bar");
                                 console.log(bhash_err);
                                 dialog.showErrorBox("bhash_err", bhash_err);
                             } else if (bhash_resp && bhash_resp.statusCode === 200) {
                                 const blockHash = JSON.parse(bhash_body).blockHash;
 
+                                event.sender.send("update-progress-bar", "Looking for spendable funds ...", 60);
                                 // Iterate through each utxo and append it to history
                                 for (let i = 0; i < tx_data.length; i++) {
                                     if (tx_data[i].confirmations === 0) {
@@ -1078,36 +1081,42 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
 
                                 // If we don't have enough address - fail and tell it to the user
                                 if (satoshisSoFar < amountInSatoshi + feeInSatoshi) {
+                                    event.sender.send("close-progress-bar");
                                     console.log("You don't have so many funds!");
                                     dialog.showErrorBox("You don't have so many funds!", "You wanted to send: " +
                                         Number((amountInSatoshi + feeInSatoshi) / 100000000).toFixed(8) + " ZEN, but your balance is only: " +
                                         Number(satoshisSoFar / 100000000).toFixed(8) + " ZEN.");
                                 } else {
+                                    event.sender.send("update-progress-bar", "Querying information ...", 70);
                                     // If we don't have exact amount - refund remaining to current address
                                     if (satoshisSoFar !== (amountInSatoshi + feeInSatoshi)) {
                                         let refundSatoshis = satoshisSoFar - amountInSatoshi - feeInSatoshi;
                                         recipients = recipients.concat({address: fromAddress, satoshis: refundSatoshis})
                                     }
 
+                                    event.sender.send("update-progress-bar", "Creating transaction ...", 80);
                                     // Create transaction
                                     let txObj = zencashjs.transaction.createRawTx(history, recipients, blockHeight, blockHash);
 
+                                    event.sender.send("update-progress-bar", "Signing transaction ...", 85);
                                     // Sign each history transcation
                                     for (let i = 0; i < history.length; i ++) {
                                         txObj = zencashjs.transaction.signTx(txObj, i, privateKey, true)
                                     }
 
                                     // Convert it to hex string
+                                    event.sender.send("update-progress-bar", "Sending transaction ...", 90);
                                     const txHexString = zencashjs.transaction.serializeTx(txObj);
                                     request.post({url: sendRawTxURL, form: {rawtx: txHexString}}, function(sendtx_err, sendtx_resp, sendtx_body) {
                                         if (sendtx_err) {
+                                            event.sender.send("close-progress-bar");
                                             console.log(sendtx_err);
                                             dialog.showErrorBox("sendtx_err", sendtx_err);
                                         } else if(sendtx_resp && sendtx_resp.statusCode === 200) {
                                             const tx_resp_data = JSON.parse(sendtx_body);
-                                            // TODO: add "icon" to dialogs for macOS
+                                            event.sender.send("update-progress-bar", "Done!", 100);
+                                            event.sender.send("close-progress-bar");
                                             dialog.showMessageBox({
-                                                // icon: "./resources/zen_icon.png",
                                                 type: "question",
                                                 buttons: ["Yes", "No"],
                                                 title: "Sucess!",
