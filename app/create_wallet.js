@@ -95,7 +95,8 @@ function checkPasswd() {
 }
 
 function checkPasswdAgain() {
-    ide = (document.getElementById("pswd").value === document.getElementById("pswd_again").value);
+    ide = (document.getElementById("pswd").value === document.getElementById("pswd_again").value) &&
+        (document.getElementById("pswd").value !== "" || document.getElementById("pswd_again").value !== "");
     if (ide) {
         changeClass("identical_info", "valid", "invalid");
     } else {
