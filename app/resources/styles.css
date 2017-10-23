@@ -246,8 +246,9 @@ body {
 }
 
 #settingsDialog label {
+    display:inline-block;
     font-size: 1.1em;
-    margin: 5px;
+    margin-top: 5px;
 }
 
 .closeAddWalletDialog {
@@ -272,7 +273,7 @@ body {
 }
 
 .settings_input{
-    width: 55%;
+    width: 80%;
     padding: 3px 3px;
 }
 
