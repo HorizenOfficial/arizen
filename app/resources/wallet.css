@@ -513,3 +513,24 @@
 .transactionExplorer {
     font-size: 0.8em;
 }
+
+#progressBarDiv {
+    width: 100%;
+    background-color: #888888;
+}
+#progressBar {
+    width: 1%;
+    height: 30px;
+    background-color: #f88900;
+}
+
+#progressBarDialog {
+    position: absolute;
+    z-index: -1;
+    left: 162px;
+    width: 700px;
+    #height: 300px;
+    top:200px;
+    opacity:0;
+    transition: 0.5s;
+}

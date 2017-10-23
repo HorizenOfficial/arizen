@@ -1004,6 +1004,14 @@ function checkSendParameters(fromAddress, toAddress, fee, amount){
 }
 
 ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
+    event.sender.send("show-progress-bar");
+    /*
+        @lukas Progress bar update function:
+            event.sender.send("update-progress-bar", label, percent);
+
+        example:
+            event.sender.send("update-progress-bar", "Sending transaction", 65);
+    */
     let errString = checkSendParameters(fromAddress, toAddress, fee, amount);
     if (errString !== ""){
         dialog.showErrorBox("Parameter check:", errString);
@@ -1119,6 +1127,7 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
             }
         });
     }
+    event.sender.send("close-progress-bar");
 });
 
 ipcMain.on("open-explorer", function (event, url) {
