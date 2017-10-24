@@ -108,8 +108,8 @@
   "devDependencies": {
     "ajv": "^5.2.5",
     "electron": "^1.8.1",
-    "electron-builder": "19.38.*",
-    "electron-builder-squirrel-windows": "19.38.*",
+    "electron-builder": "19.32.*",
+    "electron-builder-squirrel-windows": "19.32.*",
     "flow-bin": "^0.56.0"
   },
   "optionalDependencies": {
