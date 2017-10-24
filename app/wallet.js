@@ -351,9 +351,9 @@ ipcRenderer.on("generate-wallet-response", function (event, resp) {
 });
 
 // FIXME remove this silly callback to main
-ipcRenderer.on("zz-get-wallets", (event, resp) => {
-	ipcRenderer.send("get-wallets");
-});
+//ipcRenderer.on("zz-get-wallets", (event, resp) => {
+// 	ipcRenderer.send("get-wallets");
+//});
 
 function printTransactionElem(elem, txId, datetime, myAddress, addressesFrom, addressesTo, amount, block) {
     let date = new Date(datetime * 1000);

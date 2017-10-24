@@ -166,8 +166,8 @@ function importWalletDat(login, pass, wallet) {
 
     userInfo.walletDb = db;
     loadSettings();
-    mainWindow.webContents.send("zz-get-wallets");
-    loadTransactions(mainWindow.webContents);
+    // mainWindow.webContents.send("zz-get-wallets");
+    // loadTransactions(mainWindow.webContents);
 }
 
 function importWallet(filename, encrypt) {
