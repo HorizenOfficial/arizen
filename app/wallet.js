@@ -463,7 +463,7 @@ function showSendFinish(type, text) {
     } else if (type === "ok") {
         let elem = document.getElementById("sendResultText");
         let title= document.getElementById("sendResultTitle");
-        title.style.color = "#008800";
+        title.style.color = "#00a820";
         title.innerHTML = "<b>Transaction has been successfully sent</b>";
         elem.innerHTML = text;
     }
