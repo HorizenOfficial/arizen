@@ -1146,7 +1146,7 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
             }
         });
     }
-    event.sender.send("close-progress-bar");
+    //event.sender.send("close-progress-bar");
 });
 
 ipcMain.on("open-explorer", function (event, url) {
