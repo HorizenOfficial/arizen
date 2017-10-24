@@ -34,7 +34,7 @@
     "desktop",
     "electron"
   ],
-  "author": "ZEN team",
+  "author": "ZEN team <lukas@zensystem.io>",
   "contributors": [
     {
       "name": "@lukas",
@@ -106,10 +106,10 @@
     "zencashjs": "^1.1.6-a"
   },
   "devDependencies": {
-    "ajv": "^5.2.3",
+    "ajv": "^5.2.5",
     "electron": "^1.8.1",
-    "electron-builder": "^19.39.0",
-    "electron-builder-squirrel-windows": "^19.39.0",
+    "electron-builder": "19.38.*",
+    "electron-builder-squirrel-windows": "19.38.*",
     "flow-bin": "^0.56.0"
   },
   "optionalDependencies": {
