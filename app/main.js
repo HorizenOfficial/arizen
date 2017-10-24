@@ -1009,9 +1009,7 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
     let errString = checkSendParameters(fromAddress, toAddress, fee, amount);
     if (errString !== ""){
         //event.sender.send("close-progress-bar");
-        //event.sender.send("send-finish", "error", "Parameter check: "+ errString);
-        event.sender.send("send-finish", "ok", "<br /><a href=\"javascript:void(0)\" onclick=\"openUrl('https://explorer.zensystem.io/tx/')\" class=\"walletListItemDetails transactionExplorer\" target=\"_blank\">Show Transaction in Explorer</a>");
-
+        event.sender.send("send-finish", "error", "Parameter check: "+ errString);
         //dialog.showErrorBox("Parameter check:", errString);
     }else{
         //event.sender.send("update-progress-bar", "Preparing data ...", 10);
@@ -1148,7 +1146,7 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
             }
         });
     }
-    event.sender.send("close-progress-bar");
+    //event.sender.send("close-progress-bar");
 });
 
 ipcMain.on("open-explorer", function (event, url) {
