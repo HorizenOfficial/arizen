@@ -1035,7 +1035,7 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
             if (tx_err) {
                 event.sender.send("close-progress-bar");
                 console.log(tx_err);
-                dialog.showErrorBox("tx_err", tx_err);
+                dialog.showErrorBox("tx_err", String(tx_err));
             } else if (tx_resp && tx_resp.statusCode === 200) {
                 let tx_data = JSON.parse(tx_body);
                 event.sender.send("update-progress-bar", "Querying information ...", 30);
@@ -1043,7 +1043,7 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
                     if (info_err) {
                         event.sender.send("close-progress-bar");
                         console.log(info_err);
-                        dialog.showErrorBox("info_err", info_err);
+                        dialog.showErrorBox("info_err", String(info_err));
                     } else if (info_resp && info_resp.statusCode === 200) {
                         let info_data = JSON.parse(info_body);
                         const blockHeight = info_data.info.blocks - 300;
@@ -1055,7 +1055,7 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
                             if (bhash_err) {
                                 event.sender.send("close-progress-bar");
                                 console.log(bhash_err);
-                                dialog.showErrorBox("bhash_err", bhash_err);
+                                dialog.showErrorBox("bhash_err", String(bhash_err));
                             } else if (bhash_resp && bhash_resp.statusCode === 200) {
                                 const blockHash = JSON.parse(bhash_body).blockHash;
 
@@ -1111,7 +1111,7 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
                                         if (sendtx_err) {
                                             event.sender.send("close-progress-bar");
                                             console.log(sendtx_err);
-                                            dialog.showErrorBox("sendtx_err", sendtx_err);
+                                            dialog.showErrorBox("sendtx_err", String(sendtx_err));
                                         } else if(sendtx_resp && sendtx_resp.statusCode === 200) {
                                             const tx_resp_data = JSON.parse(sendtx_body);
                                             event.sender.send("update-progress-bar", "Done!", 100);
