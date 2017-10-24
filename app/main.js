@@ -1125,7 +1125,7 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
                                             const tx_resp_data = JSON.parse(sendtx_body);
                                             //event.sender.send("update-progress-bar", "Done!", 100);
                                             //event.sender.send("close-progress-bar");
-                                            event.sender.send("send-finish", "ok", "TXid:\n\n" + tx_resp_data.txid + "<br /><a href=\"javascript:void(0)\" onclick=\"openUrl('https://explorer.zensystem.io/tx/"+ tx_resp_data.txid +"')\" class=\"walletListItemDetails transactionExplorer\" target=\"_blank\">Show Transaction in Explorer</a>");
+                                            event.sender.send("send-finish", "ok", "TXid:\n\n<small><small>" + tx_resp_data.txid + "</small></small><br /><a href=\"javascript:void(0)\" onclick=\"openUrl('" + settings.explorer + "tx/" + tx_resp_data.txid +"')\" class=\"walletListItemDetails transactionExplorer\" target=\"_blank\">Show Transaction in Explorer</a>");
                                             /*dialog.showMessageBox({
                                                 type: "question",
                                                 buttons: ["Yes", "No"],
