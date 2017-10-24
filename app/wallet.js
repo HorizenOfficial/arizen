@@ -112,6 +112,7 @@ function hideBalances() {
 }
 
 function send() {
+    showSendStart();
     ipcRenderer.send("send",
         document.getElementById("sendFromAddressText").value,
         document.getElementById("sendToAddress").value,
@@ -389,7 +390,7 @@ function transactionDetailsDialog(txId, datetime, myAddress, addressesFrom, addr
     }
     transactionText += "<div class=\"center\"><span class=\"transactionItem\">"+ myAddress +"</span></div></div>";
     transactionText += "<div class=\"transactionItemLabel\">Transaction ID:</div>";
-    transactionText += "<div class=\"center\"><a href=\"javascript:void(0)\" onclick=\"openUrl('https://explorer.zensystem.io/tx/"+ txId +"')\" class=\"walletListItemDetails transactionExlorer\" target=\"_blank\">"+txId+"</a></div></div>";
+    transactionText += "<div class=\"center\"><a href=\"javascript:void(0)\" onclick=\"openUrl('https://explorer.zensystem.io/tx/"+ txId +"')\" class=\"walletListItemDetails transactionExplorer\" target=\"_blank\">"+txId+"</a></div></div>";
     transactionText += "<div class=\"transactionItemLabel\">From:</div>";
     for(let i = 0; i < addressesSend.length; i++ ) {
         transactionText += "<div class=\"center\"><div class=\"transactionItem\">" + addressesSend[i] + "</div></div>";
@@ -435,4 +436,34 @@ ipcRenderer.on("close-progress-bar", function() {
 ipcRenderer.on("update-progress-bar", function(event, label, value) {
     document.getElementById("progressBar").style.width = value + "%";
     document.getElementById("progressBarDialogLabel").innerHTML = label;
+});
+
+function showSendStart() {
+    document.removeEventListener("keydown", escKeyDown, false);
+    document.getElementById( "darkContainer" ).setAttribute( "onClick", "" );
+    showDarkContainer();
+}
+
+function showSendFinish(type, text) {
+    document.getElementById( "darkContainer" ).setAttribute( "onClick", "javascript: closeAllWalletsDialogs();");
+    document.addEventListener("keydown", escKeyDown, false);
+    closeAllWalletsDialogs();
+    document.getElementById("sendFromAddressText").value = "";
+    document.getElementById("sendToAddress").value = "address";
+    document.getElementById("coinFee").value = "0.00010000";
+    document.getElementById("coinAmount").value = "0.00000000";
+
+    if(type === "error") {
+        let elem = document.getElementById("sendResult");
+        elem.innerHTML = "<b>Error:</b><br />" + text;
+    } else if (type === "ok") {
+        let elem = document.getElementById("sendResult");
+        elem.innerHTML = text;
+    }
+
+}
+
+
+ipcRenderer.on("send-finish", function(event, type, text) {
+    showSendFinish(type, text);
 });
