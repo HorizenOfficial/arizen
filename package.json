@@ -34,7 +34,7 @@
     "desktop",
     "electron"
   ],
-  "author": "ZEN team",
+  "author": "ZEN team <lukas@zensystem.io>",
   "contributors": [
     {
       "name": "@lukas",
