@@ -7,7 +7,7 @@
   },
   "win32-x64-prod": {
     "readme": "1st version",
-    "update": "https://github.com/ZencashOfficial/arizen/releases/download/v1.0.0",
+    "update": "https://github.com/ZencashOfficial/arizen/releases/download/v1.0.0/Arizen.Setup.1.0.0.exe",
     "install": "https://github.com/ZencashOfficial/arizen/releases/download/v1.0.0/Arizen.Setup.1.0.0.exe",
     "version": "1.0.0"
   },
