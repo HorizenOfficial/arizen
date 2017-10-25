@@ -258,10 +258,11 @@ ipcRenderer.on("get-wallets-response", function (event, resp) {
         }
     }, this);
 
-    data.transactions.forEach(function(tx) {
-        printTransactionElem("transactionHistory", tx[1], tx[2], tx[3], tx[4], tx[5], Number(tx[6]).toFixed(8), tx[7]);
-    }, this);
-
+    for (let i = data.transactions.length - 1; i >= 0; i -= 1) {
+        printTransactionElem("transactionHistory", data.transactions[i][1], data.transactions[i][2], data.transactions[i][3],
+            data.transactions[i][4], data.transactions[i][5], Number(data.transactions[i][6]).toFixed(8), data.transactions[i][7]);
+    }
+    
     if (data.autorefresh > 0) {
         setTimeout(refreshWallet, data.autorefresh * 1000);
     }
@@ -371,7 +372,7 @@ function printTransactionElem(elem, txId, datetime, myAddress, addressesFrom, ad
     transactionText += "<span class=\"transactionItem\">"+ myAddress +"</span></div>";
     transactionText += "</div>";
     let oldHtml = document.getElementById(elem).innerHTML;
-    document.getElementById(elem).innerHTML = oldHtml + transactionText;
+    document.getElementById(elem).innerHTML = transactionText + oldHtml;
 }
 
 function transactionDetailsDialog(txId, datetime, myAddress, addressesFrom, addressesTo, amount, block) {

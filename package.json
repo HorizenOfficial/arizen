@@ -85,7 +85,7 @@
       "category": "Office"
     },
     "win": {
-      "target": "NSIS",
+      "target": "Squirrel",
       "icon": "build/icon.ico"
     }
   },
