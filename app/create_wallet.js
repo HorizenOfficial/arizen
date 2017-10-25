@@ -25,9 +25,7 @@ function checkLoginInfo() {
 }
 
 function doCreateWallet() {
-    ipcRenderer.send("write-login-info", document.getElementById("username").value, document.getElementById("pswd").value,
-        (document.getElementById("btWallet").files.length > 0) ? document.getElementById("btWallet").files[0].path : ""
-    );
+    ipcRenderer.send("write-login-info", document.getElementById("username").value, document.getElementById("pswd").value, "");
     location.href = "./login.html";
     console.log("Wallet creation was successful - redirecting to wallet.html");
 }
