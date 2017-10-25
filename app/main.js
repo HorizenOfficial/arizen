@@ -441,9 +441,9 @@ function updateMenuAtLogin() {
                 //    userInfo.walletDb.run("DROP TABLE transactions;");
                 //    loadTransactions(mainWindow.webContents);
                 //}
-                }, {
+                }/*, {
                     type: "separator"
-                }, {
+                }*/, {
                     label: "Exit",
                     click() {
                         app.quit();
