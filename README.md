@@ -4,51 +4,20 @@
 [![Code Climate][codeclimate-img]][codeclimate-url]
 [![Test Coverage][testcoverage-img]][testcoverage-url]
 
-# Arizen features for v0.1.0-beta version
-- [x] team GPG verified commits 
-- [x] codeclimate code/bug automatic review
-- [x] Travis CI integration
-- [x] dependency version checker 
-- [x] displaying all your addresses with balances
-- [x] displaying detail info about address
-- [x] transaction history - raw
-- [x] transaction history - with detail about transaction
-- [x] introduce new `.awd` file (arizen wallet database)
-- [x] import wallet.dat - during registration
-- [x] import wallet.dat / `[your_login].awd` encrypted / `[your_login].awd` unencrypted - in GUI
-- [x] backup wallet to encrypted/decrypted file
-- [x] desktop notifications
-- [x] light API wallet without requiring synchronization - connected to online insight
-- [x] use modern cryptography, aes-256-gcm with sha512 key
-- [x] encrypted login pass
-- [x] encrypted `[your_login].awd` file - storing all your data
-- [x] encrypted `users.arizen` file - storing all users login data
-- [x] multiple accounts
-- [x] password protection 
-- [x] you have to create strong password 
-- [x] automatically download updates
-- [x] simple, nice, flat, ZEN branded GUI
-- [x] Windows + MacOS + Linux instalation files
-- [x] encrypted customizable wallet setting
-- [x] implement settings for selection of your favorite insight explorer
-- [x] implement settings for selection of your favorite insight API
-- [x] implement settings for enabling/disabling notification
-## Wallet
-- [x] show/hide zero balance addresses
-- [x] sending transparent transaction
-- [x] generating new transparent address + label
-- [x] configurable fee
+# What is and can do Arizen wallet in v1.0.0 version
+- [x] You can download Arizen wallet from Release section from Github right now 
+- [x] You can create multiple separate accounts
+- [x] Password protected locally stored accounts
+- [x] All data are encrypted (any of other wallets does not have this) and stored only on your HDD 
+- [x] Detailed info about address and transaction history
+- [x] You can import / export wallet to encrypted `.awd` / decrypted `.uawd` Arizen's file
+- [x] Desktop notifications when balance has been changed
+- [x] Arizen automatically downloads updates instead of you
+- [x] Windows + MacOS + Linux installation files
 
-# Planned features for next versions
-- [ ] bug-free
 ## Wallet
-- [ ] sending private transaction
-- [ ] generating new private address
-## Messenger
-- [ ] messaging 1-1
-- [ ] add/remove/edit your contacts
-- [ ] messaing history
-- [ ] compatible messaging with other messengers
+- [x] Needs connection to the insight and API (you can change servers in settings)
+- [x] Arizen is API wallet
 
 # How to create distribution
 npm run dist
