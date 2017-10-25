@@ -23,10 +23,18 @@
 npm run dist
 
 ![Arizen](bg.png)
-![Screenshot](https://i.imgur.com/Cc14AP2.png)
-![Screenshot](https://i.imgur.com/qLxk2l4.png)
-![Screenshot](https://i.imgur.com/0VezNp1.png)
-![Screenshot](https://i.imgur.com/3ngJvrW.png)
+![Screenshot](https://i.imgur.com/SLi20fh.png)
+![Screenshot](https://i.imgur.com/1XR6Fc1.png)
+![Screenshot](https://i.imgur.com/R3HoVNE.png)
+![Screenshot](https://i.imgur.com/SWabTv5.png)
+![Screenshot](https://i.imgur.com/9ZJ0fsM.png)
+![Screenshot](https://i.imgur.com/ZUhxgXy.png)
+![Screenshot](https://i.imgur.com/0Yqcomp.png)
+![Screenshot](https://i.imgur.com/CbtOqNc.png)
+![Screenshot](https://i.imgur.com/O6ozD2c.png)
+![Screenshot](https://i.imgur.com/25ndItC.png)
+![Screenshot](https://i.imgur.com/F6HvrQh.png)
+![Screenshot](https://i.imgur.com/q4siUwF.png)
 
 [david-img]: https://david-dm.org/ZencashOfficial/arizen.svg?style=flat-square
 [david-url]: https://david-dm.org/ZencashOfficial/arizen
