@@ -1,8 +1,8 @@
 {
   "linux-x64-prod": {
     "readme": "1st version",
-    "update": "linux-x64-prod-v1.0.0/simple-updater-example-1.0.0-x86_64.AppImage",
-    "install": "simple-updater-example-1.0.0-x86_64.AppImage",
+    "update": "https://github.com/ZencashOfficial/arizen/releases/download/v1.0.0/Arizen-1.0.0-x86_64.AppImage",
+    "install": "https://github.com/ZencashOfficial/arizen/releases/download/v1.0.0/Arizen-1.0.0-x86_64.AppImage",
     "version": "1.0.0"
   },
   "win32-x64-prod": {
