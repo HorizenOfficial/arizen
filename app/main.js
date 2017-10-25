@@ -1012,6 +1012,10 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
         let amountInSatoshi = Math.round(amount * 100000000);
         let feeInSatoshi = Math.round(fee * 100000000);
         let sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet WHERE addr = '" + fromAddress + "'");
+		if (!sqlRes.length) {
+			event.sender.send("send-finish", "error", "Source address is not in your wallet!");
+			return;
+		}
         let privateKey = sqlRes[0].values[0][1];
 
         // Get previous transactions
