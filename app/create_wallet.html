@@ -30,14 +30,14 @@
                 <span style="text-align:center;"><label for="pswd_again">Password again</label></span>
                 <span><input id="pswd_again" class="inputs" name="pswd_again" type="password" onkeyup="checkPasswdAgain();" tabindex="3" onfocus="selectColumn(false, false, true);checkPasswdAgain();"/></span>
             </li>
-            <li>
+            <!--<li>
                     <span class="marginLeft5p">Select Wallet
                     <input id="btWalletButton" class="buttons btWalletButtonClass" name="btWalletButton" type="button" value="Browse" tabindex="4" onclick="document.getElementById('btWallet').click();"/>
                     <input id="btWallet" name="btWallet" style="display: none;" type='file' accept=".dat" onchange="document.getElementById('btWalletFilename').textContent = document.getElementById('btWallet').value;"/>
                     </span>
                     <span id="btWalletFilename" class="right"></span>
 
-            </li>
+            </li> -->
             <li>
                 <input id="btSubmit" class="buttons" name="btSubmit" type="button" value="Create Wallet" tabindex="5" onclick="doCreateWallet();" disabled/>
             </li>

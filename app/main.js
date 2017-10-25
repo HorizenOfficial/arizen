@@ -401,27 +401,27 @@ function updateMenuAtLogin() {
                     }
                 }, {
                     type: "separator"
-                }, {
-                    label: "Import ZEND wallet.dat",
-                    click() {
-                        if (userInfo.loggedIn) {
-                            dialog.showOpenDialog({
-                                title: "Import wallet.dat",
-                                filters: [{name: "Wallet", extensions: ["dat"]}]
-                            }, function (filePaths) {
-                                if (filePaths) dialog.showMessageBox({
-                                    type: "warning",
-                                    message: "This will replace your actual wallet. Are you sure?",
-                                    buttons: ["Yes", "No"],
-                                    title: "Replace wallet?"
-                                }, function (response) {
-                                    if (response === 0) {
-                                        importWalletDat(userInfo.login, userInfo.pass, filePaths[0]);
-                                    }
+                    /*}, {
+                        label: "Import ZEND wallet.dat",
+                        click() {
+                            if (userInfo.loggedIn) {
+                                dialog.showOpenDialog({
+                                    title: "Import wallet.dat",
+                                    filters: [{name: "Wallet", extensions: ["dat"]}]
+                                }, function (filePaths) {
+                                    if (filePaths) dialog.showMessageBox({
+                                        type: "warning",
+                                        message: "This will replace your actual wallet. Are you sure?",
+                                        buttons: ["Yes", "No"],
+                                        title: "Replace wallet?"
+                                    }, function (response) {
+                                        if (response === 0) {
+                                            importWalletDat(userInfo.login, userInfo.pass, filePaths[0]);
+                                        }
+                                    });
                                 });
-                            });
-                        }
-                    }
+                            }
+                        }*/
                 }, {
                     label: "Import UNENCRYPTED Arizen wallet",
                     click() {
@@ -434,13 +434,13 @@ function updateMenuAtLogin() {
                     }
                 }, {
                     type: "separator"
-                }, {
-                    /* FIXME: remove after test - not for production */
-                    label: "Force transaction reload",
-                    click() {
-                        userInfo.walletDb.run("DROP TABLE transactions;");
-                        loadTransactions(mainWindow.webContents);
-                    }
+                //}, {
+                    //    /* FIXME: remove after test - not for production */
+                //label: "Force transaction reload",
+                //click() {
+                //    userInfo.walletDb.run("DROP TABLE transactions;");
+                //    loadTransactions(mainWindow.webContents);
+                //}
                 }, {
                     type: "separator"
                 }, {
