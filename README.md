@@ -18,7 +18,7 @@
 - [x] import wallet.dat / `[your_login].awd` encrypted / `[your_login].awd` unencrypted - in GUI
 - [x] backup wallet to encrypted/decrypted file
 - [x] desktop notifications
-- [x] light SVP wallet without requiring synchronization - connected to online insight
+- [x] light API wallet without requiring synchronization - connected to online insight
 - [x] use modern cryptography, aes-256-gcm with sha512 key
 - [x] encrypted login pass
 - [x] encrypted `[your_login].awd` file - storing all your data
