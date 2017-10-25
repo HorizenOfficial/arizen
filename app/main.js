@@ -1015,7 +1015,11 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
 		if (!sqlRes.length) {
 			event.sender.send("send-finish", "error", "Source address is not in your wallet!");
 			return;
-		}
+        }
+        if (sqlRes[0].values[0][3] < (parseFloat(amount) + parseFloat(fee))) {
+			event.sender.send("send-finish", "error", "Insufficient funds on source address!");
+			return;
+        }
         let privateKey = sqlRes[0].values[0][1];
 
         // Get previous transactions
