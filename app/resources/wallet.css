@@ -1,11 +1,11 @@
 /* Left panel */
-.leftWallet{
+.leftWallet {
     position: absolute;
     float: left;
     margin: 5px 5px 5px 5px;
     padding: 5px 5px;
     width: 48.2%;
-    top:40px;
+    top: 40px;
     bottom: 40px;
     border: 1px solid #c4cddb;
     border-top-color: #d3dbde;
@@ -16,12 +16,11 @@
     font-size: 1.1em;
 }
 
-#leftWallet{
+#leftWallet {
     overflow-y: hidden;
 }
 
-
-.addWalletButton{
+.addWalletButton {
     padding: 4px 6px;
     width: 20%;
     outline: none;
@@ -31,11 +30,11 @@
     transition: all 0.2s;
 }
 
-.addWalletButtonWidth{
+.addWalletButtonWidth {
     width: 36%;
 }
 
-.balancesButtonHide{
+.balancesButtonHide {
     padding: 4px 6px;
     width: 61%;
     outline: none;
@@ -47,13 +46,13 @@
 
 }
 
-.balancesButtonHide:hover{
+.balancesButtonHide:hover {
     border: 1px #f82000 solid;
     background-color: transparent;
     color: #f82000;
 }
 
-.balancesButtonShow{
+.balancesButtonShow {
     padding: 4px 6px;
     width: 61%;
     outline: none;
@@ -64,74 +63,70 @@
     transition: all 0.2s;
 }
 
-
-.balancesButtonShow:hover{
+.balancesButtonShow:hover {
     border: 1px #00a820 solid;
     background-color: transparent;
     color: #00a820;
 }
 
-.rightButtons{
+.rightButtons {
     position: absolute;
     right: 2%;
     width: 55%;
 }
 
-.sendButton{
+.sendButton {
     margin: 15px;
 }
 
 .wallet_select {
-    outline:none;
+    outline: none;
     background: #fefefe;
     -webkit-appearance: none;
 }
 
 .wallet_select * {
-    outline:none;
+    outline: none;
     background: #fefefe;
     -webkit-appearance: none;
 }
 
 .wallet_select *:hover {
-    outline:none;
+    outline: none;
     background: #f88900;
     -webkit-appearance: none;
 }
 
-.wallet_labels{
-    width:10%;
-    color:#888888;
+.wallet_labels {
+    width: 10%;
+    color: #888888;
 }
 
 #containerLeftWallet {
     position: relative;
     margin: 0 auto;
-    padding:5px;
+    padding: 5px;
     background: transparent;
 }
 
-#walletList{
+#walletList {
     overflow-y: scroll;
     height: 455px;
-    padding:5px;
+    padding: 5px;
     font-size: 0.8em;
 }
 
-#walletList::-webkit-scrollbar-track
-{
+#walletList::-webkit-scrollbar-track {
     /*-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);*/
     background-color: #FeFeFe;
 }
 
-#walletList::-webkit-scrollbar
-{
+#walletList::-webkit-scrollbar {
     width: 10px;
     background-color: #FeFeFe;
 }
 
-#walletList::-webkit-scrollbar-thumb
-{
+#walletList::-webkit-scrollbar-thumb {
     background: #F90 -webkit-linear-gradient(45deg,
     rgba(255, 255, 255, .2) 25%,
     transparent 25%,
@@ -142,28 +137,24 @@
     transparent);
 }
 
-
-#walletListReceive{
+#walletListReceive {
     overflow-y: scroll;
     height: 470px;
     display: block;
-    padding:5px;
+    padding: 5px;
     font-size: 0.8em;
 }
 
-#walletListReceive::-webkit-scrollbar-track
-{
+#walletListReceive::-webkit-scrollbar-track {
     background-color: #FeFeFe;
 }
 
-#walletListReceive::-webkit-scrollbar
-{
+#walletListReceive::-webkit-scrollbar {
     width: 10px;
     background-color: #FeFeFe;
 }
 
-#walletListReceive::-webkit-scrollbar-thumb
-{
+#walletListReceive::-webkit-scrollbar-thumb {
     background: #F90 -webkit-linear-gradient(45deg,
     rgba(255, 255, 255, .2) 25%,
     transparent 25%,
@@ -178,53 +169,53 @@
     padding: 5px;
 }
 
-.walletDetailsItem{
+.walletDetailsItem {
     padding: 5px;
     color: #f88900;
-    display:block;
+    display: block;
     font-weight: 800;
     font-size: 1em;
 }
 
-.walletDetailsItemLabel{
+.walletDetailsItemLabel {
     padding: 5px;
     color: #888888;
-    display:block;
+    display: block;
     font-weight: 800;
     font-size: 1em;
 }
 
-.walletDetailsItemBalance{
+.walletDetailsItemBalance {
     padding: 5px;
     color: #f88900;
-    display:block;
+    display: block;
     font-weight: 800;
     font-size: 2em;
 }
 
 .walletListItemAddress {
-    display:inline-block;
-    width:85%;
+    display: inline-block;
+    width: 85%;
 }
 
-.walletListItemBalance{
-    display:inline-block;
-    width:28%;
+.walletListItemBalance {
+    display: inline-block;
+    width: 28%;
     text-align: right;
     font-weight: bold;
 }
 
-.walletListItemTitle{
+.walletListItemTitle {
     color: #f88900;
-    width:60%;
+    width: 60%;
     display: inline-block;
     font-weight: 800;
     font-size: 1em;
 }
 
-.walletListItemTitleChat{
+.walletListItemTitleChat {
     color: #fefefe;
-    width:60%;
+    width: 60%;
     display: inline-block;
     font-weight: 800;
     font-size: 1em;
@@ -240,15 +231,15 @@
     color: #f88900;
 }
 
-.walletListItemOdd{
+.walletListItemOdd {
     background: #eeeeee;
 }
 
-.walletListItemZero{
+.walletListItemZero {
     display: none;
 }
 
-.walletListItemChat{
+.walletListItemChat {
     background: #F90 -webkit-linear-gradient(45deg,
     rgba(255, 255, 255, .2) 25%,
     transparent 25%,
@@ -260,17 +251,16 @@
     color: #fefefe;
 }
 
-.walletDetailsRenameButton{
-    position:absolute;
-    bottom : 20px;
+.walletDetailsRenameButton {
+    position: absolute;
+    bottom: 20px;
     left: 20px;
     width: 35%;
 }
 
-
 /* Right Pannel */
 
-.rightTxHistory{
+.rightTxHistory {
     position: absolute;
     margin: 5px 5px 5px auto;
     padding: 5px 5px;
@@ -286,7 +276,7 @@
     color: #0d1006;
 }
 
-.rightTxHistoryTitle{
+.rightTxHistoryTitle {
     padding: 12px 15px;
     outline: 0;
     border: none;
@@ -302,8 +292,8 @@
     left: 162px;
     width: 700px;
     height: 300px;
-    top:150px;
-    opacity:0;
+    top: 150px;
+    opacity: 0;
     transition: 0.5s;
 }
 
@@ -313,25 +303,22 @@
     left: 162px;
     width: 700px;
     bottom: 150px;
-    top:150px;
-    opacity:0;
+    top: 150px;
+    opacity: 0;
     transition: 0.5s;
     overflow-y: scroll;
 }
 
-#pickWalletDialog::-webkit-scrollbar-track
-{
+#pickWalletDialog::-webkit-scrollbar-track {
     background-color: #FeFeFe;
 }
 
-#pickWalletDialog::-webkit-scrollbar
-{
+#pickWalletDialog::-webkit-scrollbar {
     width: 10px;
     background-color: #FeFeFe;
 }
 
-#pickWalletDialog::-webkit-scrollbar-thumb
-{
+#pickWalletDialog::-webkit-scrollbar-thumb {
     background: #F90 -webkit-linear-gradient(45deg,
     rgba(255, 255, 255, .2) 25%,
     transparent 25%,
@@ -348,25 +335,22 @@
     left: 262px;
     width: 500px;
     bottom: 150px;
-    top:150px;
-    opacity:0;
+    top: 150px;
+    opacity: 0;
     transition: 0.5s;
     overflow-y: scroll;
 }
 
-#walletDetailsDialog::-webkit-scrollbar-track
-{
-   background-color: #FeFeFe;
+#walletDetailsDialog::-webkit-scrollbar-track {
+    background-color: #FeFeFe;
 }
 
-#walletDetailsDialog::-webkit-scrollbar
-{
+#walletDetailsDialog::-webkit-scrollbar {
     width: 10px;
     background-color: #FeFeFe;
 }
 
-#walletDetailsDialog::-webkit-scrollbar-thumb
-{
+#walletDetailsDialog::-webkit-scrollbar-thumb {
     background: #F90 -webkit-linear-gradient(45deg,
     rgba(255, 255, 255, .2) 25%,
     transparent 25%,
@@ -383,25 +367,22 @@
     left: 162px;
     width: 700px;
     bottom: 150px;
-    top:150px;
-    opacity:0;
+    top: 150px;
+    opacity: 0;
     transition: 0.5s;
     overflow-y: scroll;
 }
 
-#transactionDetailsDialog::-webkit-scrollbar-track
-{
+#transactionDetailsDialog::-webkit-scrollbar-track {
     background-color: #FeFeFe;
 }
 
-#transactionDetailsDialog::-webkit-scrollbar
-{
+#transactionDetailsDialog::-webkit-scrollbar {
     width: 10px;
     background-color: #FeFeFe;
 }
 
-#transactionDetailsDialog::-webkit-scrollbar-thumb
-{
+#transactionDetailsDialog::-webkit-scrollbar-thumb {
     background: #F90 -webkit-linear-gradient(45deg,
     rgba(255, 255, 255, .2) 25%,
     transparent 25%,
@@ -412,8 +393,8 @@
     transparent);
 }
 
-.generateWalletButton{
-    margin-top:30px;
+.generateWalletButton {
+    margin-top: 30px;
 }
 
 .closeAddWalletDialog {
@@ -421,17 +402,15 @@
     top: 0;
     right: 15px;
     font-size: 30px;
-    color:#888888;
+    color: #888888;
     text-decoration: none;
 }
 
-
 .closeAddWalletDialog:hover {
-    color:#f88900;
+    color: #f88900;
 }
 
-
-.rightButton{
+.rightButton {
     position: absolute;
     right: 7.5%;
 }
@@ -462,7 +441,7 @@
     font-weight: 800;
 }
 
-.transactionIncome{
+.transactionIncome {
     color: #00a820;
     font-size: 1.9em;
 }
@@ -477,19 +456,16 @@
     height: 545px;
 }
 
-#transactionHistory::-webkit-scrollbar-track
-{
+#transactionHistory::-webkit-scrollbar-track {
     background-color: #FeFeFe;
 }
 
-#transactionHistory::-webkit-scrollbar
-{
+#transactionHistory::-webkit-scrollbar {
     width: 10px;
     background-color: #FeFeFe;
 }
 
-#transactionHistory::-webkit-scrollbar-thumb
-{
+#transactionHistory::-webkit-scrollbar-thumb {
     background: #F90 -webkit-linear-gradient(45deg,
     rgba(255, 255, 255, .2) 25%,
     transparent 25%,
@@ -518,6 +494,7 @@
     width: 100%;
     background-color: #888888;
 }
+
 #progressBar {
     width: 1%;
     height: 30px;
@@ -529,12 +506,12 @@
     z-index: -1;
     left: 162px;
     width: 700px;
-    #height: 300px;
-    top:200px;
-    opacity:0;
+    height: 300px;
+    top: 200px;
+    opacity: 0;
     transition: 0.5s;
 }
 
-#sendResult{
+#sendResult {
     width: 95%;
 }

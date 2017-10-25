@@ -2,41 +2,40 @@
    Main styles file for whole APP
 */
 
-
 /* Application */
 body {
-    margin:0;
+    margin: 0;
     background: #eeeeee;
     color: #888888;
-    font-family:  "Raleway", "Lato", sans-serif;
+    font-family: "Raleway", "Lato", sans-serif;
 }
 
 ::selection {
     background: #dddddd; /* WebKit/Blink Browsers */
 }
 
-.center{
-    text-align:center;
+.center {
+    text-align: center;
 }
 
-.right{
-    text-align:right;
+.right {
+    text-align: right;
 }
 
-.padding25{
+.padding25 {
     padding: 25px;
 }
 
 /* Side navigation */
 .opennav {
     vertical-align: middle;
-    font-size:25px;
+    font-size: 25px;
 }
 
 .opennav:hover {
     color: #f88900;
     vertical-align: middle;
-    font-size:25px;
+    font-size: 25px;
 }
 
 .sidenav {
@@ -63,7 +62,7 @@ body {
     transition: all 0.4s;
 }
 
-.sidenav a:hover, .offcanvas a:focus{
+.sidenav a:hover, .offcanvas a:focus {
     color: #f88900;
 }
 
@@ -75,22 +74,27 @@ body {
     font-size: 36px;
 }
 
-#sidenavIMG{
+#sidenavIMG {
     margin-top: 100px;
-    opacity:0;
+    opacity: 0;
     transition: all 0.4s;
     transition-delay: 0.5s;
 }
 
 @media screen and (max-height: 450px) {
-    .sidenav {padding-top: 15px;}
-    .sidenav a {font-size: 18px;}
+    .sidenav {
+        padding-top: 15px;
+    }
+
+    .sidenav a {
+        font-size: 18px;
+    }
 }
 
-#darkContainer{
+#darkContainer {
     position: fixed;
     z-index: -1;
-    margin:0;
+    margin: 0;
     padding: 0;
     width: 100%;
     height: 100%;
@@ -99,13 +103,13 @@ body {
     transition: all 1.4s;
 }
 
-#about{
-    position:absolute;
+#about {
+    position: absolute;
     top: 650px;
 }
 
 /* Header */
-#topHeader{
+#topHeader {
     position: relative;
     margin: 0 auto;
     padding: 5px;
@@ -118,15 +122,15 @@ body {
 }
 
 /* Footer */
-#walletFooter{
+#walletFooter {
     position: absolute;
-    bottom:1px;
-    float:left;
+    bottom: 1px;
+    float: left;
     margin: 0 auto;
     padding: 10px 10px 10px 10px;
-    left:0;
-    right:0;
-    height:19px;
+    left: 0;
+    right: 0;
+    height: 19px;
     border: 1px solid #c4cddb;
     border-top-color: #bfc9dc;
     border-bottom: none;
@@ -136,7 +140,7 @@ body {
 }
 
 /* Titles */
-.sectionTitle{
+.sectionTitle {
     margin-bottom: 10px;
     padding: 10px 15px;
     border: none;
@@ -147,7 +151,7 @@ body {
 }
 
 /* Forms */
-.buttons{
+.buttons {
     padding: 8px 15px;
     width: 32%;
     outline: none;
@@ -181,14 +185,13 @@ body {
     color: #f88900;
 }
 
-.refreshButton{
+.refreshButton {
     padding: 4px 15px;
     width: 10%;
     margin-left: 36%;
 }
 
-
-.wallet_inputs{
+.wallet_inputs {
     margin-left: 5%;
     padding: 10px 10px;
     width: 85%;
@@ -200,18 +203,16 @@ body {
     transition: all 0.4s;
 }
 
-.wallet_inputs_shorter{
+.wallet_inputs_shorter {
     width: 55%;
 }
 
-
-
 .wallet_inputs:focus {
-    border:none;
+    border: none;
     border-bottom: 3px solid #f88900;
 }
 
-.dialog{
+.dialog {
     background-color: #fefefe;
     border: 1px solid #c4cddb;
     border-top-color: #d3dbde;
@@ -227,8 +228,8 @@ body {
     left: 162px;
     width: 700px;
     height: 250px;
-    top:170px;
-    opacity:0;
+    top: 170px;
+    opacity: 0;
     transition: 0.5s;
 }
 
@@ -239,14 +240,14 @@ body {
     left: 162px;
     width: 700px;
     height: 550px;
-    top:70px;
-    opacity:0;
+    top: 70px;
+    opacity: 0;
     transition: 0.5s;
 
 }
 
 #settingsDialog label {
-    display:inline-block;
+    display: inline-block;
     font-size: 1.1em;
     margin-top: 5px;
 }
@@ -256,28 +257,27 @@ body {
     top: 0;
     right: 15px;
     font-size: 30px;
-    color:#888888;
+    color: #888888;
     text-decoration: none;
 }
 
-
 .closeAddWalletDialog:hover {
-    color:#f88900;
+    color: #f88900;
 }
 
-.settingsSaveButton{
-    position:absolute;
-    bottom : 20px;
+.settingsSaveButton {
+    position: absolute;
+    bottom: 20px;
     left: 20px;
     width: 35%;
 }
 
-.settings_input{
+.settings_input {
     width: 80%;
     padding: 3px 3px;
 }
 
-.titleSettings{
+.titleSettings {
     color: #f88900;
     font-weight: 800;
     font-size: 1em;

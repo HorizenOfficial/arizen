@@ -454,10 +454,17 @@ function showSendFinish(type, text) {
     document.getElementById("coinAmount").value = "0.00000000";
 
     if(type === "error") {
-        let elem = document.getElementById("sendResult");
-        elem.innerHTML = "<b>Error:</b><br />" + text;
+        let elem = document.getElementById("sendResultText");
+        let title= document.getElementById("sendResultTitle");
+
+        title.style.color = "#aa0000";
+        title.innerHTML = "<b>Error:</b>";
+        elem.innerHTML = text;
     } else if (type === "ok") {
-        let elem = document.getElementById("sendResult");
+        let elem = document.getElementById("sendResultText");
+        let title= document.getElementById("sendResultTitle");
+        title.style.color = "#00a820";
+        title.innerHTML = "<b>Transaction has been successfully sent</b>";
         elem.innerHTML = text;
     }
 
