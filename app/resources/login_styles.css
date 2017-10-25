@@ -11,12 +11,11 @@ ul, li {
     list-style-type: none;
 }
 
-.right{
-    text-align:right;
+.right {
+    text-align: right;
 }
 
-
-#topHeader{
+#topHeader {
     padding: 0 0 60px;
 }
 
@@ -70,10 +69,9 @@ form ul li:last-child {
 .inputs:focus {
     width: 318px;
     padding: 15px 15px;
-    border:none;
+    border: none;
     border-bottom: 3px solid #f88900;
 }
-
 
 label {
     font-size: 1.3em;
@@ -88,7 +86,7 @@ label {
     margin-top: 5px;
 }
 
-.buttons{
+.buttons {
     padding: 8px 15px;
     width: 50%;
     outline: none;
@@ -272,27 +270,27 @@ label {
 }
 
 #username_info {
-    display:none;
+    display: none;
 }
 
 #pswd_info {
-    display:none;
+    display: none;
 }
 
 #pswd_identical_info {
-    display:none;
+    display: none;
 }
 
 /* Login.html only */
-.register_link{
+.create_wallet_link {
     color: #f88900;
-    padding : 10px;
+    padding: 10px;
     margin: 10px;
     font-size: 16px;
     text-decoration: none;
 }
 
-.register_link:hover{
+.create_wallet_link:hover {
     color: #0d1006;
-    padding : 10px;
+    padding: 10px;
 }

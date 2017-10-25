@@ -24,12 +24,10 @@ function checkLoginInfo() {
     }
 }
 
-function doRegister() {
-    ipcRenderer.send("write-login-info", document.getElementById("username").value, document.getElementById("pswd").value,
-        (document.getElementById("btWallet").files.length > 0) ? document.getElementById("btWallet").files[0].path : ""
-    );
+function doCreateWallet() {
+    ipcRenderer.send("write-login-info", document.getElementById("username").value, document.getElementById("pswd").value, "");
     location.href = "./login.html";
-    console.log("Registration was successful - redirecting to wallet.html");
+    console.log("Wallet creation was successful - redirecting to wallet.html");
 }
 
 function changeClass(objectid, newClass, oldClass) {
@@ -42,9 +40,9 @@ function checkLogin() {
     // validate the length
     usr = (document.getElementById("username").value.length >= minLoginLen);
     if (usr) {
-        changeClass("usrnm_length_info", "invalid", "valid");
-    } else {
         changeClass("usrnm_length_info", "valid", "invalid");
+    } else {
+        changeClass("usrnm_length_info", "invalid", "valid");
     }
     checkLoginInfo();
 }
@@ -95,7 +93,8 @@ function checkPasswd() {
 }
 
 function checkPasswdAgain() {
-    ide = (document.getElementById("pswd").value === document.getElementById("pswd_again").value);
+    ide = (document.getElementById("pswd").value === document.getElementById("pswd_again").value) &&
+        (document.getElementById("pswd").value !== "" || document.getElementById("pswd_again").value !== "");
     if (ide) {
         changeClass("identical_info", "valid", "invalid");
     } else {
