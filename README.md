@@ -2,7 +2,8 @@
 [![License][license-img]][license-url]
 [![Build status][travis-img]][travis-url]
 [![Code Climate][codeclimate-img]][codeclimate-url]
-[![Test Coverage][testcoverage-img]][testcoverage-url]
+[![Coverage Status][testcoverage-img]][testcoverage-url]
+
 
 # What is and can do Arizen wallet in v1.0.0 version
 - [x] You can download Arizen wallet from Release section from Github right now 
@@ -44,5 +45,6 @@ npm run dist
 [travis-url]: https://travis-ci.org/ZencashOfficial/arizen.svg?branch=master
 [codeclimate-img]: https://codeclimate.com/github/ZencashOfficial/arizen/badges/gpa.svg?style=flat-square
 [codeclimate-url]: https://codeclimate.com/github/ZencashOfficial/arizen
-[testcoverage-img]: https://codeclimate.com/github/ZencashOfficial/arizen/badges/coverage.svg
-[testcoverage-url]: https://codeclimate.com/github/ZencashOfficial/arizen/coverage
+[testcoverage-img]: https://coveralls.io/repos/github/ZencashOfficial/arizen/badge.svg?branch=master
+[testcoverage-url]: https://coveralls.io/github/ZencashOfficial/arizen?branch=master
+
