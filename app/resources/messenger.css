@@ -36,7 +36,7 @@
 }
 
 #contactList {
-    height: 495px;
+    height: 485px;
     overflow-y: scroll;
 }
 
@@ -88,7 +88,7 @@
 }
 
 #ConversationContainerMessages {
-    height: 470px;
+    height: 460px;
     overflow-y: scroll;
 }
 
@@ -116,7 +116,7 @@
     float: left;
     margin-right: 0;
     padding: 10px 10px;
-    width: 560px;
+    width: 540px;
     height: 15px;
     box-shadow: 0 1px 1px #aaa;
 }
@@ -126,7 +126,7 @@
     float: left;
     margin-right: 0;
     padding: 10px 10px;
-    width: 560px;
+    width: 540px;
     height: 15px;
     border-bottom: 1px #f88900 solid;
 }
