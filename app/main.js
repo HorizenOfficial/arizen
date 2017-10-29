@@ -126,8 +126,24 @@ function decryptWallet(login, password) {
 
         decipher.setAuthTag(tag);
         outputBytes = decipher.update(encrypted, "binary", "binary");
-        // FIXME: handle error
-        outputBytes += decipher.final("binary");
+        try {
+            outputBytes += decipher.final("binary");
+        } catch (err) {
+            /*
+             * Let's hope node.js crypto won't change error messages.
+             * https://github.com/nodejs/node/blob/ee76f3153b51c60c74e7e4b0882a99f3a3745294/src/node_crypto.cc#L3705
+             * https://github.com/nodejs/node/blob/ee76f3153b51c60c74e7e4b0882a99f3a3745294/src/node_crypto.cc#L312
+             */
+            if (err.message.match(/Unsupported state/)) {
+                /*
+                 * User should be notified that wallet couldn't be decrypted because of an invalid
+                 * password or because the wallet file is corrupted.
+                 */
+                outputBytes = [];
+            }
+            else
+                throw err; // FIXME: handle other errors
+        }
     }
     return outputBytes;
 }
@@ -609,33 +625,27 @@ ipcMain.on("write-login-info", function (event, login, pass, wallet) {
 });
 
 ipcMain.on("verify-login-info", function (event, login, pass) {
-    let path = getLoginPath();
-    let data = JSON.parse(fs.readFileSync(path, "utf8"));
-    let user = data.users.filter(function (user) {
-        return user.login === login;
-    });
     let resp = {
         response: "ERR"
     };
 
-    if (user.length === 1 && user[0].login === login) {
-        if (passwordHash.verify(pass, user[0].password)) {
-            let walletBytes = decryptWallet(login, pass);
-            if (walletBytes.length > 0) {
-                userInfo.loggedIn = true;
-                userInfo.login = login;
-                userInfo.pass = pass;
-                userInfo.walletDb = new sql.Database(walletBytes);
-                loadSettings();
-                loadTransactions(mainWindow.webContents);
-                updateMenuAtLogin();
-                resp = {
-                    response: "OK",
-                    user: login
-                };
-            }
+    if (fs.existsSync(getWalletPath() + login + ".awd")) {
+        let walletBytes = decryptWallet(login, pass);
+        if (walletBytes.length > 0) {
+            userInfo.loggedIn = true;
+            userInfo.login = login;
+            userInfo.pass = pass;
+            userInfo.walletDb = new sql.Database(walletBytes);
+            loadSettings();
+            loadTransactions(mainWindow.webContents);
+            updateMenuAtLogin();
+            resp = {
+                response: "OK",
+                user: login
+            };
         }
     }
+
     event.sender.send("verify-login-response", JSON.stringify(resp));
 });
 
