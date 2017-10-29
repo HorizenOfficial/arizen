@@ -108,7 +108,7 @@ function encryptWallet(login, password, inputBytes) {
 }
 
 function decryptWallet(login, password) {
-    let i = login.length;
+    let i = Buffer.byteLength(login);
     let inputBytes = fs.readFileSync(getWalletPath() + login + ".awd");
     let recoveredLogin = inputBytes.slice(0, i).toString("utf8");
     let outputBytes = [];
