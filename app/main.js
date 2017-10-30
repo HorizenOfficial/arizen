@@ -588,6 +588,9 @@ app.on("before-quit", function () {
 
 ipcMain.on("write-login-info", function (event, login, pass, wallet) {
     let path = getLoginPath();
+    let resp = {
+        response: "ERR"
+    };
     let data;
     //let passHash: { algorithm: string, saltLength: number };
     let passHash = passwordHash.generate(pass, {
@@ -612,16 +615,23 @@ ipcMain.on("write-login-info", function (event, login, pass, wallet) {
     storeFile(path, JSON.stringify(data));
 
     path = getWalletPath();
+    /* create wallet path if necessary */
     if (!fs.existsSync(path)) {
         fs.mkdirSync(path);
     }
-    if (wallet !== "") {
-        if (fs.existsSync(wallet)) {
-            importWalletDat(login, pass, wallet);
+    /* check if user exists */
+    if (!fs.existsSync(path + login + ".awd"))
+    {
+        if (wallet !== "") {
+            if (fs.existsSync(wallet)) {
+                importWalletDat(login, pass, wallet);
+            }
+        } else {
+            generateNewWallet(login, pass);
         }
-    } else {
-        generateNewWallet(login, pass);
+        resp.response = "OK";
     }
+    event.sender.send("write-login-response", JSON.stringify(resp));
 });
 
 ipcMain.on("verify-login-info", function (event, login, pass) {

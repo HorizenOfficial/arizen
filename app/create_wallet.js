@@ -26,9 +26,18 @@ function checkLoginInfo() {
 
 function doCreateWallet() {
     ipcRenderer.send("write-login-info", document.getElementById("username").value, document.getElementById("pswd").value, "");
-    location.href = "./login.html";
-    console.log("Wallet creation was successful - redirecting to wallet.html");
 }
+
+ipcRenderer.on("write-login-response", function (event, resp) {
+    let data = JSON.parse(resp);
+
+    if (data.response === "OK") {
+        location.href = "./login.html";
+        console.log("Wallet creation was successful - redirecting to login.html");
+    } else {
+        console.log("Wallet creation failed");
+    }
+});
 
 function changeClass(objectid, newClass, oldClass) {
     /* FIXME: use classList.replace when electron uses chrome 61 */
