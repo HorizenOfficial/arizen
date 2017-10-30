@@ -65,10 +65,6 @@ function attachUpdaterHandlers() {
     }
 }
 
-function getLoginPath() {
-    return getRootConfigPath() + "users.arizen";
-}
-
 function getWalletPath() {
     return getRootConfigPath() + "wallets/";
 }
@@ -518,7 +514,7 @@ function createWindow() {
     updateMenuAtLogout();
     mainWindow = new BrowserWindow({width: 1050, height: 730, resizable: false, icon: "resources/zen_icon.png"});
 
-    if (fs.existsSync(getLoginPath())) {
+    if (fs.existsSync(getWalletPath())) {
         mainWindow.loadURL(url.format({
             pathname: path.join(__dirname, "login.html"),
             protocol: "file:",
@@ -587,34 +583,11 @@ app.on("before-quit", function () {
 // code. You can also put them in separate files and require them here.
 
 ipcMain.on("write-login-info", function (event, login, pass, wallet) {
-    let path = getLoginPath();
     let resp = {
         response: "ERR"
     };
-    let data;
-    //let passHash: { algorithm: string, saltLength: number };
-    let passHash = passwordHash.generate(pass, {
-        "algorithm": "sha512",
-        "saltLength": 32
-    });
+    let path = getWalletPath();
 
-    if (fs.existsSync(path)) {
-        data = JSON.parse(fs.readFileSync(path, "utf8"));
-        data.users.push({
-            login: login,
-            password: passHash
-        });
-    } else {
-        data = {
-            users: [{
-                login: login,
-                password: passHash
-            }]
-        };
-    }
-    storeFile(path, JSON.stringify(data));
-
-    path = getWalletPath();
     /* create wallet path if necessary */
     if (!fs.existsSync(path)) {
         fs.mkdirSync(path);
