@@ -197,6 +197,8 @@ function importWallet(filename, encrypt) {
         }
         userInfo.dbChanged = true;
         userInfo.walletDb = new sql.Database(data);
+        mainWindow.webContents.send("call-get-wallets");
+        mainWindow.webContents.send("show-notification-response", "Import", "Wallet imported succesfully", 3);
     } else {
         dialog.showErrorBox("Import failed", "Data import failed, possible reason is wrong credentials");
     }
