@@ -103,9 +103,9 @@ function encryptWallet(login, password, inputBytes) {
     return Buffer.concat([iv, salt, cipher.getAuthTag(), encrypted]);
 }
 
-function decryptWallet(login, password) {
+function decryptWallet(login, password, path) {
     let i = Buffer.byteLength(login);
-    let inputBytes = fs.readFileSync(getWalletPath() + login + ".awd");
+    let inputBytes = fs.readFileSync(path);
     let recoveredLogin = inputBytes.slice(0, i).toString("utf8");
     let outputBytes = [];
 
@@ -185,13 +185,21 @@ function importWalletDat(login, pass, wallet) {
 function importWallet(filename, encrypt) {
     let data;
     if (encrypt === true) {
-        fs.copy(filename, getWalletPath() + userInfo.login + ".awd");
-        data = decryptWallet(userInfo.login, userInfo.pass);
+        data = decryptWallet(userInfo.login, userInfo.pass, filename);
     } else {
         data = fs.readFileSync(filename);
-        userInfo.dbChanged = true;
     }
-    userInfo.walletDb = new sql.Database(data);
+
+    if (data.length > 0)
+    {
+        if (encrypt) {
+            fs.copy(filename, getWalletPath() + userInfo.login + ".awd");
+        }
+        userInfo.dbChanged = true;
+        userInfo.walletDb = new sql.Database(data);
+    } else {
+        dialog.showErrorBox("Import failed", "Data import failed, possible reason is wrong credentials");
+    }
 }
 
 function exportWallet(filename, encrypt) {
@@ -611,9 +619,10 @@ ipcMain.on("verify-login-info", function (event, login, pass) {
     let resp = {
         response: "ERR"
     };
+    let path = getWalletPath() + login + ".awd";
 
-    if (fs.existsSync(getWalletPath() + login + ".awd")) {
-        let walletBytes = decryptWallet(login, pass);
+    if (fs.existsSync(path)) {
+        let walletBytes = decryptWallet(login, pass, path);
         if (walletBytes.length > 0) {
             userInfo.loggedIn = true;
             userInfo.login = login;
