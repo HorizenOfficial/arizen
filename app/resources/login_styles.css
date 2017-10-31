@@ -129,7 +129,8 @@ label {
 
 #username_info {
     position: absolute;
-    bottom: 330px;
+    z-index: 2;
+    top: 30px;
     right: -292px;
     width: 250px;
     padding: 15px;
@@ -161,7 +162,7 @@ label {
 
 #pswd_info {
     position: absolute;
-    bottom: 185px;
+    top: 80px;
     right: -292px;
     width: 250px;
     padding: 15px;
@@ -225,7 +226,7 @@ label {
 
 #pswd_identical_info {
     position: absolute;
-    bottom: 145px;
+    top: 220px;
     right: -292px;
     width: 250px;
     padding: 15px;
