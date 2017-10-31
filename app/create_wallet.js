@@ -25,7 +25,15 @@ function checkLoginInfo() {
 }
 
 function doCreateWallet() {
-    ipcRenderer.send("write-login-info", document.getElementById("username").value, document.getElementById("pswd").value, "");
+    let resp = {
+        username: document.getElementById("username").value,
+        password: document.getElementById("pswd").value,
+        walletPath: (document.getElementById("btWallet").files.length > 0) ? document.getElementById("btWallet").files[0].path : "",
+        encrypted: (document.getElementById("old_username_area").style.display === "block"),
+        olduser: document.getElementById("old_username").value,
+        oldpass: document.getElementById("old_pswd").value
+    }
+    ipcRenderer.send("write-login-info", JSON.stringify(resp));
 }
 
 ipcRenderer.on("write-login-response", function (event, resp) {

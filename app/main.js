@@ -592,9 +592,11 @@ app.on("before-quit", function () {
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
 
-ipcMain.on("write-login-info", function (event, login, pass, wallet) {
+ipcMain.on("write-login-info", function (event, data) {
+    let inputs = JSON.parse(data);
     let resp = {
-        response: "ERR"
+        response: "ERR",
+        msg: ""
     };
     let path = getWalletPath();
 
@@ -602,17 +604,37 @@ ipcMain.on("write-login-info", function (event, login, pass, wallet) {
     if (!fs.existsSync(path)) {
         fs.mkdirSync(path);
     }
+
+    path += inputs.username + ".awd";
     /* check if user exists */
-    if (!fs.existsSync(path + login + ".awd"))
+    if (!fs.existsSync(path))
     {
-        if (wallet !== "") {
-            if (fs.existsSync(wallet)) {
-                importWalletDat(login, pass, wallet);
+        if (inputs.walletPath !== "") {
+            if (fs.existsSync(inputs.walletPath)) {
+                let walletBytes = [];
+                if (inputs.encrypted) {
+                    walletBytes = decryptWallet(inputs.olduser, inputs.oldpass, inputs.walletPath);
+                    resp.msg = "Wallet decrypt failed";
+                } else {
+                    walletBytes = fs.readFileSync(inputs.walletPath);
+                    resp.msg = "Wallet read failed";
+                }
+                if (walletBytes.length > 0) {
+                    let db = new sql.Database(walletBytes);
+                    let walletEncrypted = encryptWallet(inputs.username, inputs.password, db.export());
+                    storeFile(path, walletEncrypted);
+                    resp.response = "OK";
+                    resp.msg = "";
+                }
+            } else {
+                resp.msg = "Original file is missing";
             }
         } else {
-            generateNewWallet(login, pass);
+            generateNewWallet(inputs.username, inputs.password);
+            resp.response = "OK";
         }
-        resp.response = "OK";
+    } else {
+        resp.msg = "User is already registered";
     }
     event.sender.send("write-login-response", JSON.stringify(resp));
 });
