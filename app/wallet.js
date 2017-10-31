@@ -218,9 +218,9 @@ ipcRenderer.on("get-wallets-response", function (event, resp) {
     showWallet();
     document.getElementById("walletList").innerHTML = "";
     for (let i = 0; i < data.wallets.length; i += 1) {
-        wAddress = data.wallets[i][2];
-        wBalance = data.wallets[i][3];
-        wName = data.wallets[i][4];
+        wAddress = data.wallets[i].addr;
+        wBalance = data.wallets[i].lastbalance;
+        wName = data.wallets[i].name;
         let walletPick = "";
 
         walletClass = "<div name=\"block_" + wAddress + "\" class=\"walletListItem";
@@ -259,8 +259,8 @@ ipcRenderer.on("get-wallets-response", function (event, resp) {
     }, this);
 
     for (let i = data.transactions.length - 1; i >= 0; i -= 1) {
-        printTransactionElem("transactionHistory", data.transactions[i][1], data.transactions[i][2], data.transactions[i][3],
-            data.transactions[i][4], data.transactions[i][5], Number(data.transactions[i][6]).toFixed(8), data.transactions[i][7]);
+        printTransactionElem("transactionHistory", data.transactions[i].txid, data.transactions[i].time, data.transactions[i].address,
+            data.transactions[i].vins, data.transactions[i].vouts, Number(data.transactions[i].amount).toFixed(8), data.transactions[i].block);
     }
     
     if (data.autorefresh > 0) {

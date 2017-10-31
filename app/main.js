@@ -783,7 +783,13 @@ function updateBalance(address, oldBalance, event) {
 }
 
 ipcMain.on("get-wallets", function (event) {
-    let resp;
+    let resp = {
+        response: "ERR",
+        wallets: [],
+        transactions: [],
+        total: 0,
+        autorefresh: 0
+    };
     let sqlRes;
 
     if (userInfo.loggedIn) {
@@ -793,29 +799,29 @@ ipcMain.on("get-wallets", function (event) {
             userInfo.walletDb.exec("ALTER TABLE wallet ADD COLUMN name TEXT DEFAULT ''");
             sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet");
         }
-        resp = {
-            response: "OK",
-            wallets: sqlRes[0].values,
-            transactions: [],
-            total: 0,
-            autorefresh: settings.autorefresh
-        };
+        resp.wallets = sqlRes[0].values.map(function(x) {
+            var obj = {};
+            for (let i = 0, len = x.length; i < len; i += 1) {
+                obj[sqlRes[0].columns[i]] = x[i];
+            }
+            return obj;
+         });
+        resp.response = "OK";
+        resp.autorefresh = settings.autorefresh;
         sqlRes = userInfo.walletDb.exec("SELECT * FROM transactions ORDER BY time DESC LIMIT " + settings.txHistory);
         if (sqlRes.length > 0) {
-            resp.transactions = sqlRes[0].values;
+            resp.transactions = sqlRes[0].values.map(function(x) {
+                var obj = {};
+                for (let i = 0, len = x.length; i < len; i += 1) {
+                    obj[sqlRes[0].columns[i]] = x[i];
+                }
+                return obj;
+             });
         }
         resp.wallets.forEach(function(element) {
-            resp.total += element[3];
-            updateBalance(element[2], element[3], event);
+            resp.total += element.lastbalance;
+            updateBalance(element.addr, element.lastbalance, event);
         }, this);
-    } else {
-        resp = {
-            response: "ERR",
-            wallets: [],
-            transactions: [],
-            total: 0,
-            autorefresh: 0
-        };
     }
 
     event.sender.send("get-wallets-response", JSON.stringify(resp));
