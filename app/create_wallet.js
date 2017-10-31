@@ -130,12 +130,11 @@ function selectColumn(username, pswd, pswd_again) {
 
 function handleWalletFile() {
     let re =  /(?:\.([^.]+))?$/;
+    let targetStyle = "none";
+
     document.getElementById("btWalletFilename").textContent = document.getElementById("btWallet").value;
     if (re.exec(document.getElementById("btWallet").value)[1] === "awd") {
-        document.getElementById("old_username_area").style.display = "block";
-        document.getElementById("old_pswd_area").style.display = "block";
-    } else {
-        document.getElementById("old_username_area").style.display = "none";
-        document.getElementById("old_pswd_area").style.display = "none";
+        targetStyle = "block";
     }
+    document.getElementById("old_username_area").style.display = targetStyle;
 }
