@@ -115,7 +115,7 @@ function send() {
     showSendStart();
     ipcRenderer.send("send",
         document.getElementById("sendFromAddressText").value,
-        document.getElementById("sendToAddress").value,
+        document.getElementById("sendToAddressText").value,
         document.getElementById("coinFee").value,
         document.getElementById("coinAmount").value);
 }
@@ -450,7 +450,7 @@ function showSendFinish(type, text) {
     document.addEventListener("keydown", escKeyDown, false);
     closeAllWalletsDialogs();
     document.getElementById("sendFromAddressText").value = "";
-    document.getElementById("sendToAddress").value = "address";
+    document.getElementById("sendToAddressText").value = "address";
     document.getElementById("coinFee").value = "0.00010000";
     document.getElementById("coinAmount").value = "0.00000000";
 
