@@ -127,3 +127,15 @@ function selectColumn(username, pswd, pswd_again) {
     document.getElementById("pswd_info").style.display = pswd_info;
     document.getElementById("pswd_identical_info").style.display = pswd_identical_info;
 }
+
+function handleWalletFile() {
+    let re =  /(?:\.([^.]+))?$/;
+    document.getElementById("btWalletFilename").textContent = document.getElementById("btWallet").value;
+    if (re.exec(document.getElementById("btWallet").value)[1] === "awd") {
+        document.getElementById("old_username_area").style.display = "block";
+        document.getElementById("old_pswd_area").style.display = "block";
+    } else {
+        document.getElementById("old_username_area").style.display = "none";
+        document.getElementById("old_pswd_area").style.display = "none";
+    }
+}
