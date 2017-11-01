@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ZEN Messenger</title>
+    <link rel="stylesheet" href="resources/zstyle.css">
+    <link rel="stylesheet" href="resources/zwallet.css">
+    <script src="tabs.js"></script>
+</head>
+<body>
+
+<header class='panel'>
+    <div class=headerLeft>
+        <span><a href="../wallet.html">Go to Wallet</a></span>
+    </div>
+    <div class=headerCenter>
+        <span>ZEN messenger (WIP)</span>
+    </div>
+    <div class=headerRight>
+    </div>
+</header>
+
+
+<x-tabs class='walletOps panel'>
+    <div class=walletOpsTabs>
+        <button data-tab-button=overview>Overview</button>
+        <button data-tab-button=send>Send</button>
+        <button data-tab-button=recieve>Receive</button>
+    </div>
+    <div data-tab-content=overview class='walletOverview walletOpsContent'>
+        <div class=walletOverviewControl>
+            <span class=walletOverviewLabel>List of Addresses</span>
+            <button id=actionShowZeroBalances>Show zero balances</button>
+            <button id=actionGetANewAddress>Get a new address</button>
+        </div>
+        <template id=addrItemTemplate>
+            <div class=addrItem>
+                <div class=addrBalance><span class=addrBalanceAmount></span> ZEN</div>
+                <div class=addrName>Unnamed address</div>
+                <div class=addrText></div>
+            </div>
+        </template>
+        <div id=addrList>
+        </div>
+    </div>
+    <div data-tab-content=send class='walletSend walletOpsContent'>
+    </div>
+    <div data-tab-content=recieve class='walletReceive walletOpsContent'>
+    </div>
+</x-tabs>
+
+<div class='txPanel panel'>
+    <div class=txPanelHeader>
+        <span>Transaction History</span>
+    </div>
+    <template id=txItemTemplate>
+        <div class=txItem>
+            <div><span class=txDate>Wed Nov 01 2017 21:07:39</span> (Block <span class=txBlock></span>)</div>
+            <div class='txBalance txBalancePositive'><span class=txBalanceAmount></span> ZEN</div>
+            <div class=txId></div>
+        </div>
+    </template>
+    <div id=txList>
+    </div>
+</div>
+
+<footer class='statusLine panel'>
+Total balance: <span id=totalBalance><span id=totalBalanceAmount>0.00000000</span> ZEN</span>
+</footer>
+
+<script src="zwallet.js"></script>
+</body>
+</html>

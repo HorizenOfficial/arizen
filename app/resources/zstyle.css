@@ -1,0 +1,50 @@
+
+/* include padding and border in width/height */
+html {
+    box-sizing: border-box;
+}
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+/* fill whole viewport */
+body {
+    margin: 0;
+    height: 100vh;
+}
+
+/* util */
+.hidden {
+    display: none !important;
+}
+
+/* main look and feel */
+
+:root {
+    --arizen-fg: #f88900;
+    --panel-bg: #fefefe;
+    --border-color: #c4cddb;
+}
+
+body {
+    color: #888888;
+    background: #eeeeee;
+    font-family: 'Raleway', 'Lato', sans-serif;
+}
+
+div {
+    border-color: var(--arizen-fg); /* TODO */
+}
+
+.panel {
+    padding: 5px;
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 1px 1px #ccc;
+}
+header {
+    border-style: none none solid none !important; 
+}
+footer {
+    border-style: solid none none none !important; 
+}
