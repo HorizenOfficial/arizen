@@ -48,13 +48,13 @@
 }
 
 .inputs_small {
-    padding: 5px 5px;
+    padding: 3px 3px;
     border: none;
     border-bottom: 1px solid #888888;
     #border-radius: 5px;
     #box-shadow: 0 0 5px #e8e9eb inset;
     width: 338px; /* 400 (#container) - 40 (li margins) -  10 (span paddings) - 20 (input paddings) - 2 (input borders) */
-    font-size: 1.1em;
+    font-size: 1em;
     outline: 0; /* remove webkit focus styles */
     transition: all 0.4s;
     color: #888888;
