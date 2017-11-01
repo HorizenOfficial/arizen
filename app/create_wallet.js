@@ -25,6 +25,8 @@ function checkLoginInfo() {
 }
 
 function doCreateWallet() {
+    document.getElementById("wallet_creation_info").innerHTML = "";
+    document.getElementById("wallet_creation_info_area").style.display = "none";
     let resp = {
         username: document.getElementById("username").value,
         password: document.getElementById("pswd").value,
@@ -44,6 +46,8 @@ ipcRenderer.on("write-login-response", function (event, resp) {
         console.log("Wallet creation was successful - redirecting to login.html");
     } else {
         console.log("Wallet creation failed");
+        document.getElementById("wallet_creation_info").innerHTML = data.msg;
+        document.getElementById("wallet_creation_info_area").style.display = "block";
     }
 });
 
