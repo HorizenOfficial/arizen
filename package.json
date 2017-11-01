@@ -100,6 +100,7 @@
   "dependencies": {
     "bip32-utils": "^0.10.1",
     "bitcoinjs-lib": "^3.3.0",
+    "electron-debug": "^1.4.0",
     "electron-download": "^4.1.0",
     "electron-packager": "^9.1.0",
     "electron-simple-updater": "^1.2.3",
@@ -119,7 +120,8 @@
     "electron": "^1.8.1",
     "electron-builder": "19.45.4",
     "electron-builder-squirrel-windows": "19.45.0",
-    "flow-bin": "^0.59.0"
+    "flow-bin": "^0.59.0",
+    "devtron": "^1.4.0"
   },
   "optionalDependencies": {
     "electron-installer-debian": "^0.7.0",

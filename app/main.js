@@ -21,6 +21,10 @@ const request = require("request");
 const updater = require("electron-simple-updater");
 const QRCode = require("qrcode");
 
+// Press F12 to open the DevTools. See https://github.com/sindresorhus/electron-debug.
+// FIXME: comment this for release versions!
+require('electron-debug')();
+
 updater.init({checkUpdateOnStart: true, autoDownload: true});
 attachUpdaterHandlers();
 
@@ -494,10 +498,6 @@ function createWindow() {
             slashes: true
         }));
     }
-
-    // Open the DevTools.
-    // FIXME: comment this for release versions!
-    // mainWindow.webContents.openDevTools();
 
     // Emitted when the window is closed.
     mainWindow.on("closed", function () {
