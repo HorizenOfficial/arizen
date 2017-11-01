@@ -11,7 +11,7 @@
 - [x] Fixed copy/cut/paste in register form
 - [x] Allow special character in username
 - [x] Fixed auto-update feature on Windows
-
+- [x] Only `AppImage` format is supported for Linux (only this format can be autoupdated)
 
 # What is and can do Arizen wallet in v1.0.0 version
 - [x] You can download Arizen wallet from Release section from Github right now 
