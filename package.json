@@ -1,6 +1,6 @@
 {
   "name": "Arizen",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Wallet for ZenCash (ZEN)",
   "main": "app/main.js",
   "scripts": {
@@ -47,6 +47,14 @@
     {
       "name": "@k4chn1k",
       "email": "k4chn1k@gmail.com"
+    },
+    {
+      "name": "@woky",
+      "email": "nechtom@gmail.com"
+    },
+    {
+      "name": "@Tigger",
+      "email": "-"
     }
   ],
   "license": "MIT",
@@ -85,7 +93,7 @@
       "category": "Office"
     },
     "win": {
-      "target": "NSIS",
+      "target": "Squirrel",
       "icon": "build/icon.ico"
     }
   },
@@ -107,6 +115,7 @@
   },
   "devDependencies": {
     "ajv": "^5.2.5",
+    "coveralls": "^3.0.0",
     "electron": "^1.8.1",
     "electron-builder": "19.32.*",
     "electron-builder-squirrel-windows": "19.32.*",

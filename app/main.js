@@ -65,10 +65,6 @@ function attachUpdaterHandlers() {
     }
 }
 
-function getLoginPath() {
-    return getRootConfigPath() + "users.arizen";
-}
-
 function getWalletPath() {
     return getRootConfigPath() + "wallets/";
 }
@@ -107,9 +103,9 @@ function encryptWallet(login, password, inputBytes) {
     return Buffer.concat([iv, salt, cipher.getAuthTag(), encrypted]);
 }
 
-function decryptWallet(login, password) {
-    let i = login.length;
-    let inputBytes = fs.readFileSync(getWalletPath() + login + ".awd");
+function decryptWallet(login, password, path) {
+    let i = Buffer.byteLength(login);
+    let inputBytes = fs.readFileSync(path);
     let recoveredLogin = inputBytes.slice(0, i).toString("utf8");
     let outputBytes = [];
 
@@ -126,60 +122,49 @@ function decryptWallet(login, password) {
 
         decipher.setAuthTag(tag);
         outputBytes = decipher.update(encrypted, "binary", "binary");
-        // FIXME: handle error
-        outputBytes += decipher.final("binary");
+        try {
+            outputBytes += decipher.final("binary");
+        } catch (err) {
+            /*
+             * Let's hope node.js crypto won't change error messages.
+             * https://github.com/nodejs/node/blob/ee76f3153b51c60c74e7e4b0882a99f3a3745294/src/node_crypto.cc#L3705
+             * https://github.com/nodejs/node/blob/ee76f3153b51c60c74e7e4b0882a99f3a3745294/src/node_crypto.cc#L312
+             */
+            if (err.message.match(/Unsupported state/)) {
+                /*
+                 * User should be notified that wallet couldn't be decrypted because of an invalid
+                 * password or because the wallet file is corrupted.
+                 */
+                outputBytes = [];
+            } else {
+                // FIXME: handle other errors
+                throw err;
+            }
+        }
     }
     return outputBytes;
-}
-
-function importWalletDat(login, pass, wallet) {
-    let walletBytes = fs.readFileSync(wallet, "binary");
-    let re = /\x30\x81\xD3\x02\x01\x01\x04\x20(.{32})/gm;
-    let privateKeys = walletBytes.match(re);
-    privateKeys = privateKeys.map(function (x) {
-        x = x.replace("\x30\x81\xD3\x02\x01\x01\x04\x20", "");
-        x = Buffer.from(x, "latin1").toString("hex");
-        return x;
-    });
-
-    let pk;
-    let pubKey;
-    //Create the database
-    let db = new sql.Database();
-    // Run a query without reading the results
-    db.run(dbStructWallet);
-
-    for (let i = 0; i < privateKeys.length; i += 1) {
-        // If not 64 length, probs WIF format
-        if (privateKeys[i].length !== 64) {
-            pk = zencashjs.address.WIFToPrivKey(privateKeys[i]);
-        } else {
-            pk = privateKeys[i];
-        }
-        pubKey = zencashjs.address.privKeyToPubKey(pk, true);
-        db.run("INSERT OR IGNORE INTO wallet VALUES (?,?,?,?,?)", [null, pk, zencashjs.address.pubKeyToAddr(pubKey), 0, ""]);
-    }
-
-    let data = db.export();
-    let walletEncrypted = encryptWallet(login, pass, data);
-    storeFile(getWalletPath() + login + ".awd", walletEncrypted);
-
-    userInfo.walletDb = db;
-    loadSettings();
-    // mainWindow.webContents.send("zz-get-wallets");
-    // loadTransactions(mainWindow.webContents);
 }
 
 function importWallet(filename, encrypt) {
     let data;
     if (encrypt === true) {
-        fs.copy(filename, getWalletPath() + userInfo.login + ".awd");
-        data = decryptWallet(userInfo.login, userInfo.pass);
+        data = decryptWallet(userInfo.login, userInfo.pass, filename);
     } else {
         data = fs.readFileSync(filename);
-        userInfo.dbChanged = true;
     }
-    userInfo.walletDb = new sql.Database(data);
+
+    if (data.length > 0)
+    {
+        if (encrypt) {
+            fs.copy(filename, getWalletPath() + userInfo.login + ".awd");
+        }
+        userInfo.dbChanged = true;
+        userInfo.walletDb = new sql.Database(data);
+        mainWindow.webContents.send("call-get-wallets");
+        mainWindow.webContents.send("show-notification-response", "Import", "Wallet imported succesfully", 3);
+    } else {
+        dialog.showErrorBox("Import failed", "Data import failed, possible reason is wrong credentials");
+    }
 }
 
 function exportWallet(filename, encrypt) {
@@ -481,9 +466,19 @@ function updateMenuAtLogout() {
                     }
                 }
             ]
+        }, {
+            label: "Edit",
+            submenu: [
+                {label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:"},
+                {label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:"},
+                {type: "separator"},
+                {label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:"},
+                {label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:"},
+                {label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:"},
+                {label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:"}
+            ]
         }
     ];
-
     setDarwin(template);
     Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
@@ -492,7 +487,7 @@ function createWindow() {
     updateMenuAtLogout();
     mainWindow = new BrowserWindow({width: 1050, height: 730, resizable: false, icon: "resources/zen_icon.png"});
 
-    if (fs.existsSync(getLoginPath())) {
+    if (fs.existsSync(getWalletPath())) {
         mainWindow.loadURL(url.format({
             pathname: path.join(__dirname, "login.html"),
             protocol: "file:",
@@ -560,72 +555,76 @@ app.on("before-quit", function () {
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
 
-ipcMain.on("write-login-info", function (event, login, pass, wallet) {
-    let path = getLoginPath();
-    let data;
-    //let passHash: { algorithm: string, saltLength: number };
-    let passHash = passwordHash.generate(pass, {
-        "algorithm": "sha512",
-        "saltLength": 32
-    });
+ipcMain.on("write-login-info", function (event, data) {
+    let inputs = JSON.parse(data);
+    let resp = {
+        response: "ERR",
+        msg: ""
+    };
+    let path = getWalletPath();
 
-    if (fs.existsSync(path)) {
-        data = JSON.parse(fs.readFileSync(path, "utf8"));
-        data.users.push({
-            login: login,
-            password: passHash
-        });
-    } else {
-        data = {
-            users: [{
-                login: login,
-                password: passHash
-            }]
-        };
-    }
-    storeFile(path, JSON.stringify(data));
-
-    path = getWalletPath();
+    /* create wallet path if necessary */
     if (!fs.existsSync(path)) {
         fs.mkdirSync(path);
     }
-    if (wallet !== "") {
-        if (fs.existsSync(wallet)) {
-            importWalletDat(login, pass, wallet);
+
+    path += inputs.username + ".awd";
+    /* check if user exists */
+    if (!fs.existsSync(path))
+    {
+        if (inputs.walletPath !== "") {
+            if (fs.existsSync(inputs.walletPath)) {
+                let walletBytes = [];
+                if (inputs.encrypted) {
+                    walletBytes = decryptWallet(inputs.olduser, inputs.oldpass, inputs.walletPath);
+                    resp.msg = "Wallet decrypt failed";
+                } else {
+                    walletBytes = fs.readFileSync(inputs.walletPath);
+                    resp.msg = "Wallet read failed";
+                }
+                if (walletBytes.length > 0) {
+                    let db = new sql.Database(walletBytes);
+                    let walletEncrypted = encryptWallet(inputs.username, inputs.password, db.export());
+                    storeFile(path, walletEncrypted);
+                    resp.response = "OK";
+                    resp.msg = "";
+                }
+            } else {
+                resp.msg = "Original file is missing";
+            }
+        } else {
+            generateNewWallet(inputs.username, inputs.password);
+            resp.response = "OK";
         }
     } else {
-        generateNewWallet(login, pass);
+        resp.msg = "User is already registered";
     }
+    event.sender.send("write-login-response", JSON.stringify(resp));
 });
 
 ipcMain.on("verify-login-info", function (event, login, pass) {
-    let path = getLoginPath();
-    let data = JSON.parse(fs.readFileSync(path, "utf8"));
-    let user = data.users.filter(function (user) {
-        return user.login === login;
-    });
     let resp = {
         response: "ERR"
     };
+    let path = getWalletPath() + login + ".awd";
 
-    if (user.length === 1 && user[0].login === login) {
-        if (passwordHash.verify(pass, user[0].password)) {
-            let walletBytes = decryptWallet(login, pass);
-            if (walletBytes.length > 0) {
-                userInfo.loggedIn = true;
-                userInfo.login = login;
-                userInfo.pass = pass;
-                userInfo.walletDb = new sql.Database(walletBytes);
-                loadSettings();
-                loadTransactions(mainWindow.webContents);
-                updateMenuAtLogin();
-                resp = {
-                    response: "OK",
-                    user: login
-                };
-            }
+    if (fs.existsSync(path)) {
+        let walletBytes = decryptWallet(login, pass, path);
+        if (walletBytes.length > 0) {
+            userInfo.loggedIn = true;
+            userInfo.login = login;
+            userInfo.pass = pass;
+            userInfo.walletDb = new sql.Database(walletBytes);
+            loadSettings();
+            loadTransactions(mainWindow.webContents);
+            updateMenuAtLogin();
+            resp = {
+                response: "OK",
+                user: login
+            };
         }
     }
+
     event.sender.send("verify-login-response", JSON.stringify(resp));
 });
 
@@ -664,10 +663,10 @@ ipcMain.on("exit-from-menu", function () {
 
 function parseTransactionResponse(transaction, address, webContents) {
     let data = JSON.parse(transaction);
-    let inAmount = 0;
     let amount = 0;
     let isSending = 0;
     let vouts = [];
+
     /* find my address in send transaction */
     data.vin.forEach(function(element) {
         /* my address is sending */
@@ -675,6 +674,7 @@ function parseTransactionResponse(transaction, address, webContents) {
             isSending = 1;
         }
     }, this);
+
     /* find my address in recv transaction */
     data.vout.forEach(function(element) {
         /* my address is receiving */
@@ -690,11 +690,13 @@ function parseTransactionResponse(transaction, address, webContents) {
             vouts.push(element.scriptPubKey.addresses[0]);
         }
     }, this);
+
     /* we are sending but amount is not set -> address hits 0 */
     if (amount === 0 && isSending === 1)
     {
         amount = -1 * data.valueOut;
     }
+
     /* find unique input addresses */
     let vins = [...new Set(data.vin.map(item => item.addr))];
 
@@ -710,7 +712,7 @@ function parseTransactionResponse(transaction, address, webContents) {
             vouts: vouts,
             amount: amount,
             block: data.blockheight
-        }
+        };
         webContents.send("get-transaction-update", JSON.stringify(resp));
     }
 }
@@ -747,7 +749,13 @@ function updateBalance(address, oldBalance, event) {
 }
 
 ipcMain.on("get-wallets", function (event) {
-    let resp;
+    let resp = {
+        response: "ERR",
+        wallets: [],
+        transactions: [],
+        total: 0,
+        autorefresh: 0
+    };
     let sqlRes;
 
     if (userInfo.loggedIn) {
@@ -757,29 +765,29 @@ ipcMain.on("get-wallets", function (event) {
             userInfo.walletDb.exec("ALTER TABLE wallet ADD COLUMN name TEXT DEFAULT ''");
             sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet");
         }
-        resp = {
-            response: "OK",
-            wallets: sqlRes[0].values,
-            transactions: [],
-            total: 0,
-            autorefresh: settings.autorefresh
-        };
+        resp.wallets = sqlRes[0].values.map(function(x) {
+            let obj = {};
+            for (let i = 0, len = x.length; i < len; i += 1) {
+                obj[sqlRes[0].columns[i]] = x[i];
+            }
+            return obj;
+         });
+        resp.response = "OK";
+        resp.autorefresh = settings.autorefresh;
         sqlRes = userInfo.walletDb.exec("SELECT * FROM transactions ORDER BY time DESC LIMIT " + settings.txHistory);
         if (sqlRes.length > 0) {
-            resp.transactions = sqlRes[0].values;
+            resp.transactions = sqlRes[0].values.map(function(x) {
+                var obj = {};
+                for (let i = 0, len = x.length; i < len; i += 1) {
+                    obj[sqlRes[0].columns[i]] = x[i];
+                }
+                return obj;
+             });
         }
         resp.wallets.forEach(function(element) {
-            resp.total += element[3];
-            updateBalance(element[2], element[3], event);
+            resp.total += element.lastbalance;
+            updateBalance(element.addr, element.lastbalance, event);
         }, this);
-    } else {
-        resp = {
-            response: "ERR",
-            wallets: [],
-            transactions: [],
-            total: 0,
-            autorefresh: 0
-        };
     }
 
     event.sender.send("get-wallets-response", JSON.stringify(resp));
@@ -1134,3 +1142,43 @@ ipcMain.on("generate-qr-code", function(event, address, amount){
         event.sender.send("render-qr-code", url);
     });
 });
+
+// Unused
+
+// function importWalletDat(login, pass, wallet) {
+//     let walletBytes = fs.readFileSync(wallet, "binary");
+//     let re = /\x30\x81\xD3\x02\x01\x01\x04\x20(.{32})/gm;
+//     let privateKeys = walletBytes.match(re);
+//     privateKeys = privateKeys.map(function (x) {
+//         x = x.replace("\x30\x81\xD3\x02\x01\x01\x04\x20", "");
+//         x = Buffer.from(x, "latin1").toString("hex");
+//         return x;
+//     });
+//
+//     let pk;
+//     let pubKey;
+//     //Create the database
+//     let db = new sql.Database();
+//     // Run a query without reading the results
+//     db.run(dbStructWallet);
+//
+//     for (let i = 0; i < privateKeys.length; i += 1) {
+//         // If not 64 length, probs WIF format
+//         if (privateKeys[i].length !== 64) {
+//             pk = zencashjs.address.WIFToPrivKey(privateKeys[i]);
+//         } else {
+//             pk = privateKeys[i];
+//         }
+//         pubKey = zencashjs.address.privKeyToPubKey(pk, true);
+//         db.run("INSERT OR IGNORE INTO wallet VALUES (?,?,?,?,?)", [null, pk, zencashjs.address.pubKeyToAddr(pubKey), 0, ""]);
+//     }
+//
+//     let data = db.export();
+//     let walletEncrypted = encryptWallet(login, pass, data);
+//     storeFile(getWalletPath() + login + ".awd", walletEncrypted);
+//
+//     userInfo.walletDb = db;
+//     loadSettings();
+//     // mainWindow.webContents.send("zz-get-wallets");
+//     // loadTransactions(mainWindow.webContents);
+// }

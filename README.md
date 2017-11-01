@@ -4,6 +4,14 @@
 [![Code Climate][codeclimate-img]][codeclimate-url]
 [![Coverage Status][testcoverage-img]][testcoverage-url]
 
+# Bug fixes in Arizen wallet v1.0.1
+- [x] added possibility to chose one of your wallet in "Send" "To" section
+- [x] Fixed bug with wrong transaction ordering in transaction history section
+- [x] Fixed bug with importing wallet on "Create new wallet" forms, for `.uawd` and `.awd` files
+- [x] Fixed copy/cut/paste in register form
+- [x] Allow special character in username
+- [x] Fixed auto-update feature on Windows
+
 
 # What is and can do Arizen wallet in v1.0.0 version
 - [x] You can download Arizen wallet from Release section from Github right now 

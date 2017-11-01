@@ -25,10 +25,31 @@ function checkLoginInfo() {
 }
 
 function doCreateWallet() {
-    ipcRenderer.send("write-login-info", document.getElementById("username").value, document.getElementById("pswd").value, "");
-    location.href = "./login.html";
-    console.log("Wallet creation was successful - redirecting to wallet.html");
+    document.getElementById("wallet_creation_info").innerHTML = "";
+    document.getElementById("wallet_creation_info_area").style.display = "none";
+    let resp = {
+        username: document.getElementById("username").value,
+        password: document.getElementById("pswd").value,
+        walletPath: (document.getElementById("btWallet").files.length > 0) ? document.getElementById("btWallet").files[0].path : "",
+        encrypted: (document.getElementById("old_username_area").style.display === "block"),
+        olduser: document.getElementById("old_username").value,
+        oldpass: document.getElementById("old_pswd").value
+    };
+    ipcRenderer.send("write-login-info", JSON.stringify(resp));
 }
+
+ipcRenderer.on("write-login-response", function (event, resp) {
+    let data = JSON.parse(resp);
+
+    if (data.response === "OK") {
+        location.href = "./login.html";
+        console.log("Wallet creation was successful - redirecting to login.html");
+    } else {
+        console.log("Wallet creation failed");
+        document.getElementById("wallet_creation_info").innerHTML = data.msg;
+        document.getElementById("wallet_creation_info_area").style.display = "block";
+    }
+});
 
 function changeClass(objectid, newClass, oldClass) {
     /* FIXME: use classList.replace when electron uses chrome 61 */
@@ -117,4 +138,15 @@ function selectColumn(username, pswd, pswd_again) {
     document.getElementById("username_info").style.display = username_info;
     document.getElementById("pswd_info").style.display = pswd_info;
     document.getElementById("pswd_identical_info").style.display = pswd_identical_info;
+}
+
+function handleWalletFile() {
+    let re =  /(?:\.([^.]+))?$/;
+    let targetStyle = "none";
+
+    document.getElementById("btWalletFilename").textContent = document.getElementById("btWallet").value;
+    if (re.exec(document.getElementById("btWallet").value)[1] === "awd") {
+        targetStyle = "block";
+    }
+    document.getElementById("old_username_area").style.display = targetStyle;
 }

@@ -30,20 +30,26 @@
                 <span style="text-align:center;"><label for="pswd_again">Password again</label></span>
                 <span><input id="pswd_again" class="inputs" name="pswd_again" type="password" onkeyup="checkPasswdAgain();" tabindex="3" onfocus="selectColumn(false, false, true);checkPasswdAgain();"/></span>
             </li>
-            <!--<li>
+            <li>
                     <span class="marginLeft5p">Select Wallet
                     <input id="btWalletButton" class="buttons btWalletButtonClass" name="btWalletButton" type="button" value="Browse" tabindex="4" onclick="document.getElementById('btWallet').click();"/>
-                    <input id="btWallet" name="btWallet" style="display: none;" type='file' accept=".dat" onchange="document.getElementById('btWalletFilename').textContent = document.getElementById('btWallet').value;"/>
+                    <input id="btWallet" name="btWallet" style="display: none;" type='file' accept=".awd,.uawd" onchange="handleWalletFile()"/>
                     </span>
                     <span id="btWalletFilename" class="right"></span>
 
-            </li> -->
+            </li>
+            <li>
+                <div id="old_username_area">
+                    <span><input id="old_username" class="inputs_small" name="old_username" onfocus="" placeholder="Old Username" /></span>
+                    <span><input id="old_pswd" class="inputs_small" name="old_pswd" type="password" onfocus="" placeholder="Old Password"/></span>
+                </div>
+            </li>
             <li>
                 <input id="btSubmit" class="buttons" name="btSubmit" type="button" value="Create Wallet" tabindex="5" onclick="doCreateWallet();" disabled/>
             </li>
         </ul>
         <div class="right">
-            <a href="./login.html" class="create_wallet_link">login</a>
+            <a href="./login.html" class="create_wallet_link">Login</a>
         </div>
     </form>
 
@@ -67,6 +73,13 @@
         <h4>Password must meet the following requirements:</h4>
         <ul>
             <li id="identical_info" class="invalid"><strong>Identical</strong></li>
+        </ul>
+    </div>
+
+    <div id="wallet_creation_info_area">
+        <h4>Wallet creation failed</h4>
+        <ul>
+            <li id="wallet_creation_info" class="invalid"></li>
         </ul>
     </div>
 </div>

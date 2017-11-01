@@ -115,7 +115,7 @@ function send() {
     showSendStart();
     ipcRenderer.send("send",
         document.getElementById("sendFromAddressText").value,
-        document.getElementById("sendToAddress").value,
+        document.getElementById("sendToAddressText").value,
         document.getElementById("coinFee").value,
         document.getElementById("coinAmount").value);
 }
@@ -218,9 +218,9 @@ ipcRenderer.on("get-wallets-response", function (event, resp) {
     showWallet();
     document.getElementById("walletList").innerHTML = "";
     for (let i = 0; i < data.wallets.length; i += 1) {
-        wAddress = data.wallets[i][2];
-        wBalance = data.wallets[i][3];
-        wName = data.wallets[i][4];
+        wAddress = data.wallets[i].addr;
+        wBalance = data.wallets[i].lastbalance;
+        wName = data.wallets[i].name;
         let walletPick = "";
 
         walletClass = "<div name=\"block_" + wAddress + "\" class=\"walletListItem";
@@ -258,10 +258,11 @@ ipcRenderer.on("get-wallets-response", function (event, resp) {
         }
     }, this);
 
-    data.transactions.forEach(function(tx) {
-        printTransactionElem("transactionHistory", tx[1], tx[2], tx[3], tx[4], tx[5], Number(tx[6]).toFixed(8), tx[7]);
-    }, this);
-
+    for (let i = data.transactions.length - 1; i >= 0; i -= 1) {
+        printTransactionElem("transactionHistory", data.transactions[i].txid, data.transactions[i].time, data.transactions[i].address,
+            data.transactions[i].vins, data.transactions[i].vouts, Number(data.transactions[i].amount).toFixed(8), data.transactions[i].block);
+    }
+    
     if (data.autorefresh > 0) {
         setTimeout(refreshWallet, data.autorefresh * 1000);
     }
@@ -352,9 +353,9 @@ ipcRenderer.on("generate-wallet-response", function (event, resp) {
 });
 
 // FIXME remove this silly callback to main
-//ipcRenderer.on("zz-get-wallets", (event, resp) => {
-// 	ipcRenderer.send("get-wallets");
-//});
+ipcRenderer.on("call-get-wallets", (event) => {
+ 	ipcRenderer.send("get-wallets");
+});
 
 function printTransactionElem(elem, txId, datetime, myAddress, addressesFrom, addressesTo, amount, block) {
     let date = new Date(datetime * 1000);
@@ -371,7 +372,7 @@ function printTransactionElem(elem, txId, datetime, myAddress, addressesFrom, ad
     transactionText += "<span class=\"transactionItem\">"+ myAddress +"</span></div>";
     transactionText += "</div>";
     let oldHtml = document.getElementById(elem).innerHTML;
-    document.getElementById(elem).innerHTML = oldHtml + transactionText;
+    document.getElementById(elem).innerHTML = transactionText + oldHtml;
 }
 
 function transactionDetailsDialog(txId, datetime, myAddress, addressesFrom, addressesTo, amount, block) {
@@ -449,7 +450,7 @@ function showSendFinish(type, text) {
     document.addEventListener("keydown", escKeyDown, false);
     closeAllWalletsDialogs();
     document.getElementById("sendFromAddressText").value = "";
-    document.getElementById("sendToAddress").value = "address";
+    document.getElementById("sendToAddressText").value = "address";
     document.getElementById("coinFee").value = "0.00010000";
     document.getElementById("coinAmount").value = "0.00000000";
 
