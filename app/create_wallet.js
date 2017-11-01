@@ -32,7 +32,7 @@ function doCreateWallet() {
         encrypted: (document.getElementById("old_username_area").style.display === "block"),
         olduser: document.getElementById("old_username").value,
         oldpass: document.getElementById("old_pswd").value
-    }
+    };
     ipcRenderer.send("write-login-info", JSON.stringify(resp));
 }
 

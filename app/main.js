@@ -136,50 +136,13 @@ function decryptWallet(login, password, path) {
                  * password or because the wallet file is corrupted.
                  */
                 outputBytes = [];
+            } else {
+                // FIXME: handle other errors
+                throw err;
             }
-            else
-                throw err; // FIXME: handle other errors
         }
     }
     return outputBytes;
-}
-
-function importWalletDat(login, pass, wallet) {
-    let walletBytes = fs.readFileSync(wallet, "binary");
-    let re = /\x30\x81\xD3\x02\x01\x01\x04\x20(.{32})/gm;
-    let privateKeys = walletBytes.match(re);
-    privateKeys = privateKeys.map(function (x) {
-        x = x.replace("\x30\x81\xD3\x02\x01\x01\x04\x20", "");
-        x = Buffer.from(x, "latin1").toString("hex");
-        return x;
-    });
-
-    let pk;
-    let pubKey;
-    //Create the database
-    let db = new sql.Database();
-    // Run a query without reading the results
-    db.run(dbStructWallet);
-
-    for (let i = 0; i < privateKeys.length; i += 1) {
-        // If not 64 length, probs WIF format
-        if (privateKeys[i].length !== 64) {
-            pk = zencashjs.address.WIFToPrivKey(privateKeys[i]);
-        } else {
-            pk = privateKeys[i];
-        }
-        pubKey = zencashjs.address.privKeyToPubKey(pk, true);
-        db.run("INSERT OR IGNORE INTO wallet VALUES (?,?,?,?,?)", [null, pk, zencashjs.address.pubKeyToAddr(pubKey), 0, ""]);
-    }
-
-    let data = db.export();
-    let walletEncrypted = encryptWallet(login, pass, data);
-    storeFile(getWalletPath() + login + ".awd", walletEncrypted);
-
-    userInfo.walletDb = db;
-    loadSettings();
-    // mainWindow.webContents.send("zz-get-wallets");
-    // loadTransactions(mainWindow.webContents);
 }
 
 function importWallet(filename, encrypt) {
@@ -700,10 +663,10 @@ ipcMain.on("exit-from-menu", function () {
 
 function parseTransactionResponse(transaction, address, webContents) {
     let data = JSON.parse(transaction);
-    let inAmount = 0;
     let amount = 0;
     let isSending = 0;
     let vouts = [];
+
     /* find my address in send transaction */
     data.vin.forEach(function(element) {
         /* my address is sending */
@@ -711,6 +674,7 @@ function parseTransactionResponse(transaction, address, webContents) {
             isSending = 1;
         }
     }, this);
+
     /* find my address in recv transaction */
     data.vout.forEach(function(element) {
         /* my address is receiving */
@@ -726,11 +690,13 @@ function parseTransactionResponse(transaction, address, webContents) {
             vouts.push(element.scriptPubKey.addresses[0]);
         }
     }, this);
+
     /* we are sending but amount is not set -> address hits 0 */
     if (amount === 0 && isSending === 1)
     {
         amount = -1 * data.valueOut;
     }
+
     /* find unique input addresses */
     let vins = [...new Set(data.vin.map(item => item.addr))];
 
@@ -746,7 +712,7 @@ function parseTransactionResponse(transaction, address, webContents) {
             vouts: vouts,
             amount: amount,
             block: data.blockheight
-        }
+        };
         webContents.send("get-transaction-update", JSON.stringify(resp));
     }
 }
@@ -800,7 +766,7 @@ ipcMain.on("get-wallets", function (event) {
             sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet");
         }
         resp.wallets = sqlRes[0].values.map(function(x) {
-            var obj = {};
+            let obj = {};
             for (let i = 0, len = x.length; i < len; i += 1) {
                 obj[sqlRes[0].columns[i]] = x[i];
             }
@@ -1176,3 +1142,43 @@ ipcMain.on("generate-qr-code", function(event, address, amount){
         event.sender.send("render-qr-code", url);
     });
 });
+
+// Unused
+
+// function importWalletDat(login, pass, wallet) {
+//     let walletBytes = fs.readFileSync(wallet, "binary");
+//     let re = /\x30\x81\xD3\x02\x01\x01\x04\x20(.{32})/gm;
+//     let privateKeys = walletBytes.match(re);
+//     privateKeys = privateKeys.map(function (x) {
+//         x = x.replace("\x30\x81\xD3\x02\x01\x01\x04\x20", "");
+//         x = Buffer.from(x, "latin1").toString("hex");
+//         return x;
+//     });
+//
+//     let pk;
+//     let pubKey;
+//     //Create the database
+//     let db = new sql.Database();
+//     // Run a query without reading the results
+//     db.run(dbStructWallet);
+//
+//     for (let i = 0; i < privateKeys.length; i += 1) {
+//         // If not 64 length, probs WIF format
+//         if (privateKeys[i].length !== 64) {
+//             pk = zencashjs.address.WIFToPrivKey(privateKeys[i]);
+//         } else {
+//             pk = privateKeys[i];
+//         }
+//         pubKey = zencashjs.address.privKeyToPubKey(pk, true);
+//         db.run("INSERT OR IGNORE INTO wallet VALUES (?,?,?,?,?)", [null, pk, zencashjs.address.pubKeyToAddr(pubKey), 0, ""]);
+//     }
+//
+//     let data = db.export();
+//     let walletEncrypted = encryptWallet(login, pass, data);
+//     storeFile(getWalletPath() + login + ".awd", walletEncrypted);
+//
+//     userInfo.walletDb = db;
+//     loadSettings();
+//     // mainWindow.webContents.send("zz-get-wallets");
+//     // loadTransactions(mainWindow.webContents);
+// }
