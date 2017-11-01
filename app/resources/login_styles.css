@@ -256,6 +256,38 @@ label {
     display: block;
 }
 
+#wallet_creation_info_area {
+    position: absolute;
+    bottom: 40px;
+    right: -292px;
+    width: 250px;
+    padding: 15px;
+    background: #fefefe;
+    font-size: .875em;
+    border: 1px solid #c4cddb;
+    border-top-color: #d3dbde;
+    border-bottom-color: #bfc9dc;
+    box-shadow: 0 1px 1px #ccc;
+}
+
+#wallet_creation_info_area h4 {
+    margin: 0 0 10px 0;
+    padding: 0;
+    font-weight: normal;
+}
+
+#wallet_creation_info_area::before {
+    content: "\25C0";
+    position: absolute;
+    left: -12px;
+    top: 45%;
+    font-size: 14px;
+    line-height: 14px;
+    color: #f88900;
+    text-shadow: none;
+    display: block;
+}
+
 .invalid {
     background: url(invalid.png) no-repeat 0 50%;
     padding-left: 22px;
@@ -281,6 +313,11 @@ label {
 #pswd_identical_info {
     display: none;
 }
+
+#wallet_creation_info_area {
+    display: none;
+}
+
 
 /* Login.html only */
 .create_wallet_link {
