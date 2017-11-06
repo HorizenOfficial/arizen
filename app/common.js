@@ -122,11 +122,11 @@ ipcRenderer.on("get-settings-response", function (event, resp) {
 
     if (data.response === "OK") {
         data.settings.forEach(function(node) {
-            elem = document.getElementById(node[1]);
+            elem = document.getElementById(node.name);
             if (elem.type === "text" || elem.type === "number") {
-                elem.value = node[2];
+                elem.value = node.value;
             } else if (elem.type === "checkbox") {
-                elem.checked = (node[2] === "1");
+                elem.checked = (node.value === "1");
             } else {
                 console.log("unknown elem type");
             }
@@ -170,8 +170,7 @@ function saveSettings() {
 ipcRenderer.on("save-settings-response", function (event, resp) {
     let data = JSON.parse(resp);
 
-    /* FIXME: @nonghost on ok close window */
-    console.log(data.msg);
+    doNotify("Settings", data.msg, 2);
 });
 
 function doNotify(title, message, duration = 2) {

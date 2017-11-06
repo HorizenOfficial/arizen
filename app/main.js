@@ -906,27 +906,27 @@ ipcMain.on("generate-wallet", function (event, name) {
 });
 
 ipcMain.on("get-settings", function (event) {
-    let resp;
     let sqlRes;
+    let resp = {
+        response: "ERR",
+        msg: "not logged in"
+    };
 
     if (userInfo.loggedIn) {
         sqlRes = userInfo.walletDb.exec("SELECT * FROM settings");
         if (sqlRes.length > 0) {
-            resp = {
-                response: "OK",
-                settings: sqlRes[0].values
-            };
+            resp.response = "OK";
+            resp.settings = sqlRes[0].values.map(function(x) {
+                var obj = {};
+                for (let i = 0, len = x.length; i < len; i += 1) {
+                    obj[sqlRes[0].columns[i]] = x[i];
+                }
+                return obj;
+             });
+
         } else {
-            resp = {
-                response: "ERR",
-                msg: "issue with db"
-            };
+            resp.msg = "issue with db";
         }
-    } else {
-        resp = {
-            response: "ERR",
-            msg: "not logged in"
-        };
     }
 
     event.sender.send("get-settings-response", JSON.stringify(resp));
@@ -934,7 +934,10 @@ ipcMain.on("get-settings", function (event) {
 
 ipcMain.on("save-settings", function (event, settings) {
     let data = JSON.parse(settings);
-    let resp;
+    let resp = {
+        response: "ERR",
+        msg: "not logged in"
+    };
 
     if (userInfo.loggedIn) {
         data.forEach(function(element) {
@@ -942,15 +945,8 @@ ipcMain.on("save-settings", function (event, settings) {
         }, this);
         userInfo.dbChanged = true;
         loadSettings();
-        resp = {
-            response: "OK",
-            msg: "saved"
-        };
-    } else {
-        resp = {
-            response: "ERR",
-            msg: "not logged in"
-        };
+        resp.response = "OK";
+        resp.msg = "saved";
     }
 
     event.sender.send("save-settings-response", JSON.stringify(resp));
