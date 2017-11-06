@@ -44,6 +44,16 @@ let settings = {
     txHistory: 50
 };
 
+const editSubmenu = [
+    {label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:"},
+    {label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:"},
+    {type: "separator"},
+    {label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:"},
+    {label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:"},
+    {label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:"},
+    {label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:"}
+];
+
 const dbStructWallet = "CREATE TABLE wallet (id INTEGER PRIMARY KEY AUTOINCREMENT, pk TEXT, addr TEXT UNIQUE, lastbalance REAL, name TEXT);";
 // FIXME: dbStructContacts is unused
 const dbStructContacts = "CREATE TABLE contacts (id INTEGER PRIMARY KEY AUTOINCREMENT, addr TEXT UNIQUE, name TEXT, nick TEXT);";
@@ -438,15 +448,7 @@ function updateMenuAtLogin() {
         },
         {
             label: "Edit",
-            submenu: [
-                {label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:"},
-                {label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:"},
-                {type: "separator"},
-                {label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:"},
-                {label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:"},
-                {label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:"},
-                {label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:"}
-            ]
+            submenu: editSubmenu
         }
     ];
 
@@ -468,15 +470,7 @@ function updateMenuAtLogout() {
             ]
         }, {
             label: "Edit",
-            submenu: [
-                {label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:"},
-                {label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:"},
-                {type: "separator"},
-                {label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:"},
-                {label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:"},
-                {label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:"},
-                {label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:"}
-            ]
+            submenu: editSubmenu
         }
     ];
     setDarwin(template);
