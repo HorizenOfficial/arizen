@@ -533,17 +533,6 @@ app.on("before-quit", function () {
         userInfo.dbChanged = false;
         exportWallet(getWalletPath() + userInfo.login + ".awd", true);
     }
-    // dialog.showMessageBox({
-    //     type: "question",
-    //     buttons: ["Yes", "No"],
-    //     title: "Confirm",
-    //     message: "Are you sure you want to quit?"
-    // }, function (response) {
-    //     if (response === 0) {
-    //         app.showExitPrompt = false;
-    //         mainWindow.close();
-    //     }
-    // });
 });
 
 // In this file you can include the rest of your app"s specific main process
