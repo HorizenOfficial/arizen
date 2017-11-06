@@ -612,18 +612,14 @@ ipcMain.on("verify-login-info", function (event, login, pass) {
 });
 
 ipcMain.on("check-login-info", function (event) {
-    let resp;
+    let resp = {
+        response: "ERR",
+        user: ""
+    };
 
     if (userInfo.loggedIn) {
-        resp = {
-            response: "OK",
-            user: userInfo.login
-        };
-    } else {
-        resp = {
-            response: "ERR",
-            user: ""
-        };
+        resp.response= "OK";
+        resp.user = userInfo.login;
     }
     event.sender.send("check-login-response", JSON.stringify(resp));
 });
@@ -777,31 +773,30 @@ ipcMain.on("get-wallets", function (event) {
 });
 
 ipcMain.on("refresh-wallet", function (event) {
-    let resp;
     let sqlRes;
+    let resp = {
+        response: "ERR",
+        autorefresh: 0
+    }
 
     if (userInfo.loggedIn) {
         sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet");
         for (let i = 0; i < sqlRes[0].values.length; i += 1) {
             updateBalance(sqlRes[0].values[i][2], sqlRes[0].values[i][3], event);
         }
-        resp = {
-            response: "OK",
-            autorefresh: settings.autorefresh
-        }
-    } else {
-        resp = {
-            response: "ERR",
-            autorefresh: 0
-        }
+        resp.response = "OK";
+        resp.autorefresh = settings.autorefresh;
     }
 
     event.sender.send("refresh-wallet-response", JSON.stringify(resp));    
 });
 
 ipcMain.on("rename-wallet", function (event, address, name) {
-    let resp;
     let sqlRes;
+    let resp = {
+        response: "ERR",
+        msg: "not logged in"
+    };
 
     if (userInfo.loggedIn) {
         sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet WHERE addr = '" + address + "'");
@@ -815,23 +810,18 @@ ipcMain.on("rename-wallet", function (event, address, name) {
                 newname: name
             };
         } else {
-            resp = {
-                response: "ERR",
-                msg: "address not found"
-            };
+            resp.msg = "address not found";
         }
-    } else {
-        resp = {
-            response: "ERR",
-            msg: "not logged in"
-        };
     }
     event.sender.send("rename-wallet-response", JSON.stringify(resp));
 });
 
 ipcMain.on("get-wallet-by-name", function (event, name) {
-    let resp;
     let sqlRes;
+    let resp = {
+        response: "ERR",
+        msg: "not logged in"
+    };
 
     if (userInfo.loggedIn) {
         sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet WHERE name = '" + name + "'");
@@ -842,16 +832,8 @@ ipcMain.on("get-wallet-by-name", function (event, name) {
                 msg: "found: " + sqlRes.length
             };
         } else {
-            resp = {
-                response: "ERR",
-                msg: "name not found"
-            };
+            resp.msg = "name not found";
         }
-    } else {
-        resp = {
-            response: "ERR",
-            msg: "not logged in"
-        };
     }
     event.sender.send("get-wallet-by-name-response", JSON.stringify(resp));
 });
@@ -869,20 +851,14 @@ ipcMain.on("get-transaction", function (event, txId, address) {
 });
 
 ipcMain.on("generate-wallet", function (event, name) {
-    let resp;
-    let newAddr;
+    let resp = {
+        response: "ERR",
+        msg: "not logged in"
+    };
 
     if (userInfo.loggedIn) {
-        newAddr = getNewAddress(name);
-        resp = {
-            response: "OK",
-            msg: newAddr
-        };
-    } else {
-        resp = {
-            response: "ERR",
-            msg: "not logged in"
-        };
+        resp.response = "OK";
+        resp.msg = getNewAddress(name);
     }
 
     event.sender.send("generate-wallet-response", JSON.stringify(resp));
