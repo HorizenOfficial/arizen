@@ -411,11 +411,8 @@ function transactionDetailsDialog(txId, datetime, myAddress, addressesFrom, addr
     document.getElementById("transactionDetailsDialogContent").innerHTML = transactionText;
 }
 
-
 function showProgressBar() {
-    document.removeEventListener("keydown", escKeyDown, false);
-    document.getElementById( "darkContainer" ).setAttribute( "onClick", "" );
-    showDarkContainer();
+    resetClickAndEsc();
     document.getElementById("progressBarDialog").style.zIndex = "2";
     document.getElementById("progressBarDialog").style.opacity = "1";
     document.getElementById("progressBar").style.width = 0 + "%";
@@ -423,9 +420,7 @@ function showProgressBar() {
 }
 
 ipcRenderer.on("show-progress-bar", function() {
-    document.removeEventListener("keydown", escKeyDown, false);
-    document.getElementById( "darkContainer" ).setAttribute( "onClick", "" );
-    showDarkContainer();
+    resetClickAndEsc();
     document.getElementById("progressBarDialog").style.zIndex = "2";
     document.getElementById("progressBarDialog").style.opacity = "1";
     document.getElementById("progressBar").style.width = 0 + "%";
@@ -433,9 +428,7 @@ ipcRenderer.on("show-progress-bar", function() {
 });
 
 ipcRenderer.on("close-progress-bar", function() {
-    document.getElementById( "darkContainer" ).setAttribute( "onClick", "javascript: closeAllWalletsDialogs();");
-    document.addEventListener("keydown", escKeyDown, false);
-    closeAllWalletsDialogs();
+    setClickAndEsc();
 });
 
 ipcRenderer.on("update-progress-bar", function(event, label, value) {
@@ -444,15 +437,11 @@ ipcRenderer.on("update-progress-bar", function(event, label, value) {
 });
 
 function showSendStart() {
-    document.removeEventListener("keydown", escKeyDown, false);
-    document.getElementById( "darkContainer" ).setAttribute( "onClick", "" );
-    showDarkContainer();
+    resetClickAndEsc();
 }
 
 function showSendFinish(type, text) {
-    document.getElementById( "darkContainer" ).setAttribute( "onClick", "javascript: closeAllWalletsDialogs();");
-    document.addEventListener("keydown", escKeyDown, false);
-    closeAllWalletsDialogs();
+    setClickAndEsc();
     document.getElementById("sendFromAddressText").value = "";
     document.getElementById("sendToAddressText").value = "address";
     document.getElementById("coinFee").value = "0.00010000";
@@ -471,7 +460,18 @@ function showSendFinish(type, text) {
     elem.innerHTML = text;
 }
 
-
 ipcRenderer.on("send-finish", function(event, type, text) {
     showSendFinish(type, text);
 });
+
+function resetClickAndEsc() {
+    document.removeEventListener("keydown", escKeyDown, false);
+    document.getElementById("darkContainer").setAttribute("onClick", "");
+    showDarkContainer();
+}
+
+function setClickAndEsc() {
+    document.getElementById("darkContainer").setAttribute("onClick", "javascript: closeAllWalletsDialogs();");
+    document.addEventListener("keydown", escKeyDown, false);
+    closeAllWalletsDialogs();
+}
