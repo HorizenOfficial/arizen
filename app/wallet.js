@@ -458,21 +458,17 @@ function showSendFinish(type, text) {
     document.getElementById("coinFee").value = "0.00010000";
     document.getElementById("coinAmount").value = "0.00000000";
 
+    let elem = document.getElementById("sendResultText");
+    let title = document.getElementById("sendResultTitle");
+    title.style.fontWeight = "bold";
     if(type === "error") {
-        let elem = document.getElementById("sendResultText");
-        let title= document.getElementById("sendResultTitle");
-
         title.style.color = "#aa0000";
-        title.innerHTML = "<b>Error:</b>";
-        elem.innerHTML = text;
+        title.innerHTML = "Error:";
     } else if (type === "ok") {
-        let elem = document.getElementById("sendResultText");
-        let title= document.getElementById("sendResultTitle");
         title.style.color = "#00a820";
-        title.innerHTML = "<b>Transaction has been successfully sent</b>";
-        elem.innerHTML = text;
+        title.innerHTML = "Transaction has been successfully sent";
     }
-
+    elem.innerHTML = text;
 }
 
 
