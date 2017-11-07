@@ -272,7 +272,11 @@ ipcRenderer.on("update-wallet-balance", function (event, resp) {
     let data = JSON.parse(resp);
 
     document.getElementsByName("block_" + data.wallet).forEach(function(element) {
-        element.classList.remove("walletListItemZero");
+        if (data.balance > 0) {
+            element.classList.remove("walletListItemZero");
+        } else {
+            element.classList.add("walletListItemZero");
+        }
     }, this);
     document.getElementsByName("balance_" + data.wallet).forEach(function(element) {
         element.innerText = Number(data.balance).toFixed(8);
