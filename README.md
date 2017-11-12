@@ -4,6 +4,12 @@
 [![Code Climate][codeclimate-img]][codeclimate-url]
 [![Coverage Status][testcoverage-img]][testcoverage-url]
 
+# Bug fixes in Arizen wallet v1.0.2
+- []
+- []
+- []
+- []
+
 # Bug fixes in Arizen wallet v1.0.1
 - [x] added possibility to chose one of your wallet in "Send" "To" section
 - [x] Fixed bug with wrong transaction ordering in transaction history section
