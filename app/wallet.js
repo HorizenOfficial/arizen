@@ -205,7 +205,6 @@ function generateNewWallet() {
 
 ipcRenderer.on("get-wallets-response", function (event, resp) {
     let data = JSON.parse(resp);
-    let wId;
     let wAddress;
     let wBalance;
     let wName;
@@ -262,7 +261,6 @@ ipcRenderer.on("get-wallets-response", function (event, resp) {
         printTransactionElem("transactionHistory", data.transactions[i].txid, data.transactions[i].time, data.transactions[i].address,
             data.transactions[i].vins, data.transactions[i].vouts, Number(data.transactions[i].amount).toFixed(8), data.transactions[i].block);
     }
-    
     if (data.autorefresh > 0) {
         setTimeout(refreshWallet, data.autorefresh * 1000);
     }
@@ -411,14 +409,6 @@ function transactionDetailsDialog(txId, datetime, myAddress, addressesFrom, addr
     document.getElementById("transactionDetailsDialogContent").innerHTML = transactionText;
 }
 
-function showProgressBar() {
-    resetClickAndEsc();
-    document.getElementById("progressBarDialog").style.zIndex = "2";
-    document.getElementById("progressBarDialog").style.opacity = "1";
-    document.getElementById("progressBar").style.width = 0 + "%";
-    document.getElementById("progressBarDialogLabel").innerHTML = "Starting...";
-}
-
 ipcRenderer.on("show-progress-bar", function() {
     resetClickAndEsc();
     document.getElementById("progressBarDialog").style.zIndex = "2";
@@ -475,3 +465,12 @@ function setClickAndEsc() {
     document.addEventListener("keydown", escKeyDown, false);
     closeAllWalletsDialogs();
 }
+
+// Unused
+// function showProgressBar() {
+//     resetClickAndEsc();
+//     document.getElementById("progressBarDialog").style.zIndex = "2";
+//     document.getElementById("progressBarDialog").style.opacity = "1";
+//     document.getElementById("progressBar").style.width = 0 + "%";
+//     document.getElementById("progressBarDialogLabel").innerHTML = "Starting...";
+// }
