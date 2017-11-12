@@ -117,12 +117,12 @@
     "ajv": "^5.2.5",
     "coveralls": "^3.0.0",
     "electron": "^1.8.1",
-    "electron-builder": "19.32.*",
-    "electron-builder-squirrel-windows": "19.32.*",
-    "flow-bin": "^0.56.0"
+    "electron-builder": "19.45.4",
+    "electron-builder-squirrel-windows": "19.45.0",
+    "flow-bin": "^0.59.0"
   },
   "optionalDependencies": {
-    "electron-installer-debian": "^0.6.0",
+    "electron-installer-debian": "^0.7.0",
     "electron-installer-dmg": "^0.2.1",
     "electron-installer-windows": "^0.2.0"
   }
