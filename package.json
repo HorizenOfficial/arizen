@@ -98,11 +98,11 @@
     }
   },
   "dependencies": {
-    "bip32-utils": "^0.10.0",
-    "bitcoinjs-lib": "^3.2.1",
+    "bip32-utils": "^0.10.1",
+    "bitcoinjs-lib": "^3.3.0",
     "electron-download": "^4.1.0",
     "electron-packager": "^9.1.0",
-    "electron-simple-updater": "^1.2.1",
+    "electron-simple-updater": "^1.2.3",
     "electron-tabs": "^0.7.3",
     "errors": "^0.3.0",
     "fs-extra": "^4.0.2",
