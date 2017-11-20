@@ -83,19 +83,85 @@ header > *:nth-child(3) {
 
 .addrItem {
     flex-shrink: 0;
+    display: flex;
+}
+.addrInfo {
+    flex-grow: 2;
+}
+.addrControl {
+    display: flex;
+    align-items: flex-start;
+    margin-left: 8px;
 }
 .addrBalance {
     float: right;
+    font-size: 110%;
 }
 .addrBalanceAmount {
     font-weight: bolder;
 }
 .addrBalancePositive {
-    color: #00a820;
+    color: var(--money-positive);
 }
 .addrText {
-    word-break: break-all;
+    word-break: none;
     font-family: 'monospace';
+}
+.addrControlButton {
+    border: none;
+    margin-left: 4px;
+    padding: 3px;
+    font-size: 120%;
+    color: white;
+    border-radius: 10%;
+}
+.addrControlButton:disabled {
+    background: gray;
+}
+.addrDepositButton {
+    background: var(--money-positive);
+}
+.addrWithdrawButton {
+    background: var(--money-negative);
+}
+
+/* Deposit */
+
+.walletDeposit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: auto;
+    padding: 10px;
+}
+.walletDeposit > *:not(:first-child) {
+    margin-top: 10px;
+}
+.depositHelp {
+    text-align: center;
+}
+.depositForm {
+    display: grid;
+    grid-template-columns: max-content auto;
+    grid-column-gap: 10px;
+    grid-row-gap: 5px;
+    align-self: stretch;
+}
+#depositAddr {
+    font-family: 'monospace';
+}
+#depositMessage {
+    align-self: flex-start;
+    color: red;
+}
+#depositQrcodeButton {
+    flex-shrink: 0;
+    font-weight: bold;
+}
+#depositQrcode {
+    background: red;
+    flex-grow: 2;
+    align-self: stretch;
 }
 
 /* Trasactions */
@@ -150,20 +216,10 @@ header > *:nth-child(3) {
     font-size: 160%;
 }
 .txBalancePositive {
-    color: #00a820;
-}
-.txBalancePositive ::before {
-    content: "+ ";
+    color: var(--money-positive);
 }
 .txBalanceNegative {
-    color: #880000;
-}
-.txBalanceNegative ::before {
-    content: "- ";
-}
-
-.ccyAmountZen ::after {
-    content: " ZEN";
+    color: var(--money-negative);
 }
 
 

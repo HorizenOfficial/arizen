@@ -7,7 +7,7 @@ const electron = require("electron");
 const {ipcRenderer} = electron;
 const {List} = require('immutable');
 const {DateTime} = require('luxon');
-const QRCode = require('qrcode');
+const Qrcode = require('qrcode');
 
 function logIpc(msgType) {
     ipcRenderer.on(msgType, (...args) => {
@@ -38,13 +38,20 @@ logIpc("zz-get-wallets");
 const addrListNode = document.getElementById('addrList');
 const txListNode = document.getElementById('txList');
 const totalBalanceNode = document.getElementById('totalBalance');
-const showZeroBalancesButton = document.getElementById('actionShowZeroBalances');
+const depositTabButton = document.getElementById('depositTabButton');
+const depositAddrInput = document.getElementById('depositAddr');
+const depositAmountInput = document.getElementById('depositAmount');
+const depositMessageNode = document.getElementById('depositMessage');
+const depositQrcodeImage = document.getElementById('depositQrcodeImg');
 
-const refreshTimeout = 30;
+const refreshTimeout = 300;
+let refreshTimer;
 let showZeroBalances = false;
 const knownTxIds = new Set();
+let depositQrcodeTimer;
 
-showZeroBalancesButton.addEventListener('click', toggleZeroBalanceAddrs);
+document.getElementById('actionShowZeroBalances').addEventListener('click', toggleZeroBalanceAddrs);
+document.getElementById('refreshButton').addEventListener('click', refresh);
 
 ipcRenderer.on('get-wallets-response', (event, msgStr) => {
     const msg = JSON.parse(msgStr);
@@ -76,7 +83,7 @@ ipcRenderer.on('refresh-wallet-response', (event, msgStr) => {
     scheduleRefresh();
 });
 
-window.addEventListener('load', initWalletView);
+window.addEventListener('load', initWallet);
 
 
 // FUNCTIONS
@@ -124,14 +131,21 @@ function createAddrItem(addrObj) {
     if (addrObj.name)
         addrItem.getElementsByClassName('addrName')[0].textContent = addrObj.name;
     addrItem.getElementsByClassName('addrText')[0].textContent = addrObj.addr;
+    addrItem.getElementsByClassName('addrDepositButton')[0].addEventListener('click', () => {
+        depositAddrInput.value = addrObj.addr;
+        depositTabButton.click();
+        updateDepositQrcode();
+    })
     return addrItem;
 }
 
 function setAddrItemBalance(addrItem, balance) {
     addrItem.dataset.balance = balance;
-    hideElement(addrItem, balance == 0 && !showZeroBalances);
+    hideElement(addrItem, balance === 0 && !showZeroBalances);
     const balanceNode = addrItem.getElementsByClassName('addrBalance')[0];
     setBalanceText(balanceNode, balance);
+    const withdrawButton = addrItem.getElementsByClassName('addrWithdrawButton')[0];
+    withdrawButton.disabled = balance === 0;
 }
 
 function shortTxId(txId) {
@@ -143,9 +157,17 @@ function createTxItem(txObj) {
     node.querySelector('.txDate').textContent =
         DateTime.fromMillis(txObj.time * 1000).toLocaleString(DateTime.DATETIME_MED);
     node.querySelector('.txBlock').textContent = txObj.block;
-    node.querySelector('.txBalanceAmount').textContent = formatBalance(txObj.amount);
     node.querySelector('.txId').textContent = shortTxId(txObj.txid);
-    node.querySelector('.txBalance').classList.add(txObj.amount > 0 ? 'txBalancePositive' : 'txBalanceNegative');
+    let balanceStr, balanceClass;
+    if (txObj.amount >= 0) {
+        balanceStr = '+' + formatBalance(txObj.amount);
+        balanceClass = 'txBalancePositive';
+    } else {
+        balanceStr = '-' + formatBalance(-txObj.amount);
+        balanceClass = 'txBalanceNegative';
+    }
+    node.querySelector('.txBalance').classList.add(balanceClass);
+    node.querySelector('.txBalanceAmount').textContent = balanceStr;
     return node;
 }
 
@@ -178,9 +200,56 @@ function toggleZeroBalanceAddrs() {
 }
 
 function scheduleRefresh() {
-    setTimeout(() => ipcRenderer.send('refresh-wallet'), refreshTimeout * 1000);
+    if (refreshTimer)
+        clearTimeout(refreshTimer);
+    refreshTimer = setTimeout(() => refresh(), refreshTimeout * 1000);
 }
 
-function initWalletView() {
+function refresh() {
+    ipcRenderer.send('refresh-wallet');
+    scheduleRefresh();
+}
+
+function initWallet() {
+    initDepositView();
     ipcRenderer.send('get-wallets');  
+}
+
+function initDepositView() {
+    depositAddrInput.addEventListener('input', updateDepositQrcode);
+    depositAmountInput.addEventListener('input', updateDepositQrcode);
+}
+
+function updateDepositQrcode() {
+    const qrcodeDelay = 500; // ms
+    const qrcodeOpts = {
+        errorCorrectionLevel: "H",
+        scale: 5,
+        color: {dark:"#000000ff", light: "#fefefeff"}
+    };
+
+    const addr = depositAddrInput.value;
+    const amount = depositAmountInput.value;
+
+    if (!addr)
+        depositMessageNode.textContent = 'WARNING: The address is empty';
+    else if (!addrListNode.querySelector(`[data-addr="${addr}"]`))
+        depositMessageNode.textContent = 'WARNING: The address does not belong to this wallet';
+    else if (!parseFloat(amount))
+        depositMessageNode.textContent = 'WARNING: The amount is not positive';
+    else
+        depositMessageNode.textContent = '\xA0'; // &nbsp;
+
+    if (depositQrcodeTimer)
+        clearTimeout(depositQrcodeTimer);
+    depositQrcodeTimer = setTimeout(() => {
+        const json = {symbol: 'zen', tAddr: addr, amount: amount};
+        Qrcode.toDataURL(JSON.stringify(json), qrcodeOpts, (err, url) => {
+            if (err)
+                console.log(err);
+            else
+                depositQrcodeImage.src = url;
+            depositQrcodeTimer = null;
+        });
+    }, qrcodeDelay);
 }

@@ -19,7 +19,6 @@ const zencashjs = require("zencashjs");
 const sql = require("sql.js");
 const request = require("request");
 const updater = require("electron-simple-updater");
-const QRCode = require("qrcode");
 const fetch = require('node-fetch');
 const {List} = require('immutable');
 
@@ -1115,16 +1114,6 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
 ipcMain.on("open-explorer", function (event, url) {
     event.preventDefault();
     shell.openExternal(url);
-});
-
-ipcMain.on("generate-qr-code", function(event, address, amount){
-    let qrcode_data = "{ \"symbol\": \"zen\", \"tAddr\": \""+ address +"\", \"amount\": \""+ amount +"\" }";
-    QRCode.toDataURL(qrcode_data, { errorCorrectionLevel: "H", scale: 5, color: {dark:"#000000ff", light: "#fefefeff"}}, function(err, url) {
-        if(err) {
-            console.log(err);
-        }
-        event.sender.send("render-qr-code", url);
-    });
 });
 
 // Unused

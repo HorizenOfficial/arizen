@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>ZEN Messenger</title>
+    <title>Arizen</title>
     <link rel="stylesheet" href="resources/zstyle.css">
     <link rel="stylesheet" href="resources/zwallet.css">
     <script src="tabs.js"></script>
@@ -11,21 +11,22 @@
 
 <header class='panel'>
     <div class=headerLeft>
-        <span><a href="../wallet.html">Go to Wallet</a></span>
     </div>
     <div class=headerCenter>
-        <span>ZEN messenger (WIP)</span>
+        <span>Arizen (WIP)</span>
     </div>
     <div class=headerRight>
-    </div>
+            <span><a id=refreshButton href=#>Refresh</a></span>
+            <span><a href=# onclick='logout()'>Logout</a></span>
+            <span><a href=# onclick='exitApp()'>Exit</a></span>
+        </div>
 </header>
-
 
 <x-tabs class='walletOps panel'>
     <div class=walletOpsTabs>
         <button data-tab-button=overview>Overview</button>
-        <button data-tab-button=send>Send</button>
-        <button data-tab-button=recieve>Receive</button>
+        <button id=depositTabButton data-tab-button=deposit selected>Deposit</button>
+        <button id=withdrawTabButton data-tab-button=withdraw>Withdraw</button>
     </div>
     <div data-tab-content=overview class='walletOverview walletOpsContent'>
         <div class=walletOverviewControl>
@@ -35,17 +36,38 @@
         </div>
         <template id=addrItemTemplate>
             <div class=addrItem>
-                <div class=addrBalance><span class=addrBalanceAmount></span> ZEN</div>
-                <div class=addrName>Unnamed address</div>
-                <div class=addrText></div>
+                <div class=addrInfo>
+                    <div class=addrBalance><span class=addrBalanceAmount></span> ZEN</div>
+                    <div class=addrName>Unnamed address</div>
+                    <div class=addrText></div>
+                </div>
+                <div class=addrControl>
+                    <button class='button addrControlButton addrDepositButton'
+                        title='Deposit to this address'>⬇</button>
+                    <button class='button addrControlButton addrWithdrawButton'
+                        title='Withdraw from this address'>⬆</button>
+                </div>
             </div>
         </template>
         <div id=addrList>
         </div>
     </div>
-    <div data-tab-content=send class='walletSend walletOpsContent'>
+    <div data-tab-content=deposit class='walletDeposit walletOpsContent'>
+        <div class=depositHelp>
+            Click the green button next to the desired address for the deposit.
+        </div>
+        <div class=depositForm>
+            <label for=depositAddr>Deposit to</label>
+            <input id=depositAddr name=depositAddr type=text>
+            <label for=depositAmount>Amount</label>
+            <input id=depositAmount name=depositAmount type=number placeholder=0 min=0 step=0.1>
+        </div>
+        <span id=depositMessage>
+            &nbsp;
+        </span>
+        <img id=depositQrcodeImg />
     </div>
-    <div data-tab-content=recieve class='walletReceive walletOpsContent'>
+    <div data-tab-content=withdraw class='walletWithdraw walletOpsContent'>
     </div>
 </x-tabs>
 
@@ -68,6 +90,7 @@
 Total balance: <span id=totalBalance><span id=totalBalanceAmount>0.00000000</span> ZEN</span>
 </footer>
 
-<script src="zwallet.js"></script>
+<script src='zcommon.js'></script>
+<script src='zwallet.js'></script>
 </body>
 </html>
