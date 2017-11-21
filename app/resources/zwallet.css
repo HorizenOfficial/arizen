@@ -265,7 +265,17 @@ header > *:nth-child(3) {
 .txBalanceNegative {
     color: var(--money-negative);
 }
-
+.txAddrs {
+    font-family: 'monospace';
+    display: flex;
+    flex-direction: column;
+}
+.txVin {
+    color: var(--money-negative);
+}
+.txVout {
+    color: var(--money-positive);
+}
 
 /* Status line */
 

@@ -57,6 +57,7 @@ const refreshTimeout = 60;
 let refreshTimer;
 let showZeroBalances = false;
 let depositQrcodeTimer;
+const myAddrs = new Set();
 
 // IPC
 
@@ -150,6 +151,7 @@ function shortTxId(txId) {
 
 function createTxItem(txObj) {
     const node = cloneTemplate('txItemTemplate');
+
     node.querySelector('.txDate').textContent =
         DateTime.fromMillis(txObj.time * 1000).toLocaleString(DateTime.DATETIME_MED);
     node.querySelector('.txBlock').textContent = txObj.block;
@@ -168,10 +170,29 @@ function createTxItem(txObj) {
     }
     node.querySelector('.txBalance').classList.add(balanceClass);
     node.querySelector('.txBalanceAmount').textContent = balanceStr;
+
+    console.log('TX: ', txObj.txid);
+    console.log('Vins: ', txObj.vins);
+    console.log('Vouts: ', txObj.vouts);
+    const txAddrsNode = node.getElementsByClassName('txAddrs')[0];
+    txObj.vins.split(',').sort().filter(addr => myAddrs.has(addr)).forEach(vin => {
+        const txVinNode = document.createElement('span');
+        txVinNode.classList.add('txVin');
+        txVinNode.textContent = vin;
+        txAddrsNode.append(txVinNode);
+    });
+    txObj.vouts.split(',').sort().filter(addr => myAddrs.has(addr)).forEach(vout => {
+        const txVoutNode = document.createElement('span');
+        txVoutNode.classList.add('txVout');
+        txVoutNode.textContent = vout;
+        txAddrsNode.append(txVoutNode);
+    });
+
     return node;
 }
 
 function addAddress(addrObj) {
+    myAddrs.add(addrObj.addr);
     const addrItem = createAddrItem(addrObj);
     hideElement(addrItem, addrObj.lastbalance == 0 && !showZeroBalances);
     addrListNode.appendChild(addrItem);
