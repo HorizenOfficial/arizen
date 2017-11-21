@@ -662,11 +662,13 @@ function sqlRun(sql, ...args) {
 }
 
 function fetchJson(url) {
-	return fetch(url).then(resp => {
-		if (!resp.ok)
+    console.log("GET " + url);
+    return fetch(url).then(resp => {
+        console.log(`GET ${url} done, status: ${resp.status} ${resp.statusText}`);
+        if (!resp.ok)
             throw new Error(`HTTP GET status: ${resp.status} ${resp.statusText}, URL: ${url}`);
-		return resp.json()
-	});
+        return resp.json()
+    });
 }
 
 function fetchApi(path) {
