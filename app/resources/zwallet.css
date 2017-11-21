@@ -44,28 +44,34 @@ header > *:nth-child(3) {
     display: flex;
     justify-content: center;
 }
-.walletOpsContent {
-    max-height: -webkit-fill-available;
+
+.tabContent {
+    display: flex;
+    flex-direction: column;
     margin-top: 5px;
 }
-
-.walletOverview {
-    display: grid;
-    grid-template-rows: max-content 1fr;
+.tabContentHeader {
+    padding: 0 5px 5px 5px;
+    border-bottom: 1px solid var(--arizen-fg);
+    margin-bottom: 5px;
 }
+.tabContentHeaderLabel {
+    font-size: 120%;
+}
+.tabContentBody {
+    height: -webkit-fill-available;
+    overflow: auto;
+    padding: 5px;
+}
+
 .walletOverviewControl {
     display: flex;
     align-items: center;
-
-    padding: 0 5px 5px 5px;
-    border-bottom: 1px solid var(--arizen-fg);
 }
+
 /* label, let it grow and push the buttons to the right */
 .walletOverviewControl > *:first-child {
     flex-grow: 2;
-}
-.walletOverviewLabel {
-    font-size: 120%;
 }
 #addrList {
     overflow: auto;
@@ -73,7 +79,6 @@ header > *:nth-child(3) {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    padding: 5px;
 }
 #addrList > *:not(:first-child) {
     margin-top: 10px;
@@ -125,43 +130,49 @@ header > *:nth-child(3) {
     background: var(--money-negative);
 }
 
-/* Deposit */
+/* Deposit/Withdraw */
 
-.walletDeposit {
+.depositBody, .withdrawBody {
     display: flex;
     flex-direction: column;
     align-items: center;
-    overflow: auto;
-    padding: 10px;
 }
-.walletDeposit > *:not(:first-child) {
+.depositBody  > *:not(:first-child),
+.withdrawBody > *:not(:first-child) {
     margin-top: 10px;
 }
-.depositHelp {
+.depositHelp, .withdrawHelp {
     text-align: center;
 }
-.depositForm {
+.depositForm, .withdrawForm {
     display: grid;
     grid-template-columns: max-content auto;
     grid-column-gap: 10px;
     grid-row-gap: 5px;
     align-self: stretch;
 }
-#depositAddr {
+#depositToAddr, #withdrawFromAddr, #withdrawToAddr {
     font-family: 'monospace';
 }
-#depositMessage {
+#depositMsg, #withdrawMsg {
     align-self: flex-start;
     color: red;
 }
-#depositQrcodeButton {
-    flex-shrink: 0;
+
+#withdrawButton {
     font-weight: bold;
+    flex-shrink: 0;
 }
-#depositQrcode {
-    background: red;
-    flex-grow: 2;
-    align-self: stretch;
+.withdrawStatusMessage {
+    align-self: flex-start;
+}
+#withdrawStatusTitle {
+    font-weight: bold;
+    font-size: 110%;
+    color: green;
+}
+.withdrawStatusBad {
+    color: red !important;
 }
 
 /* Trasactions */

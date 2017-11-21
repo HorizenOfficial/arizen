@@ -758,7 +758,8 @@ function updateBlockchainView(webContents) {
     settings.api = 'http://explorer.zenmine.pro/insight-api-zen/';
     const addrObjs = sqlSelectObjects('SELECT addr, name, lastbalance FROM wallet');
     const knownTxIds = sqlSelectColumns('SELECT DISTINCT txid FROM transactions').map(row => row[0]);
-    let totalBalance = addrObjs.reduce((sum, a) => sum + a.lastbalance, 0);
+    //let totalBalance = addrObjs.reduce((sum, a) => sum + a.lastbalance, 0);
+    let totalBalance = 0;
 
     fetchBlockchainChanges(addrObjs, knownTxIds).then(result => {
         for (const addrObj of result.changedAddrs) {

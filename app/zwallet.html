@@ -24,13 +24,13 @@
 
 <x-tabs class='walletOps panel'>
     <div class=walletOpsTabs>
-        <button data-tab-button=overview>Overview</button>
-        <button id=depositTabButton data-tab-button=deposit selected>Deposit</button>
+        <button data-tab-button=overview selected>Overview</button>
+        <button id=depositTabButton data-tab-button=deposit>Deposit</button>
         <button id=withdrawTabButton data-tab-button=withdraw>Withdraw</button>
     </div>
-    <div data-tab-content=overview class='walletOverview walletOpsContent'>
-        <div class=walletOverviewControl>
-            <span class=walletOverviewLabel>List of Addresses</span>
+    <div data-tab-content=overview class='walletOverview tabContent'>
+        <div class='tabContentHeader walletOverviewControl'>
+            <span class=tabContentHeaderLabel>List of Addresses</span>
             <button id=actionShowZeroBalances>Show zero balances</button>
             <button id=actionGetANewAddress>Get a new address</button>
         </div>
@@ -49,25 +49,56 @@
                 </div>
             </div>
         </template>
-        <div id=addrList>
+        <div id=addrList class=tabContentBody>
         </div>
     </div>
-    <div data-tab-content=deposit class='walletDeposit walletOpsContent'>
-        <div class=depositHelp>
-            Click the green button next to the desired address for the deposit.
+    <div data-tab-content=deposit class='walletDeposit tabContent'>
+        <div class='tabContentHeader tabContentHeaderLabel'>
+            Deposit
         </div>
-        <div class=depositForm>
-            <label for=depositAddr>Deposit to</label>
-            <input id=depositAddr name=depositAddr type=text>
-            <label for=depositAmount>Amount</label>
-            <input id=depositAmount name=depositAmount type=number placeholder=0 min=0 step=0.1>
+        <div class='tabContentBody depositBody'>
+            <div class=depositHelp>
+                Click the green button next to the desired address for deposit.
+            </div>
+            <div class=depositForm>
+                <label for=depositToAddr>To</label>
+                <input id=depositToAddr name=depositToAddr type=text>
+                <label for=depositAmount>Amount</label>
+                <input id=depositAmount name=depositAmount type=number placeholder=0 min=0 step=0.1>
+            </div>
+            <span id=depositMsg>&nbsp;</span>
+            <div>
+            <img id=depositQrcodeImg />
         </div>
-        <span id=depositMessage>
-            &nbsp;
-        </span>
-        <img id=depositQrcodeImg />
+        </div>
     </div>
-    <div data-tab-content=withdraw class='walletWithdraw walletOpsContent'>
+    <div data-tab-content=withdraw class='walletWithdraw tabContent'>
+        <div class='tabContentHeader tabContentHeaderLabel'>
+            Withdraw
+        </div>
+        <div class='tabContentBody withdrawBody'>
+            <div class=withdrawHelp>
+                Click the red button next to the desired address for withdrawal.
+            </div>
+            <div class=withdrawForm>
+                <label for=withdrawAvailBalance>Available balance</label>
+                <span><span id=withdrawAvailBalance>0</span> ZEN</span>
+                <label for=withdrawFromAddr>From</label>
+                <input id=withdrawFromAddr name=withdrawFromAddr type=text>
+                <label for=withdrawToAddr>To</label>
+                <input id=withdrawToAddr name=withdrawToAddr type=text>
+                <label for=withdrawAmount>Amount</label>
+                <input id=withdrawAmount name=withdrawAmount type=number placeholder=0 min=0 step=0.1>
+                <label for=withdrawFee>Fee</label>
+                <input id=withdrawFee name=withdrawFee type=number placeholder=0 min=0 step=0.1>
+            </div>
+            <span id=withdrawMsg>&nbsp;</span>
+            <button id=withdrawButton>Withdraw</button>
+            <div class='withdrawStatusMessage'>
+                <div id=withdrawStatusTitle class=withdrawStatusBad></div>
+                <div id=withdrawStatusBody></div>
+            </div>
+        </div>
     </div>
 </x-tabs>
 

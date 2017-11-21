@@ -39,10 +39,20 @@ const addrListNode = document.getElementById('addrList');
 const txListNode = document.getElementById('txList');
 const totalBalanceNode = document.getElementById('totalBalance');
 const depositTabButton = document.getElementById('depositTabButton');
-const depositAddrInput = document.getElementById('depositAddr');
+const depositToAddrInput = document.getElementById('depositToAddr');
 const depositAmountInput = document.getElementById('depositAmount');
-const depositMessageNode = document.getElementById('depositMessage');
+const depositMsg = document.getElementById('depositMsg');
 const depositQrcodeImage = document.getElementById('depositQrcodeImg');
+const withdrawTabButton = document.getElementById('withdrawTabButton');
+const withdrawAvailBalanceNode = document.getElementById('withdrawAvailBalance');
+const withdrawFromAddrInput = document.getElementById('withdrawFromAddr');
+const withdrawToAddrInput = document.getElementById('withdrawToAddr');
+const withdrawAmountInput = document.getElementById('withdrawAmount');
+const withdrawFeeInput = document.getElementById('withdrawFee');
+const withdrawMsg = document.getElementById('withdrawMsg');
+const withdrawButton = document.getElementById('withdrawButton');
+const withdrawStatusTitleNode = document.getElementById('withdrawStatusTitle');
+const withdrawStatusBodyNode = document.getElementById('withdrawStatusBody');
 
 const refreshTimeout = 300;
 let refreshTimer;
@@ -50,8 +60,7 @@ let showZeroBalances = false;
 const knownTxIds = new Set();
 let depositQrcodeTimer;
 
-document.getElementById('actionShowZeroBalances').addEventListener('click', toggleZeroBalanceAddrs);
-document.getElementById('refreshButton').addEventListener('click', refresh);
+// IPC
 
 ipcRenderer.on('get-wallets-response', (event, msgStr) => {
     const msg = JSON.parse(msgStr);
@@ -83,8 +92,10 @@ ipcRenderer.on('refresh-wallet-response', (event, msgStr) => {
     scheduleRefresh();
 });
 
-window.addEventListener('load', initWallet);
+ipcRenderer.on('send-finish', (event, result, msg) =>
+    updateWithdrawalStatus(result, msg));
 
+window.addEventListener('load', initWallet);
 
 // FUNCTIONS
 
@@ -127,15 +138,20 @@ function setBalanceText(balanceNode, balance) {
 function createAddrItem(addrObj) {
     const addrItem = cloneTemplate('addrItemTemplate');
     addrItem.dataset.addr = addrObj.addr;
-    setAddrItemBalance(addrItem, addrObj.lastbalance);
     if (addrObj.name)
         addrItem.getElementsByClassName('addrName')[0].textContent = addrObj.name;
     addrItem.getElementsByClassName('addrText')[0].textContent = addrObj.addr;
     addrItem.getElementsByClassName('addrDepositButton')[0].addEventListener('click', () => {
-        depositAddrInput.value = addrObj.addr;
-        depositTabButton.click();
+        depositToAddrInput.value = addrObj.addr;
         updateDepositQrcode();
+        depositTabButton.click();
     })
+    addrItem.getElementsByClassName('addrWithdrawButton')[0].addEventListener('click', () => {
+        withdrawFromAddrInput.value = addrObj.addr;
+		validateWithdrawForm();
+        withdrawTabButton.click();
+    })
+    setAddrItemBalance(addrItem, addrObj.lastbalance);
     return addrItem;
 }
 
@@ -212,11 +228,14 @@ function refresh() {
 
 function initWallet() {
     initDepositView();
-    ipcRenderer.send('get-wallets');  
+    initWithdrawView();
+    document.getElementById('actionShowZeroBalances').addEventListener('click', toggleZeroBalanceAddrs);
+    document.getElementById('refreshButton').addEventListener('click', refresh);
+    ipcRenderer.send('get-wallets');
 }
 
 function initDepositView() {
-    depositAddrInput.addEventListener('input', updateDepositQrcode);
+    depositToAddrInput.addEventListener('input', updateDepositQrcode);
     depositAmountInput.addEventListener('input', updateDepositQrcode);
 }
 
@@ -228,22 +247,22 @@ function updateDepositQrcode() {
         color: {dark:"#000000ff", light: "#fefefeff"}
     };
 
-    const addr = depositAddrInput.value;
-    const amount = depositAmountInput.value;
+    const toAddr = depositToAddrInput.value;
+    const amount = parseFloat(depositAmountInput.value || 0);
 
-    if (!addr)
-        depositMessageNode.textContent = 'WARNING: The address is empty';
-    else if (!addrListNode.querySelector(`[data-addr="${addr}"]`))
-        depositMessageNode.textContent = 'WARNING: The address does not belong to this wallet';
-    else if (!parseFloat(amount))
-        depositMessageNode.textContent = 'WARNING: The amount is not positive';
+    if (!toAddr)
+        depositMsg.textContent = 'WARNING: To address is empty';
+    else if (!addrListNode.querySelector(`[data-addr="${toAddr}"]`))
+        depositMsg.textContent = 'WARNING: To address does not belong to this wallet';
+    else if (amount)
+        depositMsg.textContent = 'WARNING: Amount is not positive';
     else
-        depositMessageNode.textContent = '\xA0'; // &nbsp;
+        depositMsg.textContent = '\xA0'; // &nbsp;
 
     if (depositQrcodeTimer)
         clearTimeout(depositQrcodeTimer);
     depositQrcodeTimer = setTimeout(() => {
-        const json = {symbol: 'zen', tAddr: addr, amount: amount};
+        const json = {symbol: 'zen', tAddr: toAddr, amount: amount};
         Qrcode.toDataURL(JSON.stringify(json), qrcodeOpts, (err, url) => {
             if (err)
                 console.log(err);
@@ -252,4 +271,72 @@ function updateDepositQrcode() {
             depositQrcodeTimer = null;
         });
     }, qrcodeDelay);
+}
+
+function initWithdrawView() {
+    withdrawFromAddrInput.addEventListener('input', validateWithdrawForm);
+    withdrawToAddrInput.addEventListener('input', validateWithdrawForm);
+    withdrawAmountInput.addEventListener('input', validateWithdrawForm);
+    withdrawFeeInput.addEventListener('input', validateWithdrawForm);
+    withdrawButton.addEventListener('click', () => {
+        if (confirm('Do you really want to send this transaction?')) {
+            ipcRenderer.send('send',
+                withdrawFromAddrInput.value,
+                withdrawToAddrInput.value,
+                withdrawFeeInput.value,
+                withdrawAmountInput.value);
+        }
+    });
+    validateWithdrawForm();
+}
+
+function validateWithdrawForm() {
+    const fromAddr = withdrawFromAddrInput.value;
+    const toAddr = withdrawToAddrInput.value;
+    const amount = parseFloat(withdrawAmountInput.value || 0);
+    const fee = parseFloat(withdrawFeeInput.value || 0);
+
+    withdrawButton.disabled = true;
+    withdrawAvailBalance.textContent = 0;
+
+    if (!fromAddr) {
+		withdrawMsg.textContent = 'WARNING: The From address is empty';
+		return;
+	}
+
+    const fromAddrItem = addrListNode.querySelector(`[data-addr="${fromAddr}"]`)
+	if (!fromAddrItem) {
+		withdrawMsg.textContent = 'WARNING: The From address does not belong to this wallet';
+		return;
+	}
+
+    const fromBalance = parseFloat(fromAddrItem.dataset.balance);
+    withdrawAvailBalance.textContent = fromBalance;
+
+    if (!toAddr) {
+		withdrawMsg.textContent = 'WARNING: The To address is empty';
+		return;
+	}
+	if (!amount) {
+		withdrawMsg.textContent = 'WARNING: The amount is not positive';
+		return;
+	}
+	if (amount + fee > fromBalance) {
+		withdrawMsg.textContent = 'WARNING: Insufficient funds on the From address';
+		return;
+	}
+
+	withdrawMsg.textContent = '\xA0'; // &nbsp;
+    withdrawButton.disabled = false;
+}
+
+function updateWithdrawalStatus(result, msg) {
+    if (result === "error") {
+        withdrawStatusTitleNode.classList.add('withdrawStatusBad')
+        withdrawStatusTitleNode.textContent = 'Error:'
+    } else if (result === "ok") {
+        withdrawStatusTitleNode.classList.remove('withdrawStatusBad')
+        withdrawStatusTitleNode.textContent = "Transaction has been successfully sent";
+    }
+    withdrawStatusBodyNode.innerHTML = msg;
 }
