@@ -714,12 +714,11 @@ function fetchTransactions(txIds, myAddrs) {
                         if (!firstMyAddr)
                             firstMyAddr = addr;
                     }
-                    vouts.push(addr);
+                    if (!vouts.includes(addr))
+                        vouts.push(addr);
                 }
             }
 
-            // one address can be in several previous TXs (vins)
-            const vinSet = new Set();
             for (const vin of info.vin) {
                 const addr = vin.addr;
                 if (myAddrSet.has(addr)) {
@@ -727,10 +726,8 @@ function fetchTransactions(txIds, myAddrs) {
                     if (!firstMyAddr)
                         firstMyAddr = addr;
                 }
-                if (!vinSet.has(addr)) {
-                    vinSet.add(addr);
+                if (!vins.includes(addr))
                     vins.push(addr);
-                }
             }
 
             const tx = {
