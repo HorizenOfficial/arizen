@@ -23,3 +23,23 @@ function fixLinks() {
             shell.openExternal(link.href);
         }));
 }
+
+function formatBalance(balance) {
+    return balance.toFixed(8);
+}
+
+function hideElement(node, yes) {
+    if (yes)
+        node.classList.add('hidden')
+    else
+        node.classList.remove('hidden')
+}
+
+function clearChildNodes(parent) {
+    parent.childNodes.forEach(p => parent.removeChild(p));
+}
+
+function cloneTemplate(id) {
+    return document.getElementById(id).content.cloneNode(true).firstElementChild;
+}
+

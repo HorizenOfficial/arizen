@@ -56,7 +56,6 @@ const withdrawStatusBodyNode = document.getElementById('withdrawStatusBody');
 const refreshTimeout = 60;
 let refreshTimer;
 let showZeroBalances = false;
-const knownTxIds = new Set();
 let depositQrcodeTimer;
 
 // IPC
@@ -98,30 +97,11 @@ window.addEventListener('load', initWallet);
 
 // FUNCTIONS
 
-function formatBalance(balance) {
-    return balance.toFixed(8);
-}
-
 function checkResponse(resp) {
     if (resp.response != 'OK') {
         console.error(resp);
         throw new Error('Failed response');
     }
-}
-
-function hideElement(node, yes) {
-    if (yes)
-        node.classList.add('hidden')
-    else
-        node.classList.remove('hidden')
-}
-
-function clearChildNodes(parent) {
-    parent.childNodes.forEach(p => parent.removeChild(p));
-}
-
-function cloneTemplate(id) {
-    return document.getElementById(id).content.cloneNode(true).firstElementChild;
 }
 
 // Expects a balance node with one balanceAmount child node
