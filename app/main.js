@@ -673,8 +673,8 @@ function fetchJson(url) {
 
 function fetchApi(path) {
     const apiUrls = [
-        'https://explorer.zensystem.io/insight-api-zen',
-        'http://explorer.zenmine.pro/insight-api-zen'
+        'http://explorer.zenmine.pro/insight-api-zen',
+        'https://explorer.zensystem.io/insight-api-zen'
     ];
     let errors = [];
     const fetchApiFrom = (i) => {
@@ -705,7 +705,6 @@ function fetchTransactions(txIds, myAddrs) {
         txInfos.sort(tx => tx.blockheight)
         const myAddrSet = new Set(myAddrs);
 
-        // filter unconfirmed TXs for now (blockheight = -1)
         return txInfos.map(info => {
             let txBalance = 0;
             const vins = [];
@@ -808,7 +807,7 @@ function updateBlockchainView(webContents) {
         }
     })
 	.catch(err => {
-        console.log('Failed to fetch blockchain changes: ', err.stack);
+        console.log('Failed to fetch blockchain changes: ', err);
     });
 }
 
