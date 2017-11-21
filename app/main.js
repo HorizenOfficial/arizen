@@ -695,7 +695,7 @@ function fetchTransactions(txIds, myAddrs) {
         const myAddrSet = new Set(myAddrs);
 
         // filter unconfirmed TXs for now (blockheight = -1)
-        return txInfos.filter(info => info.blockheight >= 0).map(info => {
+        return txInfos.map(info => {
             let txBalance = 0;
             const vins = [];
             const vouts = [];
@@ -793,8 +793,10 @@ function updateBlockchainView(webContents) {
             }));
         }
         for (const tx of result.newTxs) {
-            sqlRun('INSERT INTO transactions VALUES (?,?,?,?,?,?,?,?)',
-                [null, tx.txid, tx.time, tx.address, tx.vins, tx.vouts, tx.amount, tx.block]);
+            if (tx.block >= 0) {
+                sqlRun('INSERT INTO transactions VALUES (?,?,?,?,?,?,?,?)',
+                    [null, tx.txid, tx.time, tx.address, tx.vins, tx.vouts, tx.amount, tx.block]);
+            }
             webContents.send('get-transaction-update', JSON.stringify(tx));
         }
     })

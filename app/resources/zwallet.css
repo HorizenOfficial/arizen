@@ -5,7 +5,7 @@ body {
     display: grid !important;
     grid-gap: 5px;
     grid-template-rows: min-content auto 30px;
-    grid-template-columns: minmax(500px,  max-content) auto;
+    grid-template-columns: minmax(500px,  min-content) auto;
     grid-template-areas:
         "header header"
         "walletOps transactions"
@@ -268,6 +268,13 @@ header > *:nth-child(3) {
     border-color: var(--arizen-fg);
     margin: 0 10px 0 10px;
 }
+.txMempoolItem {
+    background: rgba(255, 0, 0, 0.1) !important;
+}
+.txMempoolItemTitle {
+    color: var(--money-negative);
+    font-weight: bold;
+}
 .txDate, .txBlock, .txId {
     color: var(--arizen-fg);
 }
@@ -298,9 +305,6 @@ header > *:nth-child(3) {
 @keyframes txItemNew {
     from {
         background-color: rgba(165, 255, 126, 1.0);
-    }
-    to {
-        background-color: initial;
     }
 }
 .txItemNew {

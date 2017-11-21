@@ -117,8 +117,8 @@ function setBalanceText(balanceNode, balance) {
 
 function createAddrItem(addrObj) {
     const addrItem = cloneTemplate('addrItemTemplate');
-
     addrItem.dataset.addr = addrObj.addr;
+
     if (addrObj.name)
         addrItem.getElementsByClassName('addrName')[0].textContent = addrObj.name;
 
@@ -155,12 +155,19 @@ function shortTxId(txId) {
     return txId.substring(0, edgeLen) + '…' + txId.substring(txId.length - edgeLen);
 }
 
-function createTxItem(txObj) {
-    const node = cloneTemplate('txItemTemplate');
+function createTxItem(txObj, newTx = false) {
+    const node = txObj.block >= 0 ?
+        cloneTemplate('txItemTemplate') :
+        cloneTemplate('txMempoolItemTemplate');
 
-    node.querySelector('.txDate').textContent =
-        DateTime.fromMillis(txObj.time * 1000).toLocaleString(DateTime.DATETIME_MED);
-    node.querySelector('.txBlock').textContent = txObj.block;
+    node.dataset.txid = txObj.txid;
+    node.dataset.blockheight = txObj.block;
+
+    if (txObj.block >= 0) {
+        node.querySelector('.txDate').textContent =
+            DateTime.fromMillis(txObj.time * 1000).toLocaleString(DateTime.DATETIME_MED);
+        node.querySelector('.txBlock').textContent = txObj.block;
+    }
 
     const txIdNode = node.getElementsByClassName('txId')[0];
     txIdNode.addEventListener('click', () => openZenExplorer('tx/' + txObj.txid));
@@ -191,6 +198,9 @@ function createTxItem(txObj) {
         txAddrsNode.append(txVoutNode);
     });
 
+    if (newTx)
+        node.classList.add('txItemNew');
+
     return node;
 }
 
@@ -207,15 +217,27 @@ function setAddressBalance(addr, balance) {
 }
 
 function addTransactions(txs, newTx = false) {
-    txListNode.prepend(...List(txs)
-        .sortBy(tx => -tx.block)
-        .toArray()
-        .map(txObj => {
-            const txNode = createTxItem(txObj);
-            if (newTx)
-                txNode.classList.add('txItemNew');
-            return txNode;
-        }));
+    txs.sort((a, b) => {
+        if (a.block - b.block == 0)
+            return 0;
+        if (a.block < 0)
+            return 1;
+        if (b.block < 0)
+            return -1;
+        return a.block - b.block;
+    });
+
+    for (const txObj of txs) {
+        const oldTxItem = txListNode.querySelector(`[data-txid="${txObj.txid}"]`);
+        if (oldTxItem) {
+            if (oldTxItem.dataset.blockheight != '-1')
+                console.error('Attempting to replace transaction in block');
+            else if (txObj.block >= 0)
+                txListNode.replaceChild(createTxItem(txObj, newTx), oldTxItem);
+        }
+        else
+            txListNode.prepend(createTxItem(txObj, newTx));
+    }
 }
 
 function setTotalBalance(balance) {
