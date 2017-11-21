@@ -24,7 +24,7 @@ const {List} = require('immutable');
 
 // Press F12 to open the DevTools. See https://github.com/sindresorhus/electron-debug.
 // FIXME: comment this for release versions!
-require('electron-debug')();
+//require('electron-debug')();
 
 updater.init({checkUpdateOnStart: true, autoDownload: true});
 attachUpdaterHandlers();
