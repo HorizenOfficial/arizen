@@ -14,7 +14,7 @@ ipcRenderer.on("verify-login-response", function (event, resp) {
     let data = JSON.parse(resp);
 
     if (data.response === "OK") {
-        location.href = "./wallet.html";
+        location.href = "./zwallet.html";
         console.log("Login was successful - redirecting to wallet.html");
     } else {
         document.getElementById("login_pswd_info").style.display = "block";
