@@ -661,20 +661,35 @@ function sqlRun(sql, ...args) {
     return result;
 }
 
-function fetchJson(url)
-{
+function fetchJson(url) {
 	return fetch(url).then(resp => {
-        // TODO recover from HTTP status: 429 Too Many Requests
-		if (!resp.ok) {
-            console.log(url);
-            throw new Error(`HTTP status: ${resp.status} ${resp.statusText}`);
-        }
+		if (!resp.ok)
+            throw new Error(`HTTP GET status: ${resp.status} ${resp.statusText}, URL: ${url}`);
 		return resp.json()
 	});
 }
 
+function fetchApi(path) {
+    const apiUrls = [
+        'https://explorer.zensystem.io/insight-api-zen',
+        'http://explorer.zenmine.pro/insight-api-zen'
+    ];
+    let errors = [];
+    const fetchApiFrom = (i) => {
+        if (i < apiUrls.length)
+            return fetchJson(apiUrls[i] + '/' + path).catch(err => {
+                console.log(`ERROR fetching from: ${apiUrls[i]}: `, err);
+                errors.push(err);
+                return fetchApiFrom(i + 1);
+            });
+        else
+            return Promise.reject(errors);
+    };
+    return fetchApiFrom(0);
+}
+
 function fetchTransactions(txIds, myAddrs) {
-    const reqs = txIds.map(txId => fetchJson(`${settings.api}tx/${txId}`));
+    const reqs = txIds.map(txId => fetchApi('tx/' + txId));
     return Promise.all(reqs).then(txInfos => {
         txInfos.sort(tx => tx.blockheight)
         const myAddrSet = new Set(myAddrs);
@@ -733,7 +748,7 @@ function fetchTransactions(txIds, myAddrs) {
 }
 
 function fetchBlockchainChanges(addrObjs, knownTxIds) {
-    const reqs = addrObjs.map(obj => fetchJson(`${settings.api}addr/${obj.addr}`));
+    const reqs = addrObjs.map(obj => fetchApi('addr/' + obj.addr));
 	return Promise.all(reqs).then(addrInfos => {
         const result = {
             changedAddrs: [],
@@ -762,7 +777,6 @@ function fetchBlockchainChanges(addrObjs, knownTxIds) {
 }
 
 function updateBlockchainView(webContents) {
-    settings.api = 'http://explorer.zenmine.pro/insight-api-zen/';
     const addrObjs = sqlSelectObjects('SELECT addr, name, lastbalance FROM wallet');
     const knownTxIds = sqlSelectColumns('SELECT DISTINCT txid FROM transactions').map(row => row[0]);
     let totalBalance = addrObjs.reduce((sum, a) => sum + a.lastbalance, 0);
