@@ -82,7 +82,7 @@ ipcRenderer.on('update-wallet-balance', (event, msgStr) => {
 ipcRenderer.on('get-transaction-update', (event, msgStr) => {
     const txObj = JSON.parse(msgStr);
     txObj.amount = parseFloat(txObj.amount);
-    addTransactions([txObj]);
+    addTransactions([txObj], true);
 });
 
 ipcRenderer.on('refresh-wallet-response', (event, msgStr) => {
@@ -203,11 +203,16 @@ function setAddressBalance(addr, balance) {
     setAddrItemBalance(addrItem, balance);
 }
 
-function addTransactions(txs) {
+function addTransactions(txs, newTx = false) {
     txListNode.prepend(...List(txs)
         .sortBy(tx => -tx.block)
         .toArray()
-        .map(createTxItem));
+        .map(txObj => {
+            const txNode = createTxItem(txObj);
+            if (newTx)
+                txNode.classList.add('txItemNew');
+            return txNode;
+        }));
 }
 
 function setTotalBalance(balance) {

@@ -276,6 +276,17 @@ header > *:nth-child(3) {
 .txVout {
     color: var(--money-positive);
 }
+@keyframes txItemNew {
+    from {
+        background-color: rgba(165, 255, 126, 1.0);
+    }
+    to {
+        background-color: initial;
+    }
+}
+.txItemNew {
+    animation: txItemNew 2s;
+}
 
 /* Status line */
 
