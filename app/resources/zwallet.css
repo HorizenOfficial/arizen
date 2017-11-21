@@ -151,6 +151,8 @@ header > *:nth-child(3) {
 }
 .addrText {
     font-family: 'monospace';
+    text-decoration: none;
+    color: inherit;
 }
 .addrControlButton {
     border: none;

@@ -117,10 +117,15 @@ function setBalanceText(balanceNode, balance) {
 
 function createAddrItem(addrObj) {
     const addrItem = cloneTemplate('addrItemTemplate');
+
     addrItem.dataset.addr = addrObj.addr;
     if (addrObj.name)
         addrItem.getElementsByClassName('addrName')[0].textContent = addrObj.name;
-    addrItem.getElementsByClassName('addrText')[0].textContent = addrObj.addr;
+
+    const addrTextNode = addrItem.getElementsByClassName('addrText')[0];
+    addrTextNode.addEventListener('click', () => shell.openExternal(`https://explorer.zensystem.io/address/${addrObj.addr}`));
+    addrTextNode.textContent = addrObj.addr;
+
     addrItem.getElementsByClassName('addrDepositButton')[0].addEventListener('click', () => {
         depositToAddrInput.value = addrObj.addr;
         updateDepositQrcode();
@@ -131,6 +136,7 @@ function createAddrItem(addrObj) {
 		validateWithdrawForm();
         withdrawTabButton.click();
     })
+
     setAddrItemBalance(addrItem, addrObj.lastbalance);
     return addrItem;
 }
@@ -171,9 +177,6 @@ function createTxItem(txObj) {
     node.querySelector('.txBalance').classList.add(balanceClass);
     node.querySelector('.txBalanceAmount').textContent = balanceStr;
 
-    console.log('TX: ', txObj.txid);
-    console.log('Vins: ', txObj.vins);
-    console.log('Vouts: ', txObj.vouts);
     const txAddrsNode = node.getElementsByClassName('txAddrs')[0];
     txObj.vins.split(',').sort().filter(addr => myAddrs.has(addr)).forEach(vin => {
         const txVinNode = document.createElement('span');
