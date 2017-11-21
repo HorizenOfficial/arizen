@@ -5,13 +5,9 @@ body {
     display: grid !important;
     grid-gap: 5px;
     grid-template-rows: min-content auto 30px;
-    grid-template-columns: minmax(500px,  min-content) auto;
-    grid-template-areas:
-        "header header"
-        "walletOps transactions"
-        "statusLine statusLine";
+    grid-template-columns: minmax(500px, min-content) auto;
+    grid-template-areas: "header header" "walletOps transactions" "statusLine statusLine";
 }
-
 
 /* Header */
 
@@ -21,34 +17,43 @@ header {
     grid-template-columns: 1fr 1fr 1fr;
     align-items: center;
 }
+
 header > *:nth-child(1) {
     justify-self: start;
 }
+
 header > *:nth-child(2) {
     justify-self: center;
 }
+
 header > *:nth-child(3) {
     justify-self: end;
 }
+
 .headerCenter > :not(:first-child) {
     margin-left: 5px;
 }
+
 .headerCenter {
     display: flex;
     align-items: center;
 }
+
 .headerCenter img {
     width: 15px;
     display: inline-block;
 }
+
 .arizenTitle {
     text-decoration: none;
     color: inherit;
     font-weight: bold;
 }
+
 #zenImg {
     display: block;
 }
+
 .headerRight * {
     text-decoration: none;
     font: inherit;
@@ -67,13 +72,16 @@ header > *:nth-child(3) {
     grid-template-rows: max-content auto;
     margin-left: 5px;
 }
+
 .walletOpsTabs {
     display: flex;
     justify-content: center;
 }
+
 .walletOpsTabs > :not(:first-child) {
     margin-left: 5px;
 }
+
 .walletOpsTabs > button {
     outline: none;
     font: inherit;
@@ -85,6 +93,7 @@ header > *:nth-child(3) {
     border: 2px solid var(--arizen-fg);
     border-radius: 2px;
 }
+
 .walletOpsTabs > button[selected] {
     background: inherit;
     color: inherit;
@@ -95,14 +104,17 @@ header > *:nth-child(3) {
     flex-direction: column;
     margin-top: 5px;
 }
+
 .tabContentHeader {
     padding: 0 5px 5px 5px;
     border-bottom: 1px solid var(--arizen-fg);
     margin-bottom: 5px;
 }
+
 .tabContentHeaderLabel {
     font-size: 120%;
 }
+
 .tabContentBody {
     height: -webkit-fill-available;
     overflow: auto;
@@ -113,9 +125,11 @@ header > *:nth-child(3) {
     display: flex;
     align-items: center;
 }
+
 .walletOverviewControl > *:first-child {
     flex-grow: 2;
 }
+
 .walletOverviewControl > button:not(:first-child) {
     margin-left: 5px;
 }
@@ -127,9 +141,11 @@ header > *:nth-child(3) {
     flex-direction: column;
     align-items: stretch;
 }
+
 #addrList > :not(:first-child) {
     margin-top: 5px;
 }
+
 #addrList > :nth-child(odd) {
     background: #eeeeee;
 }
@@ -141,29 +157,36 @@ header > *:nth-child(3) {
     display: flex;
     padding: 4px;
 }
+
 .addrInfo {
     flex-grow: 2;
 }
+
 .addrControl {
     display: flex;
     align-items: flex-start;
     margin-left: 8px;
 }
+
 .addrBalance {
     float: right;
     font-size: 110%;
 }
+
 .addrBalanceAmount {
     font-weight: bolder;
 }
+
 .addrBalancePositive {
     color: var(--money-positive);
 }
+
 .addrText {
     font-family: 'monospace';
     text-decoration: none;
     color: inherit;
 }
+
 .addrControlButton {
     border: none;
     margin-left: 4px;
@@ -172,12 +195,15 @@ header > *:nth-child(3) {
     color: white;
     border-radius: 10%;
 }
+
 .addrControlButton:disabled {
     background: gray;
 }
+
 .addrDepositButton {
     background: var(--money-positive);
 }
+
 .addrWithdrawButton {
     background: var(--money-negative);
 }
@@ -189,13 +215,16 @@ header > *:nth-child(3) {
     flex-direction: column;
     align-items: center;
 }
-.depositBody  > *:not(:first-child),
+
+.depositBody > *:not(:first-child),
 .withdrawBody > *:not(:first-child) {
     margin-top: 10px;
 }
+
 .depositHelp, .withdrawHelp {
     text-align: center;
 }
+
 .depositForm, .withdrawForm {
     display: grid;
     grid-template-columns: max-content auto;
@@ -203,9 +232,11 @@ header > *:nth-child(3) {
     grid-row-gap: 5px;
     align-self: stretch;
 }
+
 #depositToAddr, #withdrawFromAddr, #withdrawToAddr {
     font-family: 'monospace';
 }
+
 #depositMsg, #withdrawMsg {
     align-self: flex-start;
     color: red;
@@ -215,14 +246,17 @@ header > *:nth-child(3) {
     font-weight: bold;
     flex-shrink: 0;
 }
+
 .withdrawStatusMessage {
     align-self: flex-start;
 }
+
 #withdrawStatusTitle {
     font-weight: bold;
     font-size: 110%;
     color: green;
 }
+
 .withdrawStatusBad {
     color: red !important;
 }
@@ -251,6 +285,7 @@ header > *:nth-child(3) {
     flex-direction: column;
     align-items: stretch;
 }
+
 #txList > *:not(:first-child) {
     margin-top: 10px;
 }
@@ -268,45 +303,57 @@ header > *:nth-child(3) {
     border-color: var(--arizen-fg);
     margin: 0 10px 0 10px;
 }
+
 .txMempoolItem {
     background: rgba(255, 0, 0, 0.1) !important;
 }
+
 .txMempoolItemTitle {
     color: var(--money-negative);
     font-weight: bold;
 }
+
 .txDate, .txBlock, .txId {
     color: var(--arizen-fg);
 }
+
 .txId {
     word-break: break-all;
     font-family: 'monospace';
 }
+
 .txBalance {
     font-size: 160%;
 }
+
 .txBalancePositive {
     color: var(--money-positive);
 }
+
 .txBalanceNegative {
     color: var(--money-negative);
 }
+
 .txAddrs {
     font-family: 'monospace';
     display: flex;
     flex-direction: column;
 }
+
 .txVin {
     color: var(--money-negative);
 }
+
 .txVout {
     color: var(--money-positive);
 }
+
 @keyframes txItemNew {
     from {
         background-color: rgba(165, 255, 126, 1.0);
     }
 }
+
 .txItemNew {
     animation: txItemNew 2s;
 }

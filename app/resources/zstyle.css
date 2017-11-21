@@ -1,8 +1,8 @@
-
 /* include padding and border in width/height */
 html {
     box-sizing: border-box;
 }
+
 *, *:before, *:after {
     box-sizing: inherit;
 }
@@ -49,10 +49,12 @@ button {
     border: 1px solid var(--border-color);
     box-shadow: 0 1px 1px #ccc;
 }
+
 header {
     border-style: none none solid none !important;
     padding: 2px !important;
 }
+
 footer {
     border-style: solid none none none !important;
 }
