@@ -14,6 +14,7 @@
     </div>
     <div class=headerCenter>
         <span>Arizen (WIP)</span>
+        <a href='https://zensystem.io'><img id=zenImg src='resources/zen_icon.png' /></a>
     </div>
     <div class=headerRight>
             <span><a id=refreshButton href=#>Refresh</a></span>
@@ -31,7 +32,10 @@
     <div data-tab-content=overview class='walletOverview tabContent'>
         <div class='tabContentHeader walletOverviewControl'>
             <span class=tabContentHeaderLabel>List of Addresses</span>
-            <button id=actionShowZeroBalances>Show zero balances</button>
+            <span>
+                <input type=checkbox id=actionShowZeroBalances name=actionShowZeroBalances>
+                <label for=actionShowZeroBalances>Show zero balances</label>
+            </span>
             <button id=actionGetANewAddress>Get a new address</button>
         </div>
         <template id=addrItemTemplate>
@@ -110,7 +114,7 @@
         <div class=txItem>
             <div><span class=txDate>Wed Nov 01 2017 21:07:39</span> (Block <span class=txBlock></span>)</div>
             <div class='txBalance txBalancePositive'><span class=txBalanceAmount></span> ZEN</div>
-            <div class=txId></div>
+            <a class=txId href=#></a>
         </div>
     </template>
     <div id=txList>

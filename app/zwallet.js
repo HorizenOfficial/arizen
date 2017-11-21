@@ -3,8 +3,7 @@
 /*jshint esversion: 6 */
 /*jslint node: true */
 
-const electron = require("electron");
-const {ipcRenderer} = electron;
+const {ipcRenderer, shell} = require('electron');
 const {List} = require('immutable');
 const {DateTime} = require('luxon');
 const Qrcode = require('qrcode');
@@ -168,12 +167,17 @@ function shortTxId(txId) {
     const edgeLen = 8
     return txId.substring(0, edgeLen) + '...' + txId.substring(txId.length - edgeLen);
 }
+
 function createTxItem(txObj) {
     const node = cloneTemplate('txItemTemplate');
     node.querySelector('.txDate').textContent =
         DateTime.fromMillis(txObj.time * 1000).toLocaleString(DateTime.DATETIME_MED);
     node.querySelector('.txBlock').textContent = txObj.block;
-    node.querySelector('.txId').textContent = shortTxId(txObj.txid);
+
+    const txIdNode = node.getElementsByClassName('txId')[0];
+    txIdNode.addEventListener('click', () => shell.openExternal(`https://explorer.zensystem.io/tx/${txObj.txid}`));
+    txIdNode.textContent = shortTxId(txObj.txid);
+
     let balanceStr, balanceClass;
     if (txObj.amount >= 0) {
         balanceStr = '+' + formatBalance(txObj.amount);
@@ -224,14 +228,6 @@ function scheduleRefresh() {
 function refresh() {
     ipcRenderer.send('refresh-wallet');
     scheduleRefresh();
-}
-
-function initWallet() {
-    initDepositView();
-    initWithdrawView();
-    document.getElementById('actionShowZeroBalances').addEventListener('click', toggleZeroBalanceAddrs);
-    document.getElementById('refreshButton').addEventListener('click', refresh);
-    ipcRenderer.send('get-wallets');
 }
 
 function initDepositView() {
@@ -339,4 +335,13 @@ function updateWithdrawalStatus(result, msg) {
         withdrawStatusTitleNode.textContent = "Transaction has been successfully sent";
     }
     withdrawStatusBodyNode.innerHTML = msg;
+}
+
+function initWallet() {
+    fixLinks();
+    initDepositView();
+    initWithdrawView();
+    document.getElementById('actionShowZeroBalances').addEventListener('click', toggleZeroBalanceAddrs);
+    document.getElementById('refreshButton').addEventListener('click', refresh);
+    ipcRenderer.send('get-wallets');
 }

@@ -4,8 +4,8 @@
 body {
     display: grid !important;
     grid-gap: 5px;
-    grid-template-rows: 30px auto 30px;
-    grid-template-columns: 500px auto;
+    grid-template-rows: min-content auto 30px;
+    grid-template-columns: minmax(500px,  max-content) auto;
     grid-template-areas:
         "header header"
         "walletOps transactions"
@@ -19,7 +19,7 @@ header {
     grid-area: header;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    align-items: center;
+    align-items: end;
 }
 header > *:nth-child(1) {
     justify-self: start;
@@ -30,7 +30,17 @@ header > *:nth-child(2) {
 header > *:nth-child(3) {
     justify-self: end;
 }
-
+.headerCenter > :not(:first-child) {
+    margin-left: 5px;
+}
+.headerCenter {
+    display: flex;
+    align-items: center;
+}
+.headerCenter img {
+    width: 15px;
+    display: inline-block;
+}
 
 /* Wallet operations */
 
@@ -44,8 +54,23 @@ header > *:nth-child(3) {
     display: flex;
     justify-content: center;
 }
-.walletOpsTabs > *:not(:first-child) {
+.walletOpsTabs > :not(:first-child) {
     margin-left: 5px;
+}
+.walletOpsTabs > button {
+    outline: none;
+    font: inherit;
+    font-size: 120%;
+    font-weight: bold;
+    padding: 4px 8px;
+    color: white;
+    background: var(--arizen-fg);
+    border: 2px solid var(--arizen-fg);
+    border-radius: 5px;
+}
+.walletOpsTabs > button[selected] {
+    background: inherit;
+    color: inherit;
 }
 
 .tabContent {
@@ -118,7 +143,6 @@ header > *:nth-child(3) {
     color: var(--money-positive);
 }
 .addrText {
-    word-break: none;
     font-family: 'monospace';
 }
 .addrControlButton {

@@ -39,6 +39,10 @@ div {
     border-color: var(--arizen-fg); /* TODO */
 }
 
+button {
+    font: inherit;
+}
+
 .panel {
     padding: 5px;
     background: var(--panel-bg);
