@@ -69,3 +69,5 @@ package-lock.json
 daemon/
 .vscode/launch.json
 wallets/
+
+yarn.lock

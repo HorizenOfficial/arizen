@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Arizen</title>
+    <link rel="stylesheet" href="resources/zstyle.css">
+    <link rel="stylesheet" href="resources/zwallet.css">
+    <script src="tabs.js"></script>
+</head>
+<body>
+
+<header class='panel'>
+    <div class=headerLeft>
+    </div>
+    <div class=headerCenter>
+        <a class=arizenTitle href='https://github.com/ZencashOfficial/arizen'>Arizen</a>
+        <a class=zenLogo href='https://zensystem.io'><img id=zenImg src='resources/zen_icon.png' /></a>
+    </div>
+    <div class=headerRight>
+            <span><a id=refreshButton href=#>Refresh</a></span>
+            <span><a href=# onclick='logout()'>Logout</a></span>
+            <span><a href=# onclick='exitApp()'>Exit</a></span>
+        </div>
+</header>
+
+<x-tabs class='walletOps panel'>
+    <div class=walletOpsTabs>
+        <button data-tab-button=overview selected>Overview</button>
+        <button id=depositTabButton data-tab-button=deposit>Deposit</button>
+        <button id=withdrawTabButton data-tab-button=withdraw>Withdraw</button>
+    </div>
+    <div data-tab-content=overview class='walletOverview tabContent'>
+        <div class='tabContentHeader walletOverviewControl'>
+            <span class=tabContentHeaderLabel>List of Addresses</span>
+            <input type=checkbox id=actionShowZeroBalances name=actionShowZeroBalances>
+            <label for=actionShowZeroBalances>Show zero balances</label>
+            <!-- <button id=actionGetANewAddress>Get a new address</button> -->
+        </div>
+        <template id=addrItemTemplate>
+            <div class=addrItem>
+                <div class=addrInfo>
+                    <div class=addrBalance><span class=addrBalanceAmount></span> ZEN</div>
+                    <div class=addrName>Unnamed address</div>
+                    <a class=addrText href=#></a>
+                </div>
+                <div class=addrControl>
+                    <button class='button addrControlButton addrDepositButton'
+                        title='Deposit to this address'>⬇</button>
+                    <button class='button addrControlButton addrWithdrawButton'
+                        title='Withdraw from this address'>⬆</button>
+                </div>
+            </div>
+        </template>
+        <div id=addrList class=tabContentBody>
+        </div>
+    </div>
+    <div data-tab-content=deposit class='walletDeposit tabContent'>
+        <div class='tabContentHeader tabContentHeaderLabel'>
+            Deposit
+        </div>
+        <div class='tabContentBody depositBody'>
+            <div class=depositHelp>
+                Click the green button next to the desired address for deposit.
+            </div>
+            <div class=depositForm>
+                <label for=depositToAddr>To</label>
+                <input id=depositToAddr name=depositToAddr type=text>
+                <label for=depositAmount>Amount</label>
+                <input id=depositAmount name=depositAmount type=number value=0 min=0 step=0.1>
+            </div>
+            <span id=depositMsg>&nbsp;</span>
+            <div>
+            <img id=depositQrcodeImg />
+        </div>
+        </div>
+    </div>
+    <div data-tab-content=withdraw class='walletWithdraw tabContent'>
+        <div class='tabContentHeader tabContentHeaderLabel'>
+            Withdraw
+        </div>
+        <div class='tabContentBody withdrawBody'>
+            <div class=withdrawHelp>
+                Click the red button next to the desired address for withdrawal.
+            </div>
+            <div class=withdrawForm>
+                <label for=withdrawAvailBalance>Available balance</label>
+                <span><span id=withdrawAvailBalance>0</span> ZEN</span>
+                <label for=withdrawFromAddr>From</label>
+                <input id=withdrawFromAddr name=withdrawFromAddr type=text>
+                <label for=withdrawToAddr>To</label>
+                <input id=withdrawToAddr name=withdrawToAddr type=text>
+                <label for=withdrawAmount>Amount</label>
+                <input id=withdrawAmount name=withdrawAmount type=number value=0 min=0 step=0.1>
+                <label for=withdrawFee>Fee</label>
+                <input id=withdrawFee name=withdrawFee type=number value=0 min=0 step=0.1>
+            </div>
+            <span id=withdrawMsg>&nbsp;</span>
+            <button id=withdrawButton>Withdraw</button>
+            <div class='withdrawStatusMessage'>
+                <div id=withdrawStatusTitle class=withdrawStatusBad></div>
+                <div id=withdrawStatusBody></div>
+            </div>
+        </div>
+    </div>
+</x-tabs>
+
+<div class='txPanel panel'>
+    <div class=txPanelHeader>
+        <span>Transaction History</span>
+    </div>
+    <template id=txItemTemplate>
+        <div class=txItem>
+            <div><span class=txDate>Wed Nov 01 2017 21:07:39</span> (Block <span class=txBlock></span>)</div>
+            <div class='txBalance txBalancePositive'><span class=txBalanceAmount></span> ZEN</div>
+            <a class=txId href=#></a>
+            <div class=txAddrs></div>
+        </div>
+    </template>
+    <template id=txMempoolItemTemplate>
+        <div class='txItem txMempoolItem'>
+            <div class=txMempoolItemTitle>UNCONFIRMED TRANSACTION</div>
+            <div class='txBalance txBalancePositive'><span class=txBalanceAmount></span> ZEN</div>
+            <a class=txId href=#></a>
+            <div class=txAddrs></div>
+        </div>
+    </template>
+    <div id=txList>
+    </div>
+</div>
+
+<footer class='statusLine panel'>
+Total balance: <span id=totalBalance><span id=totalBalanceAmount>0.00000000</span> ZEN</span>
+</footer>
+
+<script src='zcommon.js'></script>
+<script src='zwallet.js'></script>
+</body>
+</html>
