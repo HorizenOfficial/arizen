@@ -3,7 +3,7 @@
 /*jshint esversion: 6 */
 /*jslint node: true */
 
-const {ipcRenderer, shell} = require('electron');
+const {ipcRenderer} = require('electron');
 const {List} = require('immutable');
 const {DateTime} = require('luxon');
 const Qrcode = require('qrcode');
@@ -123,7 +123,7 @@ function createAddrItem(addrObj) {
         addrItem.getElementsByClassName('addrName')[0].textContent = addrObj.name;
 
     const addrTextNode = addrItem.getElementsByClassName('addrText')[0];
-    addrTextNode.addEventListener('click', () => shell.openExternal(`https://explorer.zensystem.io/address/${addrObj.addr}`));
+    addrTextNode.addEventListener('click', () => openZenExplorer('address/' + addrObj.addr));
     addrTextNode.textContent = addrObj.addr;
 
     addrItem.getElementsByClassName('addrDepositButton')[0].addEventListener('click', () => {
@@ -163,7 +163,7 @@ function createTxItem(txObj) {
     node.querySelector('.txBlock').textContent = txObj.block;
 
     const txIdNode = node.getElementsByClassName('txId')[0];
-    txIdNode.addEventListener('click', () => shell.openExternal(`https://explorer.zensystem.io/tx/${txObj.txid}`));
+    txIdNode.addEventListener('click', () => openZenExplorer('tx/' + txObj.txid));
     txIdNode.textContent = shortTxId(txObj.txid);
 
     let balanceStr, balanceClass;

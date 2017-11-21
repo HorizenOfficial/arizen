@@ -1132,11 +1132,6 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
     }
 });
 
-ipcMain.on("open-explorer", function (event, url) {
-    event.preventDefault();
-    shell.openExternal(url);
-});
-
 // Unused
 
 // function importWalletDat(login, pass, wallet) {

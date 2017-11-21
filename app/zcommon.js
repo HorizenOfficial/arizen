@@ -13,7 +13,12 @@ function exitApp() {
 }
 
 function openUrl(url) {
-    ipcRenderer.send('open-explorer', url);
+    const {shell} = require('electron');
+    shell.openExternal(url);
+}
+
+function openZenExplorer(path) {
+    openUrl('https://explorer.zensystem.io/' + path);
 }
 
 function fixLinks() {
