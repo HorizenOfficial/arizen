@@ -165,7 +165,7 @@ function setAddrItemBalance(addrItem, balance) {
 
 function shortTxId(txId) {
     const edgeLen = 8
-    return txId.substring(0, edgeLen) + '...' + txId.substring(txId.length - edgeLen);
+    return txId.substring(0, edgeLen) + '…' + txId.substring(txId.length - edgeLen);
 }
 
 function createTxItem(txObj) {
