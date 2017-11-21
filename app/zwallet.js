@@ -35,7 +35,7 @@ logIpc("verify-login-response");
 logIpc("write-login-response");
 logIpc("zz-get-wallets");
 
-const addrListNode = document.getElementById("addrList");
+let addrListNode = document.getElementById("addrList");
 const txListNode = document.getElementById("txList");
 const totalBalanceNode = document.getElementById("totalBalance");
 const depositTabButton = document.getElementById("depositTabButton");
@@ -68,7 +68,7 @@ ipcRenderer.on("get-wallets-response", (event, msgStr) => {
     clearChildNodes(addrListNode);
     clearChildNodes(txListNode);
     // TODO: sort like txs
-    msg.wallets.forEach(addAddress);
+    addAddresses(msg.wallets);
     addTransactions(msg.transactions);
     setTotalBalance(msg.total);
     scheduleRefresh();
@@ -204,16 +204,35 @@ function createTxItem(txObj, newTx = false) {
     return node;
 }
 
-function addAddress(addrObj) {
-    myAddrs.add(addrObj.addr);
-    const addrItem = createAddrItem(addrObj);
-    hideElement(addrItem, addrObj.lastbalance === 0 && !showZeroBalances);
-    addrListNode.appendChild(addrItem);
+function addAddresses(addrs) {
+    addrs.forEach(addrObj => {
+        myAddrs.add(addrObj.addr);
+        const addrItem = createAddrItem(addrObj);
+        hideElement(addrItem, addrObj.lastbalance === 0 && !showZeroBalances);
+        addrListNode.appendChild(addrItem);
+    });
+    sortAddrItems();
+}
+
+function sortAddrItems() {
+    const sortedAddrItems = [...addrListNode.childNodes].sort((a, b) => {
+        if (a.dataset.balance == b.dataset.balance) {
+            const nameA = a.name || '';
+            const nameB = b.name || '';
+            return nameA.localeCompare(nameB);
+        }
+        return b.dataset.balance - a.dataset.balance;
+    });
+    const newAddrListNode = addrListNode.cloneNode(false);
+    newAddrListNode.append(...sortedAddrItems);
+    addrListNode.parentNode.replaceChild(newAddrListNode, addrListNode);
+    addrListNode = newAddrListNode;
 }
 
 function setAddressBalance(addr, balance) {
     const addrItem = addrListNode.querySelector(`[data-addr='${addr}']`);
     setAddrItemBalance(addrItem, balance);
+    sortAddrItems();
 }
 
 function addTransactions(txs, newTx = false) {
