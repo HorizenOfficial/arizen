@@ -212,7 +212,7 @@ function addAddress(addrObj) {
 }
 
 function setAddressBalance(addr, balance) {
-    const addrItem = addrListNode.querySelector("[data-addr='${addr}']");
+    const addrItem = addrListNode.querySelector(`[data-addr='${addr}']`);
     setAddrItemBalance(addrItem, balance);
 }
 
@@ -229,7 +229,7 @@ function addTransactions(txs, newTx = false) {
     });
 
     for (const txObj of txs) {
-        const oldTxItem = txListNode.querySelector("[data-txid='${txObj.txid}']");
+        const oldTxItem = txListNode.querySelector(`[data-txid='${txObj.txid}']`);
         if (oldTxItem) {
             if (oldTxItem.dataset.blockheight !== "-1") {
                 console.error("Attempting to replace transaction in block");
@@ -281,7 +281,7 @@ function updateDepositQrcode(qrcodeDelay = 0) {
 
     if (!toAddr) {
         depositMsg.textContent = "WARNING: To address is empty";
-    } else if (!addrListNode.querySelector("[data-addr='${toAddr}']")) {
+    } else if (!addrListNode.querySelector(`[data-addr='${toAddr}']`)) {
         depositMsg.textContent = "WARNING: To address does not belong to this wallet";
     } else if (!amount) {
         depositMsg.textContent = "WARNING: Amount is not positive";
@@ -334,7 +334,7 @@ function validateWithdrawForm() {
         return;
     }
 
-    const fromAddrItem = addrListNode.querySelector("[data-addr='${fromAddr}']");
+    const fromAddrItem = addrListNode.querySelector(`[data-addr='${fromAddr}']`);
     if (!fromAddrItem) {
         withdrawMsg.textContent = "ERROR: The From address does not belong to this wallet";
         return;
