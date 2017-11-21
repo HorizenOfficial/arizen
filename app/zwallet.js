@@ -118,7 +118,9 @@ function setBalanceText(balanceNode, balance) {
 
 function createAddrItem(addrObj) {
     const addrItem = cloneTemplate("addrItemTemplate");
+
     addrItem.dataset.addr = addrObj.addr;
+    addrItem.dataset.name = addrObj.name || '';
 
     if (addrObj.name) {
         addrItem.getElementsByClassName("addrName")[0].textContent = addrObj.name;
@@ -216,12 +218,14 @@ function addAddresses(addrs) {
 
 function sortAddrItems() {
     const sortedAddrItems = [...addrListNode.childNodes].sort((a, b) => {
-        if (a.dataset.balance == b.dataset.balance) {
-            const nameA = a.name || '';
-            const nameB = b.name || '';
+        const balA = parseFloat(a.dataset.balance);
+        const balB = parseFloat(b.dataset.balance);
+        if (balA === balB) {
+            const nameA = a.dataset.name || '';
+            const nameB = b.dataset.name || '';
             return nameA.localeCompare(nameB);
         }
-        return b.dataset.balance - a.dataset.balance;
+        return balA - balB;
     });
     const newAddrListNode = addrListNode.cloneNode(false);
     newAddrListNode.append(...sortedAddrItems);
