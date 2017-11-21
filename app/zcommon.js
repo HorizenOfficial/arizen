@@ -25,7 +25,7 @@ function fixLinks() {
     document.querySelectorAll('a[href^="http"]').forEach(link =>
         link.addEventListener('click', event => {
             event.preventDefault();
-            shell.openExternal(link.href);
+            openUrl(link.href);
         }));
 }
 
