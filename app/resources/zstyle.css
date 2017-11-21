@@ -50,8 +50,9 @@ button {
     box-shadow: 0 1px 1px #ccc;
 }
 header {
-    border-style: none none solid none !important; 
+    border-style: none none solid none !important;
+    padding: 2px !important;
 }
 footer {
-    border-style: solid none none none !important; 
+    border-style: solid none none none !important;
 }

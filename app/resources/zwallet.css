@@ -19,14 +19,13 @@ header {
     grid-area: header;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    align-items: end;
+    align-items: center;
 }
 header > *:nth-child(1) {
     justify-self: start;
 }
 header > *:nth-child(2) {
     justify-self: center;
-    align-self: center;
 }
 header > *:nth-child(3) {
     justify-self: end;
@@ -47,7 +46,18 @@ header > *:nth-child(3) {
     color: inherit;
     font-weight: bold;
 }
-
+#zenImg {
+    display: block;
+}
+.headerRight * {
+    text-decoration: none;
+    font: inherit;
+    font-weight: bold;
+    padding: 2px 4px;
+    color: white;
+    background: var(--arizen-fg);
+    border-radius: 2px;
+}
 
 /* Wallet operations */
 
@@ -73,7 +83,7 @@ header > *:nth-child(3) {
     color: white;
     background: var(--arizen-fg);
     border: 2px solid var(--arizen-fg);
-    border-radius: 5px;
+    border-radius: 2px;
 }
 .walletOpsTabs > button[selected] {
     background: inherit;
