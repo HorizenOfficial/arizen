@@ -688,9 +688,18 @@ function fetchApi(path) {
     return fetchApiFrom(0);
 }
 
+// TODO 1: better name
+// TODO 2: use async
+function mapSync(seq, asyncFunc) {
+    let results = [];
+    return seq.reduce(
+            (promise, item) => promise.then(() => asyncFunc(item).then(r => results.push(r))),
+            Promise.resolve())
+        .then(() => results);
+}
+
 function fetchTransactions(txIds, myAddrs) {
-    const reqs = txIds.map(txId => fetchApi('tx/' + txId));
-    return Promise.all(reqs).then(txInfos => {
+    return mapSync(txIds, txId => fetchApi("tx/" + txId)).then(txInfos => {
         txInfos.sort(tx => tx.blockheight)
         const myAddrSet = new Set(myAddrs);
 
@@ -745,8 +754,7 @@ function fetchTransactions(txIds, myAddrs) {
 }
 
 function fetchBlockchainChanges(addrObjs, knownTxIds) {
-    const reqs = addrObjs.map(obj => fetchApi('addr/' + obj.addr));
-	return Promise.all(reqs).then(addrInfos => {
+    return mapSync(addrObjs, obj => fetchApi("addr/" + obj.addr)).then(addrInfos => {
         const result = {
             changedAddrs: [],
             newTxs: []
