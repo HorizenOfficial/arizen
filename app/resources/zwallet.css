@@ -182,7 +182,7 @@ header > *:nth-child(3) {
 }
 
 .addrText {
-    font-family: 'monospace';
+    font-family: monospace;
     text-decoration: none;
     color: inherit;
 }
@@ -234,7 +234,7 @@ header > *:nth-child(3) {
 }
 
 #depositToAddr, #withdrawFromAddr, #withdrawToAddr {
-    font-family: 'monospace';
+    font-family: monospace;
 }
 
 #depositMsg, #withdrawMsg {
@@ -319,7 +319,7 @@ header > *:nth-child(3) {
 
 .txId {
     word-break: break-all;
-    font-family: 'monospace';
+    font-family: monospace;
 }
 
 .txBalance {
@@ -335,7 +335,7 @@ header > *:nth-child(3) {
 }
 
 .txAddrs {
-    font-family: 'monospace';
+    font-family: monospace;
     display: flex;
     flex-direction: column;
 }
