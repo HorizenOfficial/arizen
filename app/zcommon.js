@@ -1,7 +1,7 @@
 // @flow
 /*jshint esversion: 6 */
 /*jslint node: true */
-'use strict';
+"use strict";
 
 function logout() {
     ipcRenderer.send("do-logout");
@@ -13,17 +13,17 @@ function exitApp() {
 }
 
 function openUrl(url) {
-    const {shell} = require('electron');
+    const {shell} = require("electron");
     shell.openExternal(url);
 }
 
 function openZenExplorer(path) {
-    openUrl('https://explorer.zensystem.io/' + path);
+    openUrl("https://explorer.zensystem.io/" + path);
 }
 
 function fixLinks() {
-    document.querySelectorAll('a[href^="http"]').forEach(link =>
-        link.addEventListener('click', event => {
+    document.querySelectorAll("a[href^='http']").forEach(link =>
+        link.addEventListener("click", event => {
             event.preventDefault();
             openUrl(link.href);
         }));
@@ -34,10 +34,11 @@ function formatBalance(balance) {
 }
 
 function hideElement(node, yes) {
-    if (yes)
-        node.classList.add('hidden')
-    else
-        node.classList.remove('hidden')
+    if (yes) {
+        node.classList.add("hidden");
+    } else {
+        node.classList.remove("hidden");
+    }
 }
 
 function clearChildNodes(parent) {

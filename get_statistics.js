@@ -13,7 +13,7 @@ xhr.onload = function () {
     let resp = JSON.parse(xhr.responseText);
     if (xhr.readyState === 4 && (xhr.status === "200")) {
         console.log(resp);
-        for (let i = 0; i < resp["assets"].length; i++){
+        for (let i = 0; i < resp["assets"].length; i++) {
             let obj = resp["assets"][i];
             console.log("Downloaded: " + obj["download_count"] + ", " + obj["name"]);
         }

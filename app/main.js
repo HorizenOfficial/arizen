@@ -19,8 +19,8 @@ const zencashjs = require("zencashjs");
 const sql = require("sql.js");
 const request = require("request");
 const updater = require("electron-simple-updater");
-const fetch = require('node-fetch');
-const {List} = require('immutable');
+const fetch = require("node-fetch");
+const {List} = require("immutable");
 
 // Press F12 to open the DevTools. See https://github.com/sindresorhus/electron-debug.
 // FIXME: comment this for release versions!
