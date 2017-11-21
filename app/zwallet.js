@@ -54,7 +54,7 @@ const withdrawButton = document.getElementById('withdrawButton');
 const withdrawStatusTitleNode = document.getElementById('withdrawStatusTitle');
 const withdrawStatusBodyNode = document.getElementById('withdrawStatusBody');
 
-const refreshTimeout = 300;
+const refreshTimeout = 60;
 let refreshTimer;
 let showZeroBalances = false;
 const knownTxIds = new Set();
@@ -235,12 +235,12 @@ function initWallet() {
 }
 
 function initDepositView() {
-    depositToAddrInput.addEventListener('input', updateDepositQrcode);
-    depositAmountInput.addEventListener('input', updateDepositQrcode);
+    const qrcodeTypeDelay = 500; // ms
+    depositToAddrInput.addEventListener('input', () => updateDepositQrcode(qrcodeTypeDelay));
+    depositAmountInput.addEventListener('input', () => updateDepositQrcode(qrcodeTypeDelay));
 }
 
-function updateDepositQrcode() {
-    const qrcodeDelay = 500; // ms
+function updateDepositQrcode(qrcodeDelay = 0) {
     const qrcodeOpts = {
         errorCorrectionLevel: "H",
         scale: 5,
@@ -254,7 +254,7 @@ function updateDepositQrcode() {
         depositMsg.textContent = 'WARNING: To address is empty';
     else if (!addrListNode.querySelector(`[data-addr="${toAddr}"]`))
         depositMsg.textContent = 'WARNING: To address does not belong to this wallet';
-    else if (amount)
+    else if (!amount)
         depositMsg.textContent = 'WARNING: Amount is not positive';
     else
         depositMsg.textContent = '\xA0'; // &nbsp;
@@ -300,13 +300,13 @@ function validateWithdrawForm() {
     withdrawAvailBalance.textContent = 0;
 
     if (!fromAddr) {
-		withdrawMsg.textContent = 'WARNING: The From address is empty';
+		withdrawMsg.textContent = 'ERROR: The From address is empty';
 		return;
 	}
 
     const fromAddrItem = addrListNode.querySelector(`[data-addr="${fromAddr}"]`)
 	if (!fromAddrItem) {
-		withdrawMsg.textContent = 'WARNING: The From address does not belong to this wallet';
+		withdrawMsg.textContent = 'ERROR: The From address does not belong to this wallet';
 		return;
 	}
 
@@ -314,15 +314,15 @@ function validateWithdrawForm() {
     withdrawAvailBalance.textContent = fromBalance;
 
     if (!toAddr) {
-		withdrawMsg.textContent = 'WARNING: The To address is empty';
+		withdrawMsg.textContent = 'ERROR: The To address is empty';
 		return;
 	}
 	if (!amount) {
-		withdrawMsg.textContent = 'WARNING: The amount is not positive';
+		withdrawMsg.textContent = 'ERROR: The amount is not positive';
 		return;
 	}
 	if (amount + fee > fromBalance) {
-		withdrawMsg.textContent = 'WARNING: Insufficient funds on the From address';
+		withdrawMsg.textContent = 'ERROR: Insufficient funds on the From address';
 		return;
 	}
 

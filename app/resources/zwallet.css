@@ -44,6 +44,9 @@ header > *:nth-child(3) {
     display: flex;
     justify-content: center;
 }
+.walletOpsTabs > *:not(:first-child) {
+    margin-left: 5px;
+}
 
 .tabContent {
     display: flex;
@@ -68,11 +71,13 @@ header > *:nth-child(3) {
     display: flex;
     align-items: center;
 }
-
-/* label, let it grow and push the buttons to the right */
 .walletOverviewControl > *:first-child {
     flex-grow: 2;
 }
+.walletOverviewControl > button:not(:first-child) {
+    margin-left: 5px;
+}
+
 #addrList {
     overflow: auto;
     max-height: -webkit-fill-available;
@@ -80,8 +85,11 @@ header > *:nth-child(3) {
     flex-direction: column;
     align-items: stretch;
 }
-#addrList > *:not(:first-child) {
-    margin-top: 10px;
+#addrList > :not(:first-child) {
+    margin-top: 5px;
+}
+#addrList > :nth-child(odd) {
+    background: #eeeeee;
 }
 
 /* Addresses */
@@ -89,6 +97,7 @@ header > *:nth-child(3) {
 .addrItem {
     flex-shrink: 0;
     display: flex;
+    padding: 4px;
 }
 .addrInfo {
     flex-grow: 2;

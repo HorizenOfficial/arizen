@@ -679,7 +679,8 @@ function fetchTransactions(txIds, myAddrs) {
         txInfos.sort(tx => tx.blockheight)
         const myAddrSet = new Set(myAddrs);
 
-        return txInfos.map(info => {
+        // filter unconfirmed TXs for now (blockheight = -1)
+        return txInfos.filter(info => info.blockheight >= 0).map(info => {
             let txBalance = 0;
             const vins = [];
             const vouts = [];
@@ -739,6 +740,7 @@ function fetchBlockchainChanges(addrObjs, knownTxIds) {
             const obj = addrObjs[i];
             const info = addrInfos[i];
             if (obj.lastbalance != info.balance) {
+                obj.balanceDiff = info.balance - obj.lastbalance;
                 obj.lastbalance = info.balance;
                 result.changedAddrs.push(obj);
             }
@@ -758,13 +760,12 @@ function updateBlockchainView(webContents) {
     settings.api = 'http://explorer.zenmine.pro/insight-api-zen/';
     const addrObjs = sqlSelectObjects('SELECT addr, name, lastbalance FROM wallet');
     const knownTxIds = sqlSelectColumns('SELECT DISTINCT txid FROM transactions').map(row => row[0]);
-    //let totalBalance = addrObjs.reduce((sum, a) => sum + a.lastbalance, 0);
-    let totalBalance = 0;
+    let totalBalance = addrObjs.reduce((sum, a) => sum + a.lastbalance, 0);
 
     fetchBlockchainChanges(addrObjs, knownTxIds).then(result => {
         for (const addrObj of result.changedAddrs) {
             sqlRun('UPDATE wallet SET lastbalance = ? WHERE addr = ?', [addrObj.lastbalance, addrObj.addr]);
-            totalBalance += addrObj.lastbalance;
+            totalBalance += addrObj.balanceDiff;
             webContents.send('update-wallet-balance', JSON.stringify({
                 response: 'OK',
                 wallet: addrObj.addr,
@@ -802,7 +803,7 @@ ipcMain.on("get-wallets", function (event) {
             sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet");
         }
         */
-        //updateBlockchainView(event.sender);
+        updateBlockchainView(event.sender);
     }
 
     event.sender.send("get-wallets-response", JSON.stringify(resp));
