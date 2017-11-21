@@ -225,7 +225,7 @@ function sortAddrItems() {
             const nameB = b.dataset.name || '';
             return nameA.localeCompare(nameB);
         }
-        return balA - balB;
+        return balB - balA;
     });
     const newAddrListNode = addrListNode.cloneNode(false);
     newAddrListNode.append(...sortedAddrItems);
