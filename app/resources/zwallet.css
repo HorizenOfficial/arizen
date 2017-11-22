@@ -175,7 +175,7 @@ header > *:nth-child(3) {
 }
 
 .addrInfoLink img {
-	height: 14px;
+    height: 14px;
 }
 
 .addrControlButton {
@@ -285,9 +285,8 @@ header > *:nth-child(3) {
     justify-content: center;
     align-items: center;
 
-    border-style: solid none none none;
-    border-width: 1px;
-    border-color: var(--arizen-fg);
+    border: 1px none var(--arizen-fg);
+    border-top-style: solid;
     padding: 5px 0 5px 0;
 }
 
