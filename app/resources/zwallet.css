@@ -281,10 +281,6 @@ header > *:nth-child(3) {
     align-items: stretch;
 }
 
-#txList > *:not(:first-child) {
-    margin-top: 10px;
-}
-
 .txItem {
     flex-shrink: 0;
 
@@ -293,10 +289,10 @@ header > *:nth-child(3) {
     justify-content: center;
     align-items: center;
 
-    border-style: solid none solid none;
+    border-style: solid none none none;
     border-width: 1px;
     border-color: var(--arizen-fg);
-    margin: 0 10px 0 10px;
+    padding: 5px 0 5px 0;
 }
 
 .txMempoolItem {
