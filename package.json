@@ -98,7 +98,7 @@
     }
   },
   "dependencies": {
-    "bip32-utils": "^0.10.1",
+    "bip32-utils": "^0.10.2",
     "bitcoinjs-lib": "^3.3.0",
     "electron-debug": "^1.4.0",
     "electron-download": "^4.1.0",
@@ -118,7 +118,7 @@
     "zencashjs": "^1.1.7-a"
   },
   "devDependencies": {
-    "ajv": "^5.2.5",
+    "ajv": "^5.4.0",
     "coveralls": "^3.0.0",
     "devtron": "^1.4.0",
     "electron": "^1.8.1",

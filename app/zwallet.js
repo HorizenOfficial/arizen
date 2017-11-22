@@ -4,6 +4,7 @@
 "use strict";
 
 const {ipcRenderer} = require("electron");
+// FIXME: unused List
 const {List} = require("immutable");
 const {DateTime} = require("luxon");
 const Qrcode = require("qrcode");
@@ -44,6 +45,7 @@ const depositAmountInput = document.getElementById("depositAmount");
 const depositMsg = document.getElementById("depositMsg");
 const depositQrcodeImage = document.getElementById("depositQrcodeImg");
 const withdrawTabButton = document.getElementById("withdrawTabButton");
+// FIXME: withdrawAvailBalanceNode unused
 const withdrawAvailBalanceNode = document.getElementById("withdrawAvailBalance");
 const withdrawFromAddrInput = document.getElementById("withdrawFromAddr");
 const withdrawToAddrInput = document.getElementById("withdrawToAddr");
@@ -401,9 +403,9 @@ function initWallet() {
     document.getElementById("actionShowZeroBalances").addEventListener("click", toggleZeroBalanceAddrs);
     document.getElementById("refreshButton").addEventListener("click", refresh);
     [...document.getElementsByClassName("amountInput")].forEach(node => {
-		node.addEventListener("change", () => {
-			node.value = parseFloat(node.value).toFixed(8);
-		});
-	});
+        node.addEventListener("change", () => {
+            node.value = parseFloat(node.value).toFixed(8);
+        });
+    });
     ipcRenderer.send("get-wallets");
 }
