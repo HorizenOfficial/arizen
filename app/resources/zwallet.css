@@ -54,7 +54,6 @@ header > *:nth-child(3) {
 .headerRight * {
     text-decoration: none;
     font: inherit;
-    font-weight: bold;
     padding: 2px 4px;
     color: white;
     background: var(--arizen-fg);
@@ -83,7 +82,6 @@ header > *:nth-child(3) {
     outline: none;
     font: inherit;
     font-size: 120%;
-    font-weight: bold;
     padding: 4px 8px;
     color: white;
     background: var(--arizen-fg);
@@ -249,7 +247,7 @@ header > *:nth-child(3) {
 }
 
 #withdrawStatusTitle {
-    font-weight: bold;
+    font-weight: bolder;
     font-size: 110%;
     color: green;
 }
@@ -307,7 +305,7 @@ header > *:nth-child(3) {
 
 .txMempoolItemTitle {
     color: var(--money-negative);
-    font-weight: bold;
+    font-weight: bolder;
 }
 
 .txDate, .txBlock, .txId {
