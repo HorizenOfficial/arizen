@@ -1,3 +1,8 @@
+@font-face {
+    font-family: "monospace";
+    src: url(NotoSansMono-Regular.ttf);
+}
+
 /* include padding and border in width/height */
 html {
     box-sizing: border-box;
