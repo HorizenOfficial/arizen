@@ -38,7 +38,7 @@
 npm run dist
 
 # Screenshots
-![Overview of addresses](https://i.imgur.com/5ZBIOzQ.png)
+![Overview of addresses](https://i.imgur.com/6RpYMnJ.png)
 ![Deposit view](https://i.imgur.com/E6KKabM.png)
 ![Withdrawal view](https://i.imgur.com/nSXmAZK.png)
 
