@@ -126,9 +126,10 @@ function createAddrItem(addrObj) {
         addrItem.getElementsByClassName("addrName")[0].textContent = addrObj.name;
     }
 
-    const addrTextNode = addrItem.getElementsByClassName("addrText")[0];
-    addrTextNode.addEventListener("click", () => openZenExplorer("address/" + addrObj.addr));
-    addrTextNode.textContent = addrObj.addr;
+    addrItem.getElementsByClassName("addrText")[0].textContent = addrObj.addr;
+
+    addrItem.getElementsByClassName("addrInfoLink")[0]
+        .addEventListener("click", () => openZenExplorer("address/" + addrObj.addr));
 
     addrItem.getElementsByClassName("addrDepositButton")[0].addEventListener("click", () => {
         depositToAddrInput.value = addrObj.addr;

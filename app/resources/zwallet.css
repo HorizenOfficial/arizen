@@ -178,6 +178,9 @@ header > *:nth-child(3) {
 
 .addrText {
     font-family: "monospace" !important;
+}
+
+.addrInfoLink {
     text-decoration: none;
     color: inherit;
 }
