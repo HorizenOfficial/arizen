@@ -54,7 +54,7 @@ const withdrawButton = document.getElementById("withdrawButton");
 const withdrawStatusTitleNode = document.getElementById("withdrawStatusTitle");
 const withdrawStatusBodyNode = document.getElementById("withdrawStatusBody");
 
-const refreshTimeout = 150;
+const refreshTimeout = 300;
 let refreshTimer;
 let showZeroBalances = false;
 let depositQrcodeTimer;
