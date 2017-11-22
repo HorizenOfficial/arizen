@@ -400,5 +400,10 @@ function initWallet() {
     initWithdrawView();
     document.getElementById("actionShowZeroBalances").addEventListener("click", toggleZeroBalanceAddrs);
     document.getElementById("refreshButton").addEventListener("click", refresh);
+    [...document.getElementsByClassName("amountInput")].forEach(node => {
+		node.addEventListener("change", () => {
+			node.value = parseFloat(node.value).toFixed(8);
+		});
+	});
     ipcRenderer.send("get-wallets");
 }
