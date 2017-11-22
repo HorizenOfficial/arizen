@@ -2,6 +2,10 @@
     font-family: "monospace";
     src: url(NotoSansMono-Regular.ttf);
 }
+@font-face {
+    font-family: "FontAwesome";
+    src: url(fontawesome-webfont.eot);
+}
 
 /* include padding and border in width/height */
 html {

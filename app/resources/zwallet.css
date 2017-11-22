@@ -181,8 +181,12 @@ header > *:nth-child(3) {
 }
 
 .addrInfoLink {
+    font-family: 'FontAwesome';
     text-decoration: none;
     color: inherit;
+}
+.addrInfoLink:before {
+    content: "\f05a";
 }
 
 .addrControlButton {
