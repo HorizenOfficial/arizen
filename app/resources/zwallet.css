@@ -180,13 +180,8 @@ header > *:nth-child(3) {
     font-family: "monospace" !important;
 }
 
-.addrInfoLink {
-    font-family: 'FontAwesome';
-    text-decoration: none;
-    color: inherit;
-}
-.addrInfoLink:before {
-    content: "\f05a";
+.addrInfoLink img {
+	height: 14px;
 }
 
 .addrControlButton {
