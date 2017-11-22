@@ -38,9 +38,9 @@
 npm run dist
 
 # Screenshots
-![Overview of addresses](https://i.imgur.com/1KJexvb.png)
-![Deposit view](https://i.imgur.com/PItC0Qh.png)
-![Withdrawal view](https://i.imgur.com/KvZ0I1B.png)
+![Overview of addresses](https://i.imgur.com/5ZBIOzQ.png)
+![Deposit view](https://i.imgur.com/E6KKabM.png)
+![Withdrawal view](https://i.imgur.com/nSXmAZK.png)
 
 [david-img]: https://david-dm.org/ZencashOfficial/arizen.svg?style=flat-square
 [david-url]: https://david-dm.org/ZencashOfficial/arizen
