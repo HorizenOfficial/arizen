@@ -125,22 +125,21 @@ function createAddrItem(addrObj) {
     if (addrObj.name) {
         addrItem.getElementsByClassName("addrName")[0].textContent = addrObj.name;
     }
-
     addrItem.getElementsByClassName("addrText")[0].textContent = addrObj.addr;
-
     addrItem.getElementsByClassName("addrInfoLink")[0]
         .addEventListener("click", () => openZenExplorer("address/" + addrObj.addr));
-
-    addrItem.getElementsByClassName("addrDepositButton")[0].addEventListener("click", () => {
-        depositToAddrInput.value = addrObj.addr;
-        updateDepositQrcode();
-        depositTabButton.click();
-    });
-    addrItem.getElementsByClassName("addrWithdrawButton")[0].addEventListener("click", () => {
-        withdrawFromAddrInput.value = addrObj.addr;
-        validateWithdrawForm();
-        withdrawTabButton.click();
-    });
+    addrItem.getElementsByClassName("addrDepositButton")[0]
+        .addEventListener("click", () => {
+            depositToAddrInput.value = addrObj.addr;
+            updateDepositQrcode();
+            depositTabButton.click();
+        });
+    addrItem.getElementsByClassName("addrWithdrawButton")[0]
+        .addEventListener("click", () => {
+            withdrawFromAddrInput.value = addrObj.addr;
+            validateWithdrawForm();
+            withdrawTabButton.click();
+        });
 
     setAddrItemBalance(addrItem, addrObj.lastbalance);
     return addrItem;
