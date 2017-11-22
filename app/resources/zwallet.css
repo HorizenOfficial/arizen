@@ -91,7 +91,7 @@ header > *:nth-child(3) {
 
 .walletOpsTabs > button[selected] {
     background: inherit;
-    color: inherit;
+    color: var(--arizen-fg);
 }
 
 .tabContent {
