@@ -50,6 +50,11 @@ div {
 
 button {
     font: inherit;
+    outline: none;
+    color: white;
+    background: var(--arizen-fg);
+    border: 2px solid var(--arizen-fg);
+    border-radius: 2px;
 }
 
 .panel {

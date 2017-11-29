@@ -79,14 +79,8 @@ header > *:nth-child(3) {
 }
 
 .walletOpsTabs > button {
-    outline: none;
-    font: inherit;
     font-size: 120%;
     padding: 4px 8px;
-    color: white;
-    background: var(--arizen-fg);
-    border: 2px solid var(--arizen-fg);
-    border-radius: 2px;
 }
 
 .walletOpsTabs > button[selected] {
