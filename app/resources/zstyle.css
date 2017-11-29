@@ -65,6 +65,10 @@ button {
         transparent);
 }
 
+button:hover {
+    filter: brightness(90%);
+}
+
 .panel {
     padding: 5px;
     background: var(--panel-bg);
