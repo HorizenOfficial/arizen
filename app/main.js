@@ -702,7 +702,8 @@ function mapSync(seq, asyncFunc) {
 
 function fetchTransactions(txIds, myAddrs) {
     return mapSync(txIds, txId => fetchApi("tx/" + txId)).then(txInfos => {
-        txInfos.sort(tx => tx.blockheight)
+        // TODO
+        //txInfos.sort(tx => tx.blockheight)
         const myAddrSet = new Set(myAddrs);
 
         return txInfos.map(info => {
