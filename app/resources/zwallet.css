@@ -52,7 +52,7 @@ header > *:nth-child(3) {
 }
 
 .headerRight button {
-	padding: 0 4px;
+	padding: 1px 6px;
 }
 
 /* Wallet operations */
@@ -76,11 +76,13 @@ header > *:nth-child(3) {
 .walletOpsTabs > button {
     font-size: 120%;
     padding: 4px 8px;
+    border: 2px solid transparent;
 }
 
 .walletOpsTabs > button[selected] {
     background: inherit;
     color: var(--arizen-fg);
+    border: 2px solid var(--arizen-fg);
 }
 
 .tabContent {

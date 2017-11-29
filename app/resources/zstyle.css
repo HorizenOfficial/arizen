@@ -52,9 +52,17 @@ button {
     font: inherit;
     outline: none;
     color: white;
-    background: var(--arizen-fg);
-    border: 2px solid var(--arizen-fg);
+    border: none;
     border-radius: 2px;
+    padding: 4px 8px;
+    background: var(--arizen-fg) -webkit-linear-gradient(90deg,
+        rgba(255, 255, 255, .1) 0%,
+        transparent 0%,
+        transparent 50%,
+        rgba(255, 255, 255, .1) 50%,
+        rgba(255, 255, 255, .1) 100%,
+        transparent 100%,
+        transparent);
 }
 
 .panel {
