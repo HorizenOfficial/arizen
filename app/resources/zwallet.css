@@ -51,13 +51,8 @@ header > *:nth-child(3) {
     display: block;
 }
 
-.headerRight * {
-    text-decoration: none;
-    font: inherit;
-    padding: 2px 4px;
-    color: white;
-    background: var(--arizen-fg);
-    border-radius: 2px;
+.headerRight button {
+	padding: 0 4px;
 }
 
 /* Wallet operations */
