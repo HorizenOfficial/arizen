@@ -169,6 +169,7 @@ header button {
 .addrNameLine {
     display: flex;
     align-items: center;
+    cursor: pointer;
 }
 .addrNameLine > :not(:first-child) {
     margin-left: 5px;
@@ -176,7 +177,10 @@ header button {
 
 .addrDetailButton {
     height: 14px;
-    cursor: pointer;
+    opacity: 0.5;
+}
+.addrNameLine:hover > .addrDetailButton {
+    opacity: 1;
 }
 
 .addrControlButton {

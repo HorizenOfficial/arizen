@@ -136,7 +136,7 @@ function createAddrItem(addrObj) {
         addrItem.getElementsByClassName("addrName")[0].textContent = addrObj.name;
     }
     addrItem.getElementsByClassName("addrText")[0].textContent = addrObj.addr;
-    addrItem.getElementsByClassName("addrDetailButton")[0]
+    addrItem.getElementsByClassName("addrNameLine")[0]
         .addEventListener("click", () => showAddrDetail(addrObj));
     addrItem.getElementsByClassName("addrDepositButton")[0]
         .addEventListener("click", () => {
