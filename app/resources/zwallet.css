@@ -303,10 +303,6 @@ header button {
     background: rgba(255, 0, 0, 0.1) !important;
 }
 
-.txDate, .txMempoolItemTitle {
-    min-width: 180px;
-}
-
 .txBalance {
     font-size: 160%;
     white-space: nowrap;
