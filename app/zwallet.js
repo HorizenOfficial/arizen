@@ -436,7 +436,7 @@ function validateWithdrawForm() {
     const fee = parseFloat(withdrawFeeInput.value || 0);
 
     withdrawButton.disabled = true;
-    withdrawAvailBalance.textContent = 0;
+    setBalanceText(withdrawAvailBalance, 0);
 
     if (!fromAddr) {
         withdrawMsg.textContent = "ERROR: The From address is empty";
@@ -450,7 +450,7 @@ function validateWithdrawForm() {
     }
 
     const fromBalance = parseFloat(fromAddrItem.dataset.balance);
-    withdrawAvailBalance.textContent = fromBalance;
+    setBalanceText(withdrawAvailBalance, fromBalance);
 
     if (!toAddr) {
         withdrawMsg.textContent = "ERROR: The To address is empty";
