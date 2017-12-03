@@ -283,6 +283,7 @@ header > *:nth-child(3) {
     border: 1px none var(--arizen-fg);
     border-top-style: solid;
     padding: 5px 0 5px 0;
+    cursor: pointer;
 }
 .txItem > :not(:first-child) {
     margin-left: 5px;
@@ -293,11 +294,6 @@ header > *:nth-child(3) {
 
 .txMempoolItem {
     background: rgba(255, 0, 0, 0.1) !important;
-}
-
-.txMempoolItemTitle {
-    color: var(--money-negative);
-    font-weight: bolder;
 }
 
 .txDate, .txMempoolItemTitle {

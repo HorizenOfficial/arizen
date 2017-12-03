@@ -7,8 +7,54 @@
     <link rel="stylesheet" href="resources/page.css">
     <link rel="stylesheet" href="resources/zwallet.css">
     <script src="tabs.js"></script>
+    <link rel=import href="webcomponents/arizen-dialog.html">
 </head>
 <body>
+
+<template id=txDialogTemplate>
+    <arizen-dialog class=txDialog>
+        <h2 slot=headerText>Transaction Detail</h2>
+        <div class=form slot=content>
+            <div>Transaction ID:</div>
+            <div>
+                <div class='txDetailTxId monospace'></div>
+                <a class=txInfoLink href=#>Show in ZEN Explorer</a>
+            </div>
+            <div>Date:</div>
+            <div class=txDetailDate></div>
+            <div>Block Height:</div>
+            <div class=txDetailBlock></div>
+            <div>Amount:</div>
+            <div class=txDetailAmount><span></span> ZEN</div>
+            <div>From:</div>
+            <div class='txDetailFrom monospace'></div>
+            <div>To:</div>
+            <div class='txDetailTo monospace'></div>
+        </div>
+    </arizen-dialog>
+</template>
+
+<template id=mempoolTxDialogTemplate>
+    <arizen-dialog class=txDialog>
+        <h2 slot=headerText>Transaction Detail</h2>
+        <div slot=content>
+            <div class=form>
+                <div>Transaction ID:</div>
+                <div>
+                    <div class='txDetailTxId monospace'></div>
+                    <div class=warning>UNCONFIRMED TRANSACTION</div>
+                    <a class=txInfoLink href=#>Show in ZEN Explorer</a>
+                </div>
+                <div>Amount:</div>
+                <div class=txDetailAmount><span></span> ZEN</div>
+                <div>From:</div>
+                <div class='txDetailFrom monospace'></div>
+                <div>To:</div>
+                <div class='txDetailTo monospace'></div>
+            </div>
+        </div>
+    </arizen-dialog>
+</template>
 
 <div class=body>
 
@@ -123,7 +169,7 @@
     </template>
     <template id=txMempoolItemTemplate>
         <div class='txItem txMempoolItem'>
-            <span class=txMempoolItemTitle>UNCONFIRMED</span>
+            <span class="warning txMempoolItemTitle">UNCONFIRMED</span>
             <div class=filler></div>
             <span class=txBalance><span class=txBalanceAmount></span> ZEN</span>
         </div>

@@ -6,7 +6,6 @@
 const {ipcRenderer} = require("electron");
 // FIXME: unused List
 const {List} = require("immutable");
-const {DateTime} = require("luxon");
 const Qrcode = require("qrcode");
 
 function logIpc(msgType) {
@@ -161,32 +160,61 @@ function shortTxId(txId) {
     return txId.substring(0, edgeLen) + "..." + txId.substring(txId.length - edgeLen);
 }
 
-function createTxItem(txObj, newTx = false) {
-    const node = txObj.block >= 0 ? cloneTemplate("txItemTemplate") : cloneTemplate("txMempoolItemTemplate");
-
-    node.dataset.txid = txObj.txid;
-    node.dataset.blockheight = txObj.block;
-
-    if (txObj.block >= 0) {
-        node.querySelector(".txDate").textContent = DateTime.fromMillis(txObj.time * 1000).toLocaleString(DateTime.DATETIME_MED);
-    }
-
+// Expects a node with one amount child node
+function setTxBalanceText(node, balance) {
     let balanceStr, balanceClass;
-    if (txObj.amount >= 0) {
-        balanceStr = "+" + formatBalance(txObj.amount);
+    if (balance >= 0) {
+        balanceStr = "+" + formatBalance(balance);
         balanceClass = "txBalancePositive";
     } else {
-        balanceStr = "-" + formatBalance(-txObj.amount);
+        balanceStr = "-" + formatBalance(-balance);
         balanceClass = "txBalanceNegative";
     }
-    node.querySelector(".txBalance").classList.add(balanceClass);
-    node.querySelector(".txBalanceAmount").textContent = balanceStr;
+    node.classList.add(balanceClass);
+    const amountNode = node.firstElementChild;
+    amountNode.textContent = balanceStr;
+}
 
-    if (newTx) {
+function createTxItem(txObj, newTx = false) {
+    const node = txObj.block >= 0 ? cloneTemplate("txItemTemplate") : cloneTemplate("txMempoolItemTemplate");
+    node.dataset.txid = txObj.txid;
+    node.dataset.blockheight = txObj.block;
+    if (txObj.block >= 0)
+        node.querySelector(".txDate").textContent = formatEpochTime(txObj.time * 1000);
+    setTxBalanceText(node.querySelector(".txBalance"), txObj.amount);
+    if (newTx)
         node.classList.add("txItemNew");
-    }
-
+    node.addEventListener("click", () => showTxDetail(txObj));
     return node;
+}
+
+function showTxDetail(txObj) {
+    const templateId = txObj.block >= 0 ? "txDialogTemplate" : "mempoolTxDialogTemplate";
+    showDialogFromTemplate(templateId, dialog => {
+        dialog.querySelector(".txDetailTxId").textContent = txObj.txid;
+        dialog.querySelector(".txInfoLink").addEventListener("click", () => openZenExplorer("tx/" + txObj.txid));
+        setTxBalanceText(dialog.querySelector(".txDetailAmount"), txObj.amount);
+        const vinListNode = dialog.querySelector(".txDetailFrom");
+        txObj.vins.split(",").sort().forEach(addr => {
+            const node = document.createElement("div");
+            node.textContent = addr;
+            if (myAddrs.has(addr))
+                node.classList.add("negative");
+            vinListNode.append(node);
+        });
+        const voutListNode = dialog.querySelector(".txDetailTo");
+        txObj.vouts.split(",").sort().forEach(addr => {
+            const node = document.createElement("div");
+            node.textContent = addr;
+            if (myAddrs.has(addr))
+                node.classList.add("positive");
+            voutListNode.append(node);
+        });
+        if (txObj.block >= 0) {
+            dialog.querySelector(".txDetailDate").textContent = formatEpochTime(txObj.time * 1000);
+            dialog.querySelector(".txDetailBlock").textContent = txObj.block;
+        }
+    });
 }
 
 function addAddresses(addrs) {

@@ -101,3 +101,20 @@ dialog {
     border: none;
     color: inherit;
 }
+
+.positive {
+    color: var(--money-positive);
+}
+
+.negative {
+    color: var(--money-negative);
+}
+
+.monospace {
+    font-family: "monospace";
+}
+
+.warning {
+    color: var(--money-negative);
+    font-weight: bolder;
+}
