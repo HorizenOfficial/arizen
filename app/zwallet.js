@@ -281,6 +281,8 @@ function sortAddrItems() {
             } else {
                 if (nameA === '')
                     return 1;
+                else if (nameB === '')
+                    return -1;
                 else
                     return nameA.localeCompare(nameB);
             }
