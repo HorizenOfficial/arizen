@@ -155,11 +155,6 @@ function setAddrItemBalance(addrItem, balance) {
     withdrawButton.disabled = balance === 0;
 }
 
-function shortTxId(txId) {
-    const edgeLen = 8;
-    return txId.substring(0, edgeLen) + "..." + txId.substring(txId.length - edgeLen);
-}
-
 // Expects a node with one amount child node
 function setTxBalanceText(node, balance) {
     let balanceStr, balanceClass;
