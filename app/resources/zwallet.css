@@ -216,11 +216,7 @@ header > *:nth-child(3) {
     text-align: center;
 }
 
-.depositForm, .withdrawForm {
-    display: grid;
-    grid-template-columns: max-content auto;
-    grid-column-gap: 10px;
-    grid-row-gap: 5px;
+#depositForm, #withdrawForm {
     align-self: stretch;
 }
 

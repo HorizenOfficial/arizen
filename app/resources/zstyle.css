@@ -89,3 +89,10 @@ h2 {
 .filler {
     flex-grow: 99;
 }
+
+.form {
+    display: grid;
+    grid-template-columns: max-content auto;
+    grid-column-gap: 10px;
+    grid-row-gap: 5px;
+}
