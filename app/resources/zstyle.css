@@ -95,6 +95,7 @@ h2 {
     grid-template-columns: max-content auto;
     grid-column-gap: 10px;
     grid-row-gap: 5px;
+    align-items: baseline;
 }
 
 dialog {
