@@ -79,6 +79,21 @@
     </arizen-dialog>
 </template>
 
+<template id=addrSelectRowTemplate>
+    <div class=addrSelectRow>
+        <div class=addrSelectRowName></div>
+        <div class="addrSelectRowAddr monospace"></div>
+        <div class=addrSelectRowBalance><span></span> ZEN</div>
+    </div>
+</template>
+<template id=addrSelectDialogTemplate>
+    <arizen-dialog>
+        <h2 slot=headerText>List of Addresses</h2>
+        <div slot=content class=addrSelectList>
+       </div>
+    </arizen-dialog>
+</template>
+
 <div class=body>
 
 <header class='panel'>
@@ -138,7 +153,7 @@
                 Click the green button next to the desired address for deposit.
             </div>
             <div class=form id=depositForm>
-                <div>To</div>
+                <button id=depositToButton>To</button>
                 <input id=depositToAddr name=depositToAddr class=monospace type=text />
                 <div>Amount</div>
                 <input class=amountInput id=depositAmount name=depositAmount type=number value=0.00000000 min=0 step=0.1 />
@@ -160,9 +175,9 @@
             <div class=form id=withdrawForm>
                 <div>Available balance</div>
                 <div><span id=withdrawAvailBalance>0</span> ZEN</div>
-                <div>From</div>
+                <button id=withdrawFromButton>From</button>
                 <input id=withdrawFromAddr name=withdrawFromAddr class=monospace type=text />
-                <div>To</div>
+                <button id=withdrawToButton>To</button>
                 <input id=withdrawToAddr name=withdrawToAddr class=monospace type=text />
                 <div>Amount</div>
                 <input class=amountInput id=withdrawAmount name=withdrawAmount type=number value=0.00000000 min=0 step=0.1 />

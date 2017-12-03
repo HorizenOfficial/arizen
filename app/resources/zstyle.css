@@ -36,6 +36,8 @@ body, .body {
     --border-color: #c4cddb;
     --money-negative: #880000;
     --money-positive: #00a820;
+    --odd-bg: #eeeeee;
+    --hover-bg: yellow;
 }
 
 body {

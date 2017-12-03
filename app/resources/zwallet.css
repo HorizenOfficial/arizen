@@ -136,7 +136,7 @@ header > *:nth-child(3) {
 }
 
 #addrList > :nth-child(odd) {
-    background: #eeeeee;
+    background: var(--odd-bg);
 }
 
 /* Addresses */
@@ -236,6 +236,11 @@ header > *:nth-child(3) {
     color: red !important;
 }
 
+#depositToButton, #withdrawFromButton, #withdrawToButton {
+    justify-self: left;
+    min-width: 60px;
+}
+
 /* Trasactions */
 
 .txPanel {
@@ -316,4 +321,50 @@ header > *:nth-child(3) {
 .addrDetailButtons {
     margin-top: 10px;
     display: flex;
+}
+
+/* 
+.addrSelectList {
+    overflow: auto;
+    overflow-x: hidden;
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-gap: 10px;
+    align-items: baseline;
+    height: 100%;
+}
+*/
+/*
+ Make flexbox look like table.
+ Wait for Electron to support Chromium that supports "display: contents" (62 partly does).
+ See also https://bugs.chromium.org/p/chromium/issues/detail?id=657748
+*/
+.addrSelectList {
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+}
+.addrSelectList > :nth-child(odd) {
+    background: var(--odd-bg);
+}
+.addrSelectRow {
+    display: flex;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+.addrSelectRow:hover {
+    background: var(--hover-bg);
+}
+.addrSelectRow > * {
+    margin-right: 15px;
+}
+.addrSelectRowName {
+    width: 200px;
+}
+.addrSelectRowAddr {
+    width: 400px;
+}
+.addrSelectRowBalance {
+    justify-self: flex-end;
+    flex-grow: 2;
 }

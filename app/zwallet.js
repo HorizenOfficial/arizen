@@ -39,6 +39,7 @@ let addrListNode = document.getElementById("addrList");
 const txListNode = document.getElementById("txList");
 const totalBalanceNode = document.getElementById("totalBalance");
 const depositTabButton = document.getElementById("depositTabButton");
+const depositToButton = document.getElementById("depositToButton");
 const depositToAddrInput = document.getElementById("depositToAddr");
 const depositAmountInput = document.getElementById("depositAmount");
 const depositMsg = document.getElementById("depositMsg");
@@ -46,7 +47,9 @@ const depositQrcodeImage = document.getElementById("depositQrcodeImg");
 const withdrawTabButton = document.getElementById("withdrawTabButton");
 // FIXME: withdrawAvailBalanceNode unused
 const withdrawAvailBalanceNode = document.getElementById("withdrawAvailBalance");
+const withdrawFromButton = document.getElementById("withdrawFromButton");
 const withdrawFromAddrInput = document.getElementById("withdrawFromAddr");
+const withdrawToButton = document.getElementById("withdrawToButton");
 const withdrawToAddrInput = document.getElementById("withdrawToAddr");
 const withdrawAmountInput = document.getElementById("withdrawAmount");
 const withdrawFeeInput = document.getElementById("withdrawFee");
@@ -336,10 +339,35 @@ function refresh() {
     scheduleRefresh();
 }
 
+function showAddrSelectDialog(zeroBalanceAddrs, onSelected) {
+    showDialogFromTemplate("addrSelectDialogTemplate", dialog => {
+        const listNode = dialog.querySelector(".addrSelectList");
+        for (const addrItem of addrListNode.children) {
+            const balance = parseFloat(addrItem.dataset.balance);
+            if (!zeroBalanceAddrs && !balance)
+                continue;
+            const row = cloneTemplate("addrSelectRowTemplate");
+            row.querySelector(".addrSelectRowName").textContent = addrItem.dataset.name;
+            row.querySelector(".addrSelectRowAddr").textContent = addrItem.dataset.addr;
+            setBalanceText(row.querySelector(".addrSelectRowBalance"), balance);
+            row.addEventListener("click", () => {
+                dialog.close();
+                onSelected(addrItem.dataset.addr);
+            })
+            listNode.appendChild(row)
+        }
+    });
+}
+
 function initDepositView() {
     const qrcodeTypeDelay = 500; // ms
     depositToAddrInput.addEventListener("input", () => updateDepositQrcode(qrcodeTypeDelay));
     depositAmountInput.addEventListener("input", () => updateDepositQrcode(qrcodeTypeDelay));
+    depositToButton.addEventListener("click", () => showAddrSelectDialog(true, addr => {
+    depositToAddrInput.addEventListener("input", () => updateDepositQrcode(qrcodeTypeDelay));
+        depositToAddrInput.value = addr;
+        updateDepositQrcode();
+    }));
 }
 
 function updateDepositQrcode(qrcodeDelay = 0) {
@@ -390,6 +418,14 @@ function initWithdrawView() {
                 withdrawAmountInput.value);
         }
     });
+    withdrawFromButton.addEventListener("click", () => showAddrSelectDialog(false, addr => {
+        withdrawFromAddrInput.value = addr;
+        validateWithdrawForm();
+    }));
+    withdrawToButton.addEventListener("click", () => showAddrSelectDialog(true, addr => {
+        withdrawToAddrInput.value = addr;
+        validateWithdrawForm();
+    }));
     validateWithdrawForm();
 }
 
