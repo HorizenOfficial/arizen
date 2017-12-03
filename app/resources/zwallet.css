@@ -51,7 +51,7 @@ header > *:nth-child(3) {
     display: block;
 }
 
-.headerRight button {
+header button {
 	padding: 1px 6px;
 }
 

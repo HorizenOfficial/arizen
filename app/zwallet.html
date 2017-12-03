@@ -94,10 +94,31 @@
     </arizen-dialog>
 </template>
 
+<!-- TODO this doesn't belong here -->
+<template id=aboutDialogTemplate>
+    <arizen-dialog>
+        <h2 slot=headerText>About Arizen</h2>
+        <div slot=content class=aboutDialogContent>
+            <div class=form>
+                <div>Homepage</div>
+                <div class=aboutHomepage></div>
+                <div>Version</div>
+                <div class=aboutVersion></div>
+                <div>License</div>
+                <div class=aboutLicense></div>
+                <div>Authors</div>
+                <div class=aboutAuthors></div>
+            </div>
+            <a class=zenLogo href='https://zensystem.io'><img src='resources/zen_icon.png' /></a>
+        </div>
+    </arizen-dialog>
+</template>
+
 <div class=body>
 
 <header class='panel'>
     <div class=headerLeft>
+        <span><button onclick=showAboutDialog()>About</button></span>
     </div>
     <div class=headerCenter>
         <a class=arizenTitle href='https://github.com/ZencashOfficial/arizen'>Arizen</a>

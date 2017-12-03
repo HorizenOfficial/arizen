@@ -136,3 +136,18 @@ dialog {
     color: var(--money-negative);
     font-weight: bolder;
 }
+
+/* TODO this doesn't belong here */
+.aboutDialogContent {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.aboutDialogContent .form > :nth-child(odd) {
+    font-weight: bolder;
+}
+.aboutAuthors {
+    display: flex;
+    flex-direction: column;
+}

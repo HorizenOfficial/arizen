@@ -11,7 +11,7 @@
     "publish": "publish",
     "release": "npm run dist && npm run publish"
   },
-  "homepage": "https://zensystem.io",
+  "homepage": "https://github.com/ZencashOfficial/arizen",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zencashofficial/arizen.git"

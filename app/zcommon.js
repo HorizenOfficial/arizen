@@ -78,3 +78,30 @@ function scrollIntoViewIfNeeded(parent, child) {
         childRect.left < parentRect.left)
         child.scrollIntoView();
 }
+
+function createLink(url, text) {
+    const link = document.createElement("a");
+    link.href = url;
+    link.textContent = text;
+    return link;
+}
+
+// TODO this doesn't belong here
+function showAboutDialog() {
+    const pkg = require("../package.json");
+    showDialogFromTemplate("aboutDialogTemplate", dialog => {
+        dialog.querySelector(".aboutHomepage").appendChild(createLink(pkg.homepage, pkg.homepage));
+        dialog.querySelector(".aboutVersion").textContent = pkg.version;
+        dialog.querySelector(".aboutLicense").textContent = pkg.license;
+        const authorsNode = dialog.querySelector(".aboutAuthors");
+        pkg.contributors.forEach(function (person) {
+            const row = document.createElement("div");
+            row.textContent = person.name;
+            if (/@/.test(person.email)) {
+                row.textContent += " ";
+                row.appendChild(createLink("mailto: " + person.email, person.email));
+            }
+            authorsNode.appendChild(row);
+        });
+    });
+}
