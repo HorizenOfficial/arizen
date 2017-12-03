@@ -128,7 +128,7 @@ function createAddrItem(addrObj) {
     }
     addrItem.getElementsByClassName("addrText")[0].textContent = addrObj.addr;
     addrItem.getElementsByClassName("addrInfoLink")[0]
-        .addEventListener("click", () => openZenExplorer("address/" + addrObj.addr));
+        .addEventListener("click", () => showAddrDetail(addrObj));
     addrItem.getElementsByClassName("addrDepositButton")[0]
         .addEventListener("click", () => {
             depositToAddrInput.value = addrObj.addr;
@@ -153,6 +153,15 @@ function setAddrItemBalance(addrItem, balance) {
     setBalanceText(balanceNode, balance);
     const withdrawButton = addrItem.getElementsByClassName("addrWithdrawButton")[0];
     withdrawButton.disabled = balance === 0;
+}
+
+function showAddrDetail(addrObj) {
+    showDialogFromTemplate("addrDialogTemplate", dialog => {
+        dialog.querySelector(".addrDetailAddr").textContent = addrObj.addr;
+        setBalanceText(dialog.querySelector(".addrDetailBalance"), addrObj.lastbalance);
+        dialog.querySelector(".addrDetailName").value = addrObj.name || "";
+        dialog.querySelector(".addrInfoLink").addEventListener("click", () => openZenExplorer("address/" + addrObj.addr));
+    });
 }
 
 // Expects a node with one amount child node

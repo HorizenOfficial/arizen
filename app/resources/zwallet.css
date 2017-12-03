@@ -312,3 +312,8 @@ header > *:nth-child(3) {
 #totalBalanceAmount {
     font-weight: bolder;
 }
+
+.addrDetailButtons {
+    margin-top: 10px;
+    display: flex;
+}

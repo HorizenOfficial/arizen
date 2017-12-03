@@ -56,6 +56,29 @@
     </arizen-dialog>
 </template>
 
+<template id=addrDialogTemplate>
+    <arizen-dialog>
+        <h2 slot=headerText>Address Detail</h2>
+        <div slot=content>
+            <div class=form>
+                <div>Name</div>
+                <input type=text class=addrDetailName />
+                <div>Address</div>
+                <div>
+                    <div class="addrDetailAddr monospace"></div>
+                    <a class=addrInfoLink href=#>Show in ZEN Explorer</a>
+                </div>
+                <div>Balance</div>
+                <div class=addrDetailBalance><span></span> ZEN</div>
+            </div>
+            <div class=addrDetailButtons>
+                <div class=filler></div>
+                <button class=addrDetailSave>Save changes</button>
+            </div>
+        </div>
+    </arizen-dialog>
+</template>
+
 <div class=body>
 
 <header class='panel'>
