@@ -3,6 +3,8 @@
 /*jslint node: true */
 "use strict";
 
+const {DateTime} = require("luxon");
+
 function logout() {
     ipcRenderer.send("do-logout");
     location.href = "./login.html";
@@ -31,6 +33,10 @@ function fixLinks() {
 
 function formatBalance(balance) {
     return balance.toFixed(8);
+}
+
+function formatEpochTime(epochSeconds) {
+    return DateTime.fromMillis(epochSeconds).toLocaleString(DateTime.DATETIME_MED);
 }
 
 function hideElement(node, yes) {
