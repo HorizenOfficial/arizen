@@ -49,3 +49,16 @@ function cloneTemplate(id) {
     return document.getElementById(id).content.cloneNode(true).firstElementChild;
 }
 
+function showDialogFromTemplate(templateName, dialogInit, onClose = null) {
+    const dialog = cloneTemplate(templateName);
+    if (dialog.tagName !== "ARIZEN-DIALOG")
+        throw new Error("No dialog in the template");
+    document.body.appendChild(dialog);
+    dialogInit(dialog);
+    dialog.addEventListener("close", () => {
+        if (onClose)
+            onClose();
+        dialog.remove()
+    });
+    dialog.showModal();
+}

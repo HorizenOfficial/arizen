@@ -96,3 +96,8 @@ h2 {
     grid-column-gap: 10px;
     grid-row-gap: 5px;
 }
+
+dialog {
+    border: none;
+    color: inherit;
+}
