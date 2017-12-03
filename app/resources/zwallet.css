@@ -166,8 +166,17 @@ header button {
     font-weight: bolder;
 }
 
-.addrInfoLink img {
+.addrNameLine {
+    display: flex;
+    align-items: center;
+}
+.addrNameLine > :not(:first-child) {
+    margin-left: 5px;
+}
+
+.addrDetailButton {
     height: 14px;
+    cursor: pointer;
 }
 
 .addrControlButton {
