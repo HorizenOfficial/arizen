@@ -166,14 +166,6 @@ header > *:nth-child(3) {
     font-weight: bolder;
 }
 
-.addrBalancePositive {
-    color: var(--money-positive);
-}
-
-.addrText {
-    font-family: "monospace" !important;
-}
-
 .addrInfoLink img {
     height: 14px;
 }
@@ -218,10 +210,6 @@ header > *:nth-child(3) {
 
 #depositForm, #withdrawForm {
     align-self: stretch;
-}
-
-#depositToAddr, #withdrawFromAddr, #withdrawToAddr {
-    font-family: "monospace";
 }
 
 #depositMsg, #withdrawMsg {
@@ -303,14 +291,6 @@ header > *:nth-child(3) {
 .txBalance {
     font-size: 160%;
     white-space: nowrap;
-}
-
-.txBalancePositive {
-    color: var(--money-positive);
-}
-
-.txBalanceNegative {
-    color: var(--money-negative);
 }
 
 @keyframes txItemNew {

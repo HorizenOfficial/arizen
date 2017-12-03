@@ -112,9 +112,9 @@ function setBalanceText(balanceNode, balance) {
     const balanceAmountNode = balanceNode.firstElementChild;
     balanceAmountNode.textContent = formatBalance(balance);
     if (balance > 0)
-        balanceNode.classList.add("addrBalancePositive");
+        balanceNode.classList.add("positive");
     else
-        balanceNode.classList.remove("addrBalancePositive");
+        balanceNode.classList.remove("positive");
 }
 
 function createAddrItem(addrObj) {
@@ -165,10 +165,10 @@ function setTxBalanceText(node, balance) {
     let balanceStr, balanceClass;
     if (balance >= 0) {
         balanceStr = "+" + formatBalance(balance);
-        balanceClass = "txBalancePositive";
+        balanceClass = "positive";
     } else {
         balanceStr = "-" + formatBalance(-balance);
-        balanceClass = "txBalanceNegative";
+        balanceClass = "negative";
     }
     node.classList.add(balanceClass);
     const amountNode = node.firstElementChild;

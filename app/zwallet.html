@@ -90,7 +90,7 @@
                 <div class=addrInfo>
                     <div class=addrBalance><span class=addrBalanceAmount></span> ZEN</div>
                     <div class=addrName>Unnamed address</div>
-                    <span class=addrText></span>
+                    <span class="addrText monospace"></span>
 					<a class=addrInfoLink href=#>
 						<img src="resources/About_icon_(The_Noun_Project).svg" />
 					</a>
@@ -116,7 +116,7 @@
             </div>
             <div class=form id=depositForm>
                 <div>To</div>
-                <input id=depositToAddr name=depositToAddr type=text />
+                <input id=depositToAddr name=depositToAddr class=monospace type=text />
                 <div>Amount</div>
                 <input class=amountInput id=depositAmount name=depositAmount type=number value=0.00000000 min=0 step=0.1 />
             </div>
@@ -138,9 +138,9 @@
                 <div>Available balance</div>
                 <div><span id=withdrawAvailBalance>0</span> ZEN</div>
                 <div>From</div>
-                <input id=withdrawFromAddr name=withdrawFromAddr type=text />
+                <input id=withdrawFromAddr name=withdrawFromAddr class=monospace type=text />
                 <div>To</div>
-                <input id=withdrawToAddr name=withdrawToAddr type=text />
+                <input id=withdrawToAddr name=withdrawToAddr class=monospace type=text />
                 <div>Amount</div>
                 <input class=amountInput id=withdrawAmount name=withdrawAmount type=number value=0.00000000 min=0 step=0.1 />
                 <div>Transaction fee</div>
