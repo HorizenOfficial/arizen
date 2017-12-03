@@ -116,18 +116,16 @@
     </div>
     <template id=txItemTemplate>
         <div class=txItem>
-            <div><span class=txDate>Wed Nov 01 2017 21:07:39</span> (Block <span class=txBlock></span>)</div>
-            <div class='txBalance txBalancePositive'><span class=txBalanceAmount></span> ZEN</div>
-            <a class=txId href=#></a>
-            <div class=txAddrs></div>
+            <span class=txDate></span>
+            <div class=filler></div>
+            <span class=txBalance><span class=txBalanceAmount></span> ZEN</span>
         </div>
     </template>
     <template id=txMempoolItemTemplate>
         <div class='txItem txMempoolItem'>
-            <div class=txMempoolItemTitle>UNCONFIRMED TRANSACTION</div>
-            <div class='txBalance txBalancePositive'><span class=txBalanceAmount></span> ZEN</div>
-            <a class=txId href=#></a>
-            <div class=txAddrs></div>
+            <span class=txMempoolItemTitle>UNCONFIRMED</span>
+            <div class=filler></div>
+            <span class=txBalance><span class=txBalanceAmount></span> ZEN</span>
         </div>
     </template>
     <div id=txList>

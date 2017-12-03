@@ -281,13 +281,18 @@ header > *:nth-child(3) {
     flex-shrink: 0;
 
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    flex-wrap: wrap;
     align-items: center;
 
     border: 1px none var(--arizen-fg);
     border-top-style: solid;
     padding: 5px 0 5px 0;
+}
+.txItem > :not(:first-child) {
+    margin-left: 5px;
+}
+.txItem > :last-child {
+    margin-right: 5px;
 }
 
 .txMempoolItem {
@@ -299,17 +304,13 @@ header > *:nth-child(3) {
     font-weight: bolder;
 }
 
-.txDate, .txBlock, .txId {
-    color: var(--arizen-fg);
-}
-
-.txId {
-    word-break: break-all;
-    font-family: "monospace";
+.txDate, .txMempoolItemTitle {
+    min-width: 180px;
 }
 
 .txBalance {
     font-size: 160%;
+    white-space: nowrap;
 }
 
 .txBalancePositive {
@@ -318,20 +319,6 @@ header > *:nth-child(3) {
 
 .txBalanceNegative {
     color: var(--money-negative);
-}
-
-.txAddrs {
-    font-family: "monospace";
-    display: flex;
-    flex-direction: column;
-}
-
-.txVin {
-    color: var(--money-negative);
-}
-
-.txVout {
-    color: var(--money-positive);
 }
 
 @keyframes txItemNew {

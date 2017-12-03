@@ -169,12 +169,7 @@ function createTxItem(txObj, newTx = false) {
 
     if (txObj.block >= 0) {
         node.querySelector(".txDate").textContent = DateTime.fromMillis(txObj.time * 1000).toLocaleString(DateTime.DATETIME_MED);
-        node.querySelector(".txBlock").textContent = txObj.block;
     }
-
-    const txIdNode = node.getElementsByClassName("txId")[0];
-    txIdNode.addEventListener("click", () => openZenExplorer("tx/" + txObj.txid));
-    txIdNode.textContent = shortTxId(txObj.txid);
 
     let balanceStr, balanceClass;
     if (txObj.amount >= 0) {
@@ -186,20 +181,6 @@ function createTxItem(txObj, newTx = false) {
     }
     node.querySelector(".txBalance").classList.add(balanceClass);
     node.querySelector(".txBalanceAmount").textContent = balanceStr;
-
-    const txAddrsNode = node.getElementsByClassName("txAddrs")[0];
-    txObj.vins.split(",").sort().filter(addr => myAddrs.has(addr)).forEach(vin => {
-        const txVinNode = document.createElement("span");
-        txVinNode.classList.add("txVin");
-        txVinNode.textContent = vin;
-        txAddrsNode.append(txVinNode);
-    });
-    txObj.vouts.split(",").sort().filter(addr => myAddrs.has(addr)).forEach(vout => {
-        const txVoutNode = document.createElement("span");
-        txVoutNode.classList.add("txVout");
-        txVoutNode.textContent = vout;
-        txAddrsNode.append(txVoutNode);
-    });
 
     if (newTx) {
         node.classList.add("txItemNew");
