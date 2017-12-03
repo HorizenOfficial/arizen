@@ -1,4 +1,4 @@
-body {
+.body {
     display: grid !important;
     grid-gap: 5px;
     grid-template-rows: min-content auto 30px;
