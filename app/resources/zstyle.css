@@ -70,4 +70,18 @@ button:hover {
     filter: brightness(90%);
 }
 
+hr {
+    margin: 0;
+    margin-bottom: 5px;
+    width: 100%;
+    border: 0;
+    height: 1px;
+    background: var(--arizen-fg);
+    flex-shrink: 0;
+}
+
+h2 {
+    margin: 0;
+    font-weight: inherit;
+    font-size: 120%;
 }
