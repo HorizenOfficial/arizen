@@ -247,20 +247,31 @@ function addAddresses(addrs) {
 }
 
 function sortAddrItems() {
+    const oldScrollTop = addrListNode.scrollTop;
     const sortedAddrItems = [...addrListNode.childNodes].sort((a, b) => {
         const balA = parseFloat(a.dataset.balance);
         const balB = parseFloat(b.dataset.balance);
         if (balA === balB) {
             const nameA = a.dataset.name || '';
             const nameB = b.dataset.name || '';
-            return nameA.localeCompare(nameB);
-        }
-        return balB - balA;
+            if (nameA === nameB) {
+                const addrA = a.dataset.addr;
+                const addrB = b.dataset.addr;
+                return addrA.localeCompare(addrB);
+            } else {
+                if (nameA === '')
+                    return 1;
+                else
+                    return nameA.localeCompare(nameB);
+            }
+        } else
+            return balB - balA;
     });
     const newAddrListNode = addrListNode.cloneNode(false);
     newAddrListNode.append(...sortedAddrItems);
     addrListNode.parentNode.replaceChild(newAddrListNode, addrListNode);
     addrListNode = newAddrListNode;
+    newAddrListNode.scrollTop = oldScrollTop;
 }
 
 function setAddressBalance(addr, balance) {
@@ -275,6 +286,7 @@ function setAddressName(addr, name) {
     const displayName = name ? name : "Unnamed address";
     addrItem.querySelector(".addrName").textContent = displayName;
     sortAddrItems();
+    scrollIntoViewIfNeeded(addrListNode, addrItem);
 }
 
 function addTransactions(txs, newTx = false) {

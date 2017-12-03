@@ -68,3 +68,13 @@ function showDialogFromTemplate(templateName, dialogInit, onClose = null) {
     });
     dialog.showModal();
 }
+
+function scrollIntoViewIfNeeded(parent, child) {
+    const parentRect = parent.getBoundingClientRect();
+    const childRect = child.getBoundingClientRect();
+    if (childRect.top < parentRect.top ||
+        childRect.right > parentRect.right ||
+        childRect.bottom > parentRect.bottom ||
+        childRect.left < parentRect.left)
+        child.scrollIntoView();
+}
