@@ -70,6 +70,21 @@ button:hover {
     filter: brightness(90%);
 }
 
+input[type="text"],
+input[type="number"] {
+    border: none;
+    outline: none;
+    border-bottom: 1px solid var(--arizen-fg);
+    margin-bottom: 2px;
+    transition: all 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus {
+    border-bottom: 3px solid var(--arizen-fg);
+    margin-bottom: 0px;
+}
+
 hr {
     margin: 0;
     margin-bottom: 5px;
@@ -112,7 +127,7 @@ dialog {
 }
 
 .monospace {
-    font-family: "monospace";
+    font-family: "monospace" !important;
 }
 
 .warning {
