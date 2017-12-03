@@ -72,6 +72,10 @@ button:hover {
     filter: brightness(90%);
 }
 
+.smallButton {
+    padding: 1px 6px;
+}
+
 input[type="text"],
 input[type="number"] {
     border: none;
@@ -113,6 +117,12 @@ h2 {
     grid-column-gap: 10px;
     grid-row-gap: 5px;
     align-items: baseline;
+}
+
+.formButtons {
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-end;
 }
 
 dialog {

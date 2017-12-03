@@ -106,6 +106,12 @@ ipcRenderer.on("rename-wallet-response", (event, msgStr) => {
     setAddressName(msg.addr, msg.newname);
 });
 
+ipcRenderer.on("generate-wallet-response", (event, msgStr) => {
+    const msg = JSON.parse(msgStr);
+    checkResponse(msg);
+    addNewAddress(msg.addr);
+});
+
 window.addEventListener("load", initWallet);
 
 // FUNCTIONS
@@ -239,6 +245,17 @@ function showTxDetail(txObj) {
     });
 }
 
+function addNewAddress(addrObj) {
+    myAddrs.add(addrObj.addr);
+    const addrItem = createAddrItem(addrObj);
+    addrListNode.appendChild(addrItem);
+    sortAddrItems();
+    if (addrObj.lastbalance === 0 && !showZeroBalances)
+        hideElement(addrItem, true);
+    else
+        scrollIntoViewIfNeeded(addrListNode, addrItem);
+}
+
 function addAddresses(addrs) {
     addrs.forEach(addrObj => {
         myAddrs.add(addrObj.addr);
@@ -290,6 +307,20 @@ function setAddressName(addr, name) {
     addrItem.querySelector(".addrName").textContent = displayName;
     sortAddrItems();
     scrollIntoViewIfNeeded(addrListNode, addrItem);
+}
+
+function showNewAddrDialog() {
+    showDialogFromTemplate("newAddrDialogTemplate", dialog => {
+        const createButton = dialog.querySelector(".newAddrDialogCreate");
+        createButton.addEventListener("click", () => {
+            ipcRenderer.send("generate-wallet", dialog.querySelector(".newAddrDialogName").value);
+            dialog.close();
+        });
+        dialog.addEventListener("keypress", ev => {
+            if (event.keyCode == 13)
+                createButton.click();
+        });
+    });
 }
 
 function addTransactions(txs, newTx = false) {
@@ -486,6 +517,7 @@ function initWallet() {
     initWithdrawView();
     document.getElementById("actionShowZeroBalances").addEventListener("click", toggleZeroBalanceAddrs);
     document.getElementById("refreshButton").addEventListener("click", refresh);
+    document.getElementById("createNewAddrButton").addEventListener("click", showNewAddrDialog);
     [...document.getElementsByClassName("amountInput")].forEach(node => {
         node.addEventListener("change", () => {
             node.value = parseFloat(node.value).toFixed(8);

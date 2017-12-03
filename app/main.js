@@ -242,7 +242,7 @@ function getNewAddress(name) {
     userInfo.walletDb.run("INSERT INTO wallet VALUES (?,?,?,?,?)", [null, pk, addr, 0, name]);
     userInfo.dbChanged = true;
 
-    return addr;
+    return { addr: addr, name: name, lastbalance: 0 };
 }
 
 function loadSettings() {
@@ -916,7 +916,7 @@ ipcMain.on("generate-wallet", function (event, name) {
 
     if (userInfo.loggedIn) {
         resp.response = "OK";
-        resp.msg = getNewAddress(name);
+        resp.addr = getNewAddress(name);
     }
 
     event.sender.send("generate-wallet-response", JSON.stringify(resp));

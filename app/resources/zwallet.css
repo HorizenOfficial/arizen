@@ -112,7 +112,8 @@ header button {
 
 .walletOverviewControl {
     display: flex;
-    align-items: center;
+    align-items: baseline;
+    padding-right: 0;
 }
 
 .walletOverviewControl > *:first-child {
@@ -329,11 +330,6 @@ header button {
 
 #totalBalanceAmount {
     font-weight: bolder;
-}
-
-.addrDetailButtons {
-    margin-top: 10px;
-    display: flex;
 }
 
 /* 
