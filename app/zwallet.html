@@ -115,10 +115,10 @@
                 Click the green button next to the desired address for deposit.
             </div>
             <div class=form id=depositForm>
-                <label for=depositToAddr>To</label>
-                <input id=depositToAddr name=depositToAddr type=text>
-                <label for=depositAmount>Amount</label>
-                <input class=amountInput id=depositAmount name=depositAmount type=number value=0.00000000 min=0 step=0.1>
+                <div>To</div>
+                <input id=depositToAddr name=depositToAddr type=text />
+                <div>Amount</div>
+                <input class=amountInput id=depositAmount name=depositAmount type=number value=0.00000000 min=0 step=0.1 />
             </div>
             <span id=depositMsg>&nbsp;</span>
             <div>
@@ -135,16 +135,16 @@
                 Click the red button next to the desired address for withdrawal.
             </div>
             <div class=form id=withdrawForm>
-                <label for=withdrawAvailBalance>Available balance</label>
-                <span><span id=withdrawAvailBalance>0</span> ZEN</span>
-                <label for=withdrawFromAddr>From</label>
-                <input id=withdrawFromAddr name=withdrawFromAddr type=text>
-                <label for=withdrawToAddr>To</label>
-                <input id=withdrawToAddr name=withdrawToAddr type=text>
-                <label for=withdrawAmount>Amount</label>
-                <input class=amountInput id=withdrawAmount name=withdrawAmount type=number value=0.00000000 min=0 step=0.1>
-                <label for=withdrawFee>Transaction fee</label>
-                <input class=amountInput id=withdrawFee name=withdrawFee type=number value=0.00010000 min=0 step=0.10000000>
+                <div>Available balance</div>
+                <div><span id=withdrawAvailBalance>0</span> ZEN</div>
+                <div>From</div>
+                <input id=withdrawFromAddr name=withdrawFromAddr type=text />
+                <div>To</div>
+                <input id=withdrawToAddr name=withdrawToAddr type=text />
+                <div>Amount</div>
+                <input class=amountInput id=withdrawAmount name=withdrawAmount type=number value=0.00000000 min=0 step=0.1 />
+                <div>Transaction fee</div>
+                <input class=amountInput id=withdrawFee name=withdrawFee type=number value=0.00010000 min=0 step=0.10000000 />
             </div>
             <span id=withdrawMsg>&nbsp;</span>
             <button id=withdrawButton>Withdraw</button>
