@@ -25,7 +25,7 @@ logIpc("get-transaction-update");
 logIpc("get-wallet-by-name-response");
 //logIpc("get-wallets-response");
 logIpc("refresh-wallet-response");
-logIpc("rename-wallet-response");
+//logIpc("rename-wallet-response");
 logIpc("render-qr-code");
 logIpc("save-settings-response");
 logIpc("send-finish");
@@ -97,6 +97,12 @@ ipcRenderer.on("refresh-wallet-response", (event, msgStr) => {
 ipcRenderer.on("send-finish", (event, result, msg) =>
     updateWithdrawalStatus(result, msg));
 
+ipcRenderer.on("rename-wallet-response", (event, msgStr) => {
+    const msg = JSON.parse(msgStr);
+    checkResponse(msg);
+    setAddressName(msg.addr, msg.newname);
+});
+
 window.addEventListener("load", initWallet);
 
 // FUNCTIONS
@@ -159,8 +165,17 @@ function showAddrDetail(addrObj) {
     showDialogFromTemplate("addrDialogTemplate", dialog => {
         dialog.querySelector(".addrDetailAddr").textContent = addrObj.addr;
         setBalanceText(dialog.querySelector(".addrDetailBalance"), addrObj.lastbalance);
-        dialog.querySelector(".addrDetailName").value = addrObj.name || "";
+        const nameNode = dialog.querySelector(".addrDetailName");
+        nameNode.value = addrObj.name || "";
         dialog.querySelector(".addrInfoLink").addEventListener("click", () => openZenExplorer("address/" + addrObj.addr));
+        const saveButton = dialog.querySelector(".addrDetailSave");
+        saveButton.addEventListener("click", ev => {
+            ipcRenderer.send("rename-wallet", addrObj.addr, nameNode.value);
+        });
+        dialog.addEventListener("keypress", ev => {
+            if (event.keyCode == 13)
+                saveButton.click();
+        });
     });
 }
 
@@ -251,6 +266,14 @@ function sortAddrItems() {
 function setAddressBalance(addr, balance) {
     const addrItem = addrListNode.querySelector(`[data-addr='${addr}']`);
     setAddrItemBalance(addrItem, balance);
+    sortAddrItems();
+}
+
+function setAddressName(addr, name) {
+    const addrItem = addrListNode.querySelector(`[data-addr='${addr}']`);
+    addrItem.dataset.name = name;
+    const displayName = name ? name : "Unnamed address";
+    addrItem.querySelector(".addrName").textContent = displayName;
     sortAddrItems();
 }
 
