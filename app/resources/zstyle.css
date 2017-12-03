@@ -120,6 +120,10 @@ dialog {
     color: inherit;
 }
 
+arizen-dialog > [slot="content"] {
+    padding: 10px;
+}
+
 .positive {
     color: var(--money-positive);
 }
@@ -139,7 +143,7 @@ dialog {
 
 /* TODO this doesn't belong here */
 .aboutDialogContent {
-    padding: 15px;
+    padding: 15px !important;
     display: flex;
     flex-direction: column;
     align-items: center;
