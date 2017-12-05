@@ -634,8 +634,8 @@ function sqlSelectObjects(sql) {
     return sqlResultToObjectArray(sqlSelect(sql));
 }
 
-function sqlRun(sql, ...args) {
-    const result = userInfo.walletDb.run(sql, ...args);
+function sqlRun(sql, args) {
+    const result = userInfo.walletDb.run(sql, args);
     userInfo.dbChanged = true;
     return result;
 }
