@@ -791,9 +791,6 @@ function updateBlockchainView(webContents) {
 ipcMain.on("get-wallets", function (event) {
     if (!userInfo.loggedIn)
         return;
-    //sqlRun('delete from transactions');
-    //sqlRun('update wallet set lastbalance = 0');
-
     const resp = {};
     resp.response = 'OK';
     resp.autorefresh = settings.autorefresh;
