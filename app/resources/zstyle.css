@@ -78,6 +78,8 @@ button:hover {
 
 input[type="text"],
 input[type="number"] {
+    font: inherit;
+    color: inherit;
     border: none;
     outline: none;
     border-bottom: 1px solid var(--arizen-fg);
