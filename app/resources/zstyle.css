@@ -139,6 +139,9 @@ dialog {
 
 arizen-dialog > [slot="content"] {
     padding: 10px;
+    overflow: auto;
+    /* With the following I get scrollbar on overflow. Is the grid layout in Chrome 59 buggy? */
+    height: 100%;
 }
 
 .positive {
