@@ -19,10 +19,6 @@ function openUrl(url) {
     shell.openExternal(url);
 }
 
-function openZenExplorer(path) {
-    openUrl("https://explorer.zensystem.io/" + path);
-}
-
 function fixLinks() {
     document.querySelectorAll("a[href^='http']").forEach(link =>
         link.addEventListener("click", event => {
@@ -104,4 +100,43 @@ function showAboutDialog() {
             authorsNode.appendChild(row);
         });
     });
+}
+
+// TODO this doesn't belong here
+let settings;
+(() => {
+    const {ipcRenderer} = require("electron");
+    ipcRenderer.on("settings", (sender, settingsStr) => settings = JSON.parse(settingsStr));
+})();
+
+function showSettingsDialog() {
+    showDialogFromTemplate("settingsDialogTemplate", dialog => {
+        const inputTxHistory = dialog.querySelector(".settingsTxHistory");
+        const inputExplorerUrl = dialog.querySelector(".settingsExplorerUrl");
+        const inputApiUrls = dialog.querySelector(".settingsApiUrls");
+        const saveButton = dialog.querySelector(".settingsSave");
+
+        inputTxHistory.value = settings.txHistory;
+        inputExplorerUrl.value = settings.explorerUrl;
+        inputApiUrls.value = settings.apiUrls.join("\n");
+
+        dialog.querySelector(".settingsSave").addEventListener("click", () => {
+
+            const newSettings = {
+                txHistory: parseInt(inputTxHistory.value),
+                explorerUrl: inputExplorerUrl.value.trim().replace(/\/?$/, ""),
+                apiUrls: inputApiUrls.value.split(/\s+/).filter(s => !/^\s*$/.test(s)).map(s => s.replace(/\/?$/, "")),
+            };
+            ipcRenderer.send("save-settings", JSON.stringify(newSettings));
+            dialog.close();
+        });
+        dialog.addEventListener("keypress", ev => {
+            if (event.keyCode === 13)
+                saveButton.click();
+        });
+    });
+}
+
+function openZenExplorer(path) {
+    openUrl(settings.explorerUrl + "/" + path);
 }

@@ -141,6 +141,14 @@ h2 {
     align-items: baseline;
 }
 
+.formInput {
+    display: flex;
+}
+.formInput > input {
+    flex-grow: 2;
+    margin-right: 5px;
+}
+
 .formButtons {
     margin-top: 10px;
     display: flex;
@@ -189,4 +197,9 @@ arizen-dialog > [slot="content"] {
 .aboutAuthors {
     display: flex;
     flex-direction: column;
+}
+
+/* TODO this doesn't belong here */
+.settingsDialogContent {
+    min-width: 600px;
 }
