@@ -198,6 +198,9 @@ arizen-dialog > [slot="content"] {
     display: flex;
     flex-direction: column;
 }
+.aboutDialogContent .zenLogo {
+    margin-top: 20px;
+}
 
 /* TODO this doesn't belong here */
 .settingsDialogContent {
