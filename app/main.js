@@ -221,6 +221,8 @@ function generateNewWallet(login, password) {
 
     // Run a query without reading the results
     db.run(dbStructWallet);
+    db.run(dbStructTransactions);
+    db.run(dbStructSettings);
     for (i = 0; i <= 42; i += 1) {
         pk = zencashjs.address.WIFToPrivKey(privateKeys[i]);
         pubKey = zencashjs.address.privKeyToPubKey(pk, true);
@@ -282,12 +284,6 @@ function loadSettings() {
     settings.txHistory = sqlRes[0].values[0][2];
 }
 
-function loadTransactions(webContents) {
-    let sqlRes = sqlSelectColumns("SELECT name FROM sqlite_master WHERE type='table' AND name='transactions';");
-    if (!sqlRes) {
-        sqlRun(dbStructTransactions);
-        updateBlockchainView(webContents);
-    }
 }
 
 function setDarwin(template) {
@@ -588,7 +584,6 @@ ipcMain.on("verify-login-info", function (event, login, pass) {
             userInfo.pass = pass;
             userInfo.walletDb = new sql.Database(walletBytes);
             loadSettings();
-            loadTransactions(mainWindow.webContents);
             updateMenuAtLogin();
             resp = {
                 response: "OK",
