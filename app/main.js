@@ -896,18 +896,6 @@ ipcMain.on("get-wallet-by-name", function (event, name) {
     event.sender.send("get-wallet-by-name-response", JSON.stringify(resp));
 });
 
-ipcMain.on("get-transaction", function (event, txId, address) {
-    if (userInfo.loggedIn) {
-        request.get(settings.api + "tx/" + txId, function (err, res, body) {
-            if (err) {
-                console.log("transaction readout failed");
-            } else if (res && res.statusCode === 200) {
-                event.sender.send("get-transaction-update", address, body);
-            }
-        });
-    }
-});
-
 ipcMain.on("generate-wallet", function (event, name) {
     let resp = {
         response: "ERR",
@@ -920,33 +908,6 @@ ipcMain.on("generate-wallet", function (event, name) {
     }
 
     event.sender.send("generate-wallet-response", JSON.stringify(resp));
-});
-
-ipcMain.on("get-settings", function (event) {
-    let sqlRes;
-    let resp = {
-        response: "ERR",
-        msg: "not logged in"
-    };
-
-    if (userInfo.loggedIn) {
-        sqlRes = userInfo.walletDb.exec("SELECT * FROM settings");
-        if (sqlRes.length > 0) {
-            resp.response = "OK";
-            resp.settings = sqlRes[0].values.map(function(x) {
-                var obj = {};
-                for (let i = 0, len = x.length; i < len; i += 1) {
-                    obj[sqlRes[0].columns[i]] = x[i];
-                }
-                return obj;
-             });
-
-        } else {
-            resp.msg = "issue with db";
-        }
-    }
-
-    event.sender.send("get-settings-response", JSON.stringify(resp));
 });
 
 ipcMain.on("save-settings", function (event, settings) {
