@@ -40,14 +40,16 @@ let userInfo = {
     dbChanged: false
 };
 
-let settings = {
+const defaultSettings = {
     notifications: 1,
-    explorer: "https://explorer.zensystem.io/",
-    api: "https://explorer.zensystem.io/insight-api-zen/",
-    autorefresh: 180,
-    refreshTimeout: 10,
+    explorerUrl: "https://explorer.zensystem.io",
+    apiUrls: [
+        "http://explorer.zenmine.pro/insight-api-zen",
+        "https://explorer.zensystem.io/insight-api-zen"
+    ],
     txHistory: 50
 };
+let settings = defaultSettings;
 
 const editSubmenu = [
     {label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:"},
@@ -248,42 +250,23 @@ function getNewAddress(name) {
 }
 
 function loadSettings() {
-    let sqlRes = userInfo.walletDb.exec("SELECT name FROM sqlite_master WHERE type='table' AND name='settings';");
-    if (sqlRes.length === 0) {
-        userInfo.walletDb.run(dbStructSettings);
-        userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsNotifications", settings.notifications.toString(10)]);
-        userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsExplorer", settings.explorer]);
-        userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsApi", settings.api]);
-        userInfo.dbChanged = true;
-    }
-
-    sqlRes = userInfo.walletDb.exec("SELECT * FROM settings");
-    if (sqlRes[0].values.length === 2) {
-        userInfo.walletDb.run("UPDATE settings SET value = ? WHERE name = ?", ["settingsExplorer", settings.explorer]);
-        userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsApi", settings.api]);
-        userInfo.dbChanged = true;
-    }
-    sqlRes = userInfo.walletDb.exec("SELECT * FROM settings");
-    if (sqlRes[0].values.length !== 6) {
-        userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsAutorefresh", settings.autorefresh]);
-        userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsRefreshTimeout", settings.refreshTimeout]);
-        userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsTxHistory", settings.txHistory]);
-    }
-
-    sqlRes = userInfo.walletDb.exec("SELECT * FROM settings WHERE name = 'settingsNotifications'");
-    settings.notifications = Number(sqlRes[0].values[0][2]);
-    sqlRes = userInfo.walletDb.exec("SELECT * FROM settings WHERE name = 'settingsExplorer'");
-    settings.explorer = sqlRes[0].values[0][2];
-    sqlRes = userInfo.walletDb.exec("SELECT * FROM settings WHERE name = 'settingsApi'");
-    settings.api = sqlRes[0].values[0][2];
-    sqlRes = userInfo.walletDb.exec("SELECT * FROM settings WHERE name = 'settingsAutorefresh'");
-    settings.autorefresh = sqlRes[0].values[0][2];
-    sqlRes = userInfo.walletDb.exec("SELECT * FROM settings WHERE name = 'settingsRefreshTimeout'");
-    settings.refreshTimeout = sqlRes[0].values[0][2];
-    sqlRes = userInfo.walletDb.exec("SELECT * FROM settings WHERE name = 'settingsTxHistory'");
-    settings.txHistory = sqlRes[0].values[0][2];
+    const b64settings = sqlSelectColumns("select value from settings where name = 'settings'");
+    if (b64settings.length == 0)
+        return defaultSettings;
+    return JSON.parse(Buffer.from(b64settings[0][0], "base64").toString("ascii"));
 }
 
+function saveSettings(settings) {
+    const b64settings = Buffer.from(JSON.stringify(settings)).toString("base64");
+    sqlRun("insert or replace into settings (name, value) values ('settings', ?)", [b64settings]);
+    userInfo.dbChanged = true;
+}
+
+function upgradeDb() {
+    // expects DB to be prefilled with addresses
+    let addr = sqlSelectObjects("select * from wallet limit 1")[0];
+    if (!("name" in addr))
+        sqlRun("ALTER TABLE wallet ADD COLUMN name TEXT DEFAULT ''");
 }
 
 function setDarwin(template) {
@@ -583,7 +566,8 @@ ipcMain.on("verify-login-info", function (event, login, pass) {
             userInfo.login = login;
             userInfo.pass = pass;
             userInfo.walletDb = new sql.Database(walletBytes);
-            loadSettings();
+            upgradeDb();
+            settings = loadSettings();
             updateMenuAtLogin();
             resp = {
                 response: "OK",
@@ -667,15 +651,12 @@ function fetchJson(url) {
 }
 
 function fetchApi(path) {
-    const apiUrls = [
-        'http://explorer.zenmine.pro/insight-api-zen',
-        'https://explorer.zensystem.io/insight-api-zen'
-    ];
+    const urls = settings.apiUrls;
     let errors = [];
     const fetchApiFrom = (i) => {
-        if (i < apiUrls.length)
-            return fetchJson(apiUrls[i] + '/' + path).catch(err => {
-                console.log(`ERROR fetching from: ${apiUrls[i]}: `, err);
+        if (i < urls.length)
+            return fetchJson(urls[i] + '/' + path).catch(err => {
+                console.log(`ERROR fetching from: ${urls[i]}: `, err);
                 errors.push(err);
                 return fetchApiFrom(i + 1);
             });
@@ -808,28 +789,21 @@ function updateBlockchainView(webContents) {
 }
 
 ipcMain.on("get-wallets", function (event) {
-    let resp = { response: 'ERR' };
-
+    if (!userInfo.loggedIn)
+        return;
     //sqlRun('delete from transactions');
     //sqlRun('update wallet set lastbalance = 0');
-    if (userInfo.loggedIn) {
-        resp.response = 'OK';
-        resp.autorefresh = settings.autorefresh;
-        resp.wallets = sqlSelectObjects('SELECT * FROM wallet ORDER BY lastbalance DESC, id DESC');
-        resp.transactions = sqlSelectObjects('SELECT * FROM transactions ORDER BY time DESC LIMIT ' + settings.txHistory);
-        resp.total =  resp.wallets.reduce((sum, a) => sum + a.lastbalance, 0);
-        /* update wallet 0.1 if necessary */
-        // TODO do it on startup
-        /*
-        if (sqlRes[0].columns.includes("name") === false) {
-            userInfo.walletDb.exec("ALTER TABLE wallet ADD COLUMN name TEXT DEFAULT ''");
-            sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet");
-        }
-        */
-        updateBlockchainView(event.sender);
-    }
+
+    const resp = {};
+    resp.response = 'OK';
+    resp.autorefresh = settings.autorefresh;
+    resp.wallets = sqlSelectObjects('SELECT * FROM wallet ORDER BY lastbalance DESC, id DESC');
+    resp.transactions = sqlSelectObjects('SELECT * FROM transactions ORDER BY time DESC LIMIT ' + settings.txHistory);
+    resp.total =  resp.wallets.reduce((sum, a) => sum + a.lastbalance, 0);
 
     event.sender.send("get-wallets-response", JSON.stringify(resp));
+    event.sender.send("settings", JSON.stringify(settings));
+    updateBlockchainView(event.sender);
 });
 
 ipcMain.on("refresh-wallet", function (event) {
@@ -905,24 +879,14 @@ ipcMain.on("generate-wallet", function (event, name) {
     event.sender.send("generate-wallet-response", JSON.stringify(resp));
 });
 
-ipcMain.on("save-settings", function (event, settings) {
-    let data = JSON.parse(settings);
-    let resp = {
-        response: "ERR",
-        msg: "not logged in"
-    };
-
-    if (userInfo.loggedIn) {
-        data.forEach(function(element) {
-            userInfo.walletDb.run("UPDATE settings SET value = ? WHERE name = ?", [element.value, element.name]);
-        }, this);
-        userInfo.dbChanged = true;
-        loadSettings();
-        resp.response = "OK";
-        resp.msg = "saved";
-    }
-
-    event.sender.send("save-settings-response", JSON.stringify(resp));
+ipcMain.on("save-settings", function (event, newSettingsStr) {
+    if (!userInfo.loggedIn)
+        return;
+    const newSettings = JSON.parse(newSettingsStr);
+    saveSettings(newSettings);
+    settings = newSettings;
+    event.sender.send("save-settings-response", JSON.stringify({response: "OK"}));
+    event.sender.send("settings", newSettingsStr);
 });
 
 ipcMain.on("show-notification", function (event, title, message, duration) {
@@ -1083,7 +1047,7 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
                                         } else if(sendtx_resp && sendtx_resp.statusCode === 200) {
                                             const tx_resp_data = JSON.parse(sendtx_body);
                                             let message = "TXid:\n\n<small><small>" + tx_resp_data.txid +
-                                                "</small></small><br /><a href=\"javascript:void(0)\" onclick=\"openUrl('" + settings.explorer + "tx/" + tx_resp_data.txid +"')\" class=\"walletListItemDetails transactionExplorer\" target=\"_blank\">Show Transaction in Explorer</a>";
+                                                "</small></small><br /><a href=\"javascript:void(0)\" onclick=\"openUrl('" + settings.explorerUrl + "/tx/" + tx_resp_data.txid +"')\" class=\"walletListItemDetails transactionExplorer\" target=\"_blank\">Show Transaction in Explorer</a>";
                                             event.sender.send("send-finish", "ok", message);
                                         }
                                     });
