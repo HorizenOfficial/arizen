@@ -68,8 +68,13 @@ button {
         transparent);
 }
 
-button:hover {
+button:not(:disabled):hover,
+button:not(:disabled):focus {
     filter: brightness(90%);
+}
+
+button:disabled {
+    background: gray;
 }
 
 .smallButton {
