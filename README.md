@@ -7,10 +7,7 @@
 
 # Version History
 ## v1.1.0
-- []
-- []
-- []
-- []
+- [x] New GUI and improved functionality
 
 ## v1.0.1
 - [x] added possibility to chose one of your wallet in "Send" "To" section
