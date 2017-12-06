@@ -961,10 +961,13 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
         let privateKey = sqlRes[0].values[0][1];
 
         // Get previous transactions
-        let zenApi = settings.api;
-        const prevTxURL = zenApi + "addr/" + fromAddress + "/utxo";
-        const infoURL = zenApi + "status?q=getInfo";
-        const sendRawTxURL = zenApi + "tx/send";
+        let zenApi = settings.apiUrls[1];
+        if (!zenApi) {
+            return;
+        }
+        const prevTxURL = zenApi + "/addr/" + fromAddress + "/utxo";
+        const infoURL = zenApi + "/status?q=getInfo";
+        const sendRawTxURL = zenApi + "/tx/send";
 
         // Building our transaction TXOBJ
         // Calculate maximum ZEN satoshis that we have
@@ -984,7 +987,7 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
                     } else if (info_resp && info_resp.statusCode === 200) {
                         let info_data = JSON.parse(info_body);
                         const blockHeight = info_data.info.blocks - 300;
-                        const blockHashURL = zenApi + "block-index/" + blockHeight;
+                        const blockHashURL = zenApi + "/block-index/" + blockHeight;
 
                         // Get block hash
                         request.get(blockHashURL, function (bhash_err, bhash_resp, bhash_body) {
@@ -1046,6 +1049,8 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
                                             let message = "TXid:\n\n<small><small>" + tx_resp_data.txid +
                                                 "</small></small><br /><a href=\"javascript:void(0)\" onclick=\"openUrl('" + settings.explorerUrl + "/tx/" + tx_resp_data.txid +"')\" class=\"walletListItemDetails transactionExplorer\" target=\"_blank\">Show Transaction in Explorer</a>";
                                             event.sender.send("send-finish", "ok", message);
+                                        } else {
+                                            console.log(sendtx_resp);
                                         }
                                     });
                                 }
