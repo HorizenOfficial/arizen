@@ -130,10 +130,6 @@ function showSettingsDialog() {
             ipcRenderer.send("save-settings", JSON.stringify(newSettings));
             dialog.close();
         });
-        dialog.addEventListener("keypress", ev => {
-            if (event.keyCode === 13)
-                saveButton.click();
-        });
     });
 }
 
