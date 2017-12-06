@@ -143,7 +143,7 @@ function createAddrItem(addrObj) {
     }
     addrItem.getElementsByClassName("addrText")[0].textContent = addrObj.addr;
     addrItem.getElementsByClassName("addrNameLine")[0]
-        .addEventListener("click", () => showAddrDetail(addrObj));
+        .addEventListener("click", () => showAddrDetail(addrItem));
     addrItem.getElementsByClassName("addrDepositButton")[0]
         .addEventListener("click", () => {
             depositToAddrInput.value = addrObj.addr;
@@ -170,16 +170,17 @@ function setAddrItemBalance(addrItem, balance) {
     withdrawButton.disabled = balance === 0;
 }
 
-function showAddrDetail(addrObj) {
+function showAddrDetail(addrItem) {
     showDialogFromTemplate("addrDialogTemplate", dialog => {
-        dialog.querySelector(".addrDetailAddr").textContent = addrObj.addr;
-        setBalanceText(dialog.querySelector(".addrDetailBalance"), addrObj.lastbalance);
+        const addrData = addrItem.dataset;
+        dialog.querySelector(".addrDetailAddr").textContent = addrData.addr;
+        setBalanceText(dialog.querySelector(".addrDetailBalance"), parseFloat(addrData.balance));
         const nameNode = dialog.querySelector(".addrDetailName");
-        nameNode.value = addrObj.name || "";
-        dialog.querySelector(".addrInfoLink").addEventListener("click", () => openZenExplorer("address/" + addrObj.addr));
+        nameNode.value = addrData.name;
+        dialog.querySelector(".addrInfoLink").addEventListener("click", () => openZenExplorer("address/" + addrData.addr));
         const saveButton = dialog.querySelector(".addrDetailSave");
         saveButton.addEventListener("click", ev => {
-            ipcRenderer.send("rename-wallet", addrObj.addr, nameNode.value);
+            ipcRenderer.send("rename-wallet", addrData.addr, nameNode.value);
         });
         dialog.addEventListener("keypress", ev => {
             if (event.keyCode == 13)
