@@ -1,0 +1,207 @@
+@font-face {
+    font-family: "monospace";
+    src: url(NotoSansMono-Regular.ttf);
+}
+
+@font-face {
+    font-family: "FontAwesome";
+    src: url(fontawesome-webfont.eot);
+}
+
+/* include padding and border in width/height */
+html {
+    box-sizing: border-box;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+/* fill whole viewport */
+body, .body {
+    margin: 0;
+    height: 100vh;
+}
+
+/* util */
+.hidden {
+    display: none !important;
+}
+
+/* main look and feel */
+
+:root {
+    --arizen-fg: #f88900;
+    --panel-bg: #fefefe;
+    --border-color: #c4cddb;
+    --money-negative: #880000;
+    --money-positive: #00a820;
+    --odd-bg: #eeeeee;
+    --hover-bg: yellow;
+}
+
+body {
+    color: #444444;
+    background: #eeeeee;
+    font-family: 'Raleway', 'Lato', sans-serif;
+}
+
+div {
+    border-color: var(--arizen-fg); /* TODO */
+}
+
+button {
+    font: inherit;
+    outline: none;
+    color: white;
+    border: none;
+    border-radius: 2px;
+    padding: 4px 8px;
+    background: var(--arizen-fg) -webkit-linear-gradient(90deg,
+        rgba(255, 255, 255, .1) 0%,
+        transparent 0%,
+        transparent 50%,
+        rgba(255, 255, 255, .1) 50%,
+        rgba(255, 255, 255, .1) 100%,
+        transparent 100%,
+        transparent);
+}
+
+button:not(:disabled):hover,
+button:not(:disabled):focus {
+    filter: brightness(90%);
+}
+
+button:disabled {
+    background: gray;
+}
+
+.smallButton {
+    padding: 1px 6px;
+}
+
+input[type="text"],
+input[type="number"],
+textarea {
+    font: inherit;
+    color: inherit;
+    outline: none;
+    transition: all 0.2s;
+}
+
+input[type="text"],
+input[type="number"] {
+    border: none;
+    border-bottom: 1px solid var(--arizen-fg);
+    margin-bottom: 2px;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus {
+    border-bottom: 3px solid var(--arizen-fg);
+    margin-bottom: 0px;
+}
+
+textarea {
+    border: 1px solid var(--arizen-fg);
+    margin: 2px;
+}
+
+textarea:focus {
+    border: 3px solid var(--arizen-fg);
+    margin: 0;
+}
+
+hr {
+    margin: 0;
+    margin-bottom: 5px;
+    width: 100%;
+    border: 0;
+    height: 1px;
+    background: var(--arizen-fg);
+    flex-shrink: 0;
+}
+
+h2 {
+    margin: 0;
+    font-weight: inherit;
+    font-size: 120%;
+}
+
+.filler {
+    flex-grow: 99;
+}
+
+.form {
+    display: grid;
+    grid-template-columns: max-content auto;
+    grid-column-gap: 10px;
+    grid-row-gap: 5px;
+    align-items: baseline;
+}
+
+.formInput {
+    display: flex;
+}
+.formInput > input {
+    flex-grow: 2;
+    margin-right: 5px;
+}
+
+.formButtons {
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+dialog {
+    border: none;
+    color: inherit;
+}
+
+arizen-dialog > [slot="content"] {
+    padding: 10px;
+    overflow: auto;
+    /* With the following I get scrollbar on overflow. Is the grid layout in Chrome 59 buggy? */
+    height: 100%;
+}
+
+.positive {
+    color: var(--money-positive);
+}
+
+.negative {
+    color: var(--money-negative);
+}
+
+.monospace {
+    font-family: "monospace" !important;
+}
+
+.warning {
+    color: var(--money-negative);
+    font-weight: bolder;
+}
+
+/* TODO this doesn't belong here */
+.aboutDialogContent {
+    padding: 15px !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.aboutDialogContent .form > :nth-child(odd) {
+    font-weight: bolder;
+}
+.aboutAuthors {
+    display: flex;
+    flex-direction: column;
+}
+.aboutDialogContent .zenLogo {
+    margin-top: 20px;
+}
+
+/* TODO this doesn't belong here */
+.settingsDialogContent {
+    min-width: 600px;
+}

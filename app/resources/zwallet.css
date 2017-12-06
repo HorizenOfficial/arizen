@@ -1,0 +1,374 @@
+.body {
+    display: grid !important;
+    grid-gap: 5px;
+    grid-template-rows: min-content auto 30px;
+    grid-template-columns: minmax(520px, min-content) auto;
+    grid-template-areas: "header header" "walletOps transactions" "statusLine statusLine";
+}
+
+/* Header */
+
+header {
+    grid-area: header;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
+}
+
+header > *:nth-child(1) {
+    justify-self: start;
+}
+
+header > *:nth-child(2) {
+    justify-self: center;
+}
+
+header > *:nth-child(3) {
+    justify-self: end;
+}
+
+.headerCenter > :not(:first-child) {
+    margin-left: 5px;
+}
+
+.headerCenter {
+    display: flex;
+    align-items: center;
+}
+
+.headerCenter img {
+    width: 15px;
+    display: inline-block;
+}
+
+.arizenTitle {
+    text-decoration: none;
+    color: inherit;
+    font-weight: bold;
+}
+
+#zenImg {
+    display: block;
+}
+
+header button {
+	padding: 1px 6px;
+}
+
+/* Wallet operations */
+
+.walletOps {
+    grid-area: walletOps;
+    display: grid;
+    grid-template-rows: max-content auto;
+    margin-left: 5px;
+}
+
+.walletOpsTabs {
+    display: flex;
+}
+
+.walletOpsTabs > * {
+    flex: 1;
+}
+
+.walletOpsTabs > :not(:first-child) {
+    margin-left: 5px;
+}
+
+.walletOpsTabs > button {
+    font-size: 120%;
+    padding: 4px 8px;
+    border: 2px solid transparent;
+}
+
+.walletOpsTabs > button[selected] {
+    background: inherit;
+    color: var(--arizen-fg);
+    border: 2px solid var(--arizen-fg);
+}
+
+.tabContent {
+    display: flex;
+    flex-direction: column;
+    margin-top: 5px;
+}
+
+.tabContentHeader {
+    padding: 0 5px 5px 5px;
+    border-bottom: 1px solid var(--arizen-fg);
+    margin-bottom: 5px;
+}
+
+.tabContentHeaderLabel {
+    font-size: 120%;
+}
+
+.tabContentBody {
+    height: -webkit-fill-available;
+    overflow: auto;
+    padding: 5px;
+}
+
+.walletOverviewControl {
+    display: flex;
+    align-items: baseline;
+    padding-right: 0;
+}
+
+.walletOverviewControl > *:first-child {
+    flex-grow: 2;
+}
+
+.walletOverviewControl > button:not(:first-child) {
+    margin-left: 5px;
+}
+
+#addrList {
+    overflow: auto;
+    max-height: -webkit-fill-available;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+#addrList > :not(:first-child) {
+    margin-top: 5px;
+}
+
+#addrList > :nth-child(odd) {
+    background: var(--odd-bg);
+}
+
+/* Addresses */
+
+.addrItem {
+    flex-shrink: 0;
+    display: flex;
+    padding: 4px;
+}
+
+.addrInfo {
+    flex-grow: 2;
+}
+
+.addrControl {
+    display: flex;
+    align-items: flex-start;
+    margin-left: 8px;
+}
+
+.addrBalance {
+    float: right;
+    font-size: 110%;
+}
+
+.addrBalanceAmount {
+    font-weight: bolder;
+}
+
+.addrNameLine {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+.addrNameLine > :not(:first-child) {
+    margin-left: 5px;
+}
+
+.addrDetailButton {
+    height: 14px;
+    opacity: 0.5;
+}
+.addrNameLine:hover > .addrDetailButton {
+    opacity: 1;
+}
+
+.addrControlButton {
+    border: none;
+    margin-left: 4px;
+    padding: 3px;
+    font-size: 120%;
+    color: white;
+    border-radius: 10%;
+}
+
+.addrControlButton:disabled {
+    background: gray;
+}
+
+.addrDepositButton {
+    background: var(--money-positive);
+}
+
+.addrWithdrawButton {
+    background: var(--money-negative);
+}
+
+/* Deposit/Withdraw */
+
+.depositBody, .withdrawBody {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.depositBody > *:not(:first-child),
+.withdrawBody > *:not(:first-child) {
+    margin-top: 10px;
+}
+
+.depositHelp, .withdrawHelp {
+    text-align: center;
+}
+
+#depositForm, #withdrawForm {
+    align-self: stretch;
+}
+
+#depositMsg, #withdrawMsg {
+    align-self: flex-start;
+    color: red;
+}
+
+#withdrawButton {
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.withdrawStatusMessage {
+    align-self: flex-start;
+}
+
+#withdrawStatusTitle {
+    font-weight: bolder;
+    font-size: 110%;
+    color: green;
+}
+
+.withdrawStatusBad {
+    color: red !important;
+}
+
+#depositToButton, #withdrawFromButton, #withdrawToButton {
+    justify-self: left;
+    min-width: 60px;
+}
+
+/* Trasactions */
+
+.txPanel {
+    grid-area: transactions;
+    display: grid;
+    grid-template-rows: max-content auto;
+
+    margin-right: 5px;
+}
+
+.txPanelHeader {
+    justify-self: center;
+    align-self: center;
+    padding: 10px;
+    font-size: 130%;
+}
+
+#txList {
+    overflow: auto;
+    max-height: -webkit-fill-available;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.txItem {
+    flex-shrink: 0;
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    border: 1px none var(--arizen-fg);
+    border-top-style: solid;
+    padding: 5px 0 5px 0;
+    cursor: pointer;
+}
+.txItem > :not(:first-child) {
+    margin-left: 5px;
+}
+.txItem > :last-child {
+    margin-right: 5px;
+}
+
+.txMempoolItem {
+    background: rgba(255, 0, 0, 0.1) !important;
+}
+
+.txBalance {
+    font-size: 160%;
+    white-space: nowrap;
+}
+
+@keyframes txItemNew {
+    from {
+        background-color: rgba(165, 255, 126, 1.0);
+    }
+}
+
+.txItemNew {
+    animation: txItemNew 2s;
+}
+
+/* Status line */
+
+.statusLine {
+    grid-area: statusLine;
+}
+
+#totalBalanceAmount {
+    font-weight: bolder;
+}
+
+/* 
+.addrSelectList {
+    overflow: auto;
+    overflow-x: hidden;
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-gap: 10px;
+    align-items: baseline;
+    height: 100%;
+}
+*/
+/*
+ Make flexbox look like table.
+ Wait for Electron to support Chromium that supports "display: contents" (62 partly does).
+ See also https://bugs.chromium.org/p/chromium/issues/detail?id=657748
+*/
+.addrSelectList {
+    display: flex;
+    flex-direction: column;
+}
+.addrSelectList > :nth-child(odd) {
+    background: var(--odd-bg);
+}
+.addrSelectRow {
+    display: flex;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+.addrSelectRow:hover {
+    background: var(--hover-bg);
+}
+.addrSelectRow > * {
+    margin-right: 15px;
+}
+.addrSelectRowName {
+    width: 200px;
+}
+.addrSelectRowAddr {
+    width: 400px;
+}
+.addrSelectRowBalance {
+    justify-self: flex-end;
+    flex-grow: 2;
+}

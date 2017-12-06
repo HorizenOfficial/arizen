@@ -17,11 +17,7 @@ let ide = false;
 let spec = false;
 
 function checkLoginInfo() {
-    if (usr && len && lett && capl && num && ide && spec) {
-        document.getElementById("btSubmit").disabled = false;
-    } else {
-        document.getElementById("btSubmit").disabled = true;
-    }
+    document.getElementById("btSubmit").disabled = !(usr && len && lett && capl && num && ide && spec);
 }
 
 function doCreateWallet() {

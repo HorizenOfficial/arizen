@@ -19,7 +19,12 @@ const zencashjs = require("zencashjs");
 const sql = require("sql.js");
 const request = require("request");
 const updater = require("electron-simple-updater");
-const QRCode = require("qrcode");
+const fetch = require("node-fetch");
+const {List} = require("immutable");
+
+// Press F12 to open the DevTools. See https://github.com/sindresorhus/electron-debug.
+// FIXME: comment this for release versions!
+//require('electron-debug')();
 
 updater.init({checkUpdateOnStart: true, autoDownload: true});
 attachUpdaterHandlers();
@@ -35,14 +40,26 @@ let userInfo = {
     dbChanged: false
 };
 
-let settings = {
+const defaultSettings = {
     notifications: 1,
-    explorer: "https://explorer.zensystem.io/",
-    api: "https://explorer.zensystem.io/insight-api-zen/",
-    autorefresh: 180,
-    refreshTimeout: 10,
+    explorerUrl: "https://explorer.zensystem.io",
+    apiUrls: [
+        "http://explorer.zenmine.pro/insight-api-zen",
+        "https://explorer.zensystem.io/insight-api-zen"
+    ],
     txHistory: 50
 };
+let settings = defaultSettings;
+
+const editSubmenu = [
+    {label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:"},
+    {label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:"},
+    {type: "separator"},
+    {label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:"},
+    {label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:"},
+    {label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:"},
+    {label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:"}
+];
 
 const dbStructWallet = "CREATE TABLE wallet (id INTEGER PRIMARY KEY AUTOINCREMENT, pk TEXT, addr TEXT UNIQUE, lastbalance REAL, name TEXT);";
 // FIXME: dbStructContacts is unused
@@ -206,6 +223,8 @@ function generateNewWallet(login, password) {
 
     // Run a query without reading the results
     db.run(dbStructWallet);
+    db.run(dbStructTransactions);
+    db.run(dbStructSettings);
     for (i = 0; i <= 42; i += 1) {
         pk = zencashjs.address.WIFToPrivKey(privateKeys[i]);
         pubKey = zencashjs.address.privKeyToPubKey(pk, true);
@@ -227,64 +246,45 @@ function getNewAddress(name) {
     userInfo.walletDb.run("INSERT INTO wallet VALUES (?,?,?,?,?)", [null, pk, addr, 0, name]);
     userInfo.dbChanged = true;
 
-    return addr;
+    return { addr: addr, name: name, lastbalance: 0 };
+}
+
+function tableExists(table) {
+    return sqlSelectColumns(`select count(*) from sqlite_master where type = 'table' and name = '${table}'`)[0][0] == 1;
 }
 
 function loadSettings() {
-    let sqlRes = userInfo.walletDb.exec("SELECT name FROM sqlite_master WHERE type='table' AND name='settings';");
-    if (sqlRes.length === 0) {
-        userInfo.walletDb.run(dbStructSettings);
-        userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsNotifications", settings.notifications.toString(10)]);
-        userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsExplorer", settings.explorer]);
-        userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsApi", settings.api]);
-        userInfo.dbChanged = true;
-    }
+    /* Remove settings row from settings table. Old versions chceks row count in
+     * the table and inserts missing settings if the count isn't 6. By inserting
+     * another setting we fucked up its fucked up upgrade logic. This only
+     * happens in old versions after new version (f422bfff) run. */
+    if (tableExists("settings"))
+        sqlRun("delete from settings where name = 'settings'");
 
-    sqlRes = userInfo.walletDb.exec("SELECT * FROM settings");
-    if (sqlRes[0].values.length === 2) {
-        userInfo.walletDb.run("UPDATE settings SET value = ? WHERE name = ?", ["settingsExplorer", settings.explorer]);
-        userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsApi", settings.api]);
-        userInfo.dbChanged = true;
-    }
-    sqlRes = userInfo.walletDb.exec("SELECT * FROM settings");
-    if (sqlRes[0].values.length !== 6) {
-        userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsAutorefresh", settings.autorefresh]);
-        userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsRefreshTimeout", settings.refreshTimeout]);
-        userInfo.walletDb.run("INSERT INTO settings VALUES (?, ?, ?)", [null, "settingsTxHistory", settings.txHistory]);
-    }
+    /* In future we'll ditch SQLite and use encrypted JSONs for storage. For now
+     * store settings in temporary table "new_settings". */
+    if (!tableExists("new_settings"))
+        sqlRun("create table new_settings (name text unique, value text)");
 
-    sqlRes = userInfo.walletDb.exec("SELECT * FROM settings WHERE name = 'settingsNotifications'");
-    settings.notifications = Number(sqlRes[0].values[0][2]);
-    sqlRes = userInfo.walletDb.exec("SELECT * FROM settings WHERE name = 'settingsExplorer'");
-    settings.explorer = sqlRes[0].values[0][2];
-    sqlRes = userInfo.walletDb.exec("SELECT * FROM settings WHERE name = 'settingsApi'");
-    settings.api = sqlRes[0].values[0][2];
-    sqlRes = userInfo.walletDb.exec("SELECT * FROM settings WHERE name = 'settingsAutorefresh'");
-    settings.autorefresh = sqlRes[0].values[0][2];
-    sqlRes = userInfo.walletDb.exec("SELECT * FROM settings WHERE name = 'settingsRefreshTimeout'");
-    settings.refreshTimeout = sqlRes[0].values[0][2];
-    sqlRes = userInfo.walletDb.exec("SELECT * FROM settings WHERE name = 'settingsTxHistory'");
-    settings.txHistory = sqlRes[0].values[0][2];
+    const b64settings = sqlSelectColumns("select value from new_settings where name = 'settings'");
+    if (b64settings.length == 0)
+        return defaultSettings;
+
+    /* Later we'll want to merge user settings with default settings. */
+    return JSON.parse(Buffer.from(b64settings[0][0], "base64").toString("ascii"));
 }
 
-function loadTransactions(webContents) {
-    let sqlRes = userInfo.walletDb.exec("SELECT name FROM sqlite_master WHERE type='table' AND name='transactions';");
-    if (sqlRes.length === 0) {
-        userInfo.walletDb.run(dbStructTransactions);
-        sqlRes = userInfo.walletDb.exec("SELECT addr FROM wallet;");
-        sqlRes[0].values.forEach(function(address) {
-            request.get(settings.api + "addrs/" + address[0] + "/txs", function (err, res, body) {
-                if (err) {
-                    console.log("transaction readout failed");
-                } else if (res && res.statusCode === 200) {
-                    let data = JSON.parse(body);
-                    data.items.forEach(function(element) {
-                        parseTransactionResponse(JSON.stringify(element), address[0], webContents);
-                    }, this);
-                }
-            });
-        }, this);
-    }
+function saveSettings(settings) {
+    const b64settings = Buffer.from(JSON.stringify(settings)).toString("base64");
+    sqlRun("insert or replace into new_settings (name, value) values ('settings', ?)", [b64settings]);
+    userInfo.dbChanged = true;
+}
+
+function upgradeDb() {
+    // expects DB to be prefilled with addresses
+    let addr = sqlSelectObjects("select * from wallet limit 1")[0];
+    if (!("name" in addr))
+        sqlRun("ALTER TABLE wallet ADD COLUMN name TEXT DEFAULT ''");
 }
 
 function setDarwin(template) {
@@ -438,15 +438,7 @@ function updateMenuAtLogin() {
         },
         {
             label: "Edit",
-            submenu: [
-                {label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:"},
-                {label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:"},
-                {type: "separator"},
-                {label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:"},
-                {label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:"},
-                {label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:"},
-                {label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:"}
-            ]
+            submenu: editSubmenu
         }
     ];
 
@@ -468,15 +460,7 @@ function updateMenuAtLogout() {
             ]
         }, {
             label: "Edit",
-            submenu: [
-                {label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:"},
-                {label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:"},
-                {type: "separator"},
-                {label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:"},
-                {label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:"},
-                {label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:"},
-                {label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:"}
-            ]
+            submenu: editSubmenu
         }
     ];
     setDarwin(template);
@@ -485,7 +469,7 @@ function updateMenuAtLogout() {
 
 function createWindow() {
     updateMenuAtLogout();
-    mainWindow = new BrowserWindow({width: 1050, height: 730, resizable: false, icon: "resources/zen_icon.png"});
+    mainWindow = new BrowserWindow({width: 1000, height: 730, resizable: true, icon: "resources/zen_icon.png"});
 
     if (fs.existsSync(getWalletPath())) {
         mainWindow.loadURL(url.format({
@@ -500,10 +484,6 @@ function createWindow() {
             slashes: true
         }));
     }
-
-    // Open the DevTools.
-    // FIXME: comment this for release versions!
-    // mainWindow.webContents.openDevTools();
 
     // Emitted when the window is closed.
     mainWindow.on("closed", function () {
@@ -539,17 +519,6 @@ app.on("before-quit", function () {
         userInfo.dbChanged = false;
         exportWallet(getWalletPath() + userInfo.login + ".awd", true);
     }
-    // dialog.showMessageBox({
-    //     type: "question",
-    //     buttons: ["Yes", "No"],
-    //     title: "Confirm",
-    //     message: "Are you sure you want to quit?"
-    // }, function (response) {
-    //     if (response === 0) {
-    //         app.showExitPrompt = false;
-    //         mainWindow.close();
-    //     }
-    // });
 });
 
 // In this file you can include the rest of your app"s specific main process
@@ -615,8 +584,8 @@ ipcMain.on("verify-login-info", function (event, login, pass) {
             userInfo.login = login;
             userInfo.pass = pass;
             userInfo.walletDb = new sql.Database(walletBytes);
-            loadSettings();
-            loadTransactions(mainWindow.webContents);
+            upgradeDb();
+            settings = loadSettings();
             updateMenuAtLogin();
             resp = {
                 response: "OK",
@@ -629,18 +598,14 @@ ipcMain.on("verify-login-info", function (event, login, pass) {
 });
 
 ipcMain.on("check-login-info", function (event) {
-    let resp;
+    let resp = {
+        response: "ERR",
+        user: ""
+    };
 
     if (userInfo.loggedIn) {
-        resp = {
-            response: "OK",
-            user: userInfo.login
-        };
-    } else {
-        resp = {
-            response: "ERR",
-            user: ""
-        };
+        resp.response= "OK";
+        resp.user = userInfo.login;
     }
     event.sender.send("check-login-response", JSON.stringify(resp));
 });
@@ -661,164 +626,219 @@ ipcMain.on("exit-from-menu", function () {
     app.quit();
 });
 
-function parseTransactionResponse(transaction, address, webContents) {
-    let data = JSON.parse(transaction);
-    let amount = 0;
-    let isSending = 0;
-    let vouts = [];
-
-    /* find my address in send transaction */
-    data.vin.forEach(function(element) {
-        /* my address is sending */
-        if (element.addr === address) {
-            isSending = 1;
-        }
-    }, this);
-
-    /* find my address in recv transaction */
-    data.vout.forEach(function(element) {
-        /* my address is receiving */
-        if (element.scriptPubKey.addresses[0] === address) {
-            if (isSending === 0) {
-                vouts.push(address);
-                amount = element.value;
-            } else {
-                amount = -1 * (data.valueOut - element.value);
-            }
-        } else {
-            /* dont show my address in transaction to */
-            vouts.push(element.scriptPubKey.addresses[0]);
-        }
-    }, this);
-
-    /* we are sending but amount is not set -> address hits 0 */
-    if (amount === 0 && isSending === 1)
-    {
-        amount = -1 * data.valueOut;
-    }
-
-    /* find unique input addresses */
-    let vins = [...new Set(data.vin.map(item => item.addr))];
-
-    userInfo.walletDb.run("INSERT INTO transactions VALUES (?,?,?,?,?,?,?,?)", [null, data.txid, data.time, address, vins.join(","), vouts.join(","), amount, data.blockheight]);
-    userInfo.dbChanged = true;
-
-    if (webContents !== null) {
-        let resp = {
-            txid: data.txid,
-            time: data.time,
-            address: address, 
-            vins: vins,
-            vouts: vouts,
-            amount: amount,
-            block: data.blockheight
-        };
-        webContents.send("get-transaction-update", JSON.stringify(resp));
-    }
+function sqlResultToObjectArray(res) {
+    return res[0].values.map(columns => {
+        const obj = {};
+        for (let i = 0; i < columns.length; i++)
+            obj[res[0].columns[i]] = columns[i];
+        return obj;
+    });
 }
 
-function updateBalance(address, oldBalance, event) {
-    request.get(settings.api + "addr/" + address, function (err, res, body) {
-        if (err) {
-            console.log("balance update failed");
-            setTimeout(updateBalance, 5000, address, oldBalance, event);
-        } else if (res && res.statusCode === 200) {
-            let data = JSON.parse(body);
-            if (oldBalance !== data.balance) {
-                userInfo.walletDb.run("UPDATE wallet SET lastbalance = " + data.balance + " WHERE addr = '" + data.addrStr + "'");
-                userInfo.dbChanged = true;
-                let sqlRes = userInfo.walletDb.exec("SELECT total(lastbalance) FROM wallet");
-                let update = {
-                    response: "OK",
-                    wallet: data.addrStr,
-                    balance: data.balance,
-                    total: sqlRes[0].values[0][0]
-                };
-                event.sender.send("update-wallet-balance", JSON.stringify(update));
-                /* update latest transaction */
-                request.get(settings.api + "tx/" + data.transactions[0], function (err, res, body) {
-                    if (err) {
-                        console.log("transaction readout failed");
-                    } else if (res && res.statusCode === 200) {
-                        parseTransactionResponse(body, address, event.sender);
+function sqlSelect(sql) {
+    let result = userInfo.walletDb.exec(sql);
+    if (!result) // XXX what exactly happens on error?
+        throw new Error(`SQL query failed\n  Query: ${sql}`);
+    if (!result.length)
+        result[0] = { values: [] };
+    return result;
+}
+
+function sqlSelectColumns(sql) {
+    return sqlSelect(sql)[0].values;
+}
+
+function sqlSelectObjects(sql) {
+    return sqlResultToObjectArray(sqlSelect(sql));
+}
+
+function sqlRun(sql, args) {
+    const result = userInfo.walletDb.run(sql, args);
+    userInfo.dbChanged = true;
+    return result;
+}
+
+function fetchJson(url) {
+    console.log("GET " + url);
+    return fetch(url).then(resp => {
+        console.log(`GET ${url} done, status: ${resp.status} ${resp.statusText}`);
+        if (!resp.ok)
+            throw new Error(`HTTP GET status: ${resp.status} ${resp.statusText}, URL: ${url}`);
+        return resp.json()
+    });
+}
+
+function fetchApi(path) {
+    const urls = settings.apiUrls;
+    let errors = [];
+    const fetchApiFrom = (i) => {
+        if (i < urls.length)
+            return fetchJson(urls[i] + '/' + path).catch(err => {
+                console.log(`ERROR fetching from: ${urls[i]}: `, err);
+                errors.push(err);
+                return fetchApiFrom(i + 1);
+            });
+        else
+            return Promise.reject(errors);
+    };
+    return fetchApiFrom(0);
+}
+
+// TODO 1: better name
+// TODO 2: use async
+function mapSync(seq, asyncFunc) {
+    let results = [];
+    return seq.reduce(
+            (promise, item) => promise.then(() => asyncFunc(item).then(r => results.push(r))),
+            Promise.resolve())
+        .then(() => results);
+}
+
+function fetchTransactions(txIds, myAddrs) {
+    return mapSync(txIds, txId => fetchApi("tx/" + txId)).then(txInfos => {
+        // TODO
+        //txInfos.sort(tx => tx.blockheight)
+        const myAddrSet = new Set(myAddrs);
+
+        return txInfos.map(info => {
+            let txBalance = 0;
+            const vins = [];
+            const vouts = [];
+
+            // Address field in transaction rows is meaningless. Pick something sane.
+            let firstMyAddr;
+
+            for (const vout of info.vout) {
+                if (!vout.scriptPubKey) // XXX can it be something else?
+                    continue;
+                let balanceAccounted = false;
+                for (const addr of vout.scriptPubKey.addresses) {
+                    if (!balanceAccounted && myAddrSet.has(addr)) {
+                        balanceAccounted = true;
+                        txBalance += parseFloat(vout.value);
+                        if (!firstMyAddr)
+                            firstMyAddr = addr;
                     }
-                });
+                    if (!vouts.includes(addr))
+                        vouts.push(addr);
+                }
             }
+
+            for (const vin of info.vin) {
+                const addr = vin.addr;
+                if (myAddrSet.has(addr)) {
+                    txBalance -= parseFloat(vin.value);
+                    if (!firstMyAddr)
+                        firstMyAddr = addr;
+                }
+                if (!vins.includes(addr))
+                    vins.push(addr);
+            }
+
+            const tx = {
+                txid: info.txid,
+                time: info.blocktime,
+                address: firstMyAddr,
+                vins: vins.join(','),
+                vouts: vouts.join(','),
+                amount: txBalance,
+                block: info.blockheight
+            };
+            return tx;
+        });
+    });
+}
+
+function fetchBlockchainChanges(addrObjs, knownTxIds) {
+    return mapSync(addrObjs, obj => fetchApi("addr/" + obj.addr)).then(addrInfos => {
+        const result = {
+            changedAddrs: [],
+            newTxs: []
+        };
+        const txIdSet = new Set();
+
+        for (let i = 0; i < addrObjs.length; i++) {
+            const obj = addrObjs[i];
+            const info = addrInfos[i];
+            if (obj.lastbalance != info.balance) {
+                obj.balanceDiff = info.balance - obj.lastbalance;
+                obj.lastbalance = info.balance;
+                result.changedAddrs.push(obj);
+            }
+            info.transactions.forEach(txId => txIdSet.add(txId));
         }
+
+        knownTxIds.forEach(txId => txIdSet.delete(txId));
+        return fetchTransactions([...txIdSet], addrObjs.map(obj => obj.addr))
+            .then(newTxs => {
+                result.newTxs = List(newTxs).sortBy(tx => tx.block).toArray();
+                return result;
+            });
+	});
+}
+
+function updateBlockchainView(webContents) {
+    const addrObjs = sqlSelectObjects('SELECT addr, name, lastbalance FROM wallet');
+    const knownTxIds = sqlSelectColumns('SELECT DISTINCT txid FROM transactions').map(row => row[0]);
+    let totalBalance = addrObjs.reduce((sum, a) => sum + a.lastbalance, 0);
+
+    fetchBlockchainChanges(addrObjs, knownTxIds).then(result => {
+        for (const addrObj of result.changedAddrs) {
+            sqlRun('UPDATE wallet SET lastbalance = ? WHERE addr = ?', [addrObj.lastbalance, addrObj.addr]);
+            totalBalance += addrObj.balanceDiff;
+            webContents.send('update-wallet-balance', JSON.stringify({
+                response: 'OK',
+                wallet: addrObj.addr,
+                balance: addrObj.lastbalance,
+                total: totalBalance
+            }));
+        }
+        for (const tx of result.newTxs) {
+            if (tx.block >= 0) {
+                sqlRun('INSERT INTO transactions VALUES (?,?,?,?,?,?,?,?)',
+                    [null, tx.txid, tx.time, tx.address, tx.vins, tx.vouts, tx.amount, tx.block]);
+            }
+            webContents.send('get-transaction-update', JSON.stringify(tx));
+        }
+    })
+	.catch(err => {
+        console.log('Failed to fetch blockchain changes: ', err);
     });
 }
 
 ipcMain.on("get-wallets", function (event) {
-    let resp = {
-        response: "ERR",
-        wallets: [],
-        transactions: [],
-        total: 0,
-        autorefresh: 0
-    };
-    let sqlRes;
-
-    if (userInfo.loggedIn) {
-        sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet ORDER BY lastbalance DESC, id DESC");
-        /* update wallet 0.1 if necessary */
-        if (sqlRes[0].columns.includes("name") === false) {
-            userInfo.walletDb.exec("ALTER TABLE wallet ADD COLUMN name TEXT DEFAULT ''");
-            sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet");
-        }
-        resp.wallets = sqlRes[0].values.map(function(x) {
-            let obj = {};
-            for (let i = 0, len = x.length; i < len; i += 1) {
-                obj[sqlRes[0].columns[i]] = x[i];
-            }
-            return obj;
-         });
-        resp.response = "OK";
-        resp.autorefresh = settings.autorefresh;
-        sqlRes = userInfo.walletDb.exec("SELECT * FROM transactions ORDER BY time DESC LIMIT " + settings.txHistory);
-        if (sqlRes.length > 0) {
-            resp.transactions = sqlRes[0].values.map(function(x) {
-                var obj = {};
-                for (let i = 0, len = x.length; i < len; i += 1) {
-                    obj[sqlRes[0].columns[i]] = x[i];
-                }
-                return obj;
-             });
-        }
-        resp.wallets.forEach(function(element) {
-            resp.total += element.lastbalance;
-            updateBalance(element.addr, element.lastbalance, event);
-        }, this);
-    }
+    if (!userInfo.loggedIn)
+        return;
+    const resp = {};
+    resp.response = 'OK';
+    resp.autorefresh = settings.autorefresh;
+    resp.wallets = sqlSelectObjects('SELECT * FROM wallet ORDER BY lastbalance DESC, id DESC');
+    resp.transactions = sqlSelectObjects('SELECT * FROM transactions ORDER BY time DESC LIMIT ' + settings.txHistory);
+    resp.total =  resp.wallets.reduce((sum, a) => sum + a.lastbalance, 0);
 
     event.sender.send("get-wallets-response", JSON.stringify(resp));
+    event.sender.send("settings", JSON.stringify(settings));
+    updateBlockchainView(event.sender);
 });
 
 ipcMain.on("refresh-wallet", function (event) {
-    let resp;
-    let sqlRes;
+    let resp = { response: 'ERR' };
 
     if (userInfo.loggedIn) {
-        sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet");
-        for (let i = 0; i < sqlRes[0].values.length; i += 1) {
-            updateBalance(sqlRes[0].values[i][2], sqlRes[0].values[i][3], event);
-        }
-        resp = {
-            response: "OK",
-            autorefresh: settings.autorefresh
-        }
-    } else {
-        resp = {
-            response: "ERR",
-            autorefresh: 0
-        }
+        updateBlockchainView(event.sender);
+        resp.response = "OK";
+        resp.autorefresh = settings.autorefresh;
     }
 
     event.sender.send("refresh-wallet-response", JSON.stringify(resp));    
 });
 
 ipcMain.on("rename-wallet", function (event, address, name) {
-    let resp;
     let sqlRes;
+    let resp = {
+        response: "ERR",
+        msg: "not logged in"
+    };
 
     if (userInfo.loggedIn) {
         sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet WHERE addr = '" + address + "'");
@@ -832,23 +852,18 @@ ipcMain.on("rename-wallet", function (event, address, name) {
                 newname: name
             };
         } else {
-            resp = {
-                response: "ERR",
-                msg: "address not found"
-            };
+            resp.msg = "address not found";
         }
-    } else {
-        resp = {
-            response: "ERR",
-            msg: "not logged in"
-        };
     }
     event.sender.send("rename-wallet-response", JSON.stringify(resp));
 });
 
 ipcMain.on("get-wallet-by-name", function (event, name) {
-    let resp;
     let sqlRes;
+    let resp = {
+        response: "ERR",
+        msg: "not logged in"
+    };
 
     if (userInfo.loggedIn) {
         sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet WHERE name = '" + name + "'");
@@ -859,101 +874,34 @@ ipcMain.on("get-wallet-by-name", function (event, name) {
                 msg: "found: " + sqlRes.length
             };
         } else {
-            resp = {
-                response: "ERR",
-                msg: "name not found"
-            };
+            resp.msg = "name not found";
         }
-    } else {
-        resp = {
-            response: "ERR",
-            msg: "not logged in"
-        };
     }
     event.sender.send("get-wallet-by-name-response", JSON.stringify(resp));
 });
 
-ipcMain.on("get-transaction", function (event, txId, address) {
-    if (userInfo.loggedIn) {
-        request.get(settings.api + "tx/" + txId, function (err, res, body) {
-            if (err) {
-                console.log("transaction readout failed");
-            } else if (res && res.statusCode === 200) {
-                event.sender.send("get-transaction-update", address, body);
-            }
-        });
-    }
-});
-
 ipcMain.on("generate-wallet", function (event, name) {
-    let resp;
-    let newAddr;
+    let resp = {
+        response: "ERR",
+        msg: "not logged in"
+    };
 
     if (userInfo.loggedIn) {
-        newAddr = getNewAddress(name);
-        resp = {
-            response: "OK",
-            msg: newAddr
-        };
-    } else {
-        resp = {
-            response: "ERR",
-            msg: "not logged in"
-        };
+        resp.response = "OK";
+        resp.addr = getNewAddress(name);
     }
 
     event.sender.send("generate-wallet-response", JSON.stringify(resp));
 });
 
-ipcMain.on("get-settings", function (event) {
-    let resp;
-    let sqlRes;
-
-    if (userInfo.loggedIn) {
-        sqlRes = userInfo.walletDb.exec("SELECT * FROM settings");
-        if (sqlRes.length > 0) {
-            resp = {
-                response: "OK",
-                settings: sqlRes[0].values
-            };
-        } else {
-            resp = {
-                response: "ERR",
-                msg: "issue with db"
-            };
-        }
-    } else {
-        resp = {
-            response: "ERR",
-            msg: "not logged in"
-        };
-    }
-
-    event.sender.send("get-settings-response", JSON.stringify(resp));
-});
-
-ipcMain.on("save-settings", function (event, settings) {
-    let data = JSON.parse(settings);
-    let resp;
-
-    if (userInfo.loggedIn) {
-        data.forEach(function(element) {
-            userInfo.walletDb.run("UPDATE settings SET value = ? WHERE name = ?", [element.value, element.name]);
-        }, this);
-        userInfo.dbChanged = true;
-        loadSettings();
-        resp = {
-            response: "OK",
-            msg: "saved"
-        };
-    } else {
-        resp = {
-            response: "ERR",
-            msg: "not logged in"
-        };
-    }
-
-    event.sender.send("save-settings-response", JSON.stringify(resp));
+ipcMain.on("save-settings", function (event, newSettingsStr) {
+    if (!userInfo.loggedIn)
+        return;
+    const newSettings = JSON.parse(newSettingsStr);
+    saveSettings(newSettings);
+    settings = newSettings;
+    event.sender.send("save-settings-response", JSON.stringify({response: "OK"}));
+    event.sender.send("settings", newSettingsStr);
 });
 
 ipcMain.on("show-notification", function (event, title, message, duration) {
@@ -1031,10 +979,18 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
         let privateKey = sqlRes[0].values[0][1];
 
         // Get previous transactions
-        let zenApi = settings.api;
-        const prevTxURL = zenApi + "addr/" + fromAddress + "/utxo";
-        const infoURL = zenApi + "status?q=getInfo";
-        const sendRawTxURL = zenApi + "tx/send";
+        let zenApi = settings.apiUrls[0];
+        if (!zenApi) {
+            console.log("No Zen api in settings");
+            return;
+        }
+        if ((zenApi.substr(zenApi.length - 1)) === "/"){
+            zenApi = zenApi.substr(0, zenApi.length - 1);
+        }
+
+        const prevTxURL = zenApi + "/addr/" + fromAddress + "/utxo";
+        const infoURL = zenApi + "/status?q=getInfo";
+        const sendRawTxURL = zenApi + "/tx/send";
 
         // Building our transaction TXOBJ
         // Calculate maximum ZEN satoshis that we have
@@ -1054,7 +1010,7 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
                     } else if (info_resp && info_resp.statusCode === 200) {
                         let info_data = JSON.parse(info_body);
                         const blockHeight = info_data.info.blocks - 300;
-                        const blockHashURL = zenApi + "block-index/" + blockHeight;
+                        const blockHashURL = zenApi + "/block-index/" + blockHeight;
 
                         // Get block hash
                         request.get(blockHashURL, function (bhash_err, bhash_resp, bhash_body) {
@@ -1114,8 +1070,10 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
                                         } else if(sendtx_resp && sendtx_resp.statusCode === 200) {
                                             const tx_resp_data = JSON.parse(sendtx_body);
                                             let message = "TXid:\n\n<small><small>" + tx_resp_data.txid +
-                                                "</small></small><br /><a href=\"javascript:void(0)\" onclick=\"openUrl('" + settings.explorer + "tx/" + tx_resp_data.txid +"')\" class=\"walletListItemDetails transactionExplorer\" target=\"_blank\">Show Transaction in Explorer</a>";
+                                                "</small></small><br /><a href=\"javascript:void(0)\" onclick=\"openUrl('" + settings.explorerUrl + "/tx/" + tx_resp_data.txid +"')\" class=\"walletListItemDetails transactionExplorer\" target=\"_blank\">Show Transaction in Explorer</a>";
                                             event.sender.send("send-finish", "ok", message);
+                                        } else {
+                                            console.log(sendtx_resp);
                                         }
                                     });
                                 }
@@ -1126,21 +1084,6 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
             }
         });
     }
-});
-
-ipcMain.on("open-explorer", function (event, url) {
-    event.preventDefault();
-    shell.openExternal(url);
-});
-
-ipcMain.on("generate-qr-code", function(event, address, amount){
-    let qrcode_data = "{ \"symbol\": \"zen\", \"tAddr\": \""+ address +"\", \"amount\": \""+ amount +"\" }";
-    QRCode.toDataURL(qrcode_data, { errorCorrectionLevel: "H", scale: 5, color: {dark:"#000000ff", light: "#fefefeff"}}, function(err, url) {
-        if(err) {
-            console.log(err);
-        }
-        event.sender.send("render-qr-code", url);
-    });
 });
 
 // Unused

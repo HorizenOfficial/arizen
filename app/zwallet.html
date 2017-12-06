@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Arizen</title>
+    <link rel="stylesheet" href="resources/zstyle.css">
+    <link rel="stylesheet" href="resources/page.css">
+    <link rel="stylesheet" href="resources/zwallet.css">
+    <script src="tabs.js"></script>
+    <link rel=import href="webcomponents/arizen-dialog.html">
+</head>
+<body>
+
+<template id=txDialogTemplate>
+    <arizen-dialog class=txDialog>
+        <h2 slot=headerText>Transaction Detail</h2>
+        <div class=form slot=content>
+            <div>Transaction ID</div>
+            <div>
+                <div class='txDetailTxId monospace'></div>
+                <a class=txInfoLink href=#>Show in ZEN Explorer</a>
+            </div>
+            <div>Date</div>
+            <div class=txDetailDate></div>
+            <div>Block Height</div>
+            <div class=txDetailBlock></div>
+            <div>Amount</div>
+            <div class=txDetailAmount><span></span> ZEN</div>
+            <div>From</div>
+            <div class='txDetailFrom monospace'></div>
+            <div>To</div>
+            <div class='txDetailTo monospace'></div>
+        </div>
+    </arizen-dialog>
+</template>
+
+<template id=mempoolTxDialogTemplate>
+    <arizen-dialog class=txDialog>
+        <h2 slot=headerText>Transaction Detail</h2>
+        <div slot=content>
+            <div class=form>
+                <div>Transaction ID</div>
+                <div>
+                    <div class='txDetailTxId monospace'></div>
+                    <div class=warning>UNCONFIRMED TRANSACTION</div>
+                    <a class=txInfoLink href=#>Show in ZEN Explorer</a>
+                </div>
+                <div>Amount</div>
+                <div class=txDetailAmount><span></span> ZEN</div>
+                <div>From</div>
+                <div class='txDetailFrom monospace'></div>
+                <div>To</div>
+                <div class='txDetailTo monospace'></div>
+            </div>
+        </div>
+    </arizen-dialog>
+</template>
+
+<template id=addrDialogTemplate>
+    <arizen-dialog>
+        <h2 slot=headerText>Address Detail</h2>
+        <div slot=content>
+            <div class=form>
+                <div>Name</div>
+                <input type=text class=addrDetailName />
+                <div>Address</div>
+                <div>
+                    <div class="addrDetailAddr monospace"></div>
+                    <a class=addrInfoLink href=#>Show in ZEN Explorer</a>
+                </div>
+                <div>Balance</div>
+                <div class=addrDetailBalance><span></span> ZEN</div>
+            </div>
+            <div class=formButtons>
+                <button class=addrDetailSave>Save changes</button>
+            </div>
+        </div>
+    </arizen-dialog>
+</template>
+
+<template id=newAddrDialogTemplate>
+    <arizen-dialog>
+        <h2 slot=headerText>Create a New Address</h2>
+        <div slot=content>
+            <div class=form>
+                <div>Name (optional)</div>
+                <input type=text class=newAddrDialogName />
+            </div>
+            <div class=formButtons>
+                <button class=newAddrDialogCreate>Create</button>
+            </div>
+        </div>
+    </arizen-dialog>
+</template>
+
+<template id=addrSelectRowTemplate>
+    <div class=addrSelectRow>
+        <div class=addrSelectRowName></div>
+        <div class="addrSelectRowAddr monospace"></div>
+        <div class=addrSelectRowBalance><span></span> ZEN</div>
+    </div>
+</template>
+<template id=addrSelectDialogTemplate>
+    <arizen-dialog>
+        <h2 slot=headerText>List of Addresses</h2>
+        <div slot=content class=addrSelectList>
+       </div>
+    </arizen-dialog>
+</template>
+
+<!-- TODO this doesn't belong here -->
+<template id=aboutDialogTemplate>
+    <arizen-dialog>
+        <h2 slot=headerText>About Arizen</h2>
+        <div slot=content class=aboutDialogContent>
+            <div class=form>
+                <div>Homepage</div>
+                <div class=aboutHomepage></div>
+                <div>Version</div>
+                <div class=aboutVersion></div>
+                <div>License</div>
+                <div class=aboutLicense></div>
+                <div>Authors</div>
+                <div class=aboutAuthors></div>
+            </div>
+            <a class=zenLogo href='https://zensystem.io'><img src='resources/zen_icon.png' /></a>
+        </div>
+    </arizen-dialog>
+</template>
+
+<!-- TODO this doesn't belong here -->
+<template id=settingsDialogTemplate>
+    <arizen-dialog>
+        <h2 slot=headerText>Settings</h2>
+        <div slot=content class=settingsDialogContent>
+            <div class=form>
+                <label for=settingsTxHistory>Transaction limit</label>
+                <span class=formInput><input type=number name=settingsTxHistory class=settingsTxHistory min=0 /> items</span>
+                <label for=settingsExplorerUrl>ZEN Explorer URL</label>
+                <input type=text name=settingsExplorerUrl class=settingsExplorerUrl />
+                <label for=settingsApiUrls title="Place one URL per line">API URLs</label>
+                <textarea type=text name=settingsApiUrls class=settingsApiUrls rows=5></textarea>
+            </div>
+            <div class=formButtons>
+                <button class=settingsSave>Save</button>
+            </div>
+        </div>
+    </arizen-dialog>
+</template>
+
+<div class=body>
+
+<header class='panel'>
+    <div class=headerLeft>
+        <span><button onclick=showSettingsDialog()>Settings</button></span>
+        <span><button onclick=showAboutDialog()>About</button></span>
+    </div>
+    <div class=headerCenter>
+        <a class=arizenTitle href='https://github.com/ZencashOfficial/arizen'>Arizen</a>
+        <a class=zenLogo href='https://zensystem.io'><img id=zenImg src='resources/zen_icon.png' /></a>
+    </div>
+    <div class=headerRight>
+        <span><button id=refreshButton>Refresh</button></span>
+        <span><button onclick='logout()'>Logout</button></span>
+        <span><button onclick='exitApp()'>Exit</button></span>
+    </div>
+</header>
+
+<x-tabs class='walletOps panel'>
+    <div class=walletOpsTabs>
+        <button data-tab-button=overview selected>Overview</button>
+        <button id=depositTabButton data-tab-button=deposit>Deposit</button>
+        <button id=withdrawTabButton data-tab-button=withdraw>Withdraw</button>
+    </div>
+    <div data-tab-content=overview class='walletOverview tabContent'>
+        <div class='tabContentHeader walletOverviewControl'>
+            <span class=tabContentHeaderLabel>List of Addresses</span>
+            <input type=checkbox id=actionShowZeroBalances name=actionShowZeroBalances>
+            <label for=actionShowZeroBalances>Show zero balances</label>
+            <button id=createNewAddrButton class=smallButton>Get a new address</button>
+        </div>
+        <template id=addrItemTemplate>
+            <div class=addrItem>
+                <div class=addrInfo>
+                    <div class=addrBalance><span class=addrBalanceAmount></span> ZEN</div>
+                    <div class=addrNameLine>
+                        <img class=addrDetailButton src="resources/About_icon_(The_Noun_Project).svg" />
+                        <span class=addrName>Unnamed address</span>
+                    </div>
+                    <span class="addrText monospace"></span>
+                </div>
+                <div class=addrControl>
+                    <button class='button addrControlButton addrDepositButton'
+                        title='Deposit to this address'>⬇</button>
+                    <button class='button addrControlButton addrWithdrawButton'
+                        title='Withdraw from this address'>⬆</button>
+                </div>
+            </div>
+        </template>
+        <div id=addrList class=tabContentBody>
+        </div>
+    </div>
+    <div data-tab-content=deposit class='walletDeposit tabContent'>
+        <div class='tabContentHeader tabContentHeaderLabel'>
+            Deposit
+        </div>
+        <div class='tabContentBody depositBody'>
+            <div class=depositHelp>
+                Click the green button next to the desired address for deposit.
+            </div>
+            <div class=form id=depositForm>
+                <button id=depositToButton>To</button>
+                <input id=depositToAddr name=depositToAddr class=monospace type=text />
+                <div>Amount</div>
+                <input class=amountInput id=depositAmount name=depositAmount type=number value=0.00000000 min=0 step=0.1 />
+            </div>
+            <span id=depositMsg>&nbsp;</span>
+            <div>
+            <img id=depositQrcodeImg  src=""/>
+        </div>
+        </div>
+    </div>
+    <div data-tab-content=withdraw class='walletWithdraw tabContent'>
+        <div class='tabContentHeader tabContentHeaderLabel'>
+            Withdraw
+        </div>
+        <div class='tabContentBody withdrawBody'>
+            <div class=withdrawHelp>
+                Click the red button next to the desired address for withdrawal.
+            </div>
+            <div class=form id=withdrawForm>
+                <div>Available balance</div>
+                <div id=withdrawAvailBalance><span></span> ZEN</div>
+                <button id=withdrawFromButton>From</button>
+                <input id=withdrawFromAddr name=withdrawFromAddr class=monospace type=text />
+                <button id=withdrawToButton>To</button>
+                <input id=withdrawToAddr name=withdrawToAddr class=monospace type=text />
+                <div>Amount</div>
+                <input class=amountInput id=withdrawAmount name=withdrawAmount type=number value=0.00000000 min=0 step=0.1 />
+                <div>Transaction fee</div>
+                <input class=amountInput id=withdrawFee name=withdrawFee type=number value=0.00010000 min=0 step=0.10000000 />
+            </div>
+            <span id=withdrawMsg>&nbsp;</span>
+            <button id=withdrawButton>Withdraw</button>
+            <div class='withdrawStatusMessage'>
+                <div id=withdrawStatusTitle class=withdrawStatusBad></div>
+                <div id=withdrawStatusBody></div>
+            </div>
+        </div>
+    </div>
+</x-tabs>
+
+<div class='txPanel panel'>
+    <div class=txPanelHeader>
+        <span>Transaction History</span>
+    </div>
+    <template id=txItemTemplate>
+        <div class=txItem>
+            <span class=txDate></span>
+            <div class=filler></div>
+            <span class=txBalance><span class=txBalanceAmount></span> ZEN</span>
+        </div>
+    </template>
+    <template id=txMempoolItemTemplate>
+        <div class='txItem txMempoolItem'>
+            <span class="warning txMempoolItemTitle">UNCONFIRMED</span>
+            <div class=filler></div>
+            <span class=txBalance><span class=txBalanceAmount></span> ZEN</span>
+        </div>
+    </template>
+    <div id=txList>
+    </div>
+</div>
+
+<footer class='statusLine panel'>
+Total balance: <span id=totalBalance><span id=totalBalanceAmount>0.00000000</span> ZEN</span>
+</footer>
+
+</div>
+
+<script src='zcommon.js'></script>
+<script src='zwallet.js'></script>
+
+</body>
+</html>

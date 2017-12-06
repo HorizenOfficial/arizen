@@ -12,7 +12,6 @@ function escKeyDown(e) {
     }
 }
 
-
 function clearMessageValue(){
     if (document.getElementById("sendToAddress").value === "Message") {
         document.getElementById("sendToAddress").value = "";
@@ -58,12 +57,12 @@ function deleteContactDialog(edit=false) {
 }
 
 function deleteContact() {
-    // Todo Look for contact with specific ID
+    // TODO: Look for contact with specific ID
     closeDialog("deleteContactDialog");
 }
 
 function saveContact() {
-    // Todo Look for contact with specific ID
+    // TODO: Look for contact with specific ID
     closeDialog("addContactDialog");
 }
 

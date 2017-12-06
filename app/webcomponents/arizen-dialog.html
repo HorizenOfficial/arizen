@@ -1,0 +1,78 @@
+<template id=arizen-dialog-template>
+    <style>
+        @import "resources/zstyle.css";
+
+        dialog {
+            padding: 0;
+            margin: auto;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            max-width: 90vw;
+        }
+
+        dialog::backdrop {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .buttons {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            display: flex;
+        }
+
+        .content {
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            max-height: 90vh; /* WTF? Making scrollbar where I want it rquires magic. */
+        }
+    </style>
+
+    <dialog>
+        <div class=buttons>
+            <button id=closeButton>X</button>
+        </div>
+        <div class=content>
+            <header>
+                <h2><slot name=headerText></slot></h2>
+            </header>
+            <hr/>
+            <slot name=content></slot>
+        </div>
+    </dialog>
+</template>
+
+<script>
+const ArizenDialogElement = (() => {
+    const doc = document.currentScript.ownerDocument;
+
+    const cls = class extends HTMLElement {
+        constructor() {
+            super();
+            const template = doc.getElementById("arizen-dialog-template");
+            const dom = template.content.cloneNode(true);
+            const shadowRoot = this.attachShadow({mode: "open"});
+            shadowRoot.appendChild(dom);
+            this._dialog = shadowRoot.querySelector("dialog");
+            shadowRoot.getElementById("closeButton").addEventListener("click", () => this.close());
+        }
+
+        showModal() {
+            this._dialog.showModal();
+        }
+
+        close() {
+            this._dialog.close();
+            this.dispatchEvent(new Event("close", {bubbles: true, composed: false}));
+        }
+    }
+
+    return cls;
+})();
+
+customElements.define("arizen-dialog", ArizenDialogElement);
+</script>
