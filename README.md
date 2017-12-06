@@ -4,13 +4,15 @@
 [![Code Climate][codeclimate-img]][codeclimate-url]
 [![Coverage Status][testcoverage-img]][testcoverage-url]
 
-# Bug fixes in Arizen wallet v1.0.2
+
+# Version History
+## v1.1.0
 - []
 - []
 - []
 - []
 
-# Bug fixes in Arizen wallet v1.0.1
+## v1.0.1
 - [x] added possibility to chose one of your wallet in "Send" "To" section
 - [x] Fixed bug with wrong transaction ordering in transaction history section
 - [x] Fixed bug with importing wallet on "Create new wallet" forms, for `.uawd` and `.awd` files
@@ -19,7 +21,7 @@
 - [x] Fixed auto-update feature on Windows
 - [x] Only `AppImage` format is supported for Linux (only this format can be auto-updated)
 
-# What is and can do Arizen wallet in v1.0.0 version
+## v1.0.0
 - [x] You can download Arizen wallet from Release section from Github right now 
 - [x] You can create multiple separate accounts
 - [x] Password protected locally stored accounts
@@ -34,7 +36,7 @@
 - [x] Needs connection to the insight and API (you can change servers in settings)
 - [x] Arizen is API wallet
 
-# How to create distribution
+## How to create distribution
 npm run dist
 
 # Screenshots

@@ -1,6 +1,6 @@
 {
   "name": "Arizen",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Wallet for ZenCash (ZEN)",
   "main": "app/main.js",
   "scripts": {
@@ -98,33 +98,33 @@
     }
   },
   "dependencies": {
-    "bip32-utils": "^0.10.2",
-    "bitcoinjs-lib": "^3.3.0",
+    "bip32-utils": "^0.11.0",
+    "bitcoinjs-lib": "^3.3.1",
     "electron-debug": "^1.4.0",
     "electron-download": "^4.1.0",
-    "electron-packager": "^9.1.0",
+    "electron-packager": "^10.1.0",
     "electron-simple-updater": "^1.2.3",
-    "electron-tabs": "^0.7.3",
+    "electron-tabs": "^0.9.0",
     "errors": "^0.3.0",
-    "fs-extra": "^4.0.2",
+    "fs-extra": "^4.0.3",
     "immutable": "^3.8.2",
-    "luxon": "^0.0.21",
+    "luxon": "^0.2.5",
     "node-fetch": "^2.0.0-alpha.9",
-    "npm": "^5.5.1",
+    "npm": "^5.6.0",
     "password-hash": "^1.2.2",
     "qrcode": "^1.0.0",
     "request": "^2.83.0",
     "sql.js": "^0.4.0",
-    "zencashjs": "^1.1.7-a"
+    "zencashjs": "^1.1.9-a"
   },
   "devDependencies": {
-    "ajv": "^5.4.0",
+    "ajv": "^5.5.1",
     "coveralls": "^3.0.0",
     "devtron": "^1.4.0",
     "electron": "^1.8.1",
-    "electron-builder": "19.45.4",
-    "electron-builder-squirrel-windows": "19.45.0",
-    "flow-bin": "^0.59.0"
+    "electron-builder": "19.48.2",
+    "electron-builder-squirrel-windows": "19.48.0",
+    "flow-bin": "^0.60.1"
   },
   "optionalDependencies": {
     "electron-installer-debian": "^0.7.0",
