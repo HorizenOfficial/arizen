@@ -249,16 +249,34 @@ function getNewAddress(name) {
     return { addr: addr, name: name, lastbalance: 0 };
 }
 
+function tableExists(table) {
+    return sqlSelectColumns(`select count(*) from sqlite_master where type = 'table' and name = '${table}'`)[0][0] == 1;
+}
+
 function loadSettings() {
-    const b64settings = sqlSelectColumns("select value from settings where name = 'settings'");
+    /* Remove settings row from settings table. Old versions chceks row count in
+     * the table and inserts missing settings if the count isn't 6. By inserting
+     * another setting we fucked up its fucked up upgrade logic. This only
+     * happens in old versions after new version (f422bfff) run. */
+    if (tableExists("settings"))
+        sqlRun("delete from settings where name = 'settings'");
+
+    /* In future we'll ditch SQLite and use encrypted JSONs for storage. For now
+     * store settings in temporary table "new_settings". */
+    if (!tableExists("new_settings"))
+        sqlRun("create table new_settings (name text unique, value text)");
+
+    const b64settings = sqlSelectColumns("select value from new_settings where name = 'settings'");
     if (b64settings.length == 0)
         return defaultSettings;
+
+    /* Later we'll want to merge user settings with default settings. */
     return JSON.parse(Buffer.from(b64settings[0][0], "base64").toString("ascii"));
 }
 
 function saveSettings(settings) {
     const b64settings = Buffer.from(JSON.stringify(settings)).toString("base64");
-    sqlRun("insert or replace into settings (name, value) values ('settings', ?)", [b64settings]);
+    sqlRun("insert or replace into new_settings (name, value) values ('settings', ?)", [b64settings]);
     userInfo.dbChanged = true;
 }
 
