@@ -981,8 +981,13 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
         // Get previous transactions
         let zenApi = settings.apiUrls[0];
         if (!zenApi) {
+            console.log("No Zen api in settings");
             return;
         }
+        if ((zenApi.substr(zenApi.length - 1)) === "/"){
+            zenApi = zenApi.substr(0, zenApi.length - 1);
+        }
+
         const prevTxURL = zenApi + "/addr/" + fromAddress + "/utxo";
         const infoURL = zenApi + "/status?q=getInfo";
         const sendRawTxURL = zenApi + "/tx/send";
