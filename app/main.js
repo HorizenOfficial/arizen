@@ -961,7 +961,7 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
         let privateKey = sqlRes[0].values[0][1];
 
         // Get previous transactions
-        let zenApi = settings.apiUrls[1];
+        let zenApi = settings.apiUrls[0];
         if (!zenApi) {
             return;
         }
