@@ -6,11 +6,11 @@
 
 
 # Version History
+## v1.1.1
+- [x] Fixed auto-updater issue
+
 ## v1.1.0
-- []
-- []
-- []
-- []
+- [x] New GUI and improved functionality
 
 ## v1.0.1
 - [x] added possibility to chose one of your wallet in "Send" "To" section
@@ -22,10 +22,10 @@
 - [x] Only `AppImage` format is supported for Linux (only this format can be auto-updated)
 
 ## v1.0.0
-- [x] You can download Arizen wallet from Release section from Github right now 
+- [x] You can download Arizen wallet from Release section from Github right now
 - [x] You can create multiple separate accounts
 - [x] Password protected locally stored accounts
-- [x] All data are encrypted (any of other wallets does not have this) and stored only on your HDD 
+- [x] All data are encrypted (any of other wallets does not have this) and stored only on your HDD
 - [x] Detailed info about address and transaction history
 - [x] You can import / export wallet to encrypted `.awd` / decrypted `.uawd` Arizen's file
 - [x] Desktop notifications when balance has been changed
@@ -40,9 +40,12 @@
 npm run dist
 
 # Screenshots
-![Overview of addresses](https://i.imgur.com/6RpYMnJ.png)
-![Deposit view](https://i.imgur.com/E6KKabM.png)
-![Withdrawal view](https://i.imgur.com/nSXmAZK.png)
+![Overview of walet](https://i.imgur.com/rQKZ3FL.png)
+![Overview of walet 2](https://i.imgur.com/wm4SXkY.png)
+![List of addresses](https://i.imgur.com/zCxibuz.png)
+![Transaction detail](https://i.imgur.com/4oFREfR.png)
+![Settings](https://i.imgur.com/TFfrQMD.png)
+![About](https://i.imgur.com/Vb3ao6m.png)
 
 [david-img]: https://david-dm.org/ZencashOfficial/arizen.svg?style=flat-square
 [david-url]: https://david-dm.org/ZencashOfficial/arizen
