@@ -6,6 +6,9 @@
 
 
 # Version History
+## v1.1.1
+- [x] Fixed auto-updater issue
+
 ## v1.1.0
 - [x] New GUI and improved functionality
 
@@ -19,10 +22,10 @@
 - [x] Only `AppImage` format is supported for Linux (only this format can be auto-updated)
 
 ## v1.0.0
-- [x] You can download Arizen wallet from Release section from Github right now 
+- [x] You can download Arizen wallet from Release section from Github right now
 - [x] You can create multiple separate accounts
 - [x] Password protected locally stored accounts
-- [x] All data are encrypted (any of other wallets does not have this) and stored only on your HDD 
+- [x] All data are encrypted (any of other wallets does not have this) and stored only on your HDD
 - [x] Detailed info about address and transaction history
 - [x] You can import / export wallet to encrypted `.awd` / decrypted `.uawd` Arizen's file
 - [x] Desktop notifications when balance has been changed
