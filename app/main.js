@@ -26,6 +26,9 @@ const {List} = require("immutable");
 // FIXME: comment this for release versions!
 //require('electron-debug')();
 
+// Uncomment if you want to run in production
+//process.env.NODE_ENV !== 'production'
+
 updater.init({checkUpdateOnStart: true, autoDownload: true});
 attachUpdaterHandlers();
 
@@ -443,6 +446,26 @@ function updateMenuAtLogin() {
     ];
 
     setDarwin(template);
+    //
+    if (process.env.NODE_ENV !== 'production'){
+      template.push({
+        label: 'Developer Tools',
+        submenu:[
+          {
+            label: 'Toggle DevTools',
+            accelerator: process.platform == 'darwin' ? 'Command+I':
+            'Ctrl+I',
+            click(item, focusedWindow){
+              focusedWindow.toggleDevTools();
+            }
+          },
+          {
+            role: 'reload'
+          }
+        ]
+      })
+
+    }
     Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 
@@ -470,6 +493,8 @@ function updateMenuAtLogout() {
 function createWindow() {
     updateMenuAtLogout();
     mainWindow = new BrowserWindow({width: 1000, height: 730, resizable: true, icon: "resources/zen_icon.png"});
+
+    //mainWindow.webContents.openDevTools();
 
     if (fs.existsSync(getWalletPath())) {
         mainWindow.loadURL(url.format({
@@ -830,7 +855,7 @@ ipcMain.on("refresh-wallet", function (event) {
         resp.autorefresh = settings.autorefresh;
     }
 
-    event.sender.send("refresh-wallet-response", JSON.stringify(resp));    
+    event.sender.send("refresh-wallet-response", JSON.stringify(resp));
 });
 
 ipcMain.on("rename-wallet", function (event, address, name) {
@@ -1085,6 +1110,8 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
         });
     }
 });
+
+
 
 // Unused
 
