@@ -16,6 +16,16 @@ let num = false;
 let ide = false;
 let spec = false;
 
+document.head.insertBefore(loadLangFile(), document.head.childNodes[0]);
+
+
+function loadLangTexts()
+{
+    document.getElementById("username_label").textContent = lang.registration.username;
+    document.getElementById("pswd_label").innerHTML = lang.registration.password;
+    document.getElementById("pswd_again_label").innerHTML = lang.registration.password_again;
+}
+
 function checkLoginInfo() {
     document.getElementById("btSubmit").disabled = !(usr && len && lett && capl && num && ide && spec);
 }

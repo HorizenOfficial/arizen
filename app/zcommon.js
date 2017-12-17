@@ -133,6 +133,20 @@ function showSettingsDialog() {
     });
 }
 
+function loadLangFile() {
+    let jsElem = document.createElement("script");
+    jsElem.type = "application/javascript";
+
+    jsElem.src = "lang/lang_en.js";
+    /*
+    if (settings.hasOwnProperty("lang")) {
+        jsElem.src = "lang/lang_" + settings.lang + ".js";
+    } else {
+        jsElem.src = "lang/lang_cs.js";
+    }*/
+    return jsElem;
+}
+
 function openZenExplorer(path) {
     openUrl(settings.explorerUrl + "/" + path);
 }
