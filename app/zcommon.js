@@ -179,28 +179,24 @@ function showGeneratePaperWalletDialog() {
         dialog.querySelector(".zAddr").textContent = zAddr;
 
 
-        // Needs to be improved - Wait for image - Do not wirte in disk
+        var QRCode = require('qrcode');
+
         // z Address QR Image
-        let img_zAddr = qr.image(zAddr, { type: 'png' });
-        var stream_z = img_zAddr.pipe(fs.createWriteStream("MyzAddrQR.png"));
-        stream_z.on('close',function(){
-          console.log('QR Done - z Address');
-          var imageParent = document.getElementById("qrImagePublic");
-          imageParent.innerHTML = "<img src='../MyzAddrQR.png'/>";
-        });
+
+        var canvasZ = document.getElementById('canvas-z')
+
+        QRCode.toCanvas(canvasZ, zAddr, function (error) {
+          if (error) console.error(error)
+          console.log('success!');
+        })
 
         // Private Key QR Image
-        let img_privateKey = qr.image(privateKey, { type: 'png' });
-        var stream_p = img_privateKey.pipe(fs.createWriteStream("MyprivateKeyQR.png"));
-        stream_p.on('close',function(){
-          console.log('QR Done - Private Key');
-          var imageParent = document.getElementById("qrImagePrivate");
-          imageParent.innerHTML = "<img src='../MyprivateKeyQR.png'/>";
-        });
+        var canvasPriv = document.getElementById('canvas-priv')
 
-        // console.log(fs.existsSync("./MyzAddrQR.png"));
-        // console.log(fs.existsSync("./MyprivateKeyQR.png"));
-
+        QRCode.toCanvas(canvasPriv, privateKey, function (error) {
+          if (error) console.error(error)
+          console.log('success!');
+        })
 
 
         // Print to PDF
