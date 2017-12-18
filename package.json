@@ -111,7 +111,6 @@
     "luxon": "^0.2.5",
     "node-fetch": "^2.0.0-alpha.9",
     "password-hash": "^1.2.2",
-    "qr-image": "^3.2.0",
     "qrcode": "^1.0.0",
     "request": "^2.83.0",
     "sql.js": "^0.4.0",
