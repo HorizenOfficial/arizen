@@ -249,7 +249,7 @@ function getNewAddress(name) {
     userInfo.walletDb.run("INSERT INTO wallet VALUES (?,?,?,?,?)", [null, pk, addr, 0, name]);
     userInfo.dbChanged = true;
 
-    return { addr: addr, name: name, lastbalance: 0 };
+    return { addr: addr, name: name, lastbalance: 0, pk: pk, wif: privateKeys[0]};
 }
 
 function tableExists(table) {
@@ -1112,6 +1112,34 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
 });
 
 
+ipcMain.on("export-pdf",  function(event) {
+   const pdfPath = './printedPDF.pdf';
+  const win = BrowserWindow.fromWebContents(event.sender);
+  console.log('print-to-pdf received')
+
+    win.webContents.printToPDF({}, function(error,data){
+      fs.writeFile(pdfPath, data, function(err){
+        if (err) return console.log(err.message)
+        //shell.openExternal('file://'+ pdfPath);
+        //event.sender.send('wrote-pdf', pdfPath);
+        event.sender.send('export-pdf-done', 'PDF exported')
+    });
+  });
+  // });
+});
+
+
+ipcMain.on("get-paper-address-wif",  function(event,addressInWallet, Name) {
+    if (!addressInWallet){
+      let wif_tmp = generateNewAddress(1, userInfo.pass);
+      let wif = wif_tmp[0];
+      event.returnValue = wif;
+  } else if (addressInWallet){
+    let resp = getNewAddress(Name);
+    //ipcMain.send("generate-wallet-response", JSON.stringify(resp));
+    event.returnValue = resp.wif;
+  }
+});
 
 // Unused
 

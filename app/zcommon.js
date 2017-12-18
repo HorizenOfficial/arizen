@@ -5,6 +5,7 @@
 
 const {DateTime} = require("luxon");
 
+
 function logout() {
     ipcRenderer.send("do-logout");
     location.href = "./login.html";
@@ -82,6 +83,7 @@ function createLink(url, text) {
     return link;
 }
 
+
 // TODO this doesn't belong here
 function showAboutDialog() {
     const pkg = require("../package.json");
@@ -136,3 +138,98 @@ function showSettingsDialog() {
 function openZenExplorer(path) {
     openUrl(settings.explorerUrl + "/" + path);
 }
+
+// TODO this doesn't belong here
+function showGeneratePaperWalletDialog() {
+    // const pkg = require("../package.json");
+    const zencashjs = require("zencashjs");
+    var qr = require('qr-image');
+    var fs = require('fs');
+    // /const path = require("path");
+
+    showDialogFromTemplate("GeneratePaperWalletDialogTemplate", dialog => {
+
+      dialog.querySelector(".generateNewWallet").addEventListener("click", () => {
+        let addressInWallet = document.getElementById("Add-Paper-Wallet-Arizen").checked;
+        console.log(addressInWallet);
+
+        let NewWalletNamePaper = document.getElementById("NewWalletNamePaper").value;
+        console.log(NewWalletNamePaper);
+
+
+
+        // Clear Checkbox and Button from HTML
+        let ButtonArea = document.getElementById("CreateButtonCheck");
+        ButtonArea.innerHTML = '';
+
+        dialog.querySelector(".namezAddr").textContent = "Public Key";
+        dialog.querySelector(".namePrivateKey").textContent = "Private Key";
+        dialog.querySelector(".NewWalletNamePaperLabel").innerHTML = "Name: " + NewWalletNamePaper;
+
+
+
+
+        let wif = ipcRenderer.sendSync("get-paper-address-wif",addressInWallet, NewWalletNamePaper);
+        console.log('Done New Add');
+        let privateKey = zencashjs.address.WIFToPrivKey(wif);
+        let pubKey = zencashjs.address.privKeyToPubKey(privateKey, true);
+        let zAddr = zencashjs.address.pubKeyToAddr(pubKey)
+
+        dialog.querySelector(".keyPrivate").textContent = privateKey;
+        dialog.querySelector(".zAddr").textContent = zAddr;
+
+
+        // Needs to be improved - Wait for image - Do not wirte in disk
+        // z Address QR Image
+        let img_zAddr = qr.image(zAddr, { type: 'png' });
+        var stream_z = img_zAddr.pipe(fs.createWriteStream("MyzAddrQR.png"));
+        stream_z.on('close',function(){
+          console.log('QR Done - z Address');
+          var imageParent = document.getElementById("qrImagePublic");
+          imageParent.innerHTML = "<img src='../MyzAddrQR.png'/>";
+        });
+
+        // Private Key QR Image
+        let img_privateKey = qr.image(privateKey, { type: 'png' });
+        var stream_p = img_privateKey.pipe(fs.createWriteStream("MyprivateKeyQR.png"));
+        stream_p.on('close',function(){
+          console.log('QR Done - Private Key');
+          var imageParent = document.getElementById("qrImagePrivate");
+          imageParent.innerHTML = "<img src='../MyprivateKeyQR.png'/>";
+        });
+
+        // console.log(fs.existsSync("./MyzAddrQR.png"));
+        // console.log(fs.existsSync("./MyprivateKeyQR.png"));
+
+
+
+        // Print to PDF
+        var PDFButton = document.createElement("BUTTON");
+        var t = document.createTextNode("Export PDF");       // Create a text node
+        PDFButton.appendChild(t);
+        dialog.querySelector(".PDFButton").appendChild(PDFButton)
+
+        dialog.querySelector(".PDFButton").addEventListener("click", () => {
+          //const {ipcRenderer} = require("electron");
+          ipcRenderer.send("export-pdf");
+          //dialog.close()
+          console.log('PDF export command sent')
+          console.log('=============================');
+          fs.unlinkSync('./MyzAddrQR.png');
+          console.log('Deleted - MyzAddrQR.png');
+          fs.unlinkSync('./MyprivateKeyQR.png');
+          console.log('Deleted - MyprivateKeyQR.png');
+          dialog.close()
+        });
+
+      });
+
+    });
+}
+
+(() => {
+    const {ipcRenderer} = require("electron");
+    ipcRenderer.on("export-pdf-done", (event,arg)=> {
+    console.log(arg);
+    });
+})();

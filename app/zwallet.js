@@ -34,6 +34,7 @@ logIpc("update-wallet-balance");
 logIpc("verify-login-response");
 logIpc("write-login-response");
 logIpc("zz-get-wallets");
+logIpc("export-pdf");
 
 let addrListNode = document.getElementById("addrList");
 const txListNode = document.getElementById("txList");
