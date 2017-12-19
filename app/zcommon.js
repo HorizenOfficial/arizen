@@ -31,6 +31,10 @@ function formatBalance(balance) {
     return balance.toFixed(8);
 }
 
+function formatFiatBalance(balance) {
+    return balance.toFixed(2);
+}
+
 function formatEpochTime(epochSeconds) {
     return DateTime.fromMillis(epochSeconds).toLocaleString(DateTime.DATETIME_MED);
 }

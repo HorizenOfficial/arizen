@@ -24,7 +24,7 @@ const {List} = require("immutable");
 
 // Press F12 to open the DevTools. See https://github.com/sindresorhus/electron-debug.
 // FIXME: comment this for release versions!
-//require('electron-debug')();
+require('electron-debug')();
 
 updater.init({checkUpdateOnStart: true, autoDownload: true});
 attachUpdaterHandlers();
@@ -830,7 +830,7 @@ ipcMain.on("refresh-wallet", function (event) {
         resp.autorefresh = settings.autorefresh;
     }
 
-    event.sender.send("refresh-wallet-response", JSON.stringify(resp));    
+    event.sender.send("refresh-wallet-response", JSON.stringify(resp));
 });
 
 ipcMain.on("rename-wallet", function (event, address, name) {

@@ -38,6 +38,7 @@ logIpc("zz-get-wallets");
 let addrListNode = document.getElementById("addrList");
 const txListNode = document.getElementById("txList");
 const totalBalanceNode = document.getElementById("totalBalance");
+const totalBalanceFiatNode = document.getElementById("totalBalanceFiat");
 const depositTabButton = document.getElementById("depositTabButton");
 const depositToButton = document.getElementById("depositToButton");
 const depositToAddrInput = document.getElementById("depositToAddr");
@@ -130,6 +131,13 @@ function setBalanceText(balanceNode, balance) {
         balanceNode.classList.add("positive");
     else
         balanceNode.classList.remove("positive");
+}
+
+function setFiatBalanceText(totalBalanceFiatNode, balanceZEN) {
+    const balanceFiatAmountNode = totalBalanceFiatNode.firstElementChild;
+    let fiat = 'USD' //FIXME: Get from settings the desired fiat currency
+    let balance = 1.0 * balanceZEN; //zenToFiat(balanceZEN, fiat);
+    balanceFiatAmountNode.textContent = formatFiatBalance(balance) + " " + fiat;
 }
 
 function createAddrItem(addrObj) {
@@ -354,6 +362,9 @@ function addTransactions(txs, newTx = false) {
 
 function setTotalBalance(balance) {
     setBalanceText(totalBalanceNode, balance);
+    let balanceZEN = balance;
+    setFiatBalanceText(totalBalanceFiatNode,balanceZEN);
+    // GS: Add SetBalance for fiat here
 }
 
 function toggleZeroBalanceAddrs() {
