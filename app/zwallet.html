@@ -121,23 +121,26 @@
 
             <div class=form id="NewAddressPrintArea">
               <label id="NewWalletNamePaperLabel" class=NewWalletNamePaperLabel></label>
-              <table style="width:80%">
+              <table style="width:100%">
                 <tr>
-                  <th class=namezAddr></th>
-                  <th class=namePrivateKey></th>
+                  <!-- <th class=namezAddr></th>
+                  <th class=namePrivateKey></th> -->
+                  <th><label id="NewWalletNamePaperLabel" class=NewWalletNamePaperLabel style="font-weight:bold"></label></th>
                 </tr>
                 <tr>
-                  <td class=qrPrivate></td>
+                  <td class=namePrivateKey></td>
+                  <td class=qrPrivate><canvas id="canvas-priv"></canvas></td>
                   <td class=keyPrivate ></td>
                 </tr>
                 <tr>
-                  <td class=qrzAddr></td>
+                  <td class=namezAddr></td>
+                  <td class=qrzAddr><canvas id="canvas-z"></canvas></td>
                   <td class=zAddr></td>
                 </tr>
               </table>
 
-              <canvas id="canvas-z"></canvas>
-              <canvas id="canvas-priv"></canvas>
+              <!-- <canvas id="canvas-z"></canvas> -->
+              <!-- <canvas id="canvas-priv"></canvas> -->
 
             <a id="qrImagePublic" class="qrImagePublic"></a>
             <a id="qrImagePrivate" class="qrImagePrivate"></a>

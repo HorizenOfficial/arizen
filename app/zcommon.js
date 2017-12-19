@@ -141,7 +141,7 @@ function openZenExplorer(path) {
 
 // TODO this doesn't belong here
 function showGeneratePaperWalletDialog() {
-    const zencashjs = require("zencashjs");    
+    const zencashjs = require("zencashjs");
     var fs = require('fs');
 
 
@@ -162,7 +162,9 @@ function showGeneratePaperWalletDialog() {
 
         dialog.querySelector(".namezAddr").textContent = "Public Key";
         dialog.querySelector(".namePrivateKey").textContent = "Private Key";
-        dialog.querySelector(".NewWalletNamePaperLabel").innerHTML = "Name: " + NewWalletNamePaper;
+        if (NewWalletNamePaper){
+          dialog.querySelector(".NewWalletNamePaperLabel").innerHTML = "Name: " + NewWalletNamePaper;
+        }
 
 
 
@@ -204,16 +206,8 @@ function showGeneratePaperWalletDialog() {
         dialog.querySelector(".PDFButton").appendChild(PDFButton)
 
         dialog.querySelector(".PDFButton").addEventListener("click", () => {
-          //const {ipcRenderer} = require("electron");
           ipcRenderer.send("export-pdf");
-          //dialog.close()
           console.log('PDF export command sent')
-          console.log('=============================');
-          // fs.unlinkSync('./MyzAddrQR.png');
-          // console.log('Deleted - MyzAddrQR.png');
-          // fs.unlinkSync('./MyprivateKeyQR.png');
-          // console.log('Deleted - MyprivateKeyQR.png');
-          //dialog.close()
         });
 
       });

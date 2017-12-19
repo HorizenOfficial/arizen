@@ -24,7 +24,7 @@ const {List} = require("immutable");
 
 // Press F12 to open the DevTools. See https://github.com/sindresorhus/electron-debug.
 // FIXME: comment this for release versions!
-//require('electron-debug')();
+require('electron-debug')();
 
 // Uncomment if you want to run in production
 //process.env.NODE_ENV !== 'production'
@@ -1107,10 +1107,8 @@ ipcMain.on("export-pdf",  function(event) {
 
   dialog.showSaveDialog(win, {title: 'Save',filters: [{name: "PDF", extensions: ['.pdf']}], defaultPath: "C:/NewWallet.pdf"},(fileName)=> {
     if(fileName === undefined){
-      //alert('No filename given');
       return;
     }
-    //fileName = fileName + '.pdf';
       win.webContents.printToPDF({}, function(error,data){
         fs.writeFile(fileName, data, function(err){
           if (err) return console.log(err.message)
