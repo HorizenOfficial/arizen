@@ -1113,19 +1113,34 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
 
 
 ipcMain.on("export-pdf",  function(event) {
-   const pdfPath = './printedPDF.pdf';
   const win = BrowserWindow.fromWebContents(event.sender);
+  const app = require("electron");
+  const dialog = app.dialog;
   console.log('print-to-pdf received')
 
-    win.webContents.printToPDF({}, function(error,data){
-      fs.writeFile(pdfPath, data, function(err){
-        if (err) return console.log(err.message)
-        //shell.openExternal('file://'+ pdfPath);
-        //event.sender.send('wrote-pdf', pdfPath);
-        event.sender.send('export-pdf-done', 'PDF exported')
+//   if (process.platform === 'win32'){
+//     defaultPathPDF = "C:/NewWallet.pdf"
+//   } else {
+//     usernameOS = process.env["USER"];
+//     defaultPathPDF = '/home/'+usernameOS+'/NewWallet.pdf'
+//   };
+//
+
+  dialog.showSaveDialog(win, {title: 'Save',filters: [{name: "NewWallet", extensions: ['.pdf']}],(fileName)=> { //, defaultPath: "C:/NewWallet.pdf"}
+    if(fileName === undefined){
+      alert('No filename given');
+      return;
+    }
+    //fileName = fileName + '.pdf';
+      win.webContents.printToPDF({}, function(error,data){
+        fs.writeFile(fileName, data, function(err){
+          if (err) return console.log(err.message)
+          shell.openExternal('file://'+ fileName);
+          //event.sender.send('wrote-pdf', pdfPath);
+          event.sender.send('export-pdf-done', 'PDF exported')
+      });
     });
-  });
-  // });
+   });
 });
 
 

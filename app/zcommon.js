@@ -141,10 +141,9 @@ function openZenExplorer(path) {
 
 // TODO this doesn't belong here
 function showGeneratePaperWalletDialog() {
-    // const pkg = require("../package.json");
-    const zencashjs = require("zencashjs");
+    const zencashjs = require("zencashjs");    
     var fs = require('fs');
-    // /const path = require("path");
+
 
     showDialogFromTemplate("GeneratePaperWalletDialogTemplate", dialog => {
 
@@ -210,11 +209,11 @@ function showGeneratePaperWalletDialog() {
           //dialog.close()
           console.log('PDF export command sent')
           console.log('=============================');
-          fs.unlinkSync('./MyzAddrQR.png');
-          console.log('Deleted - MyzAddrQR.png');
-          fs.unlinkSync('./MyprivateKeyQR.png');
-          console.log('Deleted - MyprivateKeyQR.png');
-          dialog.close()
+          // fs.unlinkSync('./MyzAddrQR.png');
+          // console.log('Deleted - MyzAddrQR.png');
+          // fs.unlinkSync('./MyprivateKeyQR.png');
+          // console.log('Deleted - MyprivateKeyQR.png');
+          //dialog.close()
         });
 
       });
