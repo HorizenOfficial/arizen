@@ -143,7 +143,6 @@ function openZenExplorer(path) {
 function showGeneratePaperWalletDialog() {
     // const pkg = require("../package.json");
     const zencashjs = require("zencashjs");
-    var qr = require('qr-image');
     var fs = require('fs');
     // /const path = require("path");
 
