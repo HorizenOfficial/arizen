@@ -446,26 +446,6 @@ function updateMenuAtLogin() {
     ];
 
     setDarwin(template);
-    //
-    if (process.env.NODE_ENV !== 'production'){
-      template.push({
-        label: 'Developer Tools',
-        submenu:[
-          {
-            label: 'Toggle DevTools',
-            accelerator: process.platform == 'darwin' ? 'Command+I':
-            'Ctrl+I',
-            click(item, focusedWindow){
-              focusedWindow.toggleDevTools();
-            }
-          },
-          {
-            role: 'reload'
-          }
-        ]
-      })
-
-    }
     Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 
@@ -494,7 +474,6 @@ function createWindow() {
     updateMenuAtLogout();
     mainWindow = new BrowserWindow({width: 1000, height: 730, resizable: true, icon: "resources/zen_icon.png"});
 
-    //mainWindow.webContents.openDevTools();
 
     if (fs.existsSync(getWalletPath())) {
         mainWindow.loadURL(url.format({
