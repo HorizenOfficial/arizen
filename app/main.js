@@ -1126,9 +1126,9 @@ ipcMain.on("export-pdf",  function(event) {
 //   };
 //
 
-  dialog.showSaveDialog(win, {title: 'Save',filters: [{name: "NewWallet", extensions: ['.pdf']}],(fileName)=> { //, defaultPath: "C:/NewWallet.pdf"}
+  dialog.showSaveDialog(win, {title: 'Save',filters: [{name: "PDF", extensions: ['.pdf']}], defaultPath: "C:/NewWallet.pdf"},(fileName)=> {
     if(fileName === undefined){
-      alert('No filename given');
+      //alert('No filename given');
       return;
     }
     //fileName = fileName + '.pdf';
