@@ -150,6 +150,8 @@ function loadLang() {
 }
 
 function tr(key, defaultVal) {
+    if (!langDict)
+        return defaultVal;
     function iter(dict, trPath) {
         if (trPath.length)
             return iter(dict[trPath[0]], trPath.slice(1));
