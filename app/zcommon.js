@@ -155,23 +155,21 @@ function loadLang() {
             return;
         let lang = require("./lang/lang_"+ langStr + ".json");
 
-        setLangToArrayNodes(document.querySelectorAll("[data-tr='showSettingsDialogButton']"), lang.wallet.showSettingsDialogButton);
-        setLangToArrayNodes(document.querySelectorAll("[data-tr='showAboutDialogButton']"), lang.wallet.showAboutDialogButton);
-        setLangToArrayNodes(document.querySelectorAll("[data-tr='refreshWallet']"), lang.wallet.refreshWallet);
-        setLangToArrayNodes(document.querySelectorAll("[data-tr='logout']"), lang.wallet.logout);
-        setLangToArrayNodes(document.querySelectorAll("[data-tr='exit']"), lang.wallet.exit);
+        function trValue(dict, trPath) {
+            if (trPath.length)
+                return trValue(dict[trPath[0]], trPath.slice(1));
+            else if (typeof(dict) === "string")
+                return dict;
+            else
+                return null; // null or object
+        }
 
-        // tab Overview
-        setLangToArrayNodes(document.querySelectorAll("[data-tr='tabOverview']"), lang.wallet.tabOverview.label);
-        setLangToArrayNodes(document.querySelectorAll("[data-tr='tabOverviewList']"), lang.wallet.tabOverview.listOfAddresses);
-        setLangToArrayNodes(document.querySelectorAll("[data-tr='tabOverviewShowZeroBalances']"), lang.wallet.tabOverview.showZeroBalances);
-        setLangToArrayNodes(document.querySelectorAll("[data-tr='tabOverviewNewAddress']"), lang.wallet.tabOverview.newAddress);
-
-        // tab Deposit
-        setLangToArrayNodes(document.querySelectorAll("[data-tr='tabDeposit']"), lang.wallet.tabDeposit.label);
-
-        // tab Withdraw
-        setLangToArrayNodes(document.querySelectorAll("[data-tr='tabWithdraw']"), lang.wallet.tabWithdraw.label);
+        for (const nodeToTr of document.querySelectorAll("[data-tr]")) {
+            const trKey = nodeToTr.dataset.tr;
+            const trVal = trValue(lang, trKey.split("."));
+            if (trVal)
+                setLangToArrayNodes([nodeToTr], trVal);
+        }
     });
 }
 
