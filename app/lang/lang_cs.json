@@ -1,0 +1,6 @@
+{
+    "wallet": {
+        "showSettingsDialogButton" : "Nastavení",
+        "showAboutDialogButton" : "O Programu"
+    }
+}

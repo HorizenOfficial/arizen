@@ -1,0 +1,6 @@
+{
+    "wallet" : {
+       "showSettingsDialogButton" : "Settings",
+        "showAboutDialogButton" : "About"
+    }
+}
