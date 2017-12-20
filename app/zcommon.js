@@ -104,9 +104,14 @@ function showAboutDialog() {
 
 // TODO this doesn't belong here
 let settings;
+let langDict;
 (() => {
     const {ipcRenderer} = require("electron");
-    ipcRenderer.on("settings", (sender, settingsStr) => settings = JSON.parse(settingsStr));
+    ipcRenderer.on("settings", (sender, settingsStr) => {
+        settings = JSON.parse(settingsStr)
+        loadLang();
+        translateCurrentPage();
+    });
 })();
 
 function showSettingsDialog() {
@@ -137,6 +142,13 @@ function openZenExplorer(path) {
     openUrl(settings.explorerUrl + "/" + path);
 }
 
+function loadLang() {
+    if (!settings.lang)
+        return;
+    // TODO: there can be invalid language in DB, fail gracefully
+    langDict = require("./lang/lang_" + settings.lang + ".json");
+}
+
 function setLangToArrayNodes(elArray, value) {
     for (let i = 0; i < elArray.length; i++) {
         if (elArray[i].hasOwnProperty("innerHTML")) {
@@ -147,30 +159,23 @@ function setLangToArrayNodes(elArray, value) {
     }
 }
 
-function loadLang() {
-    const {ipcRenderer} = require("electron");
-    ipcRenderer.on("settings", (...args) => {
-        let langStr = JSON.parse(args[1]).lang;
-        if (!langStr)
-            return;
-        let lang = require("./lang/lang_"+ langStr + ".json");
+function translateCurrentPage() {
+    if (!langDict)
+        return;
 
-        function trValue(dict, trPath) {
-            if (trPath.length)
-                return trValue(dict[trPath[0]], trPath.slice(1));
-            else if (typeof(dict) === "string")
-                return dict;
-            else
-                return null; // null or object
-        }
+    function trValue(dict, trPath) {
+        if (trPath.length)
+            return trValue(dict[trPath[0]], trPath.slice(1));
+        else if (typeof(dict) === "string")
+            return dict;
+        else
+            return null; // null or object
+    }
 
-        for (const nodeToTr of document.querySelectorAll("[data-tr]")) {
-            const trKey = nodeToTr.dataset.tr;
-            const trVal = trValue(lang, trKey.split("."));
-            if (trVal)
-                setLangToArrayNodes([nodeToTr], trVal);
-        }
-    });
+    for (const nodeToTr of document.querySelectorAll("[data-tr]")) {
+        const trKey = nodeToTr.dataset.tr;
+        const trVal = trValue(lang, trKey.split("."));
+        if (trVal)
+            setLangToArrayNodes([nodeToTr], trVal);
+    }
 }
-
-loadLang();
