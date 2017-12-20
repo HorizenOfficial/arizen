@@ -136,3 +136,41 @@ function showSettingsDialog() {
 function openZenExplorer(path) {
     openUrl(settings.explorerUrl + "/" + path);
 }
+
+function setLangToArrayNodes(elArray, value) {
+    for (let i = 0; i < elArray.length; i++) {
+        if (elArray[i].hasOwnProperty("innerHTML")) {
+            elArray[i].innerHTML = value;
+        } else {
+            elArray[i].textContent = value;
+        }
+    }
+}
+
+function loadLang() {
+    const {ipcRenderer} = require("electron");
+    ipcRenderer.on("settings", (...args) => {
+        let langStr = JSON.parse(args[1]).lang;
+        let lang = require("./lang/lang_"+ langStr + ".json");
+
+        setLangToArrayNodes(document.querySelectorAll("[data-tr='showSettingsDialogButton']"), lang.wallet.showSettingsDialogButton);
+        setLangToArrayNodes(document.querySelectorAll("[data-tr='showAboutDialogButton']"), lang.wallet.showAboutDialogButton);
+        setLangToArrayNodes(document.querySelectorAll("[data-tr='refreshWallet']"), lang.wallet.refreshWallet);
+        setLangToArrayNodes(document.querySelectorAll("[data-tr='logout']"), lang.wallet.logout);
+        setLangToArrayNodes(document.querySelectorAll("[data-tr='exit']"), lang.wallet.exit);
+
+        // tab Overview
+        setLangToArrayNodes(document.querySelectorAll("[data-tr='tabOverview']"), lang.wallet.tabOverview.label);
+        setLangToArrayNodes(document.querySelectorAll("[data-tr='tabOverviewList']"), lang.wallet.tabOverview.listOfAddresses);
+        setLangToArrayNodes(document.querySelectorAll("[data-tr='tabOverviewShowZeroBalances']"), lang.wallet.tabOverview.showZeroBalances);
+        setLangToArrayNodes(document.querySelectorAll("[data-tr='tabOverviewNewAddress']"), lang.wallet.tabOverview.newAddress);
+
+        // tab Deposit
+        setLangToArrayNodes(document.querySelectorAll("[data-tr='tabDeposit']"), lang.wallet.tabDeposit.label);
+
+        // tab Withdraw
+        setLangToArrayNodes(document.querySelectorAll("[data-tr='tabWithdraw']"), lang.wallet.tabWithdraw.label);
+    });
+}
+
+loadLang();
