@@ -151,6 +151,8 @@ function loadLang() {
     const {ipcRenderer} = require("electron");
     ipcRenderer.on("settings", (...args) => {
         let langStr = JSON.parse(args[1]).lang;
+        if (!langStr)
+            return;
         let lang = require("./lang/lang_"+ langStr + ".json");
 
         setLangToArrayNodes(document.querySelectorAll("[data-tr='showSettingsDialogButton']"), lang.wallet.showSettingsDialogButton);
