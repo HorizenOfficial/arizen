@@ -1,6 +1,19 @@
 {
     "wallet" : {
-       "showSettingsDialogButton" : "Settings",
-        "showAboutDialogButton" : "About"
+        "showSettingsDialogButton" : "Settings",
+        "showAboutDialogButton" : "About",
+        "refreshWallet" : "Refresh",
+        "logout" : "Logout",
+        "exit" : "Exit",
+        "tabOverview": {
+          "label": "Přehled",
+          "listOfAddresses": "Seznam adres"
+        },
+        "tabDeposit": {
+          "label": "Vklad"
+        },
+        "tabWithdraw": {
+          "label": "Výběr"
+        }
     }
 }

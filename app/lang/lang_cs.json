@@ -1,6 +1,21 @@
 {
     "wallet": {
         "showSettingsDialogButton" : "Nastavení",
-        "showAboutDialogButton" : "O Programu"
+        "showAboutDialogButton" : "O Programu",
+        "refreshWallet" : "Obnovit",
+        "logout" : "Odhlásit se",
+        "exit" : "Ukončit",
+        "tabOverview": {
+            "label": "Přehled",
+            "listOfAddresses": "Seznam adres",
+            "showZeroBalances" : "Nulové adresy",
+            "newAddress": "Nová adresa"
+        },
+        "tabDeposit": {
+            "label": "Vklad"
+        },
+        "tabWithdraw": {
+            "label": "Výběr"
+        }
     }
 }

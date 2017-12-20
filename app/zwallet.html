@@ -152,32 +152,32 @@
 
 <header class='panel'>
     <div class=headerLeft>
-        <span><button onclick=showSettingsDialog()>Settings</button></span>
-        <span><button onclick=showAboutDialog()>About</button></span>
+        <span><button onclick="showSettingsDialog()" data-tr="showSettingsDialogButton">Settings</button></span>
+        <span><button onclick="showAboutDialog()" data-tr="showAboutDialogButton">About</button></span>
     </div>
     <div class=headerCenter>
         <a class=arizenTitle href='https://github.com/ZencashOfficial/arizen'>Arizen</a>
         <a class=zenLogo href='https://zensystem.io'><img id=zenImg src='resources/zen_icon.png' /></a>
     </div>
     <div class=headerRight>
-        <span><button id=refreshButton>Refresh</button></span>
-        <span><button onclick='logout()'>Logout</button></span>
-        <span><button onclick='exitApp()'>Exit</button></span>
+        <span><button id=refreshButton data-tr="refreshWallet">Refresh</button></span>
+        <span><button onclick='logout()' data-tr="logout">Logout</button></span>
+        <span><button onclick='exitApp()' data-tr="exit">Exit</button></span>
     </div>
 </header>
 
 <x-tabs class='walletOps panel'>
     <div class=walletOpsTabs>
-        <button data-tab-button=overview selected>Overview</button>
-        <button id=depositTabButton data-tab-button=deposit>Deposit</button>
-        <button id=withdrawTabButton data-tab-button=withdraw>Withdraw</button>
+        <button data-tab-button="overview" data-tr="tabOverview" selected>Overview</button>
+        <button id="depositTabButton" data-tab-button="deposit" data-tr="tabDeposit">Deposit</button>
+        <button id="withdrawTabButton" data-tab-button="withdraw" data-tr="tabWithdraw">Withdraw</button>
     </div>
     <div data-tab-content=overview class='walletOverview tabContent'>
         <div class='tabContentHeader walletOverviewControl'>
-            <span class=tabContentHeaderLabel>List of Addresses</span>
+            <span class=tabContentHeaderLabel data-tr="tabOverviewList">List of Addresses</span>
             <input type=checkbox id=actionShowZeroBalances name=actionShowZeroBalances>
-            <label for=actionShowZeroBalances>Show zero balances</label>
-            <button id=createNewAddrButton class=smallButton>Get a new address</button>
+            <label for=actionShowZeroBalances data-tr="tabOverviewShowZeroBalances">Show zero balances</label>
+            <button id=createNewAddrButton class=smallButton data-tr="tabOverviewNewAddress">Get a new address</button>
         </div>
         <template id=addrItemTemplate>
             <div class=addrItem>
