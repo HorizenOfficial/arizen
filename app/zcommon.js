@@ -155,7 +155,7 @@ function tr(key, defaultVal) {
             return iter(dict[trPath[0]], trPath.slice(1));
         else if (typeof(dict) === "string")
             return dict;
-        else { // dist is an object or null
+        else { // dict is an object or null
             console.warn("Untranslated key: " + key);
             return defaultVal;
         }
