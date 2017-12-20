@@ -136,8 +136,14 @@ function setFiatBalanceText(balanceZEN) {
     const totalBalanceFiatNode = document.getElementById("totalBalanceFiat");
     const balanceFiatAmountNode = totalBalanceFiatNode.firstElementChild;
     let fiat = 'USD' //FIXME: Get from settings the desired fiat currency
-    let balance = balanceZEN * zenToFiat(fiat);
-    balanceFiatAmountNode.textContent = formatFiatBalance(balance) + " " + fiat;
+    zenToFiat(fiat).then( function(ZENPrice){
+      //console.log(ZENPrice);
+      let balance = (balanceZEN) * ZENPrice;
+      //console.log(balance);
+      balanceFiatAmountNode.textContent = formatFiatBalance(balance) + " " + fiat;
+    });
+
+
 }
 
 function zenToFiat(fiat){
@@ -145,24 +151,18 @@ function zenToFiat(fiat){
   let BASE_API_URL = 'https://api.coinmarketcap.com/v1//ticker'
   let API_URL = BASE_API_URL + '/zencash/?convert='+ fiat;
 
-//   APIJSON = fetch(API_URL).catch(err => {
-//               console.log(`ERROR fetching from: ${API_URL}: `, err);
-// //              errors.push(err);
-//               return -1
-//           });
-          console.log("GET " + API_URL);
-          let The_Json =  fetch(API_URL).then(resp => {
-              console.log(`GET ${API_URL} done, status: ${resp.status} ${resp.statusText}`);
-              if (!resp.ok)
-                  throw new Error(`HTTP GET status: ${resp.status} ${resp.statusText}, URL: ${API_URL}`);
-              return resp.json()
-          });
-          console.log(The_Json);
-          let price = The_Json[0].price_usd //.toFixed(2)
-          console.log(price);
-
-
-
+  console.log("GET " + API_URL);
+  return fetch(API_URL).then( function(resp){
+      console.log(`GET ${API_URL} done, status: ${resp.status} ${resp.statusText}`);
+      if (!resp.ok)
+          throw new Error(`HTTP GET status: ${resp.status} ${resp.statusText}, URL: ${API_URL}`);
+      return resp.json()
+  }).then( function(responseAsJson) {
+    //console.log(responseAsJson);
+    //console.log(parseFloat(responseAsJson[0].price_usd));
+    //console.log(("responseAsJson[0].price_"+fiat.toLowerCase()));
+    return parseFloat(eval("responseAsJson[0].price_"+fiat.toLowerCase()));
+  });
 };
 
 function createAddrItem(addrObj) {
