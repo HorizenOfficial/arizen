@@ -149,33 +149,21 @@ function loadLang() {
     langDict = require("./lang/lang_" + settings.lang + ".json");
 }
 
-function setLangToArrayNodes(elArray, value) {
-    for (let i = 0; i < elArray.length; i++) {
-        if (elArray[i].hasOwnProperty("innerHTML")) {
-            elArray[i].innerHTML = value;
-        } else {
-            elArray[i].textContent = value;
-        }
+function tr(key, defaultVal) {
+    function iter(dict, trPath) {
+        if (trPath.length)
+            return iter(dict[trPath[0]], trPath.slice(1));
+        else if (typeof(dict) === "string")
+            return dict;
+        else
+            return defaultVal; // dist is an object or null
     }
+    return iter(langDict, key.split("."));
 }
 
 function translateCurrentPage() {
     if (!langDict)
         return;
-
-    function trValue(dict, trPath) {
-        if (trPath.length)
-            return trValue(dict[trPath[0]], trPath.slice(1));
-        else if (typeof(dict) === "string")
-            return dict;
-        else
-            return null; // null or object
-    }
-
-    for (const nodeToTr of document.querySelectorAll("[data-tr]")) {
-        const trKey = nodeToTr.dataset.tr;
-        const trVal = trValue(lang, trKey.split("."));
-        if (trVal)
-            setLangToArrayNodes([nodeToTr], trVal);
-    }
+    document.querySelectorAll("[data-tr]").forEach(node =>
+        node.textContent = tr(node.dataset.tr, node.textContent));
 }
