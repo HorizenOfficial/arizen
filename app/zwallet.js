@@ -415,11 +415,11 @@ function updateDepositQrcode(qrcodeDelay = 0) {
     const amount = parseFloat(depositAmountInput.value || 0);
 
     if (!toAddr) {
-        depositMsg.textContent = "WARNING: To address is empty";
+        depositMsg.textContent = "To address is empty";
     } else if (!addrListNode.querySelector(`[data-addr='${toAddr}']`)) {
-        depositMsg.textContent = "WARNING: To address does not belong to this wallet";
+        depositMsg.textContent = "To address does not belong to this wallet";
     } else if (!amount) {
-        depositMsg.textContent = "WARNING: Amount is not positive";
+        depositMsg.textContent = "Amount is not positive";
     } else {
         depositMsg.textContent = "\xA0"; // &nbsp;
     }
@@ -473,13 +473,13 @@ function validateWithdrawForm() {
     setBalanceText(withdrawAvailBalance, 0);
 
     if (!fromAddr) {
-        withdrawMsg.textContent = "ERROR: The From address is empty";
+        withdrawMsg.textContent = "The From address is empty";
         return;
     }
 
     const fromAddrItem = addrListNode.querySelector(`[data-addr='${fromAddr}']`);
     if (!fromAddrItem) {
-        withdrawMsg.textContent = "ERROR: The From address does not belong to this wallet";
+        withdrawMsg.textContent = "The From address does not belong to this wallet";
         return;
     }
 
@@ -487,15 +487,15 @@ function validateWithdrawForm() {
     setBalanceText(withdrawAvailBalance, fromBalance);
 
     if (!toAddr) {
-        withdrawMsg.textContent = "ERROR: The To address is empty";
+        withdrawMsg.textContent = "The To address is empty";
         return;
     }
     if (!amount) {
-        withdrawMsg.textContent = "ERROR: The amount is not positive";
+        withdrawMsg.textContent = "The amount is not positive";
         return;
     }
     if (amount + fee > fromBalance) {
-        withdrawMsg.textContent = "ERROR: Insufficient funds on the From address";
+        withdrawMsg.textContent = "Insufficient funds on the From address";
         return;
     }
 
