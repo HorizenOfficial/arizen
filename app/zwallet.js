@@ -135,12 +135,18 @@ function setBalanceText(balanceNode, balance) {
 function setFiatBalanceText(balanceZEN) {
     const totalBalanceFiatNode = document.getElementById("totalBalanceFiat");
     const balanceFiatAmountNode = totalBalanceFiatNode.firstElementChild;
+    const LastUpdateTimeNode = document.getElementById("LastUpdateTime");
     let fiat = 'USD' //FIXME: Get from settings the desired fiat currency
     zenToFiat(fiat).then( function(ZENPrice){
       //console.log(ZENPrice);
+      const now = new Date();
+      // View the output
+      console.log(now);
       let balance = (balanceZEN) * ZENPrice;
       //console.log(balance);
       balanceFiatAmountNode.textContent = formatFiatBalance(balance) + " " + fiat;
+      LastUpdateTimeNode.textContent = now;
+
     });
 
 
@@ -158,7 +164,7 @@ function zenToFiat(fiat){
           throw new Error(`HTTP GET status: ${resp.status} ${resp.statusText}, URL: ${API_URL}`);
       return resp.json()
   }).then( function(responseAsJson) {
-    //console.log(responseAsJson);
+    console.log(responseAsJson);
     //console.log(parseFloat(responseAsJson[0].price_usd));
     //console.log(("responseAsJson[0].price_"+fiat.toLowerCase()));
     return parseFloat(eval("responseAsJson[0].price_"+fiat.toLowerCase()));
