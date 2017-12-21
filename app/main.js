@@ -1086,6 +1086,9 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
     }
 });
 
+// Test to verfy PGP
+
+
 // Unused
 
 // function importWalletDat(login, pass, wallet) {
