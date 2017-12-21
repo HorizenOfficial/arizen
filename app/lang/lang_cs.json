@@ -1,21 +1,71 @@
 {
+    "languageName": "Czech",
+    "languageValue": "cs",
     "wallet": {
         "showSettingsDialogButton" : "Nastavení",
         "showAboutDialogButton" : "O Programu",
         "refreshWallet" : "Obnovit",
         "logout" : "Odhlásit se",
         "exit" : "Ukončit",
+        "date" : "Datum",
+        "from": "Z adresy",
+        "to": "Na adresu",
+        "amount" : "Množství",
+        "balance" : "Zůstatek",
+        "totalBalance": "Celkový zůstatek",
+        "showExplorer": "Otevřít v ZEN exploreru",
+        "listOfAddresses": "Seznam adres",
         "tabOverview": {
             "label": "Přehled",
-            "listOfAddresses": "Seznam adres",
             "showZeroBalances" : "Nulové adresy",
-            "newAddress": "Nová adresa"
+            "newAddress": "Nová adresa",
+            "unnamedAddress": "Nepojmenovaná adresa"
         },
         "tabDeposit": {
-            "label": "Vklad"
+            "label": "Vklad",
+            "help": "Klikem na zelené tlačítko vedle adresy provedete vklad."
         },
         "tabWithdraw": {
-            "label": "Výběr"
+            "label": "Výběr",
+            "help": "Klikem na červené tlačítko vedle adresy provedete výběr.",
+            "availableBalance": "Dostupný zůstatek",
+            "fee": "Poplatek za transakci"
+        },
+        "transactionHistory": {
+            "label": "Historie transakcí",
+            "unconfirmed": "Čeká na potvrzení"
+        },
+        "transactionDetail": {
+            "label": "Detail transakce",
+            "txid": "ID transakce",
+            "blockHeight": "Číslo bloku",
+            "unconfirmedTx": "Transakce čeká na potvrzení"
+        },
+        "addressDetail": {
+            "label": "Detail adresy",
+            "name": "Jméno",
+            "address": "Adresa",
+            "saveButton": "Uložit změny"
+        },
+        "newAddress": {
+            "label": "Vytvoření nové adresy",
+            "name": "Jméno (nepovinné)",
+            "createButton": "Vytvořit"
+        },
+        "about": {
+            "label": "O Arizenu",
+            "homepage": "Web",
+            "version": "Verze",
+            "licence": "Licence",
+            "authors": "Autoři"
+        },
+        "settings": {
+            "label": "Nastavení",
+            "limit": "Limit transakcí v historii",
+            "language": "Jazyk",
+            "explorerUrl": "Adresa ZEN exploreru",
+            "apiURL": "Adresa API",
+            "save": "Uložit"
         }
     }
 }

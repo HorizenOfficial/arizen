@@ -1,19 +1,71 @@
 {
-    "wallet" : {
-        "showSettingsDialogButton" : "Settings",
-        "showAboutDialogButton" : "About",
-        "refreshWallet" : "Refresh",
-        "logout" : "Logout",
-        "exit" : "Exit",
-        "tabOverview": {
-          "label": "Přehled",
-          "listOfAddresses": "Seznam adres"
-        },
-        "tabDeposit": {
-          "label": "Vklad"
-        },
-        "tabWithdraw": {
-          "label": "Výběr"
-        }
+  "languageName": "English",
+  "languageValue": "en",
+  "wallet": {
+    "showSettingsDialogButton" : "Settings",
+    "showAboutDialogButton" : "About",
+    "refreshWallet" : "Refresh",
+    "logout" : "Logout",
+    "exit" : "Exit",
+    "date" : "Date",
+    "from": "From",
+    "to": "To",
+    "amount" : "Amount",
+    "balance" : "Balance",
+    "totalBalance": "Total Balance",
+    "showExplorer": "Show in ZEN Explorer",
+    "listOfAddresses": "List Of Addresses",
+    "tabOverview": {
+      "label": "Overview",
+      "showZeroBalances" : "Show zero balances",
+      "newAddress": "Get a new address",
+      "unnamedAddress": "Unnamed address"
+    },
+    "tabDeposit": {
+      "label": "Deposit",
+      "help": "Click the green button next to the desired address for deposit."
+    },
+    "tabWithdraw": {
+      "label": "Withdraw",
+      "help": "Click the red button next to the desired address for withdrawal.",
+      "availableBalance": "Available balance",
+      "fee": "Transaction fee"
+    },
+    "transactionHistory": {
+      "label": "Transaction History",
+      "unconfirmed": "UNCONFIRMED"
+    },
+    "transactionDetail": {
+      "label": "Transaction Detail",
+      "txid": "Transaction ID",
+      "blockHeight": "Block Height",
+      "unconfirmedTx": "UNCONFIRMED TRANSACTION"
+    },
+    "addressDetail": {
+      "label": "Address Detail",
+      "name": "Name",
+      "address": "Address",
+      "saveButton": "Save changes"
+    },
+    "newAddress": {
+      "label": "Create a New Address",
+      "name": "Name (optional)",
+      "createButton": "Create"
+    },
+    "about": {
+      "label": "About Arizen",
+      "homepage": "Homepage",
+      "version": "Version",
+      "license": "License",
+      "authors": "Authors"
+    },
+    "settings": {
+      "label": "Settings",
+      "limit": "Transaction limit",
+      "language": "Language",
+      "explorerUrl": "ZEN Explorer URL",
+      "apiURL": "API URLs",
+      "save": "Save"
     }
+  }
 }

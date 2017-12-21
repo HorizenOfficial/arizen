@@ -47,7 +47,8 @@ const defaultSettings = {
         "http://explorer.zenmine.pro/insight-api-zen",
         "https://explorer.zensystem.io/insight-api-zen"
     ],
-    txHistory: 50
+    txHistory: 50,
+    lang: "cs"
 };
 let settings = defaultSettings;
 
