@@ -162,6 +162,7 @@ function createAddrItem(addrObj) {
     return addrItem;
 }
 
+
 function setAddrItemBalance(addrItem, balance) {
     addrItem.dataset.balance = balance;
     hideElement(addrItem, balance === 0 && !showZeroBalances);
