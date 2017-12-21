@@ -5,6 +5,11 @@
 
 const {DateTime} = require("luxon");
 
+function assert(condition, message) {
+    if (!condition)
+        throw new Error(message || "Assertion failed");
+}
+
 function logout() {
     ipcRenderer.send("do-logout");
     location.href = "./login.html";
