@@ -150,6 +150,7 @@ function setFiatBalanceText(balanceZEN) {
     });
 }
 
+
 function zenToFiat(fiat){
   const fetch = require("node-fetch");
   let BASE_API_URL = 'https://api.coinmarketcap.com/v1//ticker'
