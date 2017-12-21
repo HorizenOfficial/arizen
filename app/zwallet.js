@@ -148,8 +148,6 @@ function setFiatBalanceText(balanceZEN) {
       LastUpdateTimeNode.textContent = now;
 
     });
-
-
 }
 
 function zenToFiat(fiat){
