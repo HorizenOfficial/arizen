@@ -353,6 +353,7 @@ header button {
 }
 .addrSelectRow {
     display: flex;
+    align-items: baseline;
     flex-shrink: 0;
     cursor: pointer;
 }
