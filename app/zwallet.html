@@ -109,44 +109,35 @@
 </template>
 
 <!-- TODO this doesn't belong here -->
-<template id=GeneratePaperWalletDialogTemplate>
+<template id=generatePaperWalletDialogTemplate>
     <arizen-dialog>
         <h2 slot=headerText>Generate New Wallet</h2>
-        <div slot=content class=GeneratePaperWalletDialogTemplate>
-          <div id="CreateButtonCheck" class="CreateButtonCheck">
-                <div>Name (optional)</div><input id="NewWalletNamePaper" type=text class=newAddrDialogName />
-            <input id="Add-Paper-Wallet-Arizen" type="checkbox">Add this wallet to Arizen</input>
-              <button type="button" class=generateNewWallet>Generate New Wallet</button>
-          </div>
+        <div slot=content class=generatePaperWalletDialogTemplate>
+            <div id=createButtonCheck class=createButtonCheck>
+                <div>Name (optional)</div><input id=newWalletNamePaper type=text class=newAddrDialogName />
+                <input id=addPaperWalletArizen type=checkbox>Add this wallet to Arizen</input>
+                <button type=button class=generateNewWallet>Generate New Wallet</button>
+            </div>
 
-            <div class=form id="NewAddressPrintArea">
-              <label id="NewWalletNamePaperLabel" class=NewWalletNamePaperLabel></label>
-              <table style="width:100%">
-                <tr>
-                  <!-- <th class=namezAddr></th>
-                  <th class=namePrivateKey></th> -->
-                  <th><label id="NewWalletNamePaperLabel" class=NewWalletNamePaperLabel style="font-weight:bold"></label></th>
-                </tr>
-                <tr>
-                  <td class=namePrivateKey></td>
-                  <td class=qrPrivate><canvas id="canvas-priv"></canvas></td>
-                  <td class=keyPrivate ></td>
-                </tr>
-                <tr>
-                  <td class=namezAddr></td>
-                  <td class=qrzAddr><canvas id="canvas-z"></canvas></td>
-                  <td class=zAddr></td>
-                </tr>
-              </table>
-
-              <!-- <canvas id="canvas-z"></canvas> -->
-              <!-- <canvas id="canvas-priv"></canvas> -->
-
-            <a id="qrImagePublic" class="qrImagePublic"></a>
-            <a id="qrImagePrivate" class="qrImagePrivate"></a>
-          </div>
-
-            <div id="PDFButton" class="PDFButton"></div>
+            <div class=form id=NewAddressPrintArea>
+                <label id=newWalletNamePaperLabel class=newWalletNamePaperLabel></label>
+                <table style="width:100%">
+                    <tr>
+                        <th><label id=newWalletNamePaperLabel class=newWalletNamePaperLabel style="font-weight:bold"></label></th>
+                    </tr>
+                    <tr>
+                        <td class=namePrivateKey></td>
+                        <td class=qrPrivate><canvas id=canvasPriv></canvas></td>
+                        <td class=keyPrivate ></td>
+                    </tr>
+                    <tr>
+                        <td class=namezAddr></td>
+                        <td class=qrzAddr><canvas id=canvasZ></canvas></td>
+                        <td class=zAddr></td>
+                    </tr>
+                </table>
+            </div>
+            <div id=pdfButton class=pdfButton></div>
         </div>
     </arizen-dialog>
 </template>

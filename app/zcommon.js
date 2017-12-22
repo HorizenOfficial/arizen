@@ -142,76 +142,66 @@ function openZenExplorer(path) {
 // TODO this doesn't belong here
 function showGeneratePaperWalletDialog() {
     const zencashjs = require("zencashjs");
-    var fs = require('fs');
+    var fs = require("fs");
+
+    showDialogFromTemplate("generatePaperWalletDialogTemplate", dialog => {
+
+        dialog.querySelector(".generateNewWallet").addEventListener("click", () => {
+            let addressInWallet = document.getElementById("addPaperWalletArizen").checked;
+            console.log(addressInWallet);
+
+            let newWalletNamePaper = document.getElementById("newWalletNamePaper").value;
+            console.log(newWalletNamePaper);
+
+            // Clear Checkbox and Button from HTML
+            let ButtonArea = document.getElementById("createButtonCheck");
+            ButtonArea.innerHTML = "";
+
+            dialog.querySelector(".namezAddr").textContent = "Public Key";
+            dialog.querySelector(".namePrivateKey").textContent = "Private Key";
+            if (newWalletNamePaper){
+                dialog.querySelector(".newWalletNamePaperLabel").innerHTML = "Name: " + newWalletNamePaper;
+            }
+
+            let wif = ipcRenderer.sendSync("get-paper-address-wif",addressInWallet, newWalletNamePaper);
+            console.log('Done New Add');
+            let privateKey = zencashjs.address.WIFToPrivKey(wif);
+            let pubKey = zencashjs.address.privKeyToPubKey(privateKey, true);
+            let zAddr = zencashjs.address.pubKeyToAddr(pubKey);
+
+            dialog.querySelector(".keyPrivate").textContent = privateKey;
+            dialog.querySelector(".zAddr").textContent = zAddr;
+
+            var QRCode = require("qrcode");
+
+            // z Address QR Image
+            var canvasZ = document.getElementById("canvasZ")
+
+            QRCode.toCanvas(canvasZ, zAddr, function (error) {
+                if (error) console.error(error)
+                console.log("Success QRcode z Address.");
+            });
+
+            // Private Key QR Image
+            var canvasPriv = document.getElementById("canvasPriv")
+
+            QRCode.toCanvas(canvasPriv, privateKey, function (error) {
+                if (error) console.error(error)
+                console.log("Success QRCode Private Key");
+            });
 
 
-    showDialogFromTemplate("GeneratePaperWalletDialogTemplate", dialog => {
+            // Print to PDF
+            var pdfButton = document.createElement("BUTTON");
+            var t = document.createTextNode("Export PDF");       // Create a text node
+            pdfButton.appendChild(t);
+            dialog.querySelector(".pdfButton").appendChild(pdfButton)
 
-      dialog.querySelector(".generateNewWallet").addEventListener("click", () => {
-        let addressInWallet = document.getElementById("Add-Paper-Wallet-Arizen").checked;
-        console.log(addressInWallet);
-
-        let NewWalletNamePaper = document.getElementById("NewWalletNamePaper").value;
-        console.log(NewWalletNamePaper);
-
-
-
-        // Clear Checkbox and Button from HTML
-        let ButtonArea = document.getElementById("CreateButtonCheck");
-        ButtonArea.innerHTML = '';
-
-        dialog.querySelector(".namezAddr").textContent = "Public Key";
-        dialog.querySelector(".namePrivateKey").textContent = "Private Key";
-        if (NewWalletNamePaper){
-          dialog.querySelector(".NewWalletNamePaperLabel").innerHTML = "Name: " + NewWalletNamePaper;
-        }
-
-
-
-
-        let wif = ipcRenderer.sendSync("get-paper-address-wif",addressInWallet, NewWalletNamePaper);
-        console.log('Done New Add');
-        let privateKey = zencashjs.address.WIFToPrivKey(wif);
-        let pubKey = zencashjs.address.privKeyToPubKey(privateKey, true);
-        let zAddr = zencashjs.address.pubKeyToAddr(pubKey)
-
-        dialog.querySelector(".keyPrivate").textContent = privateKey;
-        dialog.querySelector(".zAddr").textContent = zAddr;
-
-
-        var QRCode = require('qrcode');
-
-        // z Address QR Image
-
-        var canvasZ = document.getElementById('canvas-z')
-
-        QRCode.toCanvas(canvasZ, zAddr, function (error) {
-          if (error) console.error(error)
-          console.log('success!');
-        })
-
-        // Private Key QR Image
-        var canvasPriv = document.getElementById('canvas-priv')
-
-        QRCode.toCanvas(canvasPriv, privateKey, function (error) {
-          if (error) console.error(error)
-          console.log('success!');
-        })
-
-
-        // Print to PDF
-        var PDFButton = document.createElement("BUTTON");
-        var t = document.createTextNode("Export PDF");       // Create a text node
-        PDFButton.appendChild(t);
-        dialog.querySelector(".PDFButton").appendChild(PDFButton)
-
-        dialog.querySelector(".PDFButton").addEventListener("click", () => {
-          ipcRenderer.send("export-pdf");
-          console.log('PDF export command sent')
+            dialog.querySelector(".pdfButton").addEventListener("click", () => {
+                ipcRenderer.send("export-pdf");
+                console.log('PDF export command sent')
+            });
         });
-
-      });
-
     });
 }
 
