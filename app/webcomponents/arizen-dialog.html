@@ -10,6 +10,7 @@
             bottom: 0;
             left: 0;
             max-width: 90vw;
+            max-height: 90vh;
         }
 
         dialog::backdrop {
@@ -28,7 +29,8 @@
             display: flex;
             flex-direction: column;
             align-items: stretch;
-            max-height: 90vh; /* WTF? Making scrollbar where I want it rquires magic. */
+            max-width: inherit;
+            max-height: inherit;
         }
     </style>
 
