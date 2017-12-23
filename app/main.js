@@ -47,7 +47,8 @@ const defaultSettings = {
         "http://explorer.zenmine.pro/insight-api-zen",
         "https://explorer.zensystem.io/insight-api-zen"
     ],
-    txHistory: 50
+    txHistory: 50,
+    fiatCurrency: "USD"
 };
 let settings = defaultSettings;
 
@@ -1086,6 +1087,9 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
     }
 });
 
+ipcMain.on("get-me-settings", function (event) {
+  event.returnValue = loadSettings();
+});
 
 // Unused
 

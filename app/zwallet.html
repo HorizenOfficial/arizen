@@ -140,6 +140,13 @@
                 <input type=text name=settingsExplorerUrl class=settingsExplorerUrl />
                 <label for=settingsApiUrls title="Place one URL per line">API URLs</label>
                 <textarea type=text name=settingsApiUrls class=settingsApiUrls rows=5></textarea>
+                <label for=settingsFiatCurrency title="Select the desired fiat to display your balance.">Fiat Equivalent</label>
+                <select name=settingsFiatCurrency class=settingsFiatCurrency >
+                    <option value="USD">USD</option>
+                    <option value="EUR">Euro</option>
+                    <option value="JPY">JPY</option>
+                    <option value="GBP">GBP</option>
+                </select>
             </div>
             <div class=formButtons>
                 <button class=settingsSave>Save</button>
@@ -273,9 +280,10 @@
 </div>
 
 <footer class='statusLine panel'>
-Total balance: <span id=totalBalance><span id=totalBalanceAmount>0.00000000</span> ZEN / </span>
+Total balance: <span id=totalBalance><span id=totalBalanceAmount>0.00000000</span> ZEN </span>
+<span> / </span>
 <span id=totalBalanceFiat><span id=totalFiatBalanceAmount>0.00</span></span>
-<span id=lastUpdateTimeText> / Last Updated: <span id=lastUpdateTime></span></span>
+<span id=lastUpdateTimeText> / Last update: <span id=lastUpdateTime></span></span>
 </footer>
 
 </div>

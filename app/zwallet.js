@@ -136,15 +136,18 @@ function setFiatBalanceText(balanceZEN) {
     const totalBalanceFiatNode = document.getElementById("totalBalanceFiat");
     const balanceFiatAmountNode = totalBalanceFiatNode.firstElementChild;
     const lastUpdateTimeNode = document.getElementById("lastUpdateTime");
-    let fiat = "USD" //FIXME: Get from settings the desired fiat currency
+    //console.log(getFiatCurrencyOfUser());
+    let userSettings = ipcRenderer.sendSync("get-me-settings");
+    let fiat = userSettings.fiatCurrency; //"USD" //FIXME: Get from settings the desired fiat currency
     zenToFiat(fiat).then( function(ZENPrice){
         //console.log(ZENPrice);
-        const now = new Date();
+        const now = new Date().toLocaleTimeString();
         // View the output
         console.log(now);
         let balance = (balanceZEN) * ZENPrice;
         //console.log(balance);
         balanceFiatAmountNode.textContent = formatFiatBalance(balance) + " " + fiat + " (@ "+ ZENPrice.toFixed(2).toString() +" "+ fiat +"/ZEN )";
+        //balanceFiatAmountNode.textContent = formatFiatBalance(balance) + " " + fiat;
         lastUpdateTimeNode.textContent = now;
     });
 }

@@ -118,11 +118,18 @@ function showSettingsDialog() {
         const inputTxHistory = dialog.querySelector(".settingsTxHistory");
         const inputExplorerUrl = dialog.querySelector(".settingsExplorerUrl");
         const inputApiUrls = dialog.querySelector(".settingsApiUrls");
+        const inputFiatCurrency = dialog.querySelector(".settingsFiatCurrency");
         const saveButton = dialog.querySelector(".settingsSave");
+
 
         inputTxHistory.value = settings.txHistory;
         inputExplorerUrl.value = settings.explorerUrl;
         inputApiUrls.value = settings.apiUrls.join("\n");
+        inputFiatCurrency.value = settings.fiatCurrency;
+        if (settings.fiatCurrency == ""){ // An existing user has empty value settings.fiatCurrency
+          inputFiatCurrency.value = "USD"
+        }
+        console.log(settings);
 
         dialog.querySelector(".settingsSave").addEventListener("click", () => {
 
@@ -130,8 +137,15 @@ function showSettingsDialog() {
                 txHistory: parseInt(inputTxHistory.value),
                 explorerUrl: inputExplorerUrl.value.trim().replace(/\/?$/, ""),
                 apiUrls: inputApiUrls.value.split(/\s+/).filter(s => !/^\s*$/.test(s)).map(s => s.replace(/\/?$/, "")),
+                fiatCurrency: inputFiatCurrency.value
             };
-            ipcRenderer.send("save-settings", JSON.stringify(newSettings));
+            ipcRenderer.send("save-settings", JSON.stringify(newSettings))
+            //ipcRenderer.send("refresh-wallet")
+            //const totalBalanceAmountNode = document.getElementById("totalBalanceAmount");
+            const totalBalanceAmountNode = dialog.querySelector(".totalBalanceAmount");
+            console.log(totalBalanceAmountNode);
+            let balance = formatBalance(parseFloat(totalBalanceAmountNode.value));
+            setFiatBalanceText(balance);
             dialog.close();
         });
     });
