@@ -10,6 +10,32 @@ function assert(condition, message) {
         throw new Error(message || "Assertion failed");
 }
 
+/**
+ * Like `document.querySelectorAll()`, but queries shadow roots and template
+ * contents too and returns an `Array` of nodes instead of a `NodeList`.
+ *
+ * @param {string} selector - selector string
+ * @returns {Array} array of matched nodes
+ */
+function querySelectorAllDeep(selector, startRoot = document) {
+    const roots = [startRoot];
+
+    const nodeQueue = [... startRoot.children];
+    while (nodeQueue.length) {
+        const node = nodeQueue.shift();
+        if (node.shadowRoot)
+            roots.push(node.shadowRoot);
+        if (node.tagName === "TEMPLATE" && node.content)
+            roots.push(node.content);
+        nodeQueue.push(... node.children);
+    }
+
+    const matches = [];
+    for (const r of roots)
+        matches.push(... r.querySelectorAll(selector));
+    return matches;
+}
+
 function logout() {
     ipcRenderer.send("do-logout");
     location.href = "./login.html";
@@ -192,6 +218,6 @@ function tr(key, defaultVal) {
 function translateCurrentPage() {
     if (!langDict)
         return;
-    document.querySelectorAll("[data-tr]").forEach(node =>
+    querySelectorAllDeep("[data-tr]").forEach(node =>
         node.textContent = tr(node.dataset.tr, node.textContent));
 }
