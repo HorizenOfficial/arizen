@@ -113,7 +113,7 @@ let langDict;
 (() => {
     const {ipcRenderer} = require("electron");
     ipcRenderer.on("settings", (sender, settingsStr) => {
-        settings = JSON.parse(settingsStr)
+        settings = JSON.parse(settingsStr);
         loadLang();
         translateCurrentPage();
     });
@@ -124,10 +124,12 @@ function showSettingsDialog() {
         const inputTxHistory = dialog.querySelector(".settingsTxHistory");
         const inputExplorerUrl = dialog.querySelector(".settingsExplorerUrl");
         const inputApiUrls = dialog.querySelector(".settingsApiUrls");
+        const inputLanguages = dialog.querySelector(".settingsLanguage");
         const saveButton = dialog.querySelector(".settingsSave");
 
         inputTxHistory.value = settings.txHistory;
         inputExplorerUrl.value = settings.explorerUrl;
+        loadAvailableLangs(inputLanguages, settings.lang);
         inputApiUrls.value = settings.apiUrls.join("\n");
 
         dialog.querySelector(".settingsSave").addEventListener("click", () => {
@@ -136,6 +138,7 @@ function showSettingsDialog() {
                 txHistory: parseInt(inputTxHistory.value),
                 explorerUrl: inputExplorerUrl.value.trim().replace(/\/?$/, ""),
                 apiUrls: inputApiUrls.value.split(/\s+/).filter(s => !/^\s*$/.test(s)).map(s => s.replace(/\/?$/, "")),
+                lang: inputLanguages[inputLanguages.selectedIndex].value,
             };
             ipcRenderer.send("save-settings", JSON.stringify(newSettings));
             dialog.close();
@@ -145,6 +148,22 @@ function showSettingsDialog() {
 
 function openZenExplorer(path) {
     openUrl(settings.explorerUrl + "/" + path);
+}
+
+function loadAvailableLangs(select, selected) {
+    const fs = require("fs");
+    fs.readdir("./lang/", (err, files) => {
+        files.forEach(file =>  {;
+            let tempLangData = require("./lang/" + file);
+            let opt = document.createElement("option");
+            opt.value = tempLangData.languageValue;
+            opt.innerHTML = tempLangData.languageName;
+            if (tempLangData.languageValue === selected) {
+                opt.selected = true;
+            }
+            select.appendChild(opt);
+        });
+    });
 }
 
 function loadLang() {
