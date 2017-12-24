@@ -64,7 +64,7 @@
       "limit": "Transaction limit",
       "language": "Language",
       "explorerUrl": "ZEN Explorer URL",
-      "apiURL": "API URLs",
+      "apiUrl": "API URLs",
       "save": "Save"
     }
   }
