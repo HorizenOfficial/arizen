@@ -1107,9 +1107,12 @@ ipcMain.on("export-pdf",  function(event) {
 
     dialog.showSaveDialog(win, {title: "Save",filters: [{name: "PDF", extensions: [".pdf"]}], defaultPath: "C:/NewWallet"},(fileName)=> {
         if(fileName === undefined){
-        return;
+            console.log("Cancel pressed");
+            event.sender.send("export-pdf-done", "PDF export: Canceled by user.")
+            event.sender.send("show-again-export-pdf-button", "Show")
+            //return;
         };
-        win.webContents.printToPDF({}, function(error,data){
+        win.webContents.printToPDF({landscape: true}, function(error,data){
             fs.writeFile(fileName, data, function(err){
                 if (err) return console.log(err.message)
                 shell.openExternal("file://"+ fileName);

@@ -157,6 +157,8 @@ function showGeneratePaperWalletDialog() {
             let ButtonArea = document.getElementById("createButtonCheck");
             ButtonArea.innerHTML = "";
 
+            // Style the new screen
+            dialog.querySelector(".generateNewWalletTitle").textContent = "ZenCash Wallet"
             dialog.querySelector(".namezAddr").textContent = "Public Key";
             dialog.querySelector(".namePrivateKey").textContent = "Private Key";
             if (newWalletNamePaper){
@@ -164,7 +166,7 @@ function showGeneratePaperWalletDialog() {
             }
 
             let wif = ipcRenderer.sendSync("get-paper-address-wif",addressInWallet, newWalletNamePaper);
-            console.log('Done New Add');
+            console.log('New wif created');
             let privateKey = zencashjs.address.WIFToPrivKey(wif);
             let pubKey = zencashjs.address.privKeyToPubKey(privateKey, true);
             let zAddr = zencashjs.address.pubKeyToAddr(pubKey);
@@ -193,13 +195,17 @@ function showGeneratePaperWalletDialog() {
 
             // Print to PDF
             var pdfButton = document.createElement("BUTTON");
+            pdfButton.setAttribute("id", "exportPDFButton");
             var t = document.createTextNode("Export PDF");       // Create a text node
             pdfButton.appendChild(t);
             dialog.querySelector(".pdfButton").appendChild(pdfButton)
 
             dialog.querySelector(".pdfButton").addEventListener("click", () => {
+                // pdfButton.parentNode.removeChild(pdfButton);
+                pdfButton.style.visibility='hidden'
                 ipcRenderer.send("export-pdf");
                 console.log('PDF export command sent')
+
             });
         });
     });
@@ -208,6 +214,15 @@ function showGeneratePaperWalletDialog() {
 (() => {
     const {ipcRenderer} = require("electron");
     ipcRenderer.on("export-pdf-done", (event,arg)=> {
-    console.log(arg);
+        console.log(arg);
+        document.getElementById("exportPDFButton").style.visibility = "visible"
+        //pdfButton.style.display = 'block';
+        console.log("Should be visible");
+    });
+
+    ipcRenderer.on("show-again-export-pdf-button", (event,arg)=> {
+        console.log(arg);
+        document.getElementById("exportPDFButton").style.visibility = "visible"
+        console.log("Should be visible");
     });
 })();

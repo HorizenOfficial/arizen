@@ -111,14 +111,17 @@
 <!-- TODO this doesn't belong here -->
 <template id=generatePaperWalletDialogTemplate>
     <arizen-dialog>
-        <h2 slot=headerText>Generate New Wallet</h2>
+        <h2 slot=headerText id=generateNewWalletTitle class=generateNewWalletTitle>Generate New Wallet</h2>
         <div slot=content class=generatePaperWalletDialogTemplate>
             <div id=createButtonCheck class=createButtonCheck>
-                <div>Name (optional)</div><input id=newWalletNamePaper type=text class=newAddrDialogName />
-                <input id=addPaperWalletArizen type=checkbox>Add this wallet to Arizen</input>
-                <button type=button class=generateNewWallet>Generate New Wallet</button>
+              <p><div>Name (optional)</div><input id=newWalletNamePaper type=text class=newAddrDialogName /></p>
+              <p></p>
+              <p><input id=addPaperWalletArizen type=checkbox>Add this wallet to Arizen</input></p>
+              <p></p>
+              <p><button type=button class=generateNewWallet>Generate New Wallet</button></p>
+              <p></p>
             </div>
-
+            <a class=zenLogo href='https://zensystem.io'><img id=zenImg src='resources/zen_icon.png' height="100" width="100"/></a>
             <div class=form id=NewAddressPrintArea>
                 <label id=newWalletNamePaperLabel class=newWalletNamePaperLabel></label>
                 <table style="width:100%">
