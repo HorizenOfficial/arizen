@@ -132,13 +132,15 @@ function setBalanceText(balanceNode, balance) {
         balanceNode.classList.remove("positive");
 }
 
-function setFiatBalanceText(balanceZEN) {
+function setFiatBalanceText(balanceZEN, fiat = "Nothing") {
     const totalBalanceFiatNode = document.getElementById("totalBalanceFiat");
     const balanceFiatAmountNode = totalBalanceFiatNode.firstElementChild;
     const lastUpdateTimeNode = document.getElementById("lastUpdateTime");
     //console.log(getFiatCurrencyOfUser());
     let userSettings = ipcRenderer.sendSync("get-me-settings");
-    let fiat = userSettings.fiatCurrency; //"USD" //FIXME: Get from settings the desired fiat currency
+    if (fiat === "Nothing"){
+        fiat = userSettings.fiatCurrency; //"USD" //FIXME: Get from settings the desired fiat currency
+    }
     zenToFiat(fiat).then( function(ZENPrice){
         //console.log(ZENPrice);
         const now = new Date().toLocaleTimeString();
@@ -146,8 +148,8 @@ function setFiatBalanceText(balanceZEN) {
         console.log(now);
         let balance = (balanceZEN) * ZENPrice;
         //console.log(balance);
-        balanceFiatAmountNode.textContent = formatFiatBalance(balance) + " " + fiat + " (@ "+ ZENPrice.toFixed(2).toString() +" "+ fiat +"/ZEN )";
-        //balanceFiatAmountNode.textContent = formatFiatBalance(balance) + " " + fiat;
+        //balanceFiatAmountNode.textContent = formatFiatBalance(balance) + " " + fiat + " (@ "+ ZENPrice.toFixed(2).toString() +" "+ fiat +"/ZEN )";
+        balanceFiatAmountNode.textContent = formatFiatBalance(balance) + " " + fiat;
         lastUpdateTimeNode.textContent = now;
     });
 }

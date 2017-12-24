@@ -140,12 +140,8 @@ function showSettingsDialog() {
                 fiatCurrency: inputFiatCurrency.value
             };
             ipcRenderer.send("save-settings", JSON.stringify(newSettings))
-            //ipcRenderer.send("refresh-wallet")
-            //const totalBalanceAmountNode = document.getElementById("totalBalanceAmount");
-            const totalBalanceAmountNode = dialog.querySelector(".totalBalanceAmount");
-            console.log(totalBalanceAmountNode);
-            let balance = formatBalance(parseFloat(totalBalanceAmountNode.value));
-            setFiatBalanceText(balance);
+            let zenBalance = getZenBalance();
+            setFiatBalanceText(zenBalance, inputFiatCurrency.value);
             dialog.close();
         });
     });
@@ -153,4 +149,10 @@ function showSettingsDialog() {
 
 function openZenExplorer(path) {
     openUrl(settings.explorerUrl + "/" + path);
+}
+
+function getZenBalance(){
+      const totalBalanceAmountNode = document.getElementById("totalBalanceAmount");
+      console.log(totalBalanceAmountNode.innerHTML);
+      return formatBalance(parseFloat(totalBalanceAmountNode.innerHTML));
 }
