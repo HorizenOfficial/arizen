@@ -166,7 +166,7 @@ function showGeneratePaperWalletDialog() {
             }
             // Add ZenCash logo for PDF print
             let logoarea = document.getElementById("zenCashLogoWallet");
-            logoarea.innerHTML = "<img id=zenImg src='resources/zen_icon.png' height='100' width='100' />"
+            logoarea.innerHTML = "<a  href='https://zensystem.io' target='_blank'><img id=zenImg src='resources/zen_icon.png' height='100' width='100' /></a>"
 
             let wif = ipcRenderer.sendSync("get-paper-address-wif",addressInWallet, newWalletNamePaper);
             console.log('New wif created');
