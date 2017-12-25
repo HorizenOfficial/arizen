@@ -123,24 +123,28 @@
                   <p></p>
               </div>
             </div>
-            <a id=zenCashLogoWallet class=zenLogo ></a>
-            <div class=form id=NewAddressPrintArea>
+<a id=zenCashLogoWallet class=zenLogo ></a>
+            <div class=form id=NewAddressPrintArea disabled>
                 <label id=newWalletNamePaperLabel class=newWalletNamePaperLabel></label>
-                <table style="width:100%">
-                    <tr>
-                        <th><label id=newWalletNamePaperLabel class=newWalletNamePaperLabel style="font-weight:bold"></label></th>
-                    </tr>
-                    <tr>
-                        <td class=namePrivateKey></td>
-                        <td class=qrPrivate><canvas id=canvasPriv></canvas></td>
-                        <td class=keyPrivate ></td>
-                    </tr>
-                    <tr>
-                        <td class=namezAddr></td>
-                        <td class=qrzAddr><canvas id=canvasZ></canvas></td>
-                        <td class=zAddr></td>
-                    </tr>
-                </table>
+                    <ul style="list-style: none; text-align: center;">
+                        <li><label id=newWalletNamePaperLabel class=newWalletNamePaperLabel style="font-weight:bold"></label></li>
+                    <li><p>
+                        <ul style="list-style: none; text-align: center; ">
+                            <li class=namePrivateKey style="color:red;"></li>
+                            <li class=qrPrivate><canvas id=canvasPriv></canvas></li>
+                            <li class=keyPrivate style="font-size: 75%; color:red;"></li>
+                        </ul>
+                        </p></li>
+                    <li>
+                      <p>
+                    <ul style="list-style: none; text-align: center; ">
+                        <li class=namezAddr style="color:green;"></li>
+                        <li class=qrzAddr><canvas id=canvasZ></canvas></li>
+                        <li class=zAddr style="font-size: 75%; color:green;"></li>
+                    </ul>
+                    </p>
+                    </li>
+                    </ul>
             </div>
             <div id=pdfButton class=pdfButton></div>
         </div>

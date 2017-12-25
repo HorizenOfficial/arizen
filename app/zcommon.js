@@ -159,14 +159,14 @@ function showGeneratePaperWalletDialog() {
 
             // Style the new screen
             dialog.querySelector(".generateNewWalletTitle").textContent = "ZenCash Wallet"
-            dialog.querySelector(".namezAddr").textContent = "Public Key";
+            dialog.querySelector(".namezAddr").textContent = "Public Key - T Address";
             dialog.querySelector(".namePrivateKey").textContent = "Private Key";
             if (newWalletNamePaper){
                 dialog.querySelector(".newWalletNamePaperLabel").innerHTML = "Name: " + newWalletNamePaper;
             }
             // Add ZenCash logo for PDF print
             let logoarea = document.getElementById("zenCashLogoWallet");
-            logoarea.innerHTML = "<a  href='https://zensystem.io' target='_blank'><img id=zenImg src='resources/zen_icon.png' height='100' width='100' /></a>"
+            logoarea.innerHTML = "<a  href='https://zensystem.io' target='_blank'><img id=zenImg src='resources/zen_icon.png' height='50' width='50' /></a>"
 
             let getback = ipcRenderer.sendSync("get-paper-address-wif",addressInWallet, newWalletNamePaper);
             let wif = getback.wif;

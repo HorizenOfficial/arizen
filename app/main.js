@@ -1119,7 +1119,7 @@ ipcMain.on("export-pdf",  function(event,newWalletNamePaper) {
             //event.sender.send("show-again-export-pdf-button", "Show")
             return;
         };
-        win.webContents.printToPDF({landscape: true}, function(error,data){
+        win.webContents.printToPDF({landscape: false}, function(error,data){
             fs.writeFile(fileName, data, function(err){
                 if (err) return console.log(err.message)
                 shell.openExternal("file://"+ fileName);
@@ -1138,6 +1138,7 @@ ipcMain.on("get-paper-address-wif",  function(event,addressInWallet, name) {
         event.returnValue = {wif: wif, resp: null};
     } else if (addressInWallet){
         let resp = getNewAddress(name);
+        //ipcMain.send("generate-wallet-response", JSON.stringify(resp));
         event.returnValue = {wif: resp.wif, resp: resp};
     }
 });
