@@ -1109,8 +1109,8 @@ ipcMain.on("export-pdf",  function(event) {
         if(fileName === undefined){
             console.log("Cancel pressed");
             event.sender.send("export-pdf-done", "PDF export: Canceled by user.")
-            event.sender.send("show-again-export-pdf-button", "Show")
-            //return;
+            //event.sender.send("show-again-export-pdf-button", "Show")
+            return;
         };
         win.webContents.printToPDF({landscape: true}, function(error,data){
             fs.writeFile(fileName, data, function(err){

@@ -216,13 +216,12 @@ function showGeneratePaperWalletDialog() {
     ipcRenderer.on("export-pdf-done", (event,arg)=> {
         console.log(arg);
         document.getElementById("exportPDFButton").style.visibility = "visible"
-        //pdfButton.style.display = 'block';
-        console.log("Should be visible");
+        console.log("exportPDFButton visible again.");
     });
 
-    ipcRenderer.on("show-again-export-pdf-button", (event,arg)=> {
-        console.log(arg);
-        document.getElementById("exportPDFButton").style.visibility = "visible"
-        console.log("Should be visible");
-    });
+    // ipcRenderer.on("show-again-export-pdf-button", (event,arg)=> {
+    //     console.log(arg);
+    //     document.getElementById("exportPDFButton").style.visibility = "visible"
+    //     console.log("Should be visible");
+    // });
 })();
