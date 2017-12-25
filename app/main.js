@@ -1135,11 +1135,10 @@ ipcMain.on("get-paper-address-wif",  function(event,addressInWallet, name) {
     if (!addressInWallet){
         let wifTmp = generateNewAddress(1, userInfo.pass);
         let wif = wifTmp[0];
-        event.returnValue = wif;
+        event.returnValue = {wif: wif, resp: null};
     } else if (addressInWallet){
         let resp = getNewAddress(name);
-        //ipcMain.send("generate-wallet-response", JSON.stringify(resp));
-        event.returnValue = resp.wif;
+        event.returnValue = {wif: resp.wif, resp: resp};
     }
 });
 

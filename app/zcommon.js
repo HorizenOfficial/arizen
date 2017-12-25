@@ -168,11 +168,20 @@ function showGeneratePaperWalletDialog() {
             let logoarea = document.getElementById("zenCashLogoWallet");
             logoarea.innerHTML = "<a  href='https://zensystem.io' target='_blank'><img id=zenImg src='resources/zen_icon.png' height='100' width='100' /></a>"
 
-            let wif = ipcRenderer.sendSync("get-paper-address-wif",addressInWallet, newWalletNamePaper);
+            let getback = ipcRenderer.sendSync("get-paper-address-wif",addressInWallet, newWalletNamePaper);
+            let wif = getback.wif;
+            let resp = getback.resp;
+            console.log(getback);
+            console.log(resp);
             console.log('New wif created');
             let privateKey = zencashjs.address.WIFToPrivKey(wif);
             let pubKey = zencashjs.address.privKeyToPubKey(privateKey, true);
             let zAddr = zencashjs.address.pubKeyToAddr(pubKey);
+
+            // Register Address
+            if (addressInWallet){
+                addNewAddress(resp);
+            }
 
             dialog.querySelector(".keyPrivate").textContent = privateKey;
             dialog.querySelector(".zAddr").textContent = zAddr;
