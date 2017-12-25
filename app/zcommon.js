@@ -150,7 +150,7 @@ function showGeneratePaperWalletDialog() {
             let addressInWallet = document.getElementById("addPaperWalletArizen").checked;
             console.log(addressInWallet);
 
-            let newWalletNamePaper = document.getElementById("newWalletNamePaper").value;
+            var newWalletNamePaper = document.getElementById("newWalletNamePaper").value;
             console.log(newWalletNamePaper);
 
             // Clear Checkbox and Button from HTML
@@ -203,7 +203,7 @@ function showGeneratePaperWalletDialog() {
             dialog.querySelector(".pdfButton").addEventListener("click", () => {
                 // pdfButton.parentNode.removeChild(pdfButton);
                 pdfButton.style.visibility='hidden'
-                ipcRenderer.send("export-pdf");
+                ipcRenderer.send("export-pdf",newWalletNamePaper);
                 console.log('PDF export command sent')
 
             });

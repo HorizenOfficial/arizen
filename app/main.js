@@ -1091,11 +1091,17 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
 });
 
 
-ipcMain.on("export-pdf",  function(event) {
+ipcMain.on("export-pdf",  function(event,newWalletNamePaper) {
     const win = BrowserWindow.fromWebContents(event.sender);
     const app = require("electron");
     const dialog = app.dialog;
     console.log("print-to-pdf received")
+    console.log(newWalletNamePaper);
+    if (!(newWalletNamePaper==="")){
+      var defaultPathPDF = "*/"+newWalletNamePaper+"ZenCashWallet";
+    } else {
+      var defaultPathPDF = "*/NewZenCashWallet";
+    }
 
 //   if (process.platform === 'win32'){
 //     defaultPathPDF = "C:/NewWallet.pdf"
@@ -1105,7 +1111,7 @@ ipcMain.on("export-pdf",  function(event) {
 //   };
 //
 
-    dialog.showSaveDialog(win, {title: "Save",filters: [{name: "PDF", extensions: [".pdf"]}], defaultPath: "C:/NewWallet"},(fileName)=> {
+    dialog.showSaveDialog(win, {title: "Save",filters: [{name: "PDF", extensions: [".pdf"]}], defaultPath: defaultPathPDF },(fileName)=> {
         if(fileName === undefined){
             console.log("Cancel pressed");
             event.sender.send("export-pdf-done", "PDF export: Canceled by user.")
