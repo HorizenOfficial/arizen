@@ -1090,19 +1090,21 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
     }
 });
 
+ipcMain.on("export-pdf", function (event, newWalletNamePaper) {
+    console.log("print-to-pdf received");
 
-ipcMain.on("export-pdf",  function(event,newWalletNamePaper) {
     const win = BrowserWindow.fromWebContents(event.sender);
     const app = require("electron");
     const dialog = app.dialog;
-    console.log("print-to-pdf received")
-    console.log(newWalletNamePaper);
+    let defaultPathPDF;
 
-    if (!(newWalletNamePaper==="")){
-      var defaultPathPDF = "*/"+newWalletNamePaper+" Wallet - " + userInfo.login;
+    if (!(newWalletNamePaper === "")) {
+        defaultPathPDF = "*/" + newWalletNamePaper + " Wallet - " + userInfo.login;
     } else {
-      var defaultPathPDF = "*/ZenCash Wallet - " + userInfo.login;
+        defaultPathPDF = "*/ZenCash Wallet - " + userInfo.login;
     }
+
+    console.log(newWalletNamePaper);
 
 //   if (process.platform === 'win32'){
 //     defaultPathPDF = "C:/NewWallet.pdf"
@@ -1112,17 +1114,17 @@ ipcMain.on("export-pdf",  function(event,newWalletNamePaper) {
 //   };
 //
 
-    dialog.showSaveDialog(win, {title: "Save",filters: [{name: "PDF", extensions: ["pdf"]}], defaultPath: defaultPathPDF },(fileName)=> {
-        if(fileName === undefined){
+    dialog.showSaveDialog(win, {title: "Save", filters: [{name: "PDF", extensions: ["pdf"]}], defaultPath: defaultPathPDF}, (fileName) => {
+        if (fileName === undefined) {
             console.log("Cancel pressed");
-            event.sender.send("export-pdf-done", "PDF export: Canceled by user.")
+            event.sender.send("export-pdf-done", "PDF export: Canceled by user.");
             //event.sender.send("show-again-export-pdf-button", "Show")
             return;
-        };
-        win.webContents.printToPDF({landscape: true}, function(error,data){
-            fs.writeFile(fileName, data, function(err){
-                if (err) return console.log(err.message)
-                shell.openExternal("file://"+ fileName);
+        }
+        win.webContents.printToPDF({landscape: true}, function (error, data) {
+            fs.writeFile(fileName, data, function (err) {
+                if (err) return console.log(err.message);
+                shell.openExternal("file://" + fileName);
                 //event.sender.send('wrote-pdf', pdfPath);
                 event.sender.send("export-pdf-done", "PDF exported")
             });
@@ -1130,13 +1132,11 @@ ipcMain.on("export-pdf",  function(event,newWalletNamePaper) {
     });
 });
 
-
-ipcMain.on("get-paper-address-wif",  function(event,addressInWallet, name) {
-    if (!addressInWallet){
+ipcMain.on("get-paper-address-wif", function (event, addressInWallet, name) {
+    if (!addressInWallet) {
         let wifTmp = generateNewAddress(1, userInfo.pass);
-        let wif = wifTmp[0];
-        event.returnValue = wif;
-    } else if (addressInWallet){
+        event.returnValue = wifTmp[0];
+    } else if (addressInWallet) {
         let resp = getNewAddress(name);
         //ipcMain.send("generate-wallet-response", JSON.stringify(resp));
         event.returnValue = resp.wif;
