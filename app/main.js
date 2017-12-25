@@ -1097,10 +1097,11 @@ ipcMain.on("export-pdf",  function(event,newWalletNamePaper) {
     const dialog = app.dialog;
     console.log("print-to-pdf received")
     console.log(newWalletNamePaper);
+
     if (!(newWalletNamePaper==="")){
-      var defaultPathPDF = "*/"+newWalletNamePaper+"ZenCashWallet";
+      var defaultPathPDF = "*/"+newWalletNamePaper+" Wallet - " + userInfo.login;
     } else {
-      var defaultPathPDF = "*/NewZenCashWallet";
+      var defaultPathPDF = "*/ZenCash Wallet - " + userInfo.login;
     }
 
 //   if (process.platform === 'win32'){
