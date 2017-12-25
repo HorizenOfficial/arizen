@@ -1111,7 +1111,7 @@ ipcMain.on("export-pdf",  function(event,newWalletNamePaper) {
 //   };
 //
 
-    dialog.showSaveDialog(win, {title: "Save",filters: [{name: "PDF", extensions: [".pdf"]}], defaultPath: defaultPathPDF },(fileName)=> {
+    dialog.showSaveDialog(win, {title: "Save",filters: [{name: "PDF", extensions: ["pdf"]}], defaultPath: defaultPathPDF },(fileName)=> {
         if(fileName === undefined){
             console.log("Cancel pressed");
             event.sender.send("export-pdf-done", "PDF export: Canceled by user.")
