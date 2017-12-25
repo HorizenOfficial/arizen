@@ -132,16 +132,18 @@ function setBalanceText(balanceNode, balance) {
         balanceNode.classList.remove("positive");
 }
 
-function setFiatBalanceText(balanceZEN, fiat = "Nothing") {
+function setFiatBalanceText(balanceZEN, fiatCurrencySymbol = "") {
     const totalBalanceFiatNode = document.getElementById("totalBalanceFiat");
     const balanceFiatAmountNode = totalBalanceFiatNode.firstElementChild;
     const lastUpdateTimeNode = document.getElementById("lastUpdateTime");
     //console.log(getFiatCurrencyOfUser());
     let userSettings = ipcRenderer.sendSync("get-me-settings");
-    if (fiat === "Nothing"){
-        fiat = userSettings.fiatCurrency; //"USD" //FIXME: Get from settings the desired fiat currency
+    if (fiatCurrencySymbol === "") {
+        // "USD"
+        // FIXME: Get from settings the desired fiat currency
+        fiatCurrencySymbol = userSettings.fiatCurrency;
     }
-    zenToFiat(fiat).then( function(ZENPrice){
+    zenToFiat(fiatCurrencySymbol).then(function (ZENPrice) {
         //console.log(ZENPrice);
         const now = new Date().toLocaleTimeString();
         // View the output
@@ -149,27 +151,27 @@ function setFiatBalanceText(balanceZEN, fiat = "Nothing") {
         let balance = (balanceZEN) * ZENPrice;
         //console.log(balance);
         //balanceFiatAmountNode.textContent = formatFiatBalance(balance) + " " + fiat + " (@ "+ ZENPrice.toFixed(2).toString() +" "+ fiat +"/ZEN )";
-        balanceFiatAmountNode.textContent = formatFiatBalance(balance) + " " + fiat;
+        balanceFiatAmountNode.textContent = formatFiatBalance(balance) + " " + fiatCurrencySymbol;
         lastUpdateTimeNode.textContent = now;
     });
 }
 
-function zenToFiat(fiat){
+function zenToFiat(fiat) {
     const fetch = require("node-fetch");
-    const BASE_API_URL = 'https://api.coinmarketcap.com/v1//ticker'
-    let API_URL = BASE_API_URL + "/zencash/?convert="+ fiat;
+    const BASE_API_URL = "https://api.coinmarketcap.com/v1//ticker";
+    let API_URL = BASE_API_URL + "/zencash/?convert=" + fiat;
 
     console.log("GET " + API_URL);
-    return fetch(API_URL).then( function(resp){
+    return fetch(API_URL).then(function (resp) {
         console.log(`GET ${API_URL} done, status: ${resp.status} ${resp.statusText}`);
         if (!resp.ok)
             throw new Error(`HTTP GET status: ${resp.status} ${resp.statusText}, URL: ${API_URL}`);
         return resp.json()
-    }).then( function(responseAsJson) {
+    }).then(function (responseAsJson) {
         console.log(responseAsJson);
-        return parseFloat(eval("responseAsJson[0].price_"+fiat.toLowerCase()));
-  });
-};
+        return parseFloat(eval("responseAsJson[0].price_" + fiat.toLowerCase()));
+    });
+}
 
 function createAddrItem(addrObj) {
     const addrItem = cloneTemplate("addrItemTemplate");

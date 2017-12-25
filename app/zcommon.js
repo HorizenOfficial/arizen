@@ -28,11 +28,11 @@ function fixLinks() {
 }
 
 function formatBalance(balance) {
-    return balance.toFixed(8);
+    return parseFloat(balance).toLocaleString(undefined, {minimumFractionDigits: 8, maximumFractionDigits: 8});
 }
 
 function formatFiatBalance(balance) {
-    return balance.toFixed(2);
+    return parseFloat(balance).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
 }
 
 function formatEpochTime(epochSeconds) {
@@ -119,15 +119,17 @@ function showSettingsDialog() {
         const inputExplorerUrl = dialog.querySelector(".settingsExplorerUrl");
         const inputApiUrls = dialog.querySelector(".settingsApiUrls");
         const inputFiatCurrency = dialog.querySelector(".settingsFiatCurrency");
-        const saveButton = dialog.querySelector(".settingsSave");
-
+        // Unused
+        // const saveButton = dialog.querySelector(".settingsSave");
 
         inputTxHistory.value = settings.txHistory;
         inputExplorerUrl.value = settings.explorerUrl;
         inputApiUrls.value = settings.apiUrls.join("\n");
         inputFiatCurrency.value = settings.fiatCurrency;
-        if (settings.fiatCurrency == ""){ // An existing user has empty value settings.fiatCurrency
-          inputFiatCurrency.value = "USD"
+
+        // An existing user has empty value settings.fiatCurrency
+        if (settings.fiatCurrency === "") {
+            inputFiatCurrency.value = "USD"
         }
         console.log(settings);
 
@@ -139,7 +141,7 @@ function showSettingsDialog() {
                 apiUrls: inputApiUrls.value.split(/\s+/).filter(s => !/^\s*$/.test(s)).map(s => s.replace(/\/?$/, "")),
                 fiatCurrency: inputFiatCurrency.value
             };
-            ipcRenderer.send("save-settings", JSON.stringify(newSettings))
+            ipcRenderer.send("save-settings", JSON.stringify(newSettings));
             let zenBalance = getZenBalance();
             setFiatBalanceText(zenBalance, inputFiatCurrency.value);
             dialog.close();
