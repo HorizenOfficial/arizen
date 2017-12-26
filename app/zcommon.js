@@ -246,6 +246,27 @@ function tr(key, defaultVal) {
     return iter(langDict, key.split("."));
 }
 
+/**
+ * Sets `node`'s `textContent` to a translated text based on the translation
+ * key `key` and current language setting or to the `defaultVal` if the `key`
+ * is not translated. Also sets node's `data-tr` attribute to the `key`.
+ * If the `key` is null, only `defaultVal` is used and `data-tr` attribute is
+ * removed.
+ *
+ * @param {Node} node node to which set the translated text (`<span>`/`<div>`)
+ * @param {string} key translation key
+ * @param {string} defaultVal default text
+ */
+function setNodeTrText(node, key, defaultVal) {
+    if (key) {
+        node.dataset.tr = key;
+        node.textContent = tr(key, defaultVal);
+    } else {
+        delete node.dataset.tr;
+        node.textContent = defaultVal;
+    }
+}
+
 function translateCurrentPage() {
     if (!langDict)
         return;
