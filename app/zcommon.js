@@ -181,21 +181,20 @@ function openZenExplorer(path) {
 function loadAvailableLangs(select, selected) {
     const fs = require("fs");
     fs.readdir("./lang/", (err, files) => {
-        console.log(err); // for debug purposes
-        if (files !== "undefined") {
-            files.forEach(file => {
-                let tempLangData = require("./lang/" + file);
-                let opt = document.createElement("option");
-                opt.value = tempLangData.languageValue;
-                opt.innerHTML = tempLangData.languageName;
-                if (tempLangData.languageValue === selected) {
-                    opt.selected = true;
-                }
-                select.appendChild(opt);
-            });
-        } else {
-            console.log("variable files is undefined");
+        if (err) {
+            console.log(err);
+            return;
         }
+        files.forEach(file => {
+            let tempLangData = require("./lang/" + file);
+            let opt = document.createElement("option");
+            opt.value = tempLangData.languageValue;
+            opt.innerHTML = tempLangData.languageName;
+            if (tempLangData.languageValue === selected) {
+                opt.selected = true;
+            }
+            select.appendChild(opt);
+        });
     });
 }
 
