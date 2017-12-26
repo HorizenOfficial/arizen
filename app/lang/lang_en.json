@@ -23,13 +23,28 @@
     },
     "tabDeposit": {
       "label": "Deposit",
-      "help": "Click the green button next to the desired address for deposit."
+      "help": "Click the green button next to the desired address for deposit.",
+      "messages": {
+        "emptyToAddr": "The to address is empty",
+        "unknownToAddr": "The to address does not belong to this wallet",
+        "zeroAmount": "The amount is not positive"
+      }
     },
     "tabWithdraw": {
       "label": "Withdraw",
       "help": "Click the red button next to the desired address for withdrawal.",
       "availableBalance": "Available balance",
-      "fee": "Transaction fee"
+      "fee": "Transaction fee",
+      "withdrawConfirmQuestion": "Do you really want to send this transaction?",
+      "messages": {
+        "emptyFromAddr": "The from address is empty",
+        "unknownFromAddr": "The from address does not belong to this wallet",
+        "emptyToAddr": "The to address is empty",
+        "zeroAmount": "The amount is not positive",
+        "insufficientFunds": "Insufficient funds on the from address",
+        "error": "Error",
+        "success": "The transaction has been successfully sent"
+      }
     },
     "transactionHistory": {
       "label": "Transaction History",

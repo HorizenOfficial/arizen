@@ -325,7 +325,7 @@ function setAddressName(addr, name) {
     const [addrObj, addrNode] = getAddrData(addr);
     assert(addrObj);
     addrObj.name = name;
-    const displayName = name ? name : "Unnamed address"; // TODO translate
+    const displayName = name ? name : tr("wallet.tabOverview.unnamedAddress", "Unnamed address");
     addrNode.querySelector(".addrName").textContent = displayName;
     sortAddresses();
     scrollIntoViewIfNeeded(addrListNode, addrNode);
@@ -435,11 +435,11 @@ function updateDepositQrcode(qrcodeDelay = 0) {
     const amount = parseFloat(depositAmountInput.value || 0);
 
     if (!toAddr) {
-        depositMsg.textContent = "To address is empty";
+        depositMsg.textContent = tr("wallet.tabDeposit.messages.emptyToAddr", "The to address is empty");
     } else if (!addrIdxByAddr.has(toAddr)) {
-        depositMsg.textContent = "To address does not belong to this wallet";
+        depositMsg.textContent = tr("wallet.tabDeposit.messages.unknownToAddr", "The to address does not belong to this wallet");
     } else if (!amount) {
-        depositMsg.textContent = "Amount is not positive";
+        depositMsg.textContent = tr("wallet.tabDeposit.messages.zeroAmount", "The amount is not positive");
     } else {
         depositMsg.textContent = "\xA0"; // &nbsp;
     }
@@ -464,7 +464,8 @@ function initWithdrawView() {
     withdrawAmountInput.addEventListener("input", validateWithdrawForm);
     withdrawFeeInput.addEventListener("input", validateWithdrawForm);
     withdrawButton.addEventListener("click", () => {
-        if (confirm("Do you really want to send this transaction?")) {
+        const msg = tr("wallet.tabWithdraw.withdrawConfirmQuestion", "Do you really want to send this transaction?");
+        if (confirm(msg)) {
             ipcRenderer.send("send",
                 withdrawFromAddrInput.value,
                 withdrawToAddrInput.value,
@@ -493,26 +494,26 @@ function validateWithdrawForm() {
     setBalanceText(withdrawAvailBalance, 0);
 
     if (!fromAddr) {
-        withdrawMsg.textContent = "The From address is empty";
+        withdrawMsg.textContent = tr("wallet.tabWithdraw.messages.emptyFromAddr", "The from address is empty");
         return;
     }
     const [fromAddrObj] = getAddrData(fromAddr);
     if (!fromAddrObj) {
-        withdrawMsg.textContent = "The From address does not belong to this wallet";
+        withdrawMsg.textContent = tr("wallet.tabWithdraw.messages.unknownFromAddr", "The from address does not belong to this wallet");
         return;
     }
     setBalanceText(withdrawAvailBalance, fromAddrObj.lastbalance);
 
     if (!toAddr) {
-        withdrawMsg.textContent = "The To address is empty";
+        withdrawMsg.textContent = tr("wallet.tabWithdraw.messages.emptyToAddr", "The to address is empty");
         return;
     }
     if (!amount) {
-        withdrawMsg.textContent = "The amount is not positive";
+        withdrawMsg.textContent = tr("wallet.tabWithdraw.messages.zeroAmount", "The amount is not positive");
         return;
     }
     if (amount + fee > fromAddrObj.lastbalance) {
-        withdrawMsg.textContent = "Insufficient funds on the From address";
+        withdrawMsg.textContent = tr("wallet.tabWithdraw.messages.insufficientFunds", "Insufficient funds on the from address");
         return;
     }
 
@@ -523,10 +524,10 @@ function validateWithdrawForm() {
 function updateWithdrawalStatus(result, msg) {
     if (result === "error") {
         withdrawStatusTitleNode.classList.add("withdrawStatusBad");
-        withdrawStatusTitleNode.textContent = "Error:"
+        withdrawStatusTitleNode.textContent = tr("wallet.tabWithdraw.messages.error", "Error") + ":";
     } else if (result === "ok") {
         withdrawStatusTitleNode.classList.remove("withdrawStatusBad");
-        withdrawStatusTitleNode.textContent = "Transaction has been successfully sent";
+        withdrawStatusTitleNode.textContent = tr("wallet.tabWithdraw.messages.success", "Transaction has been successfully sent");
     }
     withdrawStatusBodyNode.innerHTML = msg;
 }
