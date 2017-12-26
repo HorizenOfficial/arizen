@@ -2,7 +2,7 @@
     display: grid !important;
     grid-gap: 5px;
     grid-template-rows: min-content auto 30px;
-    grid-template-columns: minmax(520px, min-content) auto;
+    grid-template-columns: minmax(550px, min-content) auto;
     grid-template-areas: "header header" "walletOps transactions" "statusLine statusLine";
 }
 
