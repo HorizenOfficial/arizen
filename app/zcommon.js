@@ -180,7 +180,7 @@ function openZenExplorer(path) {
 
 function loadAvailableLangs(select, selected) {
     const fs = require("fs");
-    fs.readdir("./lang/", (err, files) => {
+    fs.readdir(__dirname + "/lang", (err, files) => {
         if (err) {
             console.log(err);
             return;
