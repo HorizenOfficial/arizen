@@ -19,8 +19,8 @@ function openUrl(url) {
     shell.openExternal(url);
 }
 
-function fixLinks() {
-    document.querySelectorAll("a[href^='http']").forEach(link =>
+function fixLinks(parent = document) {
+    parent.querySelectorAll("a[href^='http']").forEach(link =>
         link.addEventListener("click", event => {
             event.preventDefault();
             openUrl(link.href);
@@ -48,7 +48,9 @@ function clearChildNodes(parent) {
 }
 
 function cloneTemplate(id) {
-    return document.getElementById(id).content.cloneNode(true).firstElementChild;
+    const node = document.getElementById(id).content.cloneNode(true).firstElementChild;
+    fixLinks(node);
+    return node;
 }
 
 function showDialogFromTemplate(templateName, dialogInit, onClose = null) {
