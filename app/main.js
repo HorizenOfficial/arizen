@@ -26,6 +26,7 @@ const {List} = require("immutable");
 // FIXME: comment this for release versions!
 require("electron-debug")();
 
+
 updater.init({checkUpdateOnStart: true, autoDownload: true});
 attachUpdaterHandlers();
 
@@ -48,7 +49,8 @@ const defaultSettings = {
         "https://explorer.zensystem.io/insight-api-zen"
     ],
     txHistory: 50,
-    fiatCurrency: "USD"
+    fiatCurrency: "USD",
+    lang: "en"
 };
 let settings = defaultSettings;
 

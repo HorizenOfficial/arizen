@@ -2,6 +2,8 @@
 <html>
 <head>
     <title>Arizen: Create Wallet</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
     <link rel="stylesheet" href="resources/login_styles.css">
     <link rel="stylesheet" href="resources/create_wallet.css">
 
@@ -19,15 +21,15 @@
     <form>
         <ul>
             <li>
-                <span style="text-align:center;"><label for="username">Username</label></span>
+                <span style="text-align:center;"><label id="username_label" for="username">Username</label></span>
                 <span><input id="username" class="inputs" name="username" tabindex="1" onkeyup="checkLogin();" onfocus="selectColumn(true, false, false);"/></span>
             </li>
             <li>
-                <span style="text-align:center;"><label for="pswd">Password</label></span>
+                <span style="text-align:center;"><label id="pswd_label" for="pswd">Password</label></span>
                 <span><input id="pswd" class="inputs" name="pswd" type="password" onkeyup="checkPasswd();" tabindex="2" onfocus="selectColumn(false, true, false);"/></span>
             </li>
             <li>
-                <span style="text-align:center;"><label for="pswd_again">Password again</label></span>
+                <span style="text-align:center;"><label id="pswd_again_label" for="pswd_again">Password again</label></span>
                 <span><input id="pswd_again" class="inputs" name="pswd_again" type="password" onkeyup="checkPasswdAgain();" tabindex="3" onfocus="selectColumn(false, false, true);checkPasswdAgain();"/></span>
             </li>
             <li>

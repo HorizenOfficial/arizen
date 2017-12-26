@@ -5,6 +5,37 @@
 
 const {DateTime} = require("luxon");
 
+function assert(condition, message) {
+    if (!condition)
+        throw new Error(message || "Assertion failed");
+}
+
+/**
+ * Like `document.querySelectorAll()`, but queries shadow roots and template
+ * contents too and returns an `Array` of nodes instead of a `NodeList`.
+ *
+ * @param {string} selector - selector string
+ * @returns {Array} array of matched nodes
+ */
+function querySelectorAllDeep(selector, startRoot = document) {
+    const roots = [startRoot];
+
+    const nodeQueue = [... startRoot.children];
+    while (nodeQueue.length) {
+        const node = nodeQueue.shift();
+        if (node.shadowRoot)
+            roots.push(node.shadowRoot);
+        if (node.tagName === "TEMPLATE" && node.content)
+            roots.push(node.content);
+        nodeQueue.push(... node.children);
+    }
+
+    const matches = [];
+    for (const r of roots)
+        matches.push(... r.querySelectorAll(selector));
+    return matches;
+}
+
 function logout() {
     ipcRenderer.send("do-logout");
     location.href = "./login.html";
@@ -110,9 +141,14 @@ function showAboutDialog() {
 
 // TODO this doesn't belong here
 let settings;
+let langDict;
 (() => {
     const {ipcRenderer} = require("electron");
-    ipcRenderer.on("settings", (sender, settingsStr) => settings = JSON.parse(settingsStr));
+    ipcRenderer.on("settings", (sender, settingsStr) => {
+        settings = JSON.parse(settingsStr);
+        loadLang();
+        translateCurrentPage();
+    });
 })();
 
 function showSettingsDialog() {
@@ -121,11 +157,12 @@ function showSettingsDialog() {
         const inputExplorerUrl = dialog.querySelector(".settingsExplorerUrl");
         const inputApiUrls = dialog.querySelector(".settingsApiUrls");
         const inputFiatCurrency = dialog.querySelector(".settingsFiatCurrency");
-        // Unused
-        // const saveButton = dialog.querySelector(".settingsSave");
+        const inputLanguages = dialog.querySelector(".settingsLanguage");
+        const saveButton = dialog.querySelector(".settingsSave");
 
         inputTxHistory.value = settings.txHistory;
         inputExplorerUrl.value = settings.explorerUrl;
+        loadAvailableLangs(inputLanguages, settings.lang);
         inputApiUrls.value = settings.apiUrls.join("\n");
         inputFiatCurrency.value = settings.fiatCurrency;
 
@@ -141,7 +178,8 @@ function showSettingsDialog() {
                 txHistory: parseInt(inputTxHistory.value),
                 explorerUrl: inputExplorerUrl.value.trim().replace(/\/?$/, ""),
                 apiUrls: inputApiUrls.value.split(/\s+/).filter(s => !/^\s*$/.test(s)).map(s => s.replace(/\/?$/, "")),
-                fiatCurrency: inputFiatCurrency.value
+                fiatCurrency: inputFiatCurrency.value,
+                lang: inputLanguages[inputLanguages.selectedIndex].value
             };
             ipcRenderer.send("save-settings", JSON.stringify(newSettings));
             let zenBalance = getZenBalance();
@@ -156,7 +194,61 @@ function openZenExplorer(path) {
 }
 
 function getZenBalance(){
-      const totalBalanceAmountNode = document.getElementById("totalBalanceAmount");
-      console.log(totalBalanceAmountNode.innerHTML);
-      return formatBalance(parseFloat(totalBalanceAmountNode.innerHTML));
+    const totalBalanceAmountNode = document.getElementById("totalBalanceAmount");
+    console.log(totalBalanceAmountNode.innerHTML);
+    return formatBalance(parseFloat(totalBalanceAmountNode.innerHTML));
+}
+
+function loadAvailableLangs(select, selected) {
+    const fs = require("fs");
+    fs.readdir(__dirname + "/lang", (err, files) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        files.forEach(file => {
+            let tempLangData = require("./lang/" + file);
+            let opt = document.createElement("option");
+            opt.value = tempLangData.languageValue;
+            opt.innerHTML = tempLangData.languageName;
+            if (tempLangData.languageValue === selected) {
+                opt.selected = true;
+            }
+            select.appendChild(opt);
+        });
+    });
+}
+
+function loadLang() {
+    if (!settings.lang)
+        return;
+    // TODO: there can be invalid language in DB, fail gracefully
+    langDict = require("./lang/lang_" + settings.lang + ".json");
+}
+
+function tr(key, defaultVal) {
+    if (!langDict)
+        return defaultVal;
+    function iter(dict, trPath) {
+        switch (typeof(dict)) {
+            case "object":
+                if (trPath.length)
+                    return iter(dict[trPath[0]], trPath.slice(1));
+                break;
+            case "string":
+                if (!trPath.length)
+                    return dict;
+                break;
+        }
+        console.warn("Untranslated key: " + key);
+        return defaultVal;
+    }
+    return iter(langDict, key.split("."));
+}
+
+function translateCurrentPage() {
+    if (!langDict)
+        return;
+    querySelectorAllDeep("[data-tr]").forEach(node =>
+        node.textContent = tr(node.dataset.tr, node.textContent));
 }
