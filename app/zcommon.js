@@ -131,7 +131,7 @@ function showSettingsDialog() {
 
         // An existing user has empty value settings.fiatCurrency
         if (settings.fiatCurrency === "") {
-            inputFiatCurrency.value = "USD"
+            inputFiatCurrency.value = "USD";
         }
         console.log(settings);
 
