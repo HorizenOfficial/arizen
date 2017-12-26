@@ -28,7 +28,11 @@ function fixLinks(parent = document) {
 }
 
 function formatBalance(balance) {
-    return balance.toFixed(8);
+    return parseFloat(balance).toLocaleString(undefined, {minimumFractionDigits: 8, maximumFractionDigits: 8});
+}
+
+function formatFiatBalance(balance) {
+    return parseFloat(balance).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
 }
 
 function formatEpochTime(epochSeconds) {
@@ -116,11 +120,20 @@ function showSettingsDialog() {
         const inputTxHistory = dialog.querySelector(".settingsTxHistory");
         const inputExplorerUrl = dialog.querySelector(".settingsExplorerUrl");
         const inputApiUrls = dialog.querySelector(".settingsApiUrls");
-        const saveButton = dialog.querySelector(".settingsSave");
+        const inputFiatCurrency = dialog.querySelector(".settingsFiatCurrency");
+        // Unused
+        // const saveButton = dialog.querySelector(".settingsSave");
 
         inputTxHistory.value = settings.txHistory;
         inputExplorerUrl.value = settings.explorerUrl;
         inputApiUrls.value = settings.apiUrls.join("\n");
+        inputFiatCurrency.value = settings.fiatCurrency;
+
+        // An existing user has empty value settings.fiatCurrency
+        if (settings.fiatCurrency === "") {
+            inputFiatCurrency.value = "USD"
+        }
+        console.log(settings);
 
         dialog.querySelector(".settingsSave").addEventListener("click", () => {
 
@@ -128,8 +141,11 @@ function showSettingsDialog() {
                 txHistory: parseInt(inputTxHistory.value),
                 explorerUrl: inputExplorerUrl.value.trim().replace(/\/?$/, ""),
                 apiUrls: inputApiUrls.value.split(/\s+/).filter(s => !/^\s*$/.test(s)).map(s => s.replace(/\/?$/, "")),
+                fiatCurrency: inputFiatCurrency.value
             };
             ipcRenderer.send("save-settings", JSON.stringify(newSettings));
+            let zenBalance = getZenBalance();
+            setFiatBalanceText(zenBalance, inputFiatCurrency.value);
             dialog.close();
         });
     });
@@ -137,4 +153,10 @@ function showSettingsDialog() {
 
 function openZenExplorer(path) {
     openUrl(settings.explorerUrl + "/" + path);
+}
+
+function getZenBalance(){
+      const totalBalanceAmountNode = document.getElementById("totalBalanceAmount");
+      console.log(totalBalanceAmountNode.innerHTML);
+      return formatBalance(parseFloat(totalBalanceAmountNode.innerHTML));
 }
