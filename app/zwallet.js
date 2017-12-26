@@ -187,15 +187,18 @@ function zenToFiat(fiat) {
     });
 }
 
-function getAddressName(addrObj) {
-    return addrObj.name ? addrObj.name : tr("wallet.tabOverview.unnamedAddress", "Unnamed address");
+function setAddressNodeName(addrObj, addrNode) {
+    if (addrObj.name)
+        setNodeTrText(addrNode, null, addrObj.name);
+    else
+        setNodeTrText(addrNode, "wallet.tabOverview.unnamedAddress", "Unnamed address");
 }
 
 function createAddrItem(addrObj) {
     const addrItem = cloneTemplate("addrItemTemplate");
     addrItem.dataset.addr = addrObj.addr;
 
-    addrItem.getElementsByClassName("addrName")[0].textContent = getAddressName(addrObj);
+    setAddressNodeName(addrObj, addrItem.getElementsByClassName("addrName")[0]);
     addrItem.getElementsByClassName("addrText")[0].textContent = addrObj.addr;
     addrItem.getElementsByClassName("addrNameLine")[0]
         .addEventListener("click", () => showAddrDetail(addrObj.addr));
@@ -369,7 +372,7 @@ function setAddressName(addr, name) {
     const [addrObj, addrNode] = getAddrData(addr);
     assert(addrObj);
     addrObj.name = name;
-    addrNode.querySelector(".addrName").textContent = getAddressName(addrObj);
+    setAddressNodeName(addrObj, addrNode.querySelector(".addrName"));
     sortAddresses();
     scrollIntoViewIfNeeded(addrListNode, addrNode);
 }
@@ -481,13 +484,13 @@ function updateDepositQrcode(qrcodeDelay = 0) {
     const amount = parseFloat(depositAmountInput.value || 0);
 
     if (!toAddr) {
-        depositMsg.textContent = tr("wallet.tabDeposit.messages.emptyToAddr", "The to address is empty");
+        setNodeTrText(depositMsg, "wallet.tabDeposit.messages.emptyToAddr", "The to address is empty");
     } else if (!addrIdxByAddr.has(toAddr)) {
-        depositMsg.textContent = tr("wallet.tabDeposit.messages.unknownToAddr", "The to address does not belong to this wallet");
+        setNodeTrText(depositMsg, "wallet.tabDeposit.messages.unknownToAddr", "The to address does not belong to this wallet");
     } else if (!amount) {
-        depositMsg.textContent = tr("wallet.tabDeposit.messages.zeroAmount", "The amount is not positive");
+        setNodeTrText(depositMsg, "wallet.tabDeposit.messages.zeroAmount", "The amount is not positive");
     } else {
-        depositMsg.textContent = "\xA0"; // &nbsp;
+        setNodeTrText(depositMsg, null, "\xA0" /* &nbsp; */);
     }
     if (depositQrcodeTimer) {
         clearTimeout(depositQrcodeTimer);
@@ -540,26 +543,26 @@ function validateWithdrawForm() {
     setBalanceText(withdrawAvailBalance, 0);
 
     if (!fromAddr) {
-        withdrawMsg.textContent = tr("wallet.tabWithdraw.messages.emptyFromAddr", "The from address is empty");
+        setNodeTrText(withdrawMsg, "wallet.tabWithdraw.messages.emptyFromAddr", "The from address is empty");
         return;
     }
     const [fromAddrObj] = getAddrData(fromAddr);
     if (!fromAddrObj) {
-        withdrawMsg.textContent = tr("wallet.tabWithdraw.messages.unknownFromAddr", "The from address does not belong to this wallet");
+        setNodeTrText(withdrawMsg, "wallet.tabWithdraw.messages.unknownFromAddr", "The from address does not belong to this wallet");
         return;
     }
     setBalanceText(withdrawAvailBalance, fromAddrObj.lastbalance);
 
     if (!toAddr) {
-        withdrawMsg.textContent = tr("wallet.tabWithdraw.messages.emptyToAddr", "The to address is empty");
+        setNodeTrText(withdrawMsg, "wallet.tabWithdraw.messages.emptyToAddr", "The to address is empty");
         return;
     }
     if (!amount) {
-        withdrawMsg.textContent = tr("wallet.tabWithdraw.messages.zeroAmount", "The amount is not positive");
+        setNodeTrText(withdrawMsg, "wallet.tabWithdraw.messages.zeroAmount", "The amount is not positive");
         return;
     }
     if (amount + fee > fromAddrObj.lastbalance) {
-        withdrawMsg.textContent = tr("wallet.tabWithdraw.messages.insufficientFunds", "Insufficient funds on the from address");
+        setNodeTrText(withdrawMsg, "wallet.tabWithdraw.messages.insufficientFunds", "Insufficient funds on the from address");
         return;
     }
 
@@ -570,10 +573,10 @@ function validateWithdrawForm() {
 function updateWithdrawalStatus(result, msg) {
     if (result === "error") {
         withdrawStatusTitleNode.classList.add("withdrawStatusBad");
-        withdrawStatusTitleNode.textContent = tr("wallet.tabWithdraw.messages.error", "Error") + ":";
+        setNodeTrText(withdrawStatusTitleNode, "wallet.tabWithdraw.messages.error", "Error:");
     } else if (result === "ok") {
         withdrawStatusTitleNode.classList.remove("withdrawStatusBad");
-        withdrawStatusTitleNode.textContent = tr("wallet.tabWithdraw.messages.success", "Transaction has been successfully sent");
+        setNodeTrText(withdrawStatusTitleNode, "wallet.tabWithdraw.messages.success", "Transaction has been successfully sent");
     }
     withdrawStatusBodyNode.innerHTML = msg;
 }
