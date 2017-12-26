@@ -80,6 +80,7 @@
       "language": "Language",
       "explorerUrl": "ZEN Explorer URL",
       "apiUrl": "API URLs",
+      "fiat": "Fiat Equivalent",
       "save": "Save"
     }
   }

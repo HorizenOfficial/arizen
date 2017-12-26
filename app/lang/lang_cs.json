@@ -23,13 +23,28 @@
         },
         "tabDeposit": {
             "label": "Vklad",
-            "help": "Klikem na zelené tlačítko vedle adresy provedete vklad."
+            "help": "Klikem na zelené tlačítko vedle adresy provedete vklad.",
+            "messages": {
+                "emptyToAddr": "Cílová adresa není zadána",
+                "unknownToAddr": "Cílová adresa nepatří do této peněženky",
+                "zeroAmount": "Množství není větší než nula"
+            }
         },
         "tabWithdraw": {
             "label": "Výběr",
             "help": "Klikem na červené tlačítko vedle adresy provedete výběr.",
             "availableBalance": "Dostupný zůstatek",
-            "fee": "Poplatek za transakci"
+            "fee": "Poplatek za transakci",
+            "withdrawConfirmQuestion": "Do you really want to send this transaction?",
+            "messages": {
+                "emptyFromAddr": "Zdrojová adresa není zadána",
+                "unknownFromAddr": "Zdrojová adresa nepatří do této peněženky",
+                "emptyToAddr": "Cílová adresa není zadána",
+                "zeroAmount": "Množství není větší než nula",
+                "insufficientFunds": "Nedostatečný zůstatek na zdrojové adrese",
+                "error": "Chyba",
+                "success": "Transakce úspěšně odeslána"
+            }
         },
         "transactionHistory": {
             "label": "Historie transakcí",
@@ -65,6 +80,7 @@
             "language": "Jazyk",
             "explorerUrl": "Adresa ZEN exploreru",
             "apiUrl": "Adresa API",
+            "fiat": "Zůstatek ve FIAT měně",
             "save": "Uložit"
         }
     }

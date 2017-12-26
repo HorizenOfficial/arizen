@@ -82,6 +82,7 @@ button:disabled {
 
 input[type="text"],
 input[type="number"],
+select,
 textarea {
     font: inherit;
     color: inherit;
@@ -90,16 +91,33 @@ textarea {
 }
 
 input[type="text"],
-input[type="number"] {
+input[type="number"],
+select
+{
     border: none;
     border-bottom: 1px solid var(--arizen-fg);
     margin-bottom: 2px;
 }
 
 input[type="text"]:focus,
-input[type="number"]:focus {
+input[type="number"]:focus,
+select{
     border-bottom: 3px solid var(--arizen-fg);
     margin-bottom: 0px;
+}
+
+select {
+    background: var(--arizen-bg);
+}
+
+select option {
+    margin: 40px;
+    background: inherit
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+}
+
+select:focus > option:checked {
+    color: var(--arizen-fg) !important;
 }
 
 textarea {
