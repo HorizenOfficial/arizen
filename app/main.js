@@ -24,7 +24,7 @@ const {List} = require("immutable");
 
 // Press F12 to open the DevTools. See https://github.com/sindresorhus/electron-debug.
 // FIXME: comment this for release versions!
-//require('electron-debug')();
+require("electron-debug")();
 
 updater.init({checkUpdateOnStart: true, autoDownload: true});
 attachUpdaterHandlers();
@@ -47,7 +47,8 @@ const defaultSettings = {
         "http://explorer.zenmine.pro/insight-api-zen",
         "https://explorer.zensystem.io/insight-api-zen"
     ],
-    txHistory: 50
+    txHistory: 50,
+    fiatCurrency: "USD"
 };
 let settings = defaultSettings;
 
@@ -830,7 +831,7 @@ ipcMain.on("refresh-wallet", function (event) {
         resp.autorefresh = settings.autorefresh;
     }
 
-    event.sender.send("refresh-wallet-response", JSON.stringify(resp));    
+    event.sender.send("refresh-wallet-response", JSON.stringify(resp));
 });
 
 ipcMain.on("rename-wallet", function (event, address, name) {
@@ -1084,6 +1085,10 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
             }
         });
     }
+});
+
+ipcMain.on("get-me-settings", function (event) {
+  event.returnValue = loadSettings();
 });
 
 // Unused

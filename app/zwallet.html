@@ -140,6 +140,42 @@
                 <input type=text name=settingsExplorerUrl class=settingsExplorerUrl />
                 <label for=settingsApiUrls title="Place one URL per line">API URLs</label>
                 <textarea type=text name=settingsApiUrls class=settingsApiUrls rows=5></textarea>
+                <label for=settingsFiatCurrency title="Select the desired fiat to display your balance.">Fiat Equivalent</label>
+                <select name=settingsFiatCurrency class=settingsFiatCurrency >
+                    <option value="USD">(USD) US Dollar</option>
+                    <option value="EUR">(EUR) Euro</option>
+                    <option value="RUB">(RUB) Russian Ruble </option>
+                    <option value="JPY">(JPY) Japan Yen</option>
+                    <option value="GBP">(GBP) British Pount</option>
+                    <option value="AUD">(AUD) Australian Dollar </option>
+                    <option value="USD">-------------------</option>
+                    <option value="BRL">(BRL) BRL </option>
+                    <option value="CAD">(CAD) CAD </option>
+                    <option value="CHF">(CHF) CHF </option>
+                    <option value="CLP">(CLP) CLP </option>
+                    <option value="CNY">(CNY) CNY </option>
+                    <option value="CZK">(CZK) CZK </option>
+                    <option value="DKK">(DKK) DKK </option>
+                    <option value="HKD">(HKD) HKD </option>
+                    <option value="HKD">(HKD) HKD </option>
+                    <option value="IDR">(IDR) IDR </option>
+                    <option value="ILS">(ILS) ILS </option>
+                    <option value="INR">(INR) INR </option>
+                    <option value="KRW">(KRW) KRW </option>
+                    <option value="MXN">(MXN) MXN </option>
+                    <option value="MYR">(MYR) MYR </option>
+                    <option value="NOK">(NOK) NOK </option>
+                    <option value="NZD">(NZD) NZD </option>
+                    <option value="PHP">(PHP) PHP </option>
+                    <option value="PKR">(PKR) PKR </option>
+                    <option value="PLN">(PLN) PLN </option>
+                    <option value="SEK">(SEK) SEK </option>
+                    <option value="SGD">(SGD) SGD </option>
+                    <option value="THB">(THB) THB </option>
+                    <option value="TRY">(TRY) TRY </option>
+                    <option value="TWD">(TWD) TWD </option>
+                    <option value="ZAR">(ZAR) ZAR </option>
+                </select>
             </div>
             <div class=formButtons>
                 <button class=settingsSave>Save</button>
@@ -273,7 +309,10 @@
 </div>
 
 <footer class='statusLine panel'>
-Total balance: <span id=totalBalance><span id=totalBalanceAmount>0.00000000</span> ZEN</span>
+    Total balance: <span id=totalBalance><span id=totalBalanceAmount>0.00000000</span> ZEN </span>
+    <span> / </span>
+    <span id=totalBalanceFiat><span id=totalFiatBalanceAmount>0.00</span></span>
+    <span id=lastUpdateTimeText> / Last update: <span id=lastUpdateTime></span></span>
 </footer>
 
 </div>

@@ -132,6 +132,47 @@ function setBalanceText(balanceNode, balance) {
         balanceNode.classList.remove("positive");
 }
 
+function setFiatBalanceText(balanceZEN, fiatCurrencySymbol = "") {
+    const totalBalanceFiatNode = document.getElementById("totalBalanceFiat");
+    const balanceFiatAmountNode = totalBalanceFiatNode.firstElementChild;
+    const lastUpdateTimeNode = document.getElementById("lastUpdateTime");
+    //console.log(getFiatCurrencyOfUser());
+    let userSettings = ipcRenderer.sendSync("get-me-settings");
+    if (fiatCurrencySymbol === "") {
+        // "USD"
+        // FIXME: Get from settings the desired fiat currency
+        fiatCurrencySymbol = userSettings.fiatCurrency;
+    }
+    zenToFiat(fiatCurrencySymbol).then(function (ZENPrice) {
+        //console.log(ZENPrice);
+        const now = new Date().toLocaleTimeString();
+        // View the output
+        console.log(now);
+        let balance = (balanceZEN) * ZENPrice;
+        //console.log(balance);
+        //balanceFiatAmountNode.textContent = formatFiatBalance(balance) + " " + fiat + " (@ "+ ZENPrice.toFixed(2).toString() +" "+ fiat +"/ZEN )";
+        balanceFiatAmountNode.textContent = formatFiatBalance(balance) + " " + fiatCurrencySymbol;
+        lastUpdateTimeNode.textContent = now;
+    });
+}
+
+function zenToFiat(fiat) {
+    const fetch = require("node-fetch");
+    const BASE_API_URL = "https://api.coinmarketcap.com/v1//ticker";
+    let API_URL = BASE_API_URL + "/zencash/?convert=" + fiat;
+
+    console.log("GET " + API_URL);
+    return fetch(API_URL).then(function (resp) {
+        console.log(`GET ${API_URL} done, status: ${resp.status} ${resp.statusText}`);
+        if (!resp.ok)
+            throw new Error(`HTTP GET status: ${resp.status} ${resp.statusText}, URL: ${API_URL}`);
+        return resp.json()
+    }).then(function (responseAsJson) {
+        console.log(responseAsJson);
+        return parseFloat(eval("responseAsJson[0].price_" + fiat.toLowerCase()));
+    });
+}
+
 function createAddrItem(addrObj) {
     const addrItem = cloneTemplate("addrItemTemplate");
 
@@ -354,6 +395,9 @@ function addTransactions(txs, newTx = false) {
 
 function setTotalBalance(balance) {
     setBalanceText(totalBalanceNode, balance);
+    let balanceZEN = balance;
+    setFiatBalanceText(balanceZEN);
+    // GS: Add SetBalance for fiat here
 }
 
 function toggleZeroBalanceAddrs() {
