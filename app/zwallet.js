@@ -187,13 +187,15 @@ function zenToFiat(fiat) {
     });
 }
 
+function getAddressName(addrObj) {
+    return addrObj.name ? addrObj.name : tr("wallet.tabOverview.unnamedAddress", "Unnamed address");
+}
+
 function createAddrItem(addrObj) {
     const addrItem = cloneTemplate("addrItemTemplate");
     addrItem.dataset.addr = addrObj.addr;
 
-    if (addrObj.name) {
-        addrItem.getElementsByClassName("addrName")[0].textContent = addrObj.name;
-    }
+    addrItem.getElementsByClassName("addrName")[0].textContent = getAddressName(addrObj);
     addrItem.getElementsByClassName("addrText")[0].textContent = addrObj.addr;
     addrItem.getElementsByClassName("addrNameLine")[0]
         .addEventListener("click", () => showAddrDetail(addrObj.addr));
@@ -367,8 +369,7 @@ function setAddressName(addr, name) {
     const [addrObj, addrNode] = getAddrData(addr);
     assert(addrObj);
     addrObj.name = name;
-    const displayName = name ? name : tr("wallet.tabOverview.unnamedAddress", "Unnamed address");
-    addrNode.querySelector(".addrName").textContent = displayName;
+    addrNode.querySelector(".addrName").textContent = getAddressName(addrObj);
     sortAddresses();
     scrollIntoViewIfNeeded(addrListNode, addrNode);
 }
