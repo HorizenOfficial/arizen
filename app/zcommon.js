@@ -209,14 +209,18 @@ function tr(key, defaultVal) {
     if (!langDict)
         return defaultVal;
     function iter(dict, trPath) {
-        if (trPath.length)
-            return iter(dict[trPath[0]], trPath.slice(1));
-        else if (typeof(dict) === "string")
-            return dict;
-        else { // dict is an object or null
-            console.warn("Untranslated key: " + key);
-            return defaultVal;
+        switch (typeof(dict)) {
+            case "object":
+                if (trPath.length)
+                    return iter(dict[trPath[0]], trPath.slice(1));
+                break;
+            case "string":
+                if (!trPath.length)
+                    return dict;
+                break;
         }
+        console.warn("Untranslated key: " + key);
+        return defaultVal;
     }
     return iter(langDict, key.split("."));
 }
