@@ -45,8 +45,8 @@ const defaultSettings = {
     notifications: 1,
     explorerUrl: "https://explorer.zensystem.io",
     apiUrls: [
-        "http://explorer.zenmine.pro/insight-api-zen",
-        "https://explorer.zensystem.io/insight-api-zen"
+        "https://explorer.zensystem.io/insight-api-zen",
+        "http://explorer.zenmine.pro/insight-api-zen"
     ],
     txHistory: 50,
     fiatCurrency: "USD",
@@ -984,12 +984,11 @@ function checkSendParameters(fromAddress, toAddress, fee, amount){
         errString += "\n\n";
     }
 
+    // fee can be zero, in block can be few transactions with zero fee
     if (fee < 0){
         errString += "Fee has to be greater or equal zero!";
         errString += "\n\n";
     }
-
-    // fee can be zero, in block can be one transaction with zero fee
 
     return errString;
 }
@@ -1098,6 +1097,232 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
 
                                     // Convert it to hex string
                                     const txHexString = zencashjs.transaction.serializeTx(txObj);
+                                    request.post({url: sendRawTxURL, form: {rawtx: txHexString}}, function(sendtx_err, sendtx_resp, sendtx_body) {
+                                        if (sendtx_err) {
+                                            console.log(sendtx_err);
+                                            event.sender.send("send-finish", "error", "sendtx_err: " + String(sendtx_err));
+                                        } else if(sendtx_resp && sendtx_resp.statusCode === 200) {
+                                            const tx_resp_data = JSON.parse(sendtx_body);
+                                            let message = "TXid:\n\n<small><small>" + tx_resp_data.txid +
+                                                "</small></small><br /><a href=\"javascript:void(0)\" onclick=\"openUrl('" + settings.explorerUrl + "/tx/" + tx_resp_data.txid +"')\" class=\"walletListItemDetails transactionExplorer\" target=\"_blank\">Show Transaction in Explorer</a>";
+                                            event.sender.send("send-finish", "ok", message);
+                                        } else {
+                                            console.log(sendtx_resp);
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+});
+
+function checkSendParametersSendMany(fromAddresses, toAddress, fee, thresholdLimit){
+    let errString = "";
+
+    for (let i = 0; i < fromAddresses.length; i++) {
+        if (fromAddresses[i].length !== 35) {
+            errString += "Bad length of source address!";
+            errString += "\n\n";
+        }
+
+        if (fromAddresses[i].substring(0, 2) !== "zn") {
+            errString += "Bad source address prefix - have to be 'zn'!";
+            errString += "\n\n";
+        }
+    }
+
+    if (toAddress.length !== 35) {
+        errString += "Bad length of destination address!";
+        errString += "\n\n";
+    }
+
+    if (toAddress.substring(0, 2) !== "zn") {
+        errString += "Bad destination address prefix - have to be 'zn'!";
+        errString += "\n\n";
+    }
+
+    if (typeof parseInt(fee, 10) !== "number" || fee === ""){
+        errString += "Fee is NOT number!";
+        errString += "\n\n";
+    }
+
+    // fee can be zero, in block can be few transactions with zero fee
+    if (fee < 0){
+        errString += "Fee has to be greater or equal zero!";
+        errString += "\n\n";
+    }
+
+    if (thresholdLimit < 0){
+        errString += "Threshold limit has to be greater or equal zero!";
+        errString += "\n\n";
+    }
+
+    return errString;
+}
+
+/**
+ * @param event
+ * @param {array} fromAddresses - Array of strings, array of ZEN addresses
+ * @param toAddress - one destination ZEN address
+ * @param fee - fee for the whole transaction
+ * @param thresholdLimit - How many ZENs will remain in every fromAddresses
+ */
+ipcMain.on("send-many", function (event, fromAddresses, toAddress, fee, thresholdLimit = 42){
+    let errString = checkSendParametersSendMany(fromAddresses, toAddress, fee, thresholdLimit);
+
+    if (errString !== ""){
+        event.sender.send("send-finish", "error", "Parameter check: " + errString);
+    }else{
+        // VARIABLES ---------------------------------------------------------------------------------------------------
+        let nFromAddresses = fromAddresses.length;
+        let privateKeys = new Array(nFromAddresses);
+        let amountsInSatoshi = new Array(nFromAddresses);
+        let reducer = (accumulator, currentValue) => accumulator + currentValue;
+
+        // CHECK ZEN API -----------------------------------------------------------------------------------------------
+        let zenApi = settings.apiUrls[0];
+        if (!zenApi) {
+            console.log("No Zen api in settings");
+            return;
+        }
+        if ((zenApi.substr(zenApi.length - 1)) === "/"){
+            zenApi = zenApi.substr(0, zenApi.length - 1);
+        }
+
+        // CONVERT TO SATOSHI ------------------------------------------------------------------------------------------
+        let feeInSatoshi = Math.round(fee * 100000000);
+        let thresholdLimitInSatoshi = Math.round(thresholdLimit * 100000000);
+
+        for (let i = 0; i < nFromAddresses; i++) {
+            let sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet WHERE addr = '" + fromAddresses[i] + "'");
+
+            if (!sqlRes.length) {
+                event.sender.send("send-finish", "error", "Source address is not in your wallet!");
+                return;
+            }
+
+            if (i === 0) {
+                if (sqlRes[0].values[0][3] > (parseFloat(thresholdLimit) + parseFloat(fee))) {
+                    event.sender.send("send-finish", "error", "Insufficient funds on source address!");
+                    return;
+                }
+                amountsInSatoshi[i] = Math.round((sqlRes[0].values[0][3] - parseFloat(fee)) * 100000000);
+            } else {
+                if (sqlRes[0].values[0][3] > (parseFloat(thresholdLimit))) {
+                    event.sender.send("send-finish", "error", "Insufficient funds on source address!");
+                    return;
+                }
+                amountsInSatoshi[i] = Math.round(sqlRes[0].values[0][3] * 100000000);
+            }
+            privateKeys[i] = sqlRes[0].values[0][1];
+        }
+
+        // GET PREVIOUS TRANSACTIONS -----------------------------------------------------------------------------------
+        let prevTxURL = zenApi + "/addrs/";
+        for (let i = 0; i < nFromAddresses; i++) {
+            if(i !== nFromAddresses){
+                prevTxURL += fromAddresses[i] + ",";
+            }else{
+                prevTxURL += fromAddresses[i];
+            }
+        }
+        prevTxURL += "/utxo";
+        const infoURL = zenApi + "/status?q=getInfo";
+        const sendRawTxURL = zenApi + "/tx/send";
+
+
+        // BUILDING OUR TRANSACTION TXOBJ ------------------------------------------------------------------------------
+        // Calculate maximum ZEN satoshis that we have
+        let satoshisSoFar = new Array(nFromAddresses);
+        let history = [];
+        let belongToAddress = [];
+
+        request.get(prevTxURL, function (tx_err, tx_resp, tx_body) {
+            if (tx_err) {
+                console.log(tx_err);
+                event.sender.send("send-finish", "error", "tx_err: " + String(tx_err));
+            } else if (tx_resp && tx_resp.statusCode === 200) {
+                let tx_data = JSON.parse(tx_body);
+
+                if (tx_data.length !== nFromAddresses){
+                    let errStr = "One of your address doesnt have funds.";
+                    console.log(errStr);
+                    event.sender.send("send-finish", "error", errStr);
+                }
+
+                request.get(infoURL, function (info_err, info_resp, info_body) {
+                    if (info_err) {
+                        console.log(info_err);
+                        event.sender.send("send-finish", "error", "info_err: " + String(info_err));
+                    } else if (info_resp && info_resp.statusCode === 200) {
+                        let info_data = JSON.parse(info_body);
+                        const blockHeight = info_data.info.blocks - 300;
+                        const blockHashURL = zenApi + "/block-index/" + blockHeight;
+
+                        // Get block hash
+                        request.get(blockHashURL, function (bhash_err, bhash_resp, bhash_body) {
+                            if (bhash_err) {
+                                console.log(bhash_err);
+                                event.sender.send("send-finish", "error", "bhash_err: " + String(bhash_err));
+                            } else if (bhash_resp && bhash_resp.statusCode === 200) {
+                                const blockHash = JSON.parse(bhash_body).blockHash;
+
+                                // Iterate through each utxo and append it to history
+                                for (let i = 0; i < nFromAddresses; i++) {
+                                    for (let j = 0; j < tx_data[i].length; j++) {
+                                        if (tx_data[i][j].confirmations === 0) {
+                                            continue;
+                                        }
+
+                                        history = history.concat( {
+                                            txid: tx_data[i][j].txid,
+                                            vout: tx_data[i][j].vout,
+                                            scriptPubKey: tx_data[i][j].scriptPubKey
+                                        });
+
+                                        belongToAddress = belongToAddress.concat(i);
+
+                                        // How many satoshis we have so far
+                                        satoshisSoFar[i] = satoshisSoFar[i] + tx_data[i][j].satoshis;
+                                    }
+                                }
+
+                                let satoshisSoFarSum = satoshisSoFar.reduce(reducer);
+
+                                if ((satoshisSoFarSum - (nFromAddresses * thresholdLimitInSatoshi)) < feeInSatoshi) {
+                                    let errStr = "Your summed balance over all source addresses is lower than the fee!";
+                                    console.log(errStr);
+                                    event.sender.send("send-finish", "error", errStr);
+                                } else {
+                                    let amountInSatoshi = (satoshisSoFarSum - (nFromAddresses * thresholdLimitInSatoshi) - feeInSatoshi);
+                                    let recipients = [{address: toAddress, satoshis: amountInSatoshi}];
+
+                                    // Refund thresholdLimitInSatoshi amount to current address
+                                    for (let i = 0; i < nFromAddresses; i++) {
+                                        if (satoshisSoFar[i] >= thresholdLimitInSatoshi) {
+                                            recipients = recipients.concat({address: fromAddresses[i], satoshis: thresholdLimitInSatoshi})
+                                        } else {
+                                            let errStr = "One of your source address has lower balance than is your threshold!";
+                                            console.log(errStr);
+                                            event.sender.send("send-finish", "error", errStr);
+                                        }
+                                    }
+
+                                    // Create transaction
+                                    let txObj = zencashjs.transaction.createRawTx(history, recipients, blockHeight, blockHash);
+
+                                    // Sign each history transcation
+                                    for (let i = 0; i < history.length; i ++) {
+                                        txObj = zencashjs.transaction.signTx(txObj, i, privateKeys[belongToAddress[i]], true)
+                                    }
+
+                                    // Convert it to hex string
+                                    const txHexString = zencashjs.transaction.serializeTx(txObj);
+
                                     request.post({url: sendRawTxURL, form: {rawtx: txHexString}}, function(sendtx_err, sendtx_resp, sendtx_body) {
                                         if (sendtx_err) {
                                             console.log(sendtx_err);
