@@ -232,7 +232,7 @@ function showAddrDetail(addr) {
             ipcRenderer.send("rename-wallet", addr, nameNode.value);
         });
         dialog.addEventListener("keypress", ev => {
-            if (event.keyCode == 13)
+            if (event.keyCode === 13)
                 saveButton.click();
         });
     });
@@ -376,7 +376,7 @@ function showNewAddrDialog() {
             dialog.close();
         });
         dialog.addEventListener("keypress", ev => {
-            if (event.keyCode == 13)
+            if (event.keyCode === 13)
                 createButton.click();
         });
     });

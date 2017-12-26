@@ -264,6 +264,7 @@ function loadLang() {
 function tr(key, defaultVal) {
     if (!langDict)
         return defaultVal;
+
     function iter(dict, trPath) {
         switch (typeof(dict)) {
             case "object":
@@ -278,6 +279,7 @@ function tr(key, defaultVal) {
         console.warn("Untranslated key: " + key);
         return defaultVal;
     }
+
     return iter(langDict, key.split("."));
 }
 
