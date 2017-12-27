@@ -158,7 +158,6 @@ function showSettingsDialog() {
         const inputApiUrls = dialog.querySelector(".settingsApiUrls");
         const inputFiatCurrency = dialog.querySelector(".settingsFiatCurrency");
         const inputLanguages = dialog.querySelector(".settingsLanguage");
-        const saveButton = dialog.querySelector(".settingsSave");
 
         inputTxHistory.value = settings.txHistory;
         inputExplorerUrl.value = settings.explorerUrl;
@@ -167,7 +166,7 @@ function showSettingsDialog() {
         inputFiatCurrency.value = settings.fiatCurrency;
 
         // An existing user has empty value settings.fiatCurrency
-        if (settings.fiatCurrency === "") {
+        if (settings.fiatCurrency === "" || settings.fiatCurrency === undefined || settings.fiatCurrency === null) {
             inputFiatCurrency.value = "USD";
         }
         console.log(settings);
@@ -195,7 +194,6 @@ function openZenExplorer(path) {
 
 function getZenBalance(){
     const totalBalanceAmountNode = document.getElementById("totalBalanceAmount");
-    console.log(totalBalanceAmountNode.innerHTML);
     return formatBalance(parseFloat(totalBalanceAmountNode.innerHTML));
 }
 

@@ -150,21 +150,16 @@ function setFiatBalanceText(balanceZEN, fiatCurrencySymbol = "") {
     const totalBalanceFiatNode = document.getElementById("totalBalanceFiat");
     const balanceFiatAmountNode = totalBalanceFiatNode.firstElementChild;
     const lastUpdateTimeNode = document.getElementById("lastUpdateTime");
-    //console.log(getFiatCurrencyOfUser());
     let userSettings = ipcRenderer.sendSync("get-me-settings");
     if (fiatCurrencySymbol === "") {
-        // "USD"
-        // FIXME: Get from settings the desired fiat currency
         fiatCurrencySymbol = userSettings.fiatCurrency;
+        if (fiatCurrencySymbol === undefined || fiatCurrencySymbol === null ){
+            fiatCurrencySymbol = "USD";
+        }
     }
     zenToFiat(fiatCurrencySymbol).then(function (ZENPrice) {
-        //console.log(ZENPrice);
         const now = new Date().toLocaleTimeString();
-        // View the output
-        console.log(now);
         let balance = (balanceZEN) * ZENPrice;
-        //console.log(balance);
-        //balanceFiatAmountNode.textContent = formatFiatBalance(balance) + " " + fiat + " (@ "+ ZENPrice.toFixed(2).toString() +" "+ fiat +"/ZEN )";
         balanceFiatAmountNode.textContent = formatFiatBalance(balance) + " " + fiatCurrencySymbol;
         lastUpdateTimeNode.textContent = now;
     });
@@ -182,8 +177,7 @@ function zenToFiat(fiat) {
             throw new Error(`HTTP GET status: ${resp.status} ${resp.statusText}, URL: ${API_URL}`);
         return resp.json()
     }).then(function (responseAsJson) {
-        console.log(responseAsJson);
-        return parseFloat(eval("responseAsJson[0].price_" + fiat.toLowerCase()));
+        return parseFloat(responseAsJson[0]["price_" + fiat.toLowerCase()]);
     });
 }
 
@@ -417,11 +411,9 @@ function addTransactions(txs, newTx = false) {
     }
 }
 
-function setTotalBalance(balance) {
-    setBalanceText(totalBalanceNode, balance);
-    let balanceZEN = balance;
+function setTotalBalance(balanceZEN) {
+    setBalanceText(totalBalanceNode, balanceZEN);
     setFiatBalanceText(balanceZEN);
-    // GS: Add SetBalance for fiat here
 }
 
 function toggleZeroBalanceAddrs() {
