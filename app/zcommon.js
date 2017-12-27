@@ -156,7 +156,7 @@ function showGeneratePaperWalletDialog() {
 
             // Style the new screen
             dialog.querySelector(".generateNewWalletTitle").textContent = "ZenCash Wallet"
-            dialog.querySelector(".namezAddr").textContent = "Public Key - T Address";
+            dialog.querySelector(".nametAddr").textContent = "Public Key - T Address";
             dialog.querySelector(".namePrivateKey").textContent = "Private Key";
             if (newWalletNamePaper){
                 dialog.querySelector(".newWalletNamePaperLabel").textContent = "Name: " + newWalletNamePaper;
@@ -170,7 +170,7 @@ function showGeneratePaperWalletDialog() {
             let resp = getback.resp;
             let privateKey = zencashjs.address.WIFToPrivKey(wif);
             let pubKey = zencashjs.address.privKeyToPubKey(privateKey, true);
-            let zAddr = zencashjs.address.pubKeyToAddr(pubKey);
+            let tAddr = zencashjs.address.pubKeyToAddr(pubKey);
 
             // Register Address
             if (addressInWallet){
@@ -178,14 +178,14 @@ function showGeneratePaperWalletDialog() {
             }
 
             dialog.querySelector(".keyPrivate").textContent = privateKey;
-            dialog.querySelector(".zAddr").textContent = zAddr;
+            dialog.querySelector(".tAddr").textContent = tAddr;
 
             var QRCode = require("qrcode");
 
-            // z Address QR Image
-            var canvasZ = document.getElementById("canvasZ")
+            // t Address QR Image
+            var canvasT = document.getElementById("canvasT")
 
-            QRCode.toCanvas(canvasZ, zAddr, function (error) {
+            QRCode.toCanvas(canvasT, tAddr, function (error) {
                 if (error) console.error(error)
             });
 
