@@ -114,37 +114,39 @@
         <h2 slot=headerText id=generateNewWalletTitle class=generateNewWalletTitle>Generate New Wallet</h2>
         <div slot=content class=generatePaperWalletDialogTemplate>
             <div id=createButtonCheck class=createButtonCheck style="align-items: center">
-              <div class="" style="text-align: center">
-                  <p><div>Name (optional)</div><input id=newWalletNamePaper type=text class=newAddrDialogName /></p>
-                  <p></p>
-                  <p><input id=addPaperWalletArizen type=checkbox>Add this wallet to Arizen</input></p>
-                  <p></p>
-                  <p><button type=button class=generateNewWallet>Generate New Wallet</button></p>
-                  <p></p>
-              </div>
+                <div class="" style="text-align: center">
+                    <p><div>Name (optional)</div><input id=newWalletNamePaper type=text class=newAddrDialogName /></p>
+                    <p></p>
+                    <p><input id=addPaperWalletArizen type=checkbox>Add this wallet to Arizen</input></p>
+                    <p></p>
+                    <p><button type=button class=generateNewWallet>Generate New Wallet</button></p>
+                    <p></p>
+                </div>
             </div>
-<a id=zenCashLogoWallet class=zenLogo ></a>
+            <a id=zenCashLogoWallet class=zenLogo ></a>
             <div class=form id=NewAddressPrintArea disabled>
                 <label id=newWalletNamePaperLabel class=newWalletNamePaperLabel></label>
-                    <ul style="list-style: none; text-align: center;">
-                        <li><label id=newWalletNamePaperLabel class=newWalletNamePaperLabel style="font-weight:bold"></label></li>
-                    <li><p>
-                        <ul style="list-style: none; text-align: center; ">
-                            <li class=namePrivateKey style="color:red;"></li>
-                            <li class=qrPrivate><canvas id=canvasPriv></canvas></li>
-                            <li class=keyPrivate style="font-size: 75%; color:red;"></li>
-                        </ul>
-                        </p></li>
+                <ul style="list-style: none; text-align: center;">
+                    <li><label id=newWalletNamePaperLabel class=newWalletNamePaperLabel style="font-weight:bold"></label></li>
                     <li>
-                      <p>
-                    <ul style="list-style: none; text-align: center; ">
-                        <li class=namezAddr style="color:green;"></li>
-                        <li class=qrzAddr><canvas id=canvasZ></canvas></li>
-                        <li class=zAddr style="font-size: 75%; color:green;"></li>
-                    </ul>
-                    </p>
+                        <p>
+                            <ul style="list-style: none; text-align: center; ">
+                                <li class=namePrivateKey style="color:red;"></li>
+                                <li class=qrPrivate><canvas id=canvasPriv></canvas></li>
+                                <li class=keyPrivate style="font-size: 75%; color:red;"></li>
+                            </ul>
+                        </p>
                     </li>
-                    </ul>
+                    <li>
+                        <p>
+                            <ul style="list-style: none; text-align: center; ">
+                                <li class=namezAddr style="color:green;"></li>
+                                <li class=qrzAddr><canvas id=canvasZ></canvas></li>
+                                <li class=zAddr style="font-size: 75%; color:green;"></li>
+                            </ul>
+                        </p>
+                    </li>
+                </ul>
             </div>
             <div id=pdfButton class=pdfButton></div>
         </div>
@@ -166,7 +168,7 @@
                 <div>Authors</div>
                 <div class=aboutAuthors></div>
             </div>
-            <a class=zenLogo href='https://zensystem.io' target='_blank'><img src='resources/zen_icon.png' /></a>
+            <a class=zenLogo><img src='resources/zen_icon.png' /></a>
         </div>
     </arizen-dialog>
 </template>
@@ -201,7 +203,7 @@
     </div>
     <div class=headerCenter>
         <a class=arizenTitle href='https://github.com/ZencashOfficial/arizen'>Arizen</a>
-        <a class=zenLogo href='https://zensystem.io' target='_blank'><img id=zenImg src='resources/zen_icon.png' /></a>
+        <a class=zenLogo><img id=zenImg src='resources/zen_icon.png' /></a>
     </div>
     <div class=headerRight>
         <span><button id=refreshButton>Refresh</button></span>

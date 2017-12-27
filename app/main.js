@@ -1104,32 +1104,21 @@ ipcMain.on("export-pdf",  function(event,newWalletNamePaper) {
       var defaultPathPDF = "*/ZenCash Wallet - " + userInfo.login;
     }
 
-//   if (process.platform === 'win32'){
-//     defaultPathPDF = "C:/NewWallet.pdf"
-//   } else {
-//     usernameOS = process.env["USER"];
-//     defaultPathPDF = '/home/'+usernameOS+'/NewWallet.pdf'
-//   };
-//
-
     dialog.showSaveDialog(win, {title: "Save",filters: [{name: "PDF", extensions: ["pdf"]}], defaultPath: defaultPathPDF },(fileName)=> {
         if(fileName === undefined){
             console.log("Cancel pressed");
             event.sender.send("export-pdf-done", "PDF export: Canceled by user.")
-            //event.sender.send("show-again-export-pdf-button", "Show")
             return;
         };
         win.webContents.printToPDF({landscape: false}, function(error,data){
             fs.writeFile(fileName, data, function(err){
                 if (err) return console.log(err.message)
                 shell.openExternal("file://"+ fileName);
-                //event.sender.send('wrote-pdf', pdfPath);
                 event.sender.send("export-pdf-done", "PDF exported")
             });
         });
     });
 });
-
 
 ipcMain.on("get-paper-address-wif",  function(event,addressInWallet, name) {
     if (!addressInWallet){
@@ -1142,6 +1131,7 @@ ipcMain.on("get-paper-address-wif",  function(event,addressInWallet, name) {
         event.returnValue = {wif: resp.wif, resp: resp};
     }
 });
+
 
 // Unused
 

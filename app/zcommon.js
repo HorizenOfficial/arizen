@@ -148,32 +148,26 @@ function showGeneratePaperWalletDialog() {
 
         dialog.querySelector(".generateNewWallet").addEventListener("click", () => {
             let addressInWallet = document.getElementById("addPaperWalletArizen").checked;
-            console.log(addressInWallet);
-
             var newWalletNamePaper = document.getElementById("newWalletNamePaper").value;
-            console.log(newWalletNamePaper);
 
             // Clear Checkbox and Button from HTML
             let ButtonArea = document.getElementById("createButtonCheck");
-            ButtonArea.innerHTML = "";
+            ButtonArea.textContent = "";
 
             // Style the new screen
             dialog.querySelector(".generateNewWalletTitle").textContent = "ZenCash Wallet"
             dialog.querySelector(".namezAddr").textContent = "Public Key - T Address";
             dialog.querySelector(".namePrivateKey").textContent = "Private Key";
             if (newWalletNamePaper){
-                dialog.querySelector(".newWalletNamePaperLabel").innerHTML = "Name: " + newWalletNamePaper;
+                dialog.querySelector(".newWalletNamePaperLabel").textContent = "Name: " + newWalletNamePaper;
             }
             // Add ZenCash logo for PDF print
             let logoarea = document.getElementById("zenCashLogoWallet");
-            logoarea.innerHTML = "<a  href='https://zensystem.io' target='_blank'><img id=zenImg src='resources/zen_icon.png' height='50' width='50' /></a>"
+            logoarea.innerHTML = "<a><img id=zenImg src='resources/zen_icon.png' height='50' width='50' /></a>"
 
             let getback = ipcRenderer.sendSync("get-paper-address-wif",addressInWallet, newWalletNamePaper);
             let wif = getback.wif;
             let resp = getback.resp;
-            console.log(getback);
-            console.log(resp);
-            console.log('New wif created');
             let privateKey = zencashjs.address.WIFToPrivKey(wif);
             let pubKey = zencashjs.address.privKeyToPubKey(privateKey, true);
             let zAddr = zencashjs.address.pubKeyToAddr(pubKey);
@@ -193,7 +187,6 @@ function showGeneratePaperWalletDialog() {
 
             QRCode.toCanvas(canvasZ, zAddr, function (error) {
                 if (error) console.error(error)
-                console.log("Success QRcode z Address.");
             });
 
             // Private Key QR Image
@@ -201,23 +194,19 @@ function showGeneratePaperWalletDialog() {
 
             QRCode.toCanvas(canvasPriv, privateKey, function (error) {
                 if (error) console.error(error)
-                console.log("Success QRCode Private Key");
             });
 
 
             // Print to PDF
             var pdfButton = document.createElement("BUTTON");
             pdfButton.setAttribute("id", "exportPDFButton");
-            var t = document.createTextNode("Export PDF");       // Create a text node
+            var t = document.createTextNode("Export PDF");
             pdfButton.appendChild(t);
             dialog.querySelector(".pdfButton").appendChild(pdfButton)
 
             dialog.querySelector(".pdfButton").addEventListener("click", () => {
-                // pdfButton.parentNode.removeChild(pdfButton);
-                pdfButton.style.visibility='hidden'
+                pdfButton.style.visibility='hidden'; // Hide it in order to avoid printing it.
                 ipcRenderer.send("export-pdf",newWalletNamePaper);
-                console.log('PDF export command sent')
-
             });
         });
     });
@@ -226,14 +215,6 @@ function showGeneratePaperWalletDialog() {
 (() => {
     const {ipcRenderer} = require("electron");
     ipcRenderer.on("export-pdf-done", (event,arg)=> {
-        console.log(arg);
-        document.getElementById("exportPDFButton").style.visibility = "visible"
-        console.log("exportPDFButton visible again.");
+        document.getElementById("exportPDFButton").style.visibility = "visible"; // exportPDFButton visible again
     });
-
-    // ipcRenderer.on("show-again-export-pdf-button", (event,arg)=> {
-    //     console.log(arg);
-    //     document.getElementById("exportPDFButton").style.visibility = "visible"
-    //     console.log("Should be visible");
-    // });
 })();
