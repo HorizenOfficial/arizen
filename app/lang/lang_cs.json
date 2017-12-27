@@ -13,6 +13,7 @@
         "amount" : "Množství",
         "balance" : "Zůstatek",
         "totalBalance": "Celkový zůstatek",
+        "lastUpdate": "Čas poslední aktualizace",
         "showExplorer": "Otevřít v ZEN exploreru",
         "listOfAddresses": "Seznam adres",
         "tabOverview": {
@@ -77,6 +78,7 @@
         "settings": {
             "label": "Nastavení",
             "limit": "Limit transakcí v historii",
+            "items": "položek",
             "language": "Jazyk",
             "explorerUrl": "Adresa ZEN exploreru",
             "apiUrl": "Adresa API",

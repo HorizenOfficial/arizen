@@ -135,7 +135,7 @@
         <div slot=content class=settingsDialogContent>
             <div class=form>
                 <label for=settingsTxHistory data-tr=wallet.settings.limit>Transaction limit</label>
-                <span class=formInput><input type=number name=settingsTxHistory class=settingsTxHistory min=0 /> items</span>
+                <span class=formInput><input type=number name=settingsTxHistory class=settingsTxHistory min=0 /><span data-tr=wallet.settings.items>items</span></span>
                 <label for=settingsLanguage data-tr=wallet.settings.language>Language</label>
                 <select name=settingsLanguage class=settingsLanguage size=1>
                 </select>
@@ -143,7 +143,7 @@
                 <input type=text name=settingsExplorerUrl class=settingsExplorerUrl />
                 <label for=settingsApiUrls title="Place one URL per line" data-tr=wallet.settings.apiUrl>API URLs</label>
                 <textarea type=text name=settingsApiUrls class=settingsApiUrls rows=5></textarea>
-                <label for=settingsFiatCurrency title="Select the desired fiat to display your balance.">Fiat Equivalent</label>
+                <label for=settingsFiatCurrency title="Select the desired fiat to display your balance."  data-tr=wallet.settings.fiat>Fiat Equivalent</label>
                 <select name=settingsFiatCurrency class=settingsFiatCurrency >
                     <option value="USD">(USD) US Dollar</option>
                     <option value="EUR">(EUR) Euro</option>
@@ -311,11 +311,11 @@
     </div>
 </div>
 
-<footer class='statusLine panel' data-tr=wallet.totalBalance>
-    Total balance: <span id=totalBalance><span id=totalBalanceAmount>0.00000000</span> ZEN </span>
+<footer class='statusLine panel'>
+    <span data-tr=wallet.totalBalance>Total balance</span>: <span id=totalBalance><span id=totalBalanceAmount>0.00000000</span> ZEN </span>
     <span> / </span>
     <span id=totalBalanceFiat><span id=totalFiatBalanceAmount>0.00</span></span>
-    <span id=lastUpdateTimeText> / Last update: <span id=lastUpdateTime></span></span>
+    <span id=lastUpdateTimeText> / <span data-tr=wallet.lastUpdate>Last update</span>: <span id=lastUpdateTime></span></span>
 </footer>
 
 </div>
