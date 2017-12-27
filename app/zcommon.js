@@ -148,14 +148,17 @@ function showGeneratePaperWalletDialog() {
 
         dialog.querySelector(".generateNewWallet").addEventListener("click", () => {
             let addressInWallet = document.getElementById("addPaperWalletArizen").checked;
+            console.log(addressInWallet);
             var newWalletNamePaper = document.getElementById("newWalletNamePaper").value;
+            console.log(newWalletNamePaper);
 
             // Clear Checkbox and Button from HTML
             let ButtonArea = document.getElementById("createButtonCheck");
-            ButtonArea.textContent = "";
+            console.log(ButtonArea);
+            ButtonArea.innerHTML = " ";
 
             // Style the new screen
-            dialog.querySelector(".generateNewWalletTitle").textContent = "ZenCash Wallet"
+            dialog.querySelector(".generateNewWalletTitle").textContent = "ZenCash Wallet";
             dialog.querySelector(".nametAddr").textContent = "Public Key - T Address";
             dialog.querySelector(".namePrivateKey").textContent = "Private Key";
             if (newWalletNamePaper){
@@ -168,9 +171,12 @@ function showGeneratePaperWalletDialog() {
             let getback = ipcRenderer.sendSync("get-paper-address-wif",addressInWallet, newWalletNamePaper);
             let wif = getback.wif;
             let resp = getback.resp;
+            console.log(getback);
+            console.log(resp);
             let privateKey = zencashjs.address.WIFToPrivKey(wif);
             let pubKey = zencashjs.address.privKeyToPubKey(privateKey, true);
             let tAddr = zencashjs.address.pubKeyToAddr(pubKey);
+            console.log(tAddr);
 
             // Register Address
             if (addressInWallet){
@@ -188,6 +194,7 @@ function showGeneratePaperWalletDialog() {
             QRCode.toCanvas(canvasT, tAddr, function (error) {
                 if (error) console.error(error)
             });
+            console.log(canvasT);
 
             // Private Key QR Image
             var canvasPriv = document.getElementById("canvasPriv")
@@ -195,6 +202,9 @@ function showGeneratePaperWalletDialog() {
             QRCode.toCanvas(canvasPriv, privateKey, function (error) {
                 if (error) console.error(error)
             });
+
+            console.log(canvasPriv);
+            ButtonArea.innerHTML = " ";
 
 
             // Print to PDF
