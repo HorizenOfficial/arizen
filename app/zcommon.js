@@ -158,7 +158,6 @@ function showSettingsDialog() {
         const inputApiUrls = dialog.querySelector(".settingsApiUrls");
         const inputFiatCurrency = dialog.querySelector(".settingsFiatCurrency");
         const inputLanguages = dialog.querySelector(".settingsLanguage");
-        const saveButton = dialog.querySelector(".settingsSave");
 
         inputTxHistory.value = settings.txHistory;
         inputExplorerUrl.value = settings.explorerUrl;
@@ -194,8 +193,7 @@ function openZenExplorer(path) {
 }
 
 function getZenBalance(){
-    const totalBalanceAmountNode = document.getElementById("totalBalanceAmount");
-    console.log(totalBalanceAmountNode.innerHTML);
+    const totalBalanceAmountNode = document.getElementById("totalBalanceAmount");    
     return formatBalance(parseFloat(totalBalanceAmountNode.innerHTML));
 }
 
