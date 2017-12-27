@@ -151,7 +151,6 @@ function setFiatBalanceText(balanceZEN, fiatCurrencySymbol = "") {
     const balanceFiatAmountNode = totalBalanceFiatNode.firstElementChild;
     const lastUpdateTimeNode = document.getElementById("lastUpdateTime");
     let userSettings = ipcRenderer.sendSync("get-me-settings");
-    //settings.fiatCurrency
     if (fiatCurrencySymbol === "") {
         fiatCurrencySymbol = userSettings.fiatCurrency;
     }
@@ -408,7 +407,6 @@ function addTransactions(txs, newTx = false) {
 
 function setTotalBalance(balanceZEN) {
     setBalanceText(totalBalanceNode, balanceZEN);
-    //let balanceZEN = balance;
     setFiatBalanceText(balanceZEN);
 }
 

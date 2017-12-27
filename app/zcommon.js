@@ -193,7 +193,7 @@ function openZenExplorer(path) {
 }
 
 function getZenBalance(){
-    const totalBalanceAmountNode = document.getElementById("totalBalanceAmount");    
+    const totalBalanceAmountNode = document.getElementById("totalBalanceAmount");
     return formatBalance(parseFloat(totalBalanceAmountNode.innerHTML));
 }
 
