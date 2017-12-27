@@ -166,7 +166,7 @@ function setFiatBalanceText(balanceZEN, fiatCurrencySymbol = "") {
 }
 
 function zenToFiat(fiat) {
-    const fetch = require("node-fetch");
+    const fetch = require("node-fetch"); // possible node-fetch has error
     const BASE_API_URL = "https://api.coinmarketcap.com/v1//ticker";
     let API_URL = BASE_API_URL + "/zencash/?convert=" + fiat;
 
