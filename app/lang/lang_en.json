@@ -13,6 +13,7 @@
     "amount" : "Amount",
     "balance" : "Balance",
     "totalBalance": "Total Balance",
+    "lastUpdate": "Last update",
     "showExplorer": "Show in ZEN Explorer",
     "listOfAddresses": "List Of Addresses",
     "tabOverview": {
@@ -77,6 +78,7 @@
     "settings": {
       "label": "Settings",
       "limit": "Transaction limit",
+      "items": "items",
       "language": "Language",
       "explorerUrl": "ZEN Explorer URL",
       "apiUrl": "API URLs",
