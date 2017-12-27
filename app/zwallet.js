@@ -153,6 +153,9 @@ function setFiatBalanceText(balanceZEN, fiatCurrencySymbol = "") {
     let userSettings = ipcRenderer.sendSync("get-me-settings");
     if (fiatCurrencySymbol === "") {
         fiatCurrencySymbol = userSettings.fiatCurrency;
+        if (fiatCurrencySymbol === undefined || fiatCurrencySymbol === null ){
+            fiatCurrencySymbol = "USD";
+        }
     }
     zenToFiat(fiatCurrencySymbol).then(function (ZENPrice) {
         const now = new Date().toLocaleTimeString();
