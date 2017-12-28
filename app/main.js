@@ -796,6 +796,8 @@ function updateBlockchainView(webContents) {
                 total: totalBalance
             }));
         }
+        webContents.send('send-refreshed-wallet-balance', totalBalance); // Why here ? In case balance is unchanged the 'update-wallet-balance' is never sent, but the Zen/Fiat balance will change.
+
         for (const tx of result.newTxs) {
             if (tx.block >= 0) {
                 sqlRun('INSERT INTO transactions VALUES (?,?,?,?,?,?,?,?)',

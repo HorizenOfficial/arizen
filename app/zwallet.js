@@ -101,6 +101,10 @@ ipcRenderer.on("refresh-wallet-response", (event, msgStr) => {
     scheduleRefresh();
 });
 
+ipcRenderer.on("send-refreshed-wallet-balance", (event, totalBalance) => {
+    setTotalBalance(totalBalance);
+});
+
 ipcRenderer.on("send-finish", (event, result, msg) =>
     updateWithdrawalStatus(result, msg));
 
@@ -157,7 +161,7 @@ function setFiatBalanceText(balanceZEN, fiatCurrencySymbol = "") {
             fiatCurrencySymbol = "USD";
         }
     }
-    
+
     const axios = require("axios");
     const BASE_API_URL = "https://api.coinmarketcap.com/v1//ticker";
     let API_URL = BASE_API_URL + "/zencash/?convert=" + fiatCurrencySymbol;
