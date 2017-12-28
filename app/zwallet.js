@@ -157,12 +157,129 @@ function setFiatBalanceText(balanceZEN, fiatCurrencySymbol = "") {
             fiatCurrencySymbol = "USD";
         }
     }
-    zenToFiat(fiatCurrencySymbol).then(function (ZENPrice) {
+
+    const axios = require("axios");
+    const BASE_API_URL = "https://api.coinmarketcap.com/v1//ticker";
+    let API_URL = BASE_API_URL + "/zencash/?convert=" + fiatCurrencySymbol;
+
+    axios
+      .get(API_URL)
+      .then(response => {
+        //resp = response.json();
+        console.log(response);
+        let resp = response.data;
+        console.log(resp);
+        let ZENPrice = parseFloat(resp[0]["price_" + fiatCurrencySymbol.toLowerCase()]);
+        console.log(ZENPrice);
+        //return price;
+
         const now = new Date().toLocaleTimeString();
         let balance = (balanceZEN) * ZENPrice;
         balanceFiatAmountNode.textContent = formatFiatBalance(balance) + " " + fiatCurrencySymbol;
         lastUpdateTimeNode.textContent = now;
-    });
+
+        // console.log(
+        //   `City: ${response.data.results[0].formatted_address} -`,
+        //   `Latitude: ${response.data.results[0].geometry.location.lat} -`,
+        //   `Longitude: ${response.data.results[0].geometry.location.lng}`
+        // );
+      })
+      .catch(error => {
+        console.log(error);
+        return -1.0
+      });
+
+    // zenToFiat(fiatCurrencySymbol).then(function (ZENPrice) {
+    //     const now = new Date().toLocaleTimeString();
+    //     let balance = (balanceZEN) * ZENPrice;
+    //     balanceFiatAmountNode.textContent = formatFiatBalance(balance) + " " + fiatCurrencySymbol;
+    //     lastUpdateTimeNode.textContent = now;
+    // });
+
+    //zenToFiatV3(fiatCurrencySymbol,balanceZEN)
+
+    // let ZENPrice = await zenToFiatV2(fiatCurrencySymbol);
+    // console.log(ZENPrice);
+    // const now = new Date().toLocaleTimeString();
+    // let balance = (balanceZEN) * ZENPrice;
+    // balanceFiatAmountNode.textContent = formatFiatBalance(balance) + " " + fiatCurrencySymbol;
+    // lastUpdateTimeNode.textContent = now;
+    // console.log(ZENPrice)
+}
+
+function zenToFiatV3(fiat,balanceZEN) {
+  const totalBalanceFiatNode = document.getElementById("totalBalanceFiat");
+  const balanceFiatAmountNode = totalBalanceFiatNode.firstElementChild;
+  const lastUpdateTimeNode = document.getElementById("lastUpdateTime");
+
+    const axios = require("axios");
+    const BASE_API_URL = "https://api.coinmarketcap.com/v1//ticker";
+    let API_URL = BASE_API_URL + "/zencash/?convert=" + fiat;
+
+    axios
+      .get(API_URL)
+      .then(response => {
+        //resp = response.json();
+        console.log(response);
+        let resp = response.data;
+        console.log(resp);
+        let ZENPrice = parseFloat(resp[0]["price_" + fiat.toLowerCase()]);
+        console.log(ZENPrice);
+        //return price;
+
+        const now = new Date().toLocaleTimeString();
+        let balance = (balanceZEN) * ZENPrice;
+        balanceFiatAmountNode.textContent = formatFiatBalance(balance) + " " + fiatCurrencySymbol;
+        lastUpdateTimeNode.textContent = now;
+
+        // console.log(
+        //   `City: ${response.data.results[0].formatted_address} -`,
+        //   `Latitude: ${response.data.results[0].geometry.location.lat} -`,
+        //   `Longitude: ${response.data.results[0].geometry.location.lng}`
+        // );
+      })
+      .catch(error => {
+        console.log(error);
+        return -1.0
+      });
+
+    // console.log("GET " + API_URL);
+    // console.log("Ready to fetch coinmarketcap");
+    // let q =  fetchUrl(API_URL, function(error, meta, body){
+    //   console.log(body.toString());
+    //   let resp = JSON.parse(body.toString());
+    //   console.log(resp);
+    //   return resp;
+    // }).then(function(resp){
+    //   let price = parseFloat(resp[0]["price_" + fiat.toLowerCase()]);
+    //   console.log(price);
+    //   return price;
+    // }).then(function(price){ console.log(price);  })
+    //
+    // console.log(q);
+}
+
+
+
+function zenToFiatV2(fiat) {
+    var fetchUrl = require("fetch").fetchUrl; //
+    const BASE_API_URL = "https://api.coinmarketcap.com/v1//ticker";
+    let API_URL = BASE_API_URL + "/zencash/?convert=" + fiat;
+
+    console.log("GET " + API_URL);
+    console.log("Ready to fetch coinmarketcap");
+    let q =  fetchUrl(API_URL, function(error, meta, body){
+      console.log(body.toString());
+      let resp = JSON.parse(body.toString());
+      console.log(resp);
+      return resp;
+    }).then(function(resp){
+      let price = parseFloat(resp[0]["price_" + fiat.toLowerCase()]);
+      console.log(price);
+      return price;
+    }).then(function(price){ console.log(price);  })
+
+    console.log(q);
 }
 
 function zenToFiat(fiat) {
@@ -171,12 +288,16 @@ function zenToFiat(fiat) {
     let API_URL = BASE_API_URL + "/zencash/?convert=" + fiat;
 
     console.log("GET " + API_URL);
+    console.log("Ready to fetch coinmarketcap");
     return fetch(API_URL).then(function (resp) {
         console.log(`GET ${API_URL} done, status: ${resp.status} ${resp.statusText}`);
-        if (!resp.ok)
+        if (!resp.ok){
             throw new Error(`HTTP GET status: ${resp.status} ${resp.statusText}, URL: ${API_URL}`);
+            console.log("Error");
+            }
         return resp.json()
     }).then(function (responseAsJson) {
+        console.log("coinmarketcap returned");
         return parseFloat(responseAsJson[0]["price_" + fiat.toLowerCase()]);
     });
 }

@@ -98,6 +98,7 @@
     }
   },
   "dependencies": {
+    "axios": "^0.17.1",
     "bip32-utils": "^0.11.0",
     "bitcoinjs-lib": "^3.3.1",
     "electron-debug": "^1.4.0",
@@ -106,6 +107,7 @@
     "electron-simple-updater": "^1.2.3",
     "electron-tabs": "^0.9.0",
     "errors": "^0.3.0",
+    "fetch": "^1.1.0",
     "fs-extra": "^4.0.3",
     "immutable": "^3.8.2",
     "luxon": "^0.2.5",
