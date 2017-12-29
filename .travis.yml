@@ -1,7 +1,22 @@
+git:
+  depth: 10
+notifications:
+  email: false
+
 language: node_js
 node_js:
   - "6"
 os:
   - linux
   - osx
+  - windows
+
+env:
+  - TARGET_ARCH=x64
+osx_image: xcode9.2
+
 script: "npm run dist"
+
+branches:
+  only:
+    - master
