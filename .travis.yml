@@ -19,4 +19,5 @@ script: "npm run dist"
 
 branches:
   only:
+    - development
     - master
