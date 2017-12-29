@@ -1,6 +1,6 @@
 {
   "name": "Arizen",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Wallet for ZenCash (ZEN)",
   "main": "app/main.js",
   "scripts": {
@@ -106,7 +106,7 @@
     "electron-simple-updater": "^1.2.3",
     "electron-tabs": "^0.9.0",
     "errors": "^0.3.0",
-    "fs-extra": "^4.0.3",
+    "fs-extra": "^5.0.0",
     "immutable": "^3.8.2",
     "luxon": "^0.2.5",
     "node-fetch": "^2.0.0-alpha.9",
@@ -121,9 +121,9 @@
     "coveralls": "^3.0.0",
     "devtron": "^1.4.0",
     "electron": "^1.8.1",
-    "electron-builder": "19.45.4",
-    "electron-builder-squirrel-windows": "19.45.0",
-    "flow-bin": "^0.60.1"
+    "electron-builder": "19.49.4",
+    "electron-builder-squirrel-windows": "19.49.4",
+    "flow-bin": "^0.62.0"
   },
   "optionalDependencies": {
     "electron-installer-debian": "^0.7.0",
