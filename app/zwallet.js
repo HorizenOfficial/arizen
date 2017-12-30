@@ -171,9 +171,8 @@ function setFiatBalanceText(balanceZEN, fiatCurrencySymbol = "") {
       .then(response => {
         let resp = response.data;
         let ZENPrice = parseFloat(resp[0]["price_" + fiatCurrencySymbol.toLowerCase()]);
-
         const now = new Date().toLocaleTimeString();
-        let balance = balanceZEN * ZENPrice;
+        let balance = parseFloat(balanceZEN) * ZENPrice;
         balanceFiatAmountNode.textContent = formatFiatBalance(balance) + " " + fiatCurrencySymbol;
         lastUpdateTimeNode.textContent = now;
       })
