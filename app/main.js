@@ -662,9 +662,9 @@ function sqlRun(sql, args) {
 }
 
 function fetchJson(url) {
-    console.log("GET " + url);
+    // console.log("GET " + url);
     return fetch(url).then(resp => {
-        console.log(`GET ${url} done, status: ${resp.status} ${resp.statusText}`);
+        // console.log(`GET ${url} done, status: ${resp.status} ${resp.statusText}`);
         if (!resp.ok)
             throw new Error(`HTTP GET status: ${resp.status} ${resp.statusText}, URL: ${url}`);
         return resp.json()
