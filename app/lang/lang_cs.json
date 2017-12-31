@@ -85,5 +85,22 @@
             "fiat": "Zůstatek ve FIAT měně",
             "save": "Uložit"
         }
+    },
+    "menu": {
+        "file" : "Soubor",
+        "backupEncrypted": "Záloha zabezpečené peněženky",
+        "backupUnencrypted": "Záloha nezabezpečené peněženky",
+        "importEncrypted": "Import zabezpečené peněženky",
+        "importUnencrypted": "Import nezabezpečené peněženky",
+        "exit": "Konec",
+        "edit": "Upravit",
+        "editSubmenu": {
+            "undo": "Zpět",
+            "redo": "Vpřed",
+            "cut": "Vyjmout",
+            "copy": "Kopírovat",
+            "paste": "Vložit",
+            "selectAll": "Vybrat vše"
+        }
     }
 }

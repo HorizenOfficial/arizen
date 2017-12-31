@@ -148,6 +148,7 @@ let langDict;
         settings = JSON.parse(settingsStr);
         loadLang();
         translateCurrentPage();
+        setMenuLang();
     });
 })();
 
@@ -183,9 +184,19 @@ function showSettingsDialog() {
             ipcRenderer.send("save-settings", JSON.stringify(newSettings));
             let zenBalance = getZenBalance();
             setFiatBalanceText(zenBalance, inputFiatCurrency.value);
+
             dialog.close();
         });
     });
+}
+
+function setMenuLang() {
+    if (!langDict)
+        return;
+    if (!langDict.menu)
+        return;
+    console.log(langDict.menu);
+    ipcRenderer.send("set-menu",JSON.stringify(langDict.menu));
 }
 
 function openZenExplorer(path) {
