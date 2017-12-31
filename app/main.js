@@ -54,7 +54,7 @@ const defaultSettings = {
 };
 let settings = defaultSettings;
 
-const editSubmenu = [
+let editSubmenu = [
     {label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:"},
     {label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:"},
     {type: "separator"},
@@ -372,78 +372,105 @@ function importWalletArizen(ext, encrypted) {
     }
 }
 
-function updateMenuAtLogin() {
-    const template = [
-        {
-            label: "File",
-            submenu: [
-                {
-                    label: "Backup ENCRYPTED wallet",
-                    click() {
-                        exportWalletArizen("awd", true);
-                    }
-                }, {
-                    label: "Backup UNENCRYPTED wallet",
-                    click() {
-                        exportWalletArizen("uawd", false);
-                    }
-                }, {
-                    type: "separator"
-                    /*}, {
-                        label: "Import ZEND wallet.dat",
-                        click() {
-                            if (userInfo.loggedIn) {
-                                dialog.showOpenDialog({
-                                    title: "Import wallet.dat",
-                                    filters: [{name: "Wallet", extensions: ["dat"]}]
-                                }, function (filePaths) {
-                                    if (filePaths) dialog.showMessageBox({
-                                        type: "warning",
-                                        message: "This will replace your actual wallet. Are you sure?",
-                                        buttons: ["Yes", "No"],
-                                        title: "Replace wallet?"
-                                    }, function (response) {
-                                        if (response === 0) {
-                                            importWalletDat(userInfo.login, userInfo.pass, filePaths[0]);
-                                        }
-                                    });
-                                });
-                            }
-                        }*/
-                }, {
-                    label: "Import UNENCRYPTED Arizen wallet",
-                    click() {
-                        importWalletArizen("uawd", false);
-                    }
-                }, {
-                    label: "Import ENCRYPTED Arizen wallet",
-                    click() {
-                        importWalletArizen("awd", true);
-                    }
-                }, {
-                    type: "separator"
-                //}, {
-                    //    /* FIXME: remove after test - not for production */
-                //label: "Force transaction reload",
-                //click() {
-                //    userInfo.walletDb.run("DROP TABLE transactions;");
-                //    loadTransactions(mainWindow.webContents);
-                //}
-                }/*, {
-                    type: "separator"
-                }*/, {
-                    label: "Exit",
-                    click() {
-                        app.quit();
-                    }
-                }
-            ]
-        },
-        {
-            label: "Edit",
-            submenu: editSubmenu
+function updateMenuAtLogin(langData) {
+    let menuData = [];
+    if (langData === undefined) {
+       menuData = [
+           {
+               label: "File",
+               submenu: [
+                   {
+                       label: "Backup ENCRYPTED wallet",
+                       click() {
+                           exportWalletArizen("awd", true);
+                       }
+                   }, {
+                       label: "Backup UNENCRYPTED wallet",
+                       click() {
+                           exportWalletArizen("uawd", false);
+                       }
+                   }, {
+                       type: "separator"
+                   }, {
+                       label: "Import UNENCRYPTED Arizen wallet",
+                       click() {
+                           importWalletArizen("uawd", false);
+                       }
+                   }, {
+                       label: "Import ENCRYPTED Arizen wallet",
+                       click() {
+                           importWalletArizen("awd", true);
+                       }
+                   }, {
+                       type: "separator"
+                   }, {
+                       label: "Exit",
+                       click() {
+                           app.quit();
+                       }
+                   }
+               ]
+           },
+           {
+               label: "Edit",
+               submenu: editSubmenu
+           }
+       ];
+    } else {
+        if (langData.editSubmenu) {
+            editSubmenu = [
+                {label: langData.editSubmenu.undo , accelerator: "CmdOrCtrl+Z", selector: "undo:"},
+                {label: langData.editSubmenu.redo, accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:"},
+                {type: "separator"},
+                {label: langData.editSubmenu.cut, accelerator: "CmdOrCtrl+X", selector: "cut:"},
+                {label: langData.editSubmenu.copy, accelerator: "CmdOrCtrl+C", selector: "copy:"},
+                {label: langData.editSubmenu.paste, accelerator: "CmdOrCtrl+V", selector: "paste:"},
+                {label: langData.editSubmenu.selectAll, accelerator: "CmdOrCtrl+A", selector: "selectAll:"}
+            ];
         }
-    ];
+        menuData = [
+            {
+                label: langData.file,
+                submenu: [
+                    {
+                        label: langData.backupEncrypted,
+                        click() {
+                            exportWalletArizen("awd", true);
+                        }
+                    }, {
+                        label: langData.backupUnencrypted,
+                        click() {
+                            exportWalletArizen("uawd", false);
+                        }
+                    }, {
+                        type: "separator"
+                    }, {
+                        label:  langData.importUnencrypted,
+                        click() {
+                            importWalletArizen("uawd", false);
+                        }
+                    }, {
+                        label:  langData.importEncrypted,
+                        click() {
+                            importWalletArizen("awd", true);
+                        }
+                    }, {
+                        type: "separator"
+                    }, {
+                        label:  langData.exit,
+                        click() {
+                            app.quit();
+                        }
+                    }
+                ]
+            },
+            {
+                label: langData.edit,
+                submenu: editSubmenu
+            }
+        ];
+    }
+    const template = menuData;
 
     setDarwin(template);
     Menu.setApplicationMenu(Menu.buildFromTemplate(template));
@@ -526,6 +553,9 @@ app.on("before-quit", function () {
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
+ipcMain.on("set-menu", function (event, data) {
+    updateMenuAtLogin(JSON.parse(data));
+});
 
 ipcMain.on("write-login-info", function (event, data) {
     let inputs = JSON.parse(data);
