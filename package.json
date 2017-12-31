@@ -98,6 +98,7 @@
     }
   },
   "dependencies": {
+    "axios": "^0.17.1",
     "bip32-utils": "^0.11.0",
     "bitcoinjs-lib": "^3.3.1",
     "electron-debug": "^1.4.0",

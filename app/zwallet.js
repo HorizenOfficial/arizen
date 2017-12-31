@@ -101,6 +101,10 @@ ipcRenderer.on("refresh-wallet-response", (event, msgStr) => {
     scheduleRefresh();
 });
 
+ipcRenderer.on("send-refreshed-wallet-balance", (event, totalBalance) => {
+    setTotalBalance(totalBalance);
+});
+
 ipcRenderer.on("send-finish", (event, result, msg) =>
     updateWithdrawalStatus(result, msg));
 
@@ -146,7 +150,7 @@ function setBalanceText(balanceNode, balance) {
         balanceNode.classList.remove("positive");
 }
 
-function setFiatBalanceText(balanceZEN, fiatCurrencySymbol = "") {
+function setFiatBalanceText(balanceZen, fiatCurrencySymbol = "") {
     const totalBalanceFiatNode = document.getElementById("totalBalanceFiat");
     const balanceFiatAmountNode = totalBalanceFiatNode.firstElementChild;
     const lastUpdateTimeNode = document.getElementById("lastUpdateTime");
@@ -157,28 +161,21 @@ function setFiatBalanceText(balanceZEN, fiatCurrencySymbol = "") {
             fiatCurrencySymbol = "USD";
         }
     }
-    zenToFiat(fiatCurrencySymbol).then(function (ZENPrice) {
+    
+    const axios = require("axios");
+    const BASE_API_URL = "https://api.coinmarketcap.com/v1/ticker";
+    let API_URL = BASE_API_URL + "/zencash/?convert=" + fiatCurrencySymbol;
+
+    axios.get(API_URL).then(response => {
+        let resp = response.data;
+        let zenPrice = parseFloat(resp[0]["price_" + fiatCurrencySymbol.toLowerCase()]);
         const now = new Date().toLocaleTimeString();
-        let balance = (balanceZEN) * ZENPrice;
+        let balance = parseFloat(balanceZen) * zenPrice;
         balanceFiatAmountNode.textContent = formatFiatBalance(balance) + " " + fiatCurrencySymbol;
         lastUpdateTimeNode.textContent = now;
-    });
-}
-
-function zenToFiat(fiat) {
-    const fetch = require("node-fetch");
-    const BASE_API_URL = "https://api.coinmarketcap.com/v1//ticker";
-    let API_URL = BASE_API_URL + "/zencash/?convert=" + fiat;
-
-    console.log("GET " + API_URL);
-    return fetch(API_URL).then(function (resp) {
-        console.log(`GET ${API_URL} done, status: ${resp.status} ${resp.statusText}`);
-        if (!resp.ok)
-            throw new Error(`HTTP GET status: ${resp.status} ${resp.statusText}, URL: ${API_URL}`);
-        return resp.json()
-    }).then(function (responseAsJson) {
-        return parseFloat(responseAsJson[0]["price_" + fiat.toLowerCase()]);
-    });
+      }).catch(error => {
+            console.log(error);
+      });
 }
 
 function setAddressNodeName(addrObj, addrNode) {
@@ -411,9 +408,9 @@ function addTransactions(txs, newTx = false) {
     }
 }
 
-function setTotalBalance(balanceZEN) {
-    setBalanceText(totalBalanceNode, balanceZEN);
-    setFiatBalanceText(balanceZEN);
+function setTotalBalance(balanceZen) {
+    setBalanceText(totalBalanceNode, balanceZen);
+    setFiatBalanceText(balanceZen);
 }
 
 function toggleZeroBalanceAddrs() {
