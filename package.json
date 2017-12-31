@@ -107,7 +107,6 @@
     "electron-simple-updater": "^1.2.3",
     "electron-tabs": "^0.9.0",
     "errors": "^0.3.0",
-    "fetch": "^1.1.0",
     "fs-extra": "^4.0.3",
     "immutable": "^3.8.2",
     "luxon": "^0.2.5",

@@ -150,7 +150,7 @@ function setBalanceText(balanceNode, balance) {
         balanceNode.classList.remove("positive");
 }
 
-function setFiatBalanceText(balanceZEN, fiatCurrencySymbol = "") {
+function setFiatBalanceText(balanceZen, fiatCurrencySymbol = "") {
     const totalBalanceFiatNode = document.getElementById("totalBalanceFiat");
     const balanceFiatAmountNode = totalBalanceFiatNode.firstElementChild;
     const lastUpdateTimeNode = document.getElementById("lastUpdateTime");
@@ -161,23 +161,20 @@ function setFiatBalanceText(balanceZEN, fiatCurrencySymbol = "") {
             fiatCurrencySymbol = "USD";
         }
     }
-
+    
     const axios = require("axios");
-    const BASE_API_URL = "https://api.coinmarketcap.com/v1//ticker";
+    const BASE_API_URL = "https://api.coinmarketcap.com/v1/ticker";
     let API_URL = BASE_API_URL + "/zencash/?convert=" + fiatCurrencySymbol;
 
-    axios
-      .get(API_URL)
-      .then(response => {
+    axios.get(API_URL).then(response => {
         let resp = response.data;
-        let ZENPrice = parseFloat(resp[0]["price_" + fiatCurrencySymbol.toLowerCase()]);
+        let zenPrice = parseFloat(resp[0]["price_" + fiatCurrencySymbol.toLowerCase()]);
         const now = new Date().toLocaleTimeString();
-        let balance = parseFloat(balanceZEN) * ZENPrice;
+        let balance = parseFloat(balanceZen) * zenPrice;
         balanceFiatAmountNode.textContent = formatFiatBalance(balance) + " " + fiatCurrencySymbol;
         lastUpdateTimeNode.textContent = now;
-      })
-      .catch(error => {
-        console.log(error);
+      }).catch(error => {
+            console.log(error);
       });
 }
 
@@ -411,9 +408,9 @@ function addTransactions(txs, newTx = false) {
     }
 }
 
-function setTotalBalance(balanceZEN) {
-    setBalanceText(totalBalanceNode, balanceZEN);
-    setFiatBalanceText(balanceZEN);
+function setTotalBalance(balanceZen) {
+    setBalanceText(totalBalanceNode, balanceZen);
+    setFiatBalanceText(balanceZen);
 }
 
 function toggleZeroBalanceAddrs() {
