@@ -570,6 +570,20 @@ function updateWithdrawalStatus(result, msg) {
     withdrawStatusBodyNode.innerHTML = msg;
 }
 
+function showBatchWithdrawDialog() {
+    showDialogFromTemplate("batchWithdrawDialogTemplate", dialog => {
+        const listNode = dialog.querySelector(".addrSelectList");
+        for (const addrObj of addrObjList) {
+            const row = cloneTemplate("addrMultiselectRowTemplate");
+            row.querySelector(".addrSelectCheckbox").classList.remove("hidden");
+            row.querySelector(".addrSelectRowName").textContent = addrObj.name;
+            row.querySelector(".addrSelectRowAddr").textContent = addrObj.addr;
+            setBalanceText(row.querySelector(".addrSelectRowBalance"), addrObj.lastbalance);
+            listNode.appendChild(row)
+        }
+    });
+}
+
 function initWallet() {
     fixLinks();
     initDepositView();

@@ -118,6 +118,28 @@
     </arizen-dialog>
 </template>
 
+<template id=batchWithdrawDialogTemplate>
+    <arizen-dialog>
+        <h2 slot=headerText>Batch Withdraw</h2>
+        <div slot=content class=batchWithdrawContent>
+            <table class=addrSelectList></table>
+            <div class=form>
+                <label for=batchWithdrawKeepAmount data-tr=wallet.batchWithdraw.keepAmount>Amount to keep</label>
+                <input type=number class=amountInput name=batchWithdrawKeepAmount value=42.00000000 min=0 step=0.1 />
+
+                <label for=batchWithdrawFee data-tr=wallet.batchWithdraw.txFee>Transaction fee</label>
+                <input type=number class=amountInput name=batchWithdrawFee value=0.00000000 min=0 step=0.1 />
+
+                <button id=batchWithdrawToAddr data-tr=wallet.to>To</button>
+                <input type=text name=withdrawToAddr class=monospace />
+            </div>
+            <div class=formButtons>
+                <button id=batchWithdrawButton data-tr=wallet.tabWithdraw.label>Withdraw</button>
+            </div>
+        </div>
+    </arizen-dialog>
+</template>
+
 <!-- TODO this doesn't belong here -->
 <template id=aboutDialogTemplate>
     <arizen-dialog>
@@ -201,6 +223,7 @@
 <header class='panel'>
     <div class=headerLeft>
         <span><button onclick="showSettingsDialog()" data-tr=wallet.showSettingsDialogButton>Settings</button></span>
+        <span><button onclick=showBatchWithdrawDialog() data-tr=wallet.showBatchWithdrawDialog>Batch Withdraw</button></span>
     </div>
     <div class=headerCenter>
         <a class=arizenTitle href='https://github.com/ZencashOfficial/arizen'>Arizen</a>

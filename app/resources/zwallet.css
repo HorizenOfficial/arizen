@@ -370,3 +370,8 @@ header button {
     justify-self: flex-end;
     flex-grow: 2;
 }
+
+.batchWithdrawContent .addrSelectList {
+    max-height: 300px; /* cannot make table to not overflow in any otther way sadly */
+    margin-bottom: 20px;
+}
