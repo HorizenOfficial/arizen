@@ -345,16 +345,19 @@ header button {
  See also https://bugs.chromium.org/p/chromium/issues/detail?id=657748
 */
 .addrSelectList {
-    display: flex;
-    flex-direction: column;
+    display: block;
+    overflow: auto;
+    border: none;
+    border-collapse: collapse;
 }
 .addrSelectList > :nth-child(odd) {
     background: var(--odd-bg);
 }
+.addrSelectList > tr > td:not(:first-child) {
+    padding-left: 10px;
+}
+
 .addrSelectRow {
-    display: flex;
-    align-items: baseline;
-    flex-shrink: 0;
     cursor: pointer;
 }
 .addrSelectRow:hover {
@@ -362,12 +365,6 @@ header button {
 }
 .addrSelectRow > * {
     margin-right: 15px;
-}
-.addrSelectRowName {
-    width: 200px;
-}
-.addrSelectRowAddr {
-    width: 400px;
 }
 .addrSelectRowBalance {
     justify-self: flex-end;

@@ -94,17 +94,27 @@
 </template>
 
 <template id=addrSelectRowTemplate>
-    <div class=addrSelectRow>
-        <div class=addrSelectRowName></div>
-        <div class="addrSelectRowAddr monospace"></div>
-        <div class=addrSelectRowBalance><span></span> ZEN</div>
-    </div>
+    <tr class=addrSelectRow>
+        <td class=addrSelectRowName></td>
+        <td class="addrSelectRowAddr monospace"></td>
+        <td class=addrSelectRowBalance><span></span> ZEN</td>
+    </tr>
 </template>
+
+<template id=addrMultiselectRowTemplate>
+    <tr class=addrSelectRow>
+        <td><input class=addrSelectCheckbox type=checkbox /></td>
+        <td class=addrSelectRowName></td>
+        <td class="addrSelectRowAddr monospace"></td>
+        <td class=addrSelectRowBalance><span></span> ZEN</td>
+    </tr>
+</template>
+
 <template id=addrSelectDialogTemplate>
     <arizen-dialog>
         <h2 slot=headerText data-tr=wallet.listOfAddresses>List of Addresses</h2>
-        <div slot=content class=addrSelectList>
-       </div>
+        <table slot=content class=addrSelectList>
+        </table>
     </arizen-dialog>
 </template>
 
