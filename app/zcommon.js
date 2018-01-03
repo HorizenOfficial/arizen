@@ -105,22 +105,44 @@ function clearChildNodes(parent) {
 }
 
 function cloneTemplate(id) {
-    const node = document.getElementById(id).content.cloneNode(true).firstElementChild;
+    const templateNode = document.getElementById(id);
+    if (!templateNode)
+        throw new Error(`No template with ID "${id}"`);
+    const node = templateNode.content.cloneNode(true).firstElementChild;
+    if (!node)
+        throw new Error(`Template is empty (ID "${id}")`);
     fixLinks(node);
     return node;
 }
 
-function showDialogFromTemplate(templateName, dialogInit, onClose = null) {
-    const dialog = cloneTemplate(templateName);
+/**
+ * Creates dialog from a template and adds it to the DOM.
+ *
+ * WARNING! You have to call close() on the retunred dialog otherwise it'll stay
+ * in the DOM. The close event handler will automatically remove it from DOM. If
+ * you use `id` attributes on slotted contents and forget to remove old dialog
+ * before creating a new one from the same template, this will result in
+ * duplicate IDs in the DOM. Maybe. To be honest, I (woky) don't know how IDs on
+ * slotted contents in shadow DOM work. Feel free to experiment and update this
+ * comment.
+ *
+ * @param templateId id of the template
+ * @returns the `<arizen-dialog>` node of the created dialog
+ */
+function createDialogFromTemplate(templateId) {
+    const dialog = cloneTemplate(templateId);
     if (dialog.tagName !== "ARIZEN-DIALOG")
         throw new Error("No dialog in the template");
     document.body.appendChild(dialog);
+    dialog.addEventListener("close", () => dialog.remove());
+    return dialog;
+}
+
+function showDialogFromTemplate(templateId, dialogInit, onClose = null) {
+    const dialog = createDialogFromTemplate(templateId);
     dialogInit(dialog);
-    dialog.addEventListener("close", () => {
-        if (onClose)
-            onClose();
-        dialog.remove()
-    });
+    if (onClose)
+        dialog.addEventListener("close", () => onClose());
     dialog.showModal();
 }
 
