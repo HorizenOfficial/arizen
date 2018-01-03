@@ -174,6 +174,10 @@ let langDict;
     });
 })();
 
+function saveModifiedSettings() {
+    ipcRenderer.send("save-settings", JSON.stringify(settings));
+}
+
 function showSettingsDialog() {
     showDialogFromTemplate("settingsDialogTemplate", dialog => {
         const inputTxHistory = dialog.querySelector(".settingsTxHistory");
@@ -196,14 +200,14 @@ function showSettingsDialog() {
 
         dialog.querySelector(".settingsSave").addEventListener("click", () => {
 
-            const newSettings = {
+            Object.assign(settings, {
                 txHistory: parseInt(inputTxHistory.value),
                 explorerUrl: inputExplorerUrl.value.trim().replace(/\/?$/, ""),
                 apiUrls: inputApiUrls.value.split(/\s+/).filter(s => !/^\s*$/.test(s)).map(s => s.replace(/\/?$/, "")),
                 fiatCurrency: inputFiatCurrency.value,
                 lang: inputLanguages[inputLanguages.selectedIndex].value
-            };
-            ipcRenderer.send("save-settings", JSON.stringify(newSettings));
+            });
+            saveModifiedSettings();
             let zenBalance = getZenBalance();
             setFiatBalanceText(zenBalance, inputFiatCurrency.value);
 
