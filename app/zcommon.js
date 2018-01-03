@@ -20,14 +20,14 @@ function assert(condition, message) {
 function querySelectorAllDeep(selector, startRoot = document) {
     const roots = [startRoot];
 
-    const nodeQueue = [... startRoot.children];
+    const nodeQueue = [...startRoot.children];
     while (nodeQueue.length) {
         const node = nodeQueue.shift();
         if (node.shadowRoot)
             roots.push(node.shadowRoot);
         if (node.tagName === "TEMPLATE" && node.content)
             roots.push(node.content);
-        nodeQueue.push(... node.children);
+        nodeQueue.push(...node.children);
     }
 
     const matches = [];
@@ -203,7 +203,7 @@ function openZenExplorer(path) {
     openUrl(settings.explorerUrl + "/" + path);
 }
 
-function getZenBalance(){
+function getZenBalance() {
     const totalBalanceAmountNode = document.getElementById("totalBalanceAmount");
     return formatBalance(parseFloat(totalBalanceAmountNode.innerHTML));
 }
@@ -282,3 +282,91 @@ function translateCurrentPage() {
     querySelectorAllDeep("[data-tr]").forEach(node =>
         node.textContent = tr(node.dataset.tr, node.textContent));
 }
+
+// TODO this doesn't belong here
+function showGeneratePaperWalletDialog() {
+    const zencashjs = require("zencashjs");
+
+    showDialogFromTemplate("generatePaperWalletDialogTemplate", dialog => {
+        dialog.querySelector(".generateNewWallet").addEventListener("click", () => {
+            let addressInWallet = document.getElementById("addPaperWalletArizen").checked;
+            console.log(addressInWallet);
+            var newWalletNamePaper = document.getElementById("newWalletNamePaper").value;
+            console.log(newWalletNamePaper);
+
+            // Clear Checkbox and Button from HTML
+            let ButtonArea = document.getElementById("createButtonCheck");
+            console.log(ButtonArea);
+            ButtonArea.innerHTML = " ";
+
+            // Style the new screen
+            dialog.querySelector(".generateNewWalletTitle").textContent = "ZenCash Wallet";
+            dialog.querySelector(".nametAddr").textContent = "Public Key - T Address";
+            dialog.querySelector(".namePrivateKey").textContent = "Private Key";
+            if (newWalletNamePaper) {
+                dialog.querySelector(".newWalletNamePaperLabel").textContent = "Name: " + newWalletNamePaper;
+            }
+            // Add ZenCash logo for PDF print
+            let logoarea = document.getElementById("zenCashLogoWallet");
+            logoarea.innerHTML = "<a><img id=zenImg src='resources/zen_icon.png' height='50' width='50' /></a>";
+
+            let getback = ipcRenderer.sendSync("get-paper-address-wif", addressInWallet, newWalletNamePaper);
+            let wif = getback.wif;
+            let resp = getback.resp;
+            console.log(getback);
+            console.log(resp);
+            let privateKey = zencashjs.address.WIFToPrivKey(wif);
+            let pubKey = zencashjs.address.privKeyToPubKey(privateKey, true);
+            let tAddr = zencashjs.address.pubKeyToAddr(pubKey);
+            console.log(tAddr);
+
+            // Register Address
+            if (addressInWallet) {
+                addNewAddress(resp);
+            }
+
+            dialog.querySelector(".keyPrivate").textContent = privateKey;
+            dialog.querySelector(".tAddr").textContent = tAddr;
+
+            let QRCode = require("qrcode");
+
+            // t Address QR Image
+            let canvasT = document.getElementById("canvasT");
+
+            QRCode.toCanvas(canvasT, tAddr, function (error) {
+                if (error) console.error(error)
+            });
+            console.log(canvasT);
+
+            // Private Key QR Image
+            let canvasPriv = document.getElementById("canvasPriv");
+
+            QRCode.toCanvas(canvasPriv, privateKey, function (error) {
+                if (error) console.error(error)
+            });
+
+            console.log(canvasPriv);
+            ButtonArea.innerHTML = " ";
+
+
+            // Print to PDF
+            let pdfButton = document.createElement("BUTTON");
+            pdfButton.setAttribute("id", "exportPDFButton");
+            let t = document.createTextNode("Export PDF");
+            pdfButton.appendChild(t);
+            dialog.querySelector(".pdfButton").appendChild(pdfButton);
+
+            dialog.querySelector(".pdfButton").addEventListener("click", () => {
+                pdfButton.style.visibility = 'hidden'; // Hide it in order to avoid printing it.
+                ipcRenderer.send("export-pdf", newWalletNamePaper);
+            });
+        });
+    });
+}
+
+(() => {
+    const {ipcRenderer} = require("electron");
+    ipcRenderer.on("export-pdf-done", (event, arg) => {
+        document.getElementById("exportPDFButton").style.visibility = "visible"; // exportPDFButton visible again
+    });
+})();

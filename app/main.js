@@ -26,6 +26,8 @@ const {List} = require("immutable");
 // FIXME: comment this for release versions!
 require("electron-debug")();
 
+// Uncomment if you want to run in production
+// process.env.NODE_ENV !== "production"
 
 updater.init({checkUpdateOnStart: true, autoDownload: true});
 attachUpdaterHandlers();
@@ -249,7 +251,7 @@ function getNewAddress(name) {
     userInfo.walletDb.run("INSERT INTO wallet VALUES (?,?,?,?,?)", [null, pk, addr, 0, name]);
     userInfo.dbChanged = true;
 
-    return { addr: addr, name: name, lastbalance: 0 };
+    return { addr: addr, name: name, lastbalance: 0, pk: pk, wif: privateKeys[0]};
 }
 
 function tableExists(table) {
@@ -500,6 +502,7 @@ function updateMenuAtLogout() {
 function createWindow() {
     updateMenuAtLogout();
     mainWindow = new BrowserWindow({width: 1000, height: 730, resizable: true, icon: "resources/zen_icon.png"});
+
 
     if (fs.existsSync(getWalletPath())) {
         mainWindow.loadURL(url.format({
@@ -1122,7 +1125,53 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
 });
 
 ipcMain.on("get-me-settings", function (event) {
-  event.returnValue = loadSettings();
+    event.returnValue = loadSettings();
+});
+
+ipcMain.on("export-pdf", function (event, newWalletNamePaper) {
+    const win = BrowserWindow.fromWebContents(event.sender);
+    const app = require("electron");
+    const dialog = app.dialog;
+    console.log("print-to-pdf received");
+    console.log(newWalletNamePaper);
+
+    let defaultPathPDF;
+    if (!(newWalletNamePaper === "")) {
+        defaultPathPDF = "*/" + newWalletNamePaper + " Wallet - " + userInfo.login;
+    } else {
+        defaultPathPDF = "*/ZenCash Wallet - " + userInfo.login;
+    }
+
+    dialog.showSaveDialog(win, {
+        title: "Save",
+        filters: [{name: "PDF", extensions: ["pdf"]}],
+        defaultPath: defaultPathPDF
+    }, (fileName) => {
+        if (fileName === undefined) {
+            console.log("Cancel pressed");
+            event.sender.send("export-pdf-done", "PDF export: Canceled by user.");
+            return;
+        }
+        win.webContents.printToPDF({landscape: false}, function (error, data) {
+            fs.writeFile(fileName, data, function (err) {
+                if (err) return console.log(err.message);
+                shell.openExternal("file://" + fileName);
+                event.sender.send("export-pdf-done", "PDF exported")
+            });
+        });
+    });
+});
+
+ipcMain.on("get-paper-address-wif", function (event, addressInWallet, name) {
+    if (!addressInWallet) {
+        let wifTmp = generateNewAddress(1, userInfo.pass);
+        let wif = wifTmp[0];
+        event.returnValue = {wif: wif, resp: null};
+    } else if (addressInWallet) {
+        let resp = getNewAddress(name);
+        //ipcMain.send("generate-wallet-response", JSON.stringify(resp));
+        event.returnValue = {wif: resp.wif, resp: resp};
+    }
 });
 
 // Unused
