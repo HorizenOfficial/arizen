@@ -80,6 +80,32 @@ function fixLinks(parent = document) {
         }));
 }
 
+function fixAmountInputs(parent = document) {
+    querySelectorAllDeep(".amountInput", parent).forEach(node => {
+        function updateBalanceText() { node.value = formatBalance(node.value) }
+        updateBalanceText();
+        node.addEventListener("change", () => updateBalanceText());
+    });
+}
+
+function fixPage(parent = document) {
+    fixLinks(parent);
+    fixAmountInputs(parent);
+}
+
+/**
+ * Sets `<input>` node's value and also fires the change event. Needed for
+ * amount nodes which are currently hacked by reformatting their contents on
+ * change.
+ *
+ * @param {Node} node
+ * @param {string} value
+ */
+function setInputNodeValue(node, value) {
+    node.value = value;
+    node.dispatchEvent(new Event("change"));
+}
+
 function formatBalance(balance) {
     return parseFloat(balance).toLocaleString(undefined, {minimumFractionDigits: 8, maximumFractionDigits: 8});
 }

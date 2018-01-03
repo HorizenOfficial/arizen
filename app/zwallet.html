@@ -124,18 +124,29 @@
         <div slot=content class=batchWithdrawContent>
             <table class=addrSelectList></table>
             <div class=form>
+                <button id=batchWithdrawToAddrSelect data-tr=wallet.to>To</button>
+                <input type=text id=batchWithdrawToAddr name=batchWithdrawToAddr class=monospace />
+
                 <label for=batchWithdrawKeepAmount data-tr=wallet.batchWithdraw.keepAmount>Amount to keep</label>
-                <input type=number class=amountInput name=batchWithdrawKeepAmount value=42.00000000 min=0 step=0.1 />
+                <input type=number id=batchWithdrawKeepAmount name=batchWithdrawKeepAmount
+                    class=amountInput value=42.00000000 min=0 step=0.1 />
 
                 <label for=batchWithdrawFee data-tr=wallet.batchWithdraw.txFee>Transaction fee</label>
-                <input type=number class=amountInput name=batchWithdrawFee value=0.00000000 min=0 step=0.1 />
-
-                <button id=batchWithdrawToAddr data-tr=wallet.to>To</button>
-                <input type=text name=withdrawToAddr class=monospace />
+                <input type=number id=batchWithdrawFee name=batchWithdrawFee
+                    class=amountInput value=0.00000000 min=0 step=0.1 />
             </div>
             <div class=formButtons>
                 <button id=batchWithdrawButton data-tr=wallet.tabWithdraw.label>Withdraw</button>
             </div>
+        </div>
+    </arizen-dialog>
+</template>
+
+<template id=txSendStatusDialogTemplate>
+    <arizen-dialog>
+        <h2 slot=headerText>Transaction Status</h2>
+        <div slot=content id=txStatusText>
+            Sending transaction. Please wait...
         </div>
     </arizen-dialog>
 </template>

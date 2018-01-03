@@ -130,6 +130,12 @@ function checkResponse(resp) {
     }
 }
 
+function warnTxSend(onOk) {
+    const msg = tr("wallet.tabWithdraw.withdrawConfirmQuestion", "Do you really want to send this transaction?");
+    if (confirm(msg))
+        onOk();
+}
+
 function getAddrData(addr) {
     const idx = addrIdxByAddr.get(addr);
     let addrObj, addrNode;
@@ -572,16 +578,76 @@ function updateWithdrawalStatus(result, msg) {
 
 function showBatchWithdrawDialog() {
     showDialogFromTemplate("batchWithdrawDialogTemplate", dialog => {
+        const bwSettings = deepClone(settings.batchWithdraw) || {
+            fromAddrs: [],
+            toAddr: "",
+            keepAmount: 42,
+            txFee: 0.0001,
+        };
+        const fromAddrsSet = new Set(bwSettings.fromAddrs);
         const listNode = dialog.querySelector(".addrSelectList");
+
         for (const addrObj of addrObjList) {
             const row = cloneTemplate("addrMultiselectRowTemplate");
-            row.querySelector(".addrSelectCheckbox").classList.remove("hidden");
-            row.querySelector(".addrSelectRowName").textContent = addrObj.name;
-            row.querySelector(".addrSelectRowAddr").textContent = addrObj.addr;
-            setBalanceText(row.querySelector(".addrSelectRowBalance"), addrObj.lastbalance);
+            row.dataset.addr = addrObj.addr;
+
+            const selectCheckbox = row.querySelector(".addrSelectCheckbox");
+            const nameNode = row.querySelector(".addrSelectRowName");
+            const addrNode = row.querySelector(".addrSelectRowAddr");
+            const balanceNode = row.querySelector(".addrSelectRowBalance");
+
+            if (fromAddrsSet.has(addrObj.addr))
+                selectCheckbox.checked = true;
+            nameNode.textContent = addrObj.name;
+            addrNode.textContent = addrObj.addr;
+            setBalanceText(balanceNode, addrObj.lastbalance);
+
             listNode.appendChild(row)
         }
+
+        const keepAmountInput = dialog.querySelector("#batchWithdrawKeepAmount");
+        const txFeeInput = dialog.querySelector("#batchWithdrawFee");
+        const toAddrSelectButton = dialog.querySelector("#batchWithdrawToAddrSelect");
+        const toAddrInput = dialog.querySelector("#batchWithdrawToAddr");
+        const withdrawButton = dialog.querySelector("#batchWithdrawButton");
+
+        setInputNodeValue(toAddrInput, bwSettings.toAddr);
+        setInputNodeValue(keepAmountInput, bwSettings.keepAmount);
+        setInputNodeValue(txFeeInput, bwSettings.txFee);
+        toAddrSelectButton.addEventListener("click", () => showAddrSelectDialog(true, addr => {
+            toAddrInput.value = addr;
+            // TODO validate form
+        }));
+
+        withdrawButton.addEventListener("click", () => {
+            bwSettings.fromAddrs = [];
+            [... listNode.children].forEach(row => {
+                if (row.querySelector(".addrSelectCheckbox").checked)
+                    bwSettings.fromAddrs.push(row.dataset.addr);
+            });
+            bwSettings.toAddr = toAddrInput.value;
+            bwSettings.keepAmount = keepAmountInput.value;
+            bwSettings.txFee = txFeeInput.value;
+
+            settings.batchWithdraw = bwSettings;
+            saveModifiedSettings();
+
+            warnTxSend(() => {
+                const statusDialog = createDialogFromTemplate("txSendStatusDialogTemplate");
+                const statusText = statusDialog.querySelector("#txStatusText");
+                ipcRenderer.once("send-finish", (event, result, msg) => {
+                    statusText.innerHTML = msg;
+                });
+                ipcRenderer.send("send-many", bwSettings.fromAddrs, bwSettings.toAddr, bwSettings.txFee, bwSettings.keepAmount);
+                dialog.close();
+                statusDialog.showModal();
+            });
+        });
     });
+}
+
+function showTxStatusDialog() {
+
 }
 
 function initWallet() {
