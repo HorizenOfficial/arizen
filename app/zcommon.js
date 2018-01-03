@@ -36,6 +36,28 @@ function querySelectorAllDeep(selector, startRoot = document) {
     return matches;
 }
 
+function deepClone(obj) {
+    // feel free to make a better implementation
+    if (!obj)
+        return null;
+    return JSON.parse(JSON.stringify(obj));
+}
+
+/**
+ * Shows a OK/Cancel message box with `msg`. Executes `ifOk` lambda if user
+ * presses OK or executes `onCancel` if it is defined and user presses Cancel.
+ *
+ * @param {string} msg - message for the user
+ * @param {function} onOk - lambda executed if OK is pressed
+ * @param {function=} onOk - lambda executed if Cancel is pressed
+ */
+function warnUser(msg, onOk, onCancel) {
+    if (confirm(msg))
+        onOk();
+    else if (onCancel)
+        onCancel();
+}
+
 function logout() {
     ipcRenderer.send("do-logout");
     location.href = "./login.html";
