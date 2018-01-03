@@ -585,7 +585,7 @@ function showBatchWithdrawDialog() {
 }
 
 function initWallet() {
-    fixLinks();
+    fixPage();
     initDepositView();
     initWithdrawView();
     document.getElementById("actionShowZeroBalances").addEventListener("click", toggleZeroBalanceAddrs);

@@ -73,7 +73,7 @@ function openUrl(url) {
 }
 
 function fixLinks(parent = document) {
-    parent.querySelectorAll("a[href^='http']").forEach(link =>
+    querySelectorAllDeep("a[href^='http']", parent).forEach(link =>
         link.addEventListener("click", event => {
             event.preventDefault();
             openUrl(link.href);
@@ -111,7 +111,7 @@ function cloneTemplate(id) {
     const node = templateNode.content.cloneNode(true).firstElementChild;
     if (!node)
         throw new Error(`Template is empty (ID "${id}")`);
-    fixLinks(node);
+    fixPage(node);
     return node;
 }
 
