@@ -84,6 +84,12 @@
       "apiUrl": "API URLs",
       "fiat": "Fiat Equivalent",
       "save": "Save"
+    },
+    "paperWallet": {
+      "label": "Generate Paper Wallet",
+      "generateNewWallet": "Generate New Wallet",
+      "name": "Name (optional)",
+      "addWalletToArizen": "Add this wallet to Arizen"
     }
   },
   "menu": {

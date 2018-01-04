@@ -84,6 +84,12 @@
             "apiUrl": "Adresa API",
             "fiat": "Zůstatek ve FIAT měně",
             "save": "Uložit"
+        },
+        "paperWallet": {
+            "label": "Vytvořit Paper Wallet",
+            "generateNewWallet": "Vytvořit novou peněženku",
+            "name": "Jméno (nepovinné)",
+            "addWalletToArizen": "Přidat vytvořenou peněženku do Arizenu"
         }
     },
     "menu": {
