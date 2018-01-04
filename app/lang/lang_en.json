@@ -9,6 +9,27 @@
     "createWalletLink": "Create Wallet",
     "warningWrongUsernameOrPassword": "Wrong <strong>username</strong> or <strong>password</strong>"
   },
+  "createWallet": {
+    "label": "Arizen: Create Wallet",
+    "username": "Username",
+    "password": "Password",
+    "passwordAgain": "Password again" ,
+    "selectWallet": "Select Wallet",
+    "selectWalletButton": "Browse",
+    "createWalletButton": "Create Wallet",
+    "loginLink": "Login",
+    "warningUsername": "Username must meet the following requirements:",
+    "warningUsernameLength": "At least <strong>four letters</strong>",
+    "warningPassword": "Password must meet the following requirements:",
+    "warningPasswordLetter": "At least <strong>one letter</strong>",
+    "warningPasswordCapitalLetter": "At least <strong>one capital letter</strong>",
+    "warningPasswordNumber": "At least <strong>one number</strong>",
+    "warningPasswordSpecial": "At least <strong>one special character</strong>",
+    "warningPasswordLength": "Be at least <strong>8 characters</strong>",
+    "warningPasswordAgain": "Password must meet the following requirements:",
+    "warningPasswordAgainIdentical": "<strong>Identical</strong>",
+    "errorCreationFailed": "Wallet creation failed"
+  },
   "wallet": {
     "showSettingsDialogButton" : "Settings",
     "showAboutDialogButton" : "About",

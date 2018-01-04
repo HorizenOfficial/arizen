@@ -9,6 +9,27 @@
         "createWalletLink": "Vytvořit novou peněženku",
         "warningWrongUsernameOrPassword": "Špatné <strong>jméno</strong> nebo <strong>heslo</strong>"
     },
+    "createWallet": {
+        "label": "Arizen: Vytvoření peněženky",
+        "username": "Jméno",
+        "password": "Heslo",
+        "passwordAgain": "Heslo znovu" ,
+        "selectWallet": "Vybrat soubor s peněženkou",
+        "selectWalletButton": "Procházet",
+        "createWalletButton": "Vytvořit peněženku",
+        "loginLink": "Přihlásit se ",
+        "warningUsername": "Jméno musí",
+        "warningUsernameLength": "Být dlouhé minimálně <strong>4 znaky</strong>",
+        "warningPassword": "Heslo musí",
+        "warningPasswordLetter": "Obsahovat alespoň <strong>jeden znak abecedy</strong>",
+        "warningPasswordCapitalLetter": "Obsahovat alespoň <strong>jedno velké písmeno</strong>",
+        "warningPasswordNumber": "Obsahovat alespoň <strong>jednu číslici</strong>",
+        "warningPasswordSpecial": "Obsahovat alespoň <strong>jeden speciální znak</strong></strong>",
+        "warningPasswordLength": "Být dlouhé minimálně <strong>8 znaků</strong>",
+        "warningPasswordAgain": "Hesla musejí splnit následující požadavky",
+        "warningPasswordAgainIdentical": "<strong>Musí být identické</strong>",
+        "errorCreationFailed": "Vytvoření peněženky selhalo"
+    },
     "wallet": {
         "showSettingsDialogButton" : "Nastavení",
         "showAboutDialogButton" : "O Programu",
