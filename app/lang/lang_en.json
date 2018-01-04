@@ -16,6 +16,7 @@
     "lastUpdate": "Last update",
     "showExplorer": "Show in ZEN Explorer",
     "listOfAddresses": "List Of Addresses",
+    "showBatchWithdrawDialog": "Batch Withdraw",
     "tabOverview": {
       "label": "Overview",
       "showZeroBalances" : "Show zero balances",
@@ -90,6 +91,10 @@
       "generateNewWallet": "Generate New Wallet",
       "name": "Name (optional)",
       "addWalletToArizen": "Add this wallet to Arizen"
+    },
+    "batchWithdraw": {
+      "keepAmount": "Amount to keep",
+      "txFee": "Transaction fee"
     }
   },
   "menu": {

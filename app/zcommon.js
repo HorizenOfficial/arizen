@@ -195,7 +195,6 @@ function setMenuLang() {
         return;
     if (!langDict.menu)
         return;
-    console.log(langDict.menu);
     ipcRenderer.send("set-menu",JSON.stringify(langDict.menu));
 }
 
