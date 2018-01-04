@@ -1,6 +1,7 @@
 {
     "languageName": "Czech",
     "languageValue": "cs",
+    "langFileVersion": "1",
     "login": {
         "label": "Arizen: Přihlášení",
         "username": "Jméno",

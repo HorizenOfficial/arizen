@@ -1,6 +1,7 @@
 {
   "languageName": "English",
   "languageValue": "en",
+  "langFileVersion": "1",
   "login": {
     "label": "Arizen: Login",
     "username": "Username",
