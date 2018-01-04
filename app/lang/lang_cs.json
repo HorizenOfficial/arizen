@@ -1,6 +1,14 @@
 {
     "languageName": "Czech",
     "languageValue": "cs",
+    "login": {
+        "label": "Arizen: Přihlášení",
+        "username": "Jméno",
+        "password": "Heslo",
+        "loginButton": "Přihlásit",
+        "createWalletLink": "Vytvořit novou peněženku",
+        "warningWrongUsernameOrPassword": "Špatné <strong>jméno</strong> nebo <strong>heslo</strong>"
+    },
     "wallet": {
         "showSettingsDialogButton" : "Nastavení",
         "showAboutDialogButton" : "O Programu",

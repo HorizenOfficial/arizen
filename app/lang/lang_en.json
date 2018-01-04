@@ -1,6 +1,14 @@
 {
   "languageName": "English",
   "languageValue": "en",
+  "login": {
+    "label": "Arizen: Login",
+    "username": "Username",
+    "password": "Password",
+    "loginButton": "Login",
+    "createWalletLink": "Create Wallet",
+    "warningWrongUsernameOrPassword": "Wrong <strong>username</strong> or <strong>password</strong>"
+  },
   "wallet": {
     "showSettingsDialogButton" : "Settings",
     "showAboutDialogButton" : "About",
