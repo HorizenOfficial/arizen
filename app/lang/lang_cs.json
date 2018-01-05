@@ -14,6 +14,8 @@
         "label": "Arizen: Vytvoření peněženky",
         "username": "Jméno",
         "password": "Heslo",
+        "oldUsername": "Staré jméno: ",
+        "oldPassword": "Staré heslo: ",
         "passwordAgain": "Heslo znovu" ,
         "selectWallet": "Vybrat soubor s peněženkou",
         "selectWalletButton": "Procházet",

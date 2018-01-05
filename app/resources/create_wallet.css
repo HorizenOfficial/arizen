@@ -40,6 +40,7 @@
 
 #old_username_area {
     display: none;
+    font-size: 0.8em;
 }
 
 #old_pswd_area {
@@ -59,4 +60,10 @@
 
 .inputs_small:focus {
     border-bottom: 1px solid #f88900;
+}
+
+.input_smaller {
+  width: 200px;
+  display: inline;
+  margin: none;
 }
