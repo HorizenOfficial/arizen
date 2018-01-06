@@ -90,7 +90,7 @@ function fixAmountInputs(parent = document) {
 
 function fixPage(parent = document) {
     fixLinks(parent);
-    // fixAmountInputs(parent);
+    fixAmountInputs(parent);
 }
 
 /**
