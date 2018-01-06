@@ -282,6 +282,51 @@ function translateCurrentPage() {
         node.textContent = tr(node.dataset.tr, node.textContent));
 }
 
+
+function localizeErrString(errString){
+    if (langDict.wallet.tabWithdraw.messages.fromAddressBadLength) {
+        errString = errString.replace("fromAddressBadLength", langDict.wallet.tabWithdraw.messages.fromAddressBadLength);
+    } else {
+        errString = errString.replace("fromAddressBadLength", "Bad length of source address!");
+    }
+    if (langDict.wallet.tabWithdraw.messages.fromAddressBadPrefix) {
+        errString = errString.replace("fromAddressBadPrefix", langDict.wallet.tabWithdraw.messages.fromAddressBadPrefix);
+    } else {
+        errString = errString.replace("fromAddressBadPrefix", "Bad source address prefix - have to be 'zn'!");
+    }
+    if (langDict.wallet.tabWithdraw.messages.toAddressBadLength) {
+        errString = errString.replace("toAddressBadLength", langDict.wallet.tabWithdraw.messages.toAddressBadLength);
+    } else {
+        errString = errString.replace("toAddressBadLength", "Bad length of destination address!");
+    }
+    if (langDict.wallet.tabWithdraw.messages.toAddressBadPrefix) {
+        errString = errString.replace("toAddressBadPrefix", langDict.wallet.tabWithdraw.messages.toAddressBadPrefix);
+    } else {
+        errString = errString.replace("toAddressBadPrefix", "Bad destination address prefix - have to be 'zn'!");
+    }
+    if (langDict.wallet.tabWithdraw.messages.amountNotNumber) {
+        errString = errString.replace("amountNotNumber", langDict.wallet.tabWithdraw.messages.amountNotNumber);
+    } else {
+        errString = errString.replace("amountNotNumber", "Amount is NOT number");
+    }
+    if (langDict.wallet.tabWithdraw.messages.amountIsZero) {
+        errString = errString.replace("amountIsZero", langDict.wallet.tabWithdraw.messages.amountIsZero);
+    } else {
+        errString = errString.replace("amountIsZero", "Amount has to be greater than zero!");
+    }
+    if (langDict.wallet.tabWithdraw.messages.feeNotNumber) {
+        errString = errString.replace("feeNotNumber", langDict.wallet.tabWithdraw.messages.feeNotNumber);
+    } else {
+        errString = errString.replace("feeNotNumber", "Fee is NOT number!");
+    }
+    if (langDict.wallet.tabWithdraw.messages.feeIsNegative) {
+        errString = errString.replace("feeIsNegative", langDict.wallet.tabWithdraw.messages.feeIsNegative);
+    } else {
+        errString = errString.replace("feeIsNegative", "Fee has to be greater or equal zero!");
+    }
+    return errString;
+}
+
 // TODO this doesn't belong here
 function showGeneratePaperWalletDialog() {
     const zencashjs = require("zencashjs");

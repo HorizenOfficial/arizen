@@ -76,6 +76,14 @@
         "emptyToAddr": "The to address is empty",
         "zeroAmount": "The amount is not positive",
         "insufficientFunds": "Insufficient funds on the from address",
+        "fromAddressBadLength" : "Bad length of source address!",
+        "fromAddressBadPrefix" : "Bad source address prefix - have to be 'zn'!",
+        "toAddressBadLength": "Bad length of destination address!",
+        "toAddressBadPrefix": "Bad destination address prefix - have to be 'zn'!",
+        "amounNotNumber": "Amount is NOT number",
+        "amountIsZero": "Amount has to be greater than zero!",
+        "feeNotNumber": "Fee is NOT number!",
+        "feeIsNegative": "Fee has to be greater or equal zero!",
         "error": "Error",
         "success": "The transaction has been successfully sent"
       }

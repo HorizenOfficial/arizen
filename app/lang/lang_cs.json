@@ -76,6 +76,14 @@
                 "emptyToAddr": "Cílová adresa není zadána",
                 "zeroAmount": "Množství není větší než nula",
                 "insufficientFunds": "Nedostatečný zůstatek na zdrojové adrese",
+                "fromAddressBadLength" : "Špatná délka zdrojové adresy!",
+                "fromAddressBadPrefix" : "Špatný prefix zdrojové adresy - musí být 'zn'!",
+                "toAddressBadLength": "Špatná délka cílové adresy!",
+                "toAddressBadPrefix": "Špatný prefix cílové adresy - musí být 'zn'!",
+                "amounNotNumber": "Množství není číslo",
+                "amountIsZero": "Množství musí být větší než 0!",
+                "feeNotNumber": "Poplatek není číslo!",
+                "feeIsNegative": "Poplatek nesmí být záporný!",
                 "error": "Chyba",
                 "success": "Transakce úspěšně odeslána"
             }
