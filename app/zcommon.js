@@ -82,7 +82,7 @@ function fixLinks(parent = document) {
 
 function fixAmountInputs(parent = document) {
     querySelectorAllDeep(".amountInput", parent).forEach(node => {
-        function updateBalanceText() { node.value = formatBalance(node.value) }
+        function updateBalanceText() { node.value = formatBalance(node.valueAsNumber) }
         updateBalanceText();
         node.addEventListener("change", () => updateBalanceText());
     });
