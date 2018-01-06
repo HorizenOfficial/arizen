@@ -1108,13 +1108,23 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
                                             event.sender.send("send-finish", "ok", message);
                                         } else {
                                             console.log(sendtx_resp);
+                                            event.sender.send("send-finish", "error", "sendtx_resp: " + String(sendtx_resp));
                                         }
                                     });
                                 }
+                            } else {
+                                console.log(bhash_resp);
+                                event.sender.send("send-finish", "error", "bhash_resp: " + String(bhash_resp));
                             }
                         });
+                    } else {
+                        console.log(info_resp);
+                        event.sender.send("send-finish", "error", "info_resp: " + String(info_resp));
                     }
                 });
+            } else {
+                console.log(tx_resp);
+                event.sender.send("send-finish", "error", "tx_resp: " + String(tx_resp));
             }
         });
     }
@@ -1171,75 +1181,89 @@ function checkSendParametersSendMany(fromAddresses, toAddress, fee, thresholdLim
  * @param fee - fee for the whole transaction
  * @param thresholdLimit - How many ZENs will remain in every fromAddresses
  */
-ipcMain.on("send-many", function (event, fromAddresses, toAddress, fee, thresholdLimit = 42){
-    let errString = checkSendParametersSendMany(fromAddresses, toAddress, fee, thresholdLimit);
+ipcMain.on("send-many", function (event, fromAddresses, toAddress, fee, thresholdLimit = 42.0) {
+    let errParametersString = checkSendParametersSendMany(fromAddresses, toAddress, fee, thresholdLimit);
 
-    if (errString !== ""){
-        event.sender.send("send-finish", "error", "Parameter check: " + errString);
-    }else{
+    if (errParametersString !== "") {
+        console.log("Parameter check: " + errParametersString);
+        event.sender.send("send-finish", "error", "Parameter check: " + errParametersString);
+    } else {
         // VARIABLES ---------------------------------------------------------------------------------------------------
-        let nFromAddresses = fromAddresses.length;
+        let err = "";
+        const nFromAddresses = fromAddresses.length;
+        const satoshi = 100000000;
         let privateKeys = new Array(nFromAddresses);
         let amountsInSatoshi = new Array(nFromAddresses);
-        // let reducer = (accumulator, currentValue) => accumulator + currentValue;
 
         // CHECK ZEN API -----------------------------------------------------------------------------------------------
         let zenApi = settings.apiUrls[0];
         if (!zenApi) {
-            console.log("No Zen api in settings");
+            err = "Zen API is not set in settings!";
+            console.log(err);
+            event.sender.send("send-finish", "error", err);
             return;
         }
-        if ((zenApi.substr(zenApi.length - 1)) === "/"){
+        if ((zenApi.substr(zenApi.length - 1)) === "/") {
             zenApi = zenApi.substr(0, zenApi.length - 1);
         }
 
         // CONVERT TO SATOSHI ------------------------------------------------------------------------------------------
-        let feeInSatoshi = Math.round(fee * 100000000);
-        let thresholdLimitInSatoshi = Math.round(thresholdLimit * 100000000);
-
+        let feeInSatoshi = Math.round(fee * satoshi);
+        let thresholdLimitInSatoshi = Math.round(thresholdLimit * satoshi);
+        let balanceInSatoshi = 0;
         for (let i = 0; i < nFromAddresses; i++) {
             let sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet WHERE addr = '" + fromAddresses[i] + "'");
 
             if (!sqlRes.length) {
-                event.sender.send("send-finish", "error", "Source address is not in your wallet!");
+                err = "Source address is not in your wallet!";
+                console.log(err);
+                event.sender.send("send-finish", "error", err);
                 return;
             }
 
+            balanceInSatoshi = sqlRes[0].values[0][3];
             if (i === 0) {
-                if (sqlRes[0].values[0][3] > (parseFloat(thresholdLimit) + parseFloat(fee))) {
-                    event.sender.send("send-finish", "error", "Insufficient funds on source address!");
+                if (balanceInSatoshi < (parseFloat(thresholdLimit) + parseFloat(fee))) {
+                    err = "Insufficient funds on 1st source '" + fromAddresses[i] + "' (Minimum: threshold limit + fee)!";
+                    console.log(err);
+                    event.sender.send("send-finish", "error", err);
                     return;
                 }
-                amountsInSatoshi[i] = Math.round((sqlRes[0].values[0][3] - parseFloat(fee)) * 100000000);
+                amountsInSatoshi[i] = Math.round((balanceInSatoshi - parseFloat(fee)) * satoshi);
             } else {
-                if (sqlRes[0].values[0][3] > (parseFloat(thresholdLimit))) {
-                    event.sender.send("send-finish", "error", "Insufficient funds on source address!");
+                if (balanceInSatoshi < (parseFloat(thresholdLimit))) {
+                    err = "Insufficient funds on 2nd or next source address!";
+                    console.log(err);
+                    event.sender.send("send-finish", "error", err);
                     return;
                 }
-                amountsInSatoshi[i] = Math.round(sqlRes[0].values[0][3] * 100000000);
+                amountsInSatoshi[i] = Math.round(balanceInSatoshi * satoshi);
             }
             privateKeys[i] = sqlRes[0].values[0][1];
+        }
+
+        if (privateKeys.length !== nFromAddresses) {
+            err = "# private keys and # addresses are not equal!";
+            console.log(err);
+            event.sender.send("send-finish", "error", err);
+            return;
         }
 
         // GET PREVIOUS TRANSACTIONS -----------------------------------------------------------------------------------
         let prevTxURL = zenApi + "/addrs/";
         for (let i = 0; i < nFromAddresses; i++) {
-            if(i !== nFromAddresses){
-                prevTxURL += fromAddresses[i] + ",";
-            }else{
-                prevTxURL += fromAddresses[i];
-            }
+            prevTxURL += fromAddresses[i] + ",";
         }
+        prevTxURL = prevTxURL.substring(0, prevTxURL.length - 1);
         prevTxURL += "/utxo";
         const infoURL = zenApi + "/status?q=getInfo";
         const sendRawTxURL = zenApi + "/tx/send";
 
-
         // BUILDING OUR TRANSACTION TXOBJ ------------------------------------------------------------------------------
         // Calculate maximum ZEN satoshis that we have
-        let satoshisSoFar = new Array(nFromAddresses);
+        let satoshisSoFar = 0;
         let history = [];
-        let belongToAddress = [];
+        let belongToAddress;
 
         request.get(prevTxURL, function (tx_err, tx_resp, tx_body) {
             if (tx_err) {
@@ -1247,12 +1271,6 @@ ipcMain.on("send-many", function (event, fromAddresses, toAddress, fee, threshol
                 event.sender.send("send-finish", "error", "tx_err: " + String(tx_err));
             } else if (tx_resp && tx_resp.statusCode === 200) {
                 let tx_data = JSON.parse(tx_body);
-
-                if (tx_data.length !== nFromAddresses){
-                    let errStr = "One of your address doesnt have funds.";
-                    console.log(errStr);
-                    event.sender.send("send-finish", "error", errStr);
-                }
 
                 request.get(infoURL, function (info_err, info_resp, info_body) {
                     if (info_err) {
@@ -1271,76 +1289,86 @@ ipcMain.on("send-many", function (event, fromAddresses, toAddress, fee, threshol
                             } else if (bhash_resp && bhash_resp.statusCode === 200) {
                                 const blockHash = JSON.parse(bhash_body).blockHash;
 
+                                belongToAddress = new Array(tx_data.length);
                                 // Iterate through each utxo and append it to history
-                                for (let i = 0; i < nFromAddresses; i++) {
-                                    for (let j = 0; j < tx_data[i].length; j++) {
-                                        if (tx_data[i][j].confirmations === 0) {
-                                            continue;
-                                        }
-
-                                        history = history.concat( {
-                                            txid: tx_data[i][j].txid,
-                                            vout: tx_data[i][j].vout,
-                                            scriptPubKey: tx_data[i][j].scriptPubKey
-                                        });
-
-                                        belongToAddress = belongToAddress.concat(i);
-
-                                        // How many satoshis we have so far
-                                        satoshisSoFar[i] = satoshisSoFar[i] + tx_data[i][j].satoshis;
+                                for (let i = 0; i < tx_data.length; i++) {
+                                    if (tx_data[i].confirmations === 0) {
+                                        continue;
                                     }
+
+                                    history = history.concat({
+                                        txid: tx_data[i].txid,
+                                        vout: tx_data[i].vout,
+                                        scriptPubKey: tx_data[i].scriptPubKey
+                                    });
+
+                                    // to which address bellog this data
+                                    belongToAddress[i] = tx_data[i].address;
+
+                                    // How many satoshis we have so far
+                                    satoshisSoFar += tx_data[i].satoshis;
                                 }
 
-                                let satoshisSoFarSum = satoshisSoFar.reduce(reducer);
-
-                                if ((satoshisSoFarSum - (nFromAddresses * thresholdLimitInSatoshi)) < feeInSatoshi) {
-                                    let errStr = "Your summed balance over all source addresses is lower than the fee!";
-                                    console.log(errStr);
-                                    event.sender.send("send-finish", "error", errStr);
+                                if ((satoshisSoFar - (nFromAddresses * thresholdLimitInSatoshi)) < feeInSatoshi) {
+                                    err = "Your summed balance over all source addresses is lower than the fee!";
+                                    console.log(err);
+                                    event.sender.send("send-finish", "error", err);
                                 } else {
-                                    let amountInSatoshi = (satoshisSoFarSum - (nFromAddresses * thresholdLimitInSatoshi) - feeInSatoshi);
-                                    let recipients = [{address: toAddress, satoshis: amountInSatoshi}];
+                                    let amountInSatoshiToSend = satoshisSoFar - (nFromAddresses * thresholdLimitInSatoshi) - feeInSatoshi;
+                                    let recipients = [{address: toAddress, satoshis: amountInSatoshiToSend}];
 
                                     // Refund thresholdLimitInSatoshi amount to current address
                                     for (let i = 0; i < nFromAddresses; i++) {
-                                        if (satoshisSoFar[i] >= thresholdLimitInSatoshi) {
-                                            recipients = recipients.concat({address: fromAddresses[i], satoshis: thresholdLimitInSatoshi})
-                                        } else {
-                                            let errStr = "One of your source address has lower balance than is your threshold!";
-                                            console.log(errStr);
-                                            event.sender.send("send-finish", "error", errStr);
-                                        }
+                                        recipients = recipients.concat({
+                                            address: fromAddresses[i],
+                                            satoshis: thresholdLimitInSatoshi
+                                        })
                                     }
 
                                     // Create transaction
                                     let txObj = zencashjs.transaction.createRawTx(history, recipients, blockHeight, blockHash);
 
                                     // Sign each history transcation
-                                    for (let i = 0; i < history.length; i ++) {
-                                        txObj = zencashjs.transaction.signTx(txObj, i, privateKeys[belongToAddress[i]], true)
+                                    let index;
+                                    for (let i = 0; i < history.length; i++) {
+                                        index = fromAddresses.indexOf(belongToAddress[i]);
+                                        txObj = zencashjs.transaction.signTx(txObj, i, privateKeys[index], true)
                                     }
 
                                     // Convert it to hex string
                                     const txHexString = zencashjs.transaction.serializeTx(txObj);
 
-                                    request.post({url: sendRawTxURL, form: {rawtx: txHexString}}, function(sendtx_err, sendtx_resp, sendtx_body) {
+                                    request.post({
+                                        url: sendRawTxURL,
+                                        form: {rawtx: txHexString}
+                                    }, function (sendtx_err, sendtx_resp, sendtx_body) {
                                         if (sendtx_err) {
                                             console.log(sendtx_err);
                                             event.sender.send("send-finish", "error", "sendtx_err: " + String(sendtx_err));
-                                        } else if(sendtx_resp && sendtx_resp.statusCode === 200) {
+                                        } else if (sendtx_resp && sendtx_resp.statusCode === 200) {
                                             const tx_resp_data = JSON.parse(sendtx_body);
                                             let message = "TXid:\n\n<small><small>" + tx_resp_data.txid +
-                                                "</small></small><br /><a href=\"javascript:void(0)\" onclick=\"openUrl('" + settings.explorerUrl + "/tx/" + tx_resp_data.txid +"')\" class=\"walletListItemDetails transactionExplorer\" target=\"_blank\">Show Transaction in Explorer</a>";
+                                                "</small></small><br /><a href=\"javascript:void(0)\" onclick=\"openUrl('" + settings.explorerUrl + "/tx/" + tx_resp_data.txid + "')\" class=\"walletListItemDetails transactionExplorer\" target=\"_blank\">Show Transaction in Explorer</a>";
                                             event.sender.send("send-finish", "ok", message);
                                         } else {
                                             console.log(sendtx_resp);
+                                            event.sender.send("send-finish", "error", "sendtx_resp: " + String(sendtx_resp));
                                         }
                                     });
                                 }
+                            } else {
+                                console.log(bhash_resp);
+                                event.sender.send("send-finish", "error", "bhash_resp: " + String(bhash_resp));
                             }
                         });
+                    } else {
+                        console.log(info_resp);
+                        event.sender.send("send-finish", "error", "info_resp: " + String(info_resp));
                     }
                 });
+            } else {
+                console.log(tx_resp);
+                event.sender.send("send-finish", "error", "tx_resp: " + String(tx_resp));
             }
         });
     }
