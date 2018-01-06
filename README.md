@@ -2,12 +2,24 @@
 [![License][license-img]][license-url]
 [![Build status][travis-img]][travis-url]
 [![Code Climate][codeclimate-img]][codeclimate-url]
-[![Coverage Status][testcoverage-img]][testcoverage-url]
+
 
 # Arizen
 Arizen is ZenCash wallet.
 
 # Version History
+## v1.1.2
+- [x] Feature: Paper wallet - you can create QR codes (private key and address) which can be exported into PDF file and
+printed. This created address can by included to your Arizen or not.
+- [x] Feature: Arizen was translated in many languages (see Settings: Czech, ... ).
+- [x] Feature: Your total balance is shown in selected fiat currency with actual exchange rate (see Settings).
+- [x] Feature: Import and export your private keys.
+- [x] Feature: Sweeping (batch withdrawal) functionality for security node operators - you can now withdraw only ZENs
+above a selected threshold (e.g. 42 ZENs, or 0 ZENs when you want to consolidate your ZEN to one address) from multiple
+addresses at once only with one fee!
+- [x] Fix: Problem with antiviruses has been solved (false positive)
+- [x] Fix: Problem when user can't log in should be solved.
+
 ## v1.1.1
 - [x] Fixed auto-updater issue
 
@@ -101,6 +113,3 @@ npm run dist
 [travis-url]: https://travis-ci.org/ZencashOfficial/arizen.svg?branch=master
 [codeclimate-img]: https://codeclimate.com/github/ZencashOfficial/arizen/badges/gpa.svg?style=flat-square
 [codeclimate-url]: https://codeclimate.com/github/ZencashOfficial/arizen
-[testcoverage-img]: https://coveralls.io/repos/github/ZencashOfficial/arizen/badge.svg?branch=master
-[testcoverage-url]: https://coveralls.io/github/ZencashOfficial/arizen?branch=master
-
