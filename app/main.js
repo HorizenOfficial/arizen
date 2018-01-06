@@ -1318,11 +1318,13 @@ ipcMain.on("send-many", function (event, fromAddresses, toAddress, fee, threshol
                                     let recipients = [{address: toAddress, satoshis: amountInSatoshiToSend}];
 
                                     // Refund thresholdLimitInSatoshi amount to current address
-                                    for (let i = 0; i < nFromAddresses; i++) {
-                                        recipients = recipients.concat({
-                                            address: fromAddresses[i],
-                                            satoshis: thresholdLimitInSatoshi
-                                        })
+                                    if (thresholdLimitInSatoshi > 0) {
+                                        for (let i = 0; i < nFromAddresses; i++) {
+                                            recipients = recipients.concat({
+                                                address: fromAddresses[i],
+                                                satoshis: thresholdLimitInSatoshi
+                                            })
+                                        }
                                     }
 
                                     // Create transaction
