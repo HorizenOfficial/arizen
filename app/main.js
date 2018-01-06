@@ -1181,7 +1181,7 @@ ipcMain.on("send-many", function (event, fromAddresses, toAddress, fee, threshol
         let nFromAddresses = fromAddresses.length;
         let privateKeys = new Array(nFromAddresses);
         let amountsInSatoshi = new Array(nFromAddresses);
-        let reducer = (accumulator, currentValue) => accumulator + currentValue;
+        // let reducer = (accumulator, currentValue) => accumulator + currentValue;
 
         // CHECK ZEN API -----------------------------------------------------------------------------------------------
         let zenApi = settings.apiUrls[0];
