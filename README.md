@@ -17,7 +17,7 @@ printed. This created address can by included to your Arizen or not.
 - [x] Feature: Sweeping (batch withdrawal) functionality for security node operators - you can now withdraw only ZENs
 above a selected threshold (e.g. 42 ZENs, or 0 ZENs when you want to consolidate your ZEN to one address) from multiple
 addresses at once only with one fee!
-- [x] Fix: Problem with antiviruses has been solved (false positive)
+- [x] Fix: Problem with antiviruses has been solved (false positive detection with AVG, Avast, etc.).
 - [x] Fix: Problem when user can't log in should be solved.
 
 ## v1.1.1
