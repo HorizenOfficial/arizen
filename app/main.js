@@ -953,43 +953,43 @@ ipcMain.on("show-notification", function (event, title, message, duration) {
 function checkSendParameters(fromAddress, toAddress, fee, amount){
     let errString = "";
     if (fromAddress.length !== 35) {
-        errString += "Bad length of source address!";
-        errString += "\n\n";
+        errString += "fromAddressBadLength";
+        errString += "<br />\n\n";
     }
 
     if (fromAddress.substring(0, 2) !== "zn") {
-        errString += "Bad source address prefix - have to be 'zn'!";
-        errString += "\n\n";
+        errString += "fromAddressBadPrefix";
+        errString += "<br />\n\n";
     }
 
     if (toAddress.length !== 35) {
-        errString += "Bad length of destination address!";
-        errString += "\n\n";
+        errString += "toAddressBadLength";
+        errString += "<br />\n\n";
     }
 
     if (toAddress.substring(0, 2) !== "zn") {
-        errString += "Bad destination address prefix - have to be 'zn'!";
-        errString += "\n\n";
+        errString += "toAddressBadPrefix";
+        errString += "<br />\n\n";
     }
 
     if (typeof parseInt(amount, 10) !== "number" || amount === "") {
-        errString += "Amount is NOT number!";
-        errString += "\n\n";
+        errString += "amounNotNumber";
+        errString += "<br />\n\n";
     }
 
     if (amount <= 0){
-        errString += "Amount has to be greater than zero!";
-        errString += "\n\n";
+        errString += "amountIsZero";
+        errString += "<br />\n\n";
     }
 
     if (typeof parseInt(fee, 10) !== "number" || fee === ""){
-        errString += "Fee is NOT number!";
-        errString += "\n\n";
+        errString += "feeNotNumber";
+        errString += "<br />\n\n";
     }
 
     if (fee < 0){
-        errString += "Fee has to be greater or equal zero!";
-        errString += "\n\n";
+        errString += "feeIsNegative";
+        errString += "<br />\n\n";
     }
 
     // fee can be zero, in block can be one transaction with zero fee
@@ -1000,7 +1000,7 @@ function checkSendParameters(fromAddress, toAddress, fee, amount){
 ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
     let errString = checkSendParameters(fromAddress, toAddress, fee, amount);
     if (errString !== ""){
-        event.sender.send("send-finish", "error", "Parameter check: " + errString);
+        event.sender.send("send-finish", "error", errString);
     }else{
         // Convert to satoshi
         let amountInSatoshi = Math.round(amount * 100000000);
