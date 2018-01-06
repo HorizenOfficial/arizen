@@ -82,7 +82,7 @@ function fixLinks(parent = document) {
 
 function fixAmountInputs(parent = document) {
     querySelectorAllDeep(".amountInput", parent).forEach(node => {
-        function updateBalanceText() { node.value = formatBalance(node.valueAsNumber) }
+        function updateBalanceText() { node.value = formatBalance(node.valueAsNumber, "en") }
         updateBalanceText();
         node.addEventListener("change", () => updateBalanceText());
     });
@@ -106,12 +106,12 @@ function setInputNodeValue(node, value) {
     node.dispatchEvent(new Event("change"));
 }
 
-function formatBalance(balance) {
-    return parseFloat(balance).toLocaleString(undefined, {minimumFractionDigits: 8, maximumFractionDigits: 8});
+function formatBalance(balance, localeTag = undefined) {
+    return parseFloat(balance).toLocaleString(localeTag, {minimumFractionDigits: 8, maximumFractionDigits: 8});
 }
 
-function formatFiatBalance(balance) {
-    return parseFloat(balance).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+function formatFiatBalance(balance, localeTag = undefined) {
+    return parseFloat(balance).toLocaleString(localeTag, {minimumFractionDigits: 2, maximumFractionDigits: 2});
 }
 
 function formatEpochTime(epochSeconds) {
