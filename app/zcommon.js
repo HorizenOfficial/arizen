@@ -4,6 +4,7 @@
 "use strict";
 
 const {DateTime} = require("luxon");
+const {translate} = require("./util.js");
 
 function assert(condition, message) {
     if (!condition)
@@ -309,25 +310,7 @@ function loadLang() {
 }
 
 function tr(key, defaultVal) {
-    if (!langDict)
-        return defaultVal;
-
-    function iter(dict, trPath) {
-        switch (typeof(dict)) {
-            case "object":
-                if (trPath.length)
-                    return iter(dict[trPath[0]], trPath.slice(1));
-                break;
-            case "string":
-                if (!trPath.length)
-                    return dict;
-                break;
-        }
-        console.warn("Untranslated key: " + key);
-        return defaultVal;
-    }
-
-    return iter(langDict, key.split("."));
+    return (settings && settings.lang) ? translate(langDict, key, defaultVal) : defaultVal;
 }
 
 /**
