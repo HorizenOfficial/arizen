@@ -927,30 +927,27 @@ ipcMain.on("show-notification", function (event, title, message, duration) {
     }
 });
 
-function checkSendParameters(fromAddress, toAddress, fee, amount){
+function checkSendParameters(fromAddresses, toAddresses, fee) {
     let errors = [];
-    if (fromAddress.length !== 35) {
-        errors.push(tr("wallet.tabWithdraw.messages.fromAddressBadLength", "Bad length of the source address!"));
+
+    for (const fromAddress of fromAddresses) {
+        if (fromAddress.length !== 35) {
+            errors.push(tr("wallet.tabWithdraw.messages.fromAddressBadLength", "Bad length of the source address!"));
+        }
+
+        if (fromAddress.substring(0, 2) !== "zn") {
+            errors.push(tr("wallet.tabWithdraw.messages.fromAddressBadPrefix", "Bad source address prefix - it has to be 'zn'!"));
+        }
     }
 
-    if (fromAddress.substring(0, 2) !== "zn") {
-        errors.push(tr("wallet.tabWithdraw.messages.fromAddressBadPrefix", "Bad source address prefix - it has to be 'zn'!"));
-    }
+    for (const toAddress of toAddresses) {
+        if (toAddress.length !== 35) {
+            errors.push(tr("wallet.tabWithdraw.messages.toAddressBadLength", "Bad length of the destination address!"));
+        }
 
-    if (toAddress.length !== 35) {
-        errors.push(tr("wallet.tabWithdraw.messages.toAddressBadLength", "Bad length of the destination address!"));
-    }
-
-    if (toAddress.substring(0, 2) !== "zn") {
-        errors.push(tr("wallet.tabWithdraw.messages.toAddressBadPrefix", "Bad destination address prefix - it has to be 'zn'!"));
-    }
-
-    if (typeof parseInt(amount, 10) !== "number" || amount === "") {
-        errors.push(tr("wallet.tabWithdraw.messages.amountNotNumber", "Amount is NOT a number"));
-    }
-
-    if (amount <= 0){
-        errors.push(tr("wallet.tabWithdraw.messages.amountIsZero", "Amount has to be greater than zero!"));
+        if (toAddress.substring(0, 2) !== "zn") {
+            errors.push(tr("wallet.tabWithdraw.messages.toAddressBadPrefix", "Bad destination address prefix - it has to be 'zn'!"));
+        }
     }
 
     if (typeof parseInt(fee, 10) !== "number" || fee === "") {
@@ -958,17 +955,39 @@ function checkSendParameters(fromAddress, toAddress, fee, amount){
     }
 
     // fee can be zero, in block can be few transactions with zero fee
-    if (fee < 0){
-        errors.push(tr("wallet.tabWithdraw.messages.feeIsNegative", "Fee has to be greater or equal to zero!"));
+    if (fee < 0) {
+        errors.push(tr("wallet.tabWithdraw.messages.feeIsNegative", "Fee has to be greater than or equal to zero!"));
     }
 
-    // fee can be zero, in block can be one transaction with zero fee
+    return errors;
+}
+
+function checkStandardSendParameters(fromAddress, toAddress, fee, amount) {
+    let errors = checkSendParameters([fromAddress], [toAddress], fee);
+
+    if (typeof parseInt(amount, 10) !== "number" || amount === "") {
+        errors.push(tr("wallet.tabWithdraw.messages.amountNotNumber", "Amount is NOT a number"));
+    }
+
+    if (amount <= 0) {
+        errors.push(tr("wallet.tabWithdraw.messages.amountIsZero", "Amount has to be greater than zero!"));
+    }
+
+    return errors;
+}
+
+function checkSweepSendParameters(fromAddresses, toAddress, fee, thresholdLimit) {
+    let errors = checkSendParameters(fromAddresses, [toAddress], fee);
+
+    if (thresholdLimit < 0) {
+        errors.push(tr("wallet.tabWithdraw.messages.amountIsZero", "Threshold limit has to be greater than or equal to zero!"));
+    }
 
     return errors;
 }
 
 ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
-    let paramErrors = checkSendParameters(fromAddress, toAddress, fee, amount);
+    let paramErrors = checkStandardSendParameters(fromAddress, toAddress, fee, amount);
     if (paramErrors.length) {
         // TODO: Come up with better message. For now, just make a HTML out of it.
         const errString = paramErrors.join("<br/>\n\n");
@@ -1106,50 +1125,6 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
     }
 });
 
-function checkSendParametersSendMany(fromAddresses, toAddress, fee, thresholdLimit){
-    let errString = "";
-
-    for (let i = 0; i < fromAddresses.length; i++) {
-        if (fromAddresses[i].length !== 35) {
-            errString += "Bad length of source address!";
-            errString += "\n\n";
-        }
-
-        if (fromAddresses[i].substring(0, 2) !== "zn") {
-            errString += "Bad source address prefix - have to be 'zn'!";
-            errString += "\n\n";
-        }
-    }
-
-    if (toAddress.length !== 35) {
-        errString += "Bad length of destination address!";
-        errString += "\n\n";
-    }
-
-    if (toAddress.substring(0, 2) !== "zn") {
-        errString += "Bad destination address prefix - have to be 'zn'!";
-        errString += "\n\n";
-    }
-
-    if (typeof parseInt(fee, 10) !== "number" || fee === ""){
-        errString += "Fee is NOT number!";
-        errString += "\n\n";
-    }
-
-    // fee can be zero, in block can be few transactions with zero fee
-    if (fee < 0){
-        errString += "Fee has to be greater or equal zero!";
-        errString += "\n\n";
-    }
-
-    if (thresholdLimit < 0){
-        errString += "Threshold limit has to be greater or equal zero!";
-        errString += "\n\n";
-    }
-
-    return errString;
-}
-
 /**
  * @param event
  * @param {array} fromAddresses - Array of strings, array of ZEN addresses
@@ -1158,11 +1133,11 @@ function checkSendParametersSendMany(fromAddresses, toAddress, fee, thresholdLim
  * @param thresholdLimit - How many ZENs will remain in every fromAddresses
  */
 ipcMain.on("send-many", function (event, fromAddresses, toAddress, fee, thresholdLimit = 42.0) {
-    let errParametersString = checkSendParametersSendMany(fromAddresses, toAddress, fee, thresholdLimit);
-
-    if (errParametersString !== "") {
-        console.log("Parameter check: " + errParametersString);
-        event.sender.send("send-finish", "error", "Parameter check: " + errParametersString);
+    let paramErrors = checkSweepSendParameters(fromAddresses, toAddress, fee, thresholdLimit);
+    if (paramErrors.length) {
+        // TODO: Come up with better message. For now, just make a HTML out of it.
+        const errString = paramErrors.join("<br/>\n\n");
+        event.sender.send("send-finish", "error", errString);
     } else {
         // VARIABLES ---------------------------------------------------------------------------------------------------
         let err = "";
