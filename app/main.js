@@ -785,7 +785,7 @@ function fetchBlockchainChanges(addrObjs, knownTxIds) {
 
         for (const [obj, info] of results) {
             if (obj.lastbalance != info.balance) {
-                obj.balanceDiff = info.balance - obj.lastbalance;
+                obj.balanceDiff = info.balance - (obj.lastbalance || 0);
                 obj.lastbalance = info.balance;
                 result.changedAddrs.push(obj);
             }
@@ -804,7 +804,7 @@ function fetchBlockchainChanges(addrObjs, knownTxIds) {
 function updateBlockchainView(webContents) {
     const addrObjs = sqlSelectObjects('SELECT addr, name, lastbalance FROM wallet');
     const knownTxIds = sqlSelectColumns('SELECT DISTINCT txid FROM transactions').map(row => row[0]);
-    let totalBalance = addrObjs.reduce((sum, a) => sum + a.lastbalance, 0);
+    let totalBalance = addrObjs.filter(obj => obj.lastbalance).reduce((sum, a) => sum + a.lastbalance, 0);
 
     fetchBlockchainChanges(addrObjs, knownTxIds).then(result => {
         for (const addrObj of result.changedAddrs) {
@@ -865,7 +865,7 @@ function importPKs() {
             else {
                 const pk = matches[1];
                 const addr = matches[2];
-                sqlRun("insert or ignore into wallet (pk, addr, lastbalance) values (?, ?, 0)", [pk, addr]);
+                sqlRun("insert or ignore into wallet (pk, addr) values (?, ?)", [pk, addr]);
             }
             i++;
         });
