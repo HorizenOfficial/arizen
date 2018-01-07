@@ -702,7 +702,11 @@ function fetchApi(path) {
 function mapSync(seq, asyncFunc) {
     let results = [];
     return seq.reduce(
-            (promise, item) => promise.then(() => asyncFunc(item).then(r => results.push(r))),
+            (promise, item) => promise.then(() =>
+                asyncFunc(item)
+                    .then(r => results.push(r))
+                    .catch(() => promise) // skip this item
+            ),
             Promise.resolve())
         .then(() => results);
 }
@@ -763,16 +767,14 @@ function fetchTransactions(txIds, myAddrs) {
 }
 
 function fetchBlockchainChanges(addrObjs, knownTxIds) {
-    return mapSync(addrObjs, obj => fetchApi("addr/" + obj.addr)).then(addrInfos => {
+    return mapSync(addrObjs, obj => fetchApi("addr/" + obj.addr).then(info => [obj, info])).then(results => {
         const result = {
             changedAddrs: [],
             newTxs: []
         };
         const txIdSet = new Set();
 
-        for (let i = 0; i < addrObjs.length; i++) {
-            const obj = addrObjs[i];
-            const info = addrInfos[i];
+        for (const [obj, info] of results) {
             if (obj.lastbalance != info.balance) {
                 obj.balanceDiff = info.balance - obj.lastbalance;
                 obj.lastbalance = info.balance;
@@ -801,8 +803,8 @@ function updateBlockchainView(webContents) {
             totalBalance += addrObj.balanceDiff;
             webContents.send('update-wallet-balance', JSON.stringify({
                 response: 'OK',
-                wallet: addrObj.addr,
-                balance: addrObj.lastbalance,
+                addrObj: addrObj,
+                diff: addrObj.balanceDiff,
                 total: totalBalance
             }));
         }

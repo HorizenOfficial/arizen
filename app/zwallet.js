@@ -85,14 +85,16 @@ ipcRenderer.on("get-wallets-response", (event, msgStr) => {
 ipcRenderer.on("update-wallet-balance", (event, msgStr) => {
     const msg = JSON.parse(msgStr);
     checkResponse(msg);
-    setAddressBalance(msg.wallet, msg.balance);
+    setAddressBalance(msg.addrObj.addr, msg.addrObj.balance);
     setTotalBalance(msg.total);
+    showNotification(`${tr("notification.balanceUpdated", "Balance updated")} (${formatBalanceDiff(msg.diff)})`);
 });
 
 ipcRenderer.on("get-transaction-update", (event, msgStr) => {
     const txObj = JSON.parse(msgStr);
     txObj.amount = parseFloat(txObj.amount);
     addTransactions([txObj], true);
+    showNotification(tr("notification.newTransactions", "New transaction"));
 });
 
 ipcRenderer.on("refresh-wallet-response", (event, msgStr) => {
