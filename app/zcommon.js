@@ -211,15 +211,15 @@ function showAboutDialog() {
 }
 
 // TODO this doesn't belong here
-let settings;
+let settings = {};
 let langDict;
 (() => {
     const {ipcRenderer} = require("electron");
     ipcRenderer.on("settings", (sender, settingsStr) => {
-        settings = JSON.parse(settingsStr);
-        loadLang();
-        translateCurrentPage();
-        setMenuLang();
+        const newSettings = JSON.parse(settingsStr);
+        if (settings.lang !== newSettings.lang)
+            changeLanguage(newSettings.lang);
+        settings = newSettings;
     });
 })();
 
@@ -248,29 +248,26 @@ function showSettingsDialog() {
         console.log(settings);
 
         dialog.querySelector(".settingsSave").addEventListener("click", () => {
-
-            Object.assign(settings, {
+            const newSettings = {
                 txHistory: parseInt(inputTxHistory.value),
                 explorerUrl: inputExplorerUrl.value.trim().replace(/\/?$/, ""),
                 apiUrls: inputApiUrls.value.split(/\s+/).filter(s => !/^\s*$/.test(s)).map(s => s.replace(/\/?$/, "")),
                 fiatCurrency: inputFiatCurrency.value,
                 lang: inputLanguages[inputLanguages.selectedIndex].value
-            });
+            };
+
+            if (settings.lang !== newSettings.lang)
+                changeLanguage(newSettings.lang);
+
+            Object.assign(settings, newSettings);
             saveModifiedSettings();
+
             let zenBalance = getZenBalance();
             setFiatBalanceText(zenBalance, inputFiatCurrency.value);
 
             dialog.close();
         });
     });
-}
-
-function setMenuLang() {
-    if (!langDict)
-        return;
-    if (!langDict.menu)
-        return;
-    ipcRenderer.send("set-menu",JSON.stringify(langDict.menu));
 }
 
 function openZenExplorer(path) {
@@ -302,11 +299,12 @@ function loadAvailableLangs(select, selected) {
     });
 }
 
-function loadLang() {
-    if (!settings.lang)
-        return;
-    // TODO: there can be invalid language in DB, fail gracefully
-    langDict = require("./lang/lang_" + settings.lang + ".json");
+function changeLanguage(lang) {
+    // translation functions depend on this global
+    settings.lang = lang;
+    ipcRenderer.send("set-lang", lang);
+    langDict = require("./lang/lang_" + lang + ".json");
+    translateCurrentPage();
 }
 
 function tr(key, defaultVal) {
