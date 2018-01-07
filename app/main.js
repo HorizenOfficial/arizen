@@ -803,8 +803,8 @@ function updateBlockchainView(webContents) {
             totalBalance += addrObj.balanceDiff;
             webContents.send('update-wallet-balance', JSON.stringify({
                 response: 'OK',
-                wallet: addrObj.addr,
-                balance: addrObj.lastbalance,
+                addrObj: addrObj,
+                diff: addrObj.balanceDiff,
                 total: totalBalance
             }));
         }
