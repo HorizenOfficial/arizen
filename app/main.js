@@ -438,6 +438,15 @@ function updateMenuAtLogin(langData) {
                 },
                 { type: "separator" },
                 {
+                    label: tr("menu.importPrivateKeys", "Export private keys"),
+                    click() { exportPKs() }
+                },
+                {
+                    label: tr("menu.exportPrivateKeys", "Import private keys"),
+                    click() { importPKs() }
+                },
+                { type: "separator" },
+                {
                     label: tr("menu.exit", "Exit"),
                     click() {
                         app.quit();
@@ -818,6 +827,56 @@ function updateBlockchainView(webContents) {
     })
 	.catch(err => {
         console.log('Failed to fetch blockchain changes: ', err);
+    });
+}
+
+
+function exportPKs() {
+    function exportToFile(filename, overwrite = false) {
+        fs.open(filename, 'w', 0o600, (err, fd) => {
+            if (err)
+                console.error(`Couldn't open "${filename}" for writing: `, err);
+            else {
+                const keys = sqlSelectObjects("select pk, addr from wallet");
+                for (let k of keys)
+                    fs.write(fd, k.pk + " " + k.addr + "\n");
+            }
+        });
+    }
+
+    dialog.showSaveDialog({
+        title: "Choose file for private keys",
+        defaultPath: "arizen-private-keys.txt"
+    }, filename => {
+        if (filename)
+            exportToFile(filename);
+    });
+}
+
+function importPKs() {
+    function importFromFile(filename) {
+        let i = 1;
+        fs.readFileSync(filename).toString().split('\n').filter(x => x).forEach(line => {
+            const matches = line.match(/^(\w+)\s+(\w+)$/);
+            if (!matches)
+                console.log(`Invalid line ${i} in private keys file "${filename}"`);
+            else {
+                const pk = matches[1];
+                const addr = matches[2];
+                sqlRun("insert or ignore into wallet (pk, addr, lastbalance) values (?, ?, 0)", [pk, addr]);
+            }
+            i++;
+        });
+    }
+
+    dialog.showOpenDialog({
+        title: "Choose file with private keys"
+    }, filenames => {
+        if (filenames) {
+            for (let f of filenames)
+                importFromFile(f);
+            updateBlockchainView(mainWindow.webContents);
+        }
     });
 }
 
