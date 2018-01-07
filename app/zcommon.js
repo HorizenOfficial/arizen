@@ -36,6 +36,28 @@ function querySelectorAllDeep(selector, startRoot = document) {
     return matches;
 }
 
+function deepClone(obj) {
+    // feel free to make a better implementation
+    if (!obj)
+        return null;
+    return JSON.parse(JSON.stringify(obj));
+}
+
+/**
+ * Shows a OK/Cancel message box with `msg`. Executes `ifOk` lambda if user
+ * presses OK or executes `onCancel` if it is defined and user presses Cancel.
+ *
+ * @param {string} msg - message for the user
+ * @param {function} onOk - lambda executed if OK is pressed
+ * @param {function=} onOk - lambda executed if Cancel is pressed
+ */
+function warnUser(msg, onOk, onCancel) {
+    if (confirm(msg))
+        onOk();
+    else if (onCancel)
+        onCancel();
+}
+
 function logout() {
     ipcRenderer.send("do-logout");
     location.href = "./login.html";
@@ -51,19 +73,45 @@ function openUrl(url) {
 }
 
 function fixLinks(parent = document) {
-    parent.querySelectorAll("a[href^='http']").forEach(link =>
+    querySelectorAllDeep("a[href^='http']", parent).forEach(link =>
         link.addEventListener("click", event => {
             event.preventDefault();
             openUrl(link.href);
         }));
 }
 
-function formatBalance(balance) {
-    return parseFloat(balance).toLocaleString(undefined, {minimumFractionDigits: 8, maximumFractionDigits: 8});
+function fixAmountInputs(parent = document) {
+    querySelectorAllDeep(".amountInput", parent).forEach(node => {
+        function updateBalanceText() { node.value = formatBalance(node.valueAsNumber, "en") }
+        updateBalanceText();
+        node.addEventListener("change", () => updateBalanceText());
+    });
 }
 
-function formatFiatBalance(balance) {
-    return parseFloat(balance).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+function fixPage(parent = document) {
+    fixLinks(parent);
+    fixAmountInputs(parent);
+}
+
+/**
+ * Sets `<input>` node's value and also fires the change event. Needed for
+ * amount nodes which are currently hacked by reformatting their contents on
+ * change.
+ *
+ * @param {Node} node
+ * @param {string} value
+ */
+function setInputNodeValue(node, value) {
+    node.value = value;
+    node.dispatchEvent(new Event("change"));
+}
+
+function formatBalance(balance, localeTag = undefined) {
+    return parseFloat(balance).toLocaleString(localeTag, {minimumFractionDigits: 8, maximumFractionDigits: 8});
+}
+
+function formatFiatBalance(balance, localeTag = undefined) {
+    return parseFloat(balance).toLocaleString(localeTag, {minimumFractionDigits: 2, maximumFractionDigits: 2});
 }
 
 function formatEpochTime(epochSeconds) {
@@ -83,22 +131,44 @@ function clearChildNodes(parent) {
 }
 
 function cloneTemplate(id) {
-    const node = document.getElementById(id).content.cloneNode(true).firstElementChild;
-    fixLinks(node);
+    const templateNode = document.getElementById(id);
+    if (!templateNode)
+        throw new Error(`No template with ID "${id}"`);
+    const node = templateNode.content.cloneNode(true).firstElementChild;
+    if (!node)
+        throw new Error(`Template is empty (ID "${id}")`);
+    fixPage(node);
     return node;
 }
 
-function showDialogFromTemplate(templateName, dialogInit, onClose = null) {
-    const dialog = cloneTemplate(templateName);
+/**
+ * Creates dialog from a template and adds it to the DOM.
+ *
+ * WARNING! You have to call close() on the retunred dialog otherwise it'll stay
+ * in the DOM. The close event handler will automatically remove it from DOM. If
+ * you use `id` attributes on slotted contents and forget to remove old dialog
+ * before creating a new one from the same template, this will result in
+ * duplicate IDs in the DOM. Maybe. To be honest, I (woky) don't know how IDs on
+ * slotted contents in shadow DOM work. Feel free to experiment and update this
+ * comment.
+ *
+ * @param templateId id of the template
+ * @returns the `<arizen-dialog>` node of the created dialog
+ */
+function createDialogFromTemplate(templateId) {
+    const dialog = cloneTemplate(templateId);
     if (dialog.tagName !== "ARIZEN-DIALOG")
         throw new Error("No dialog in the template");
     document.body.appendChild(dialog);
+    dialog.addEventListener("close", () => dialog.remove());
+    return dialog;
+}
+
+function showDialogFromTemplate(templateId, dialogInit, onClose = null) {
+    const dialog = createDialogFromTemplate(templateId);
     dialogInit(dialog);
-    dialog.addEventListener("close", () => {
-        if (onClose)
-            onClose();
-        dialog.remove()
-    });
+    if (onClose)
+        dialog.addEventListener("close", () => onClose());
     dialog.showModal();
 }
 
@@ -152,6 +222,10 @@ let langDict;
     });
 })();
 
+function saveModifiedSettings() {
+    ipcRenderer.send("save-settings", JSON.stringify(settings));
+}
+
 function showSettingsDialog() {
     showDialogFromTemplate("settingsDialogTemplate", dialog => {
         const inputTxHistory = dialog.querySelector(".settingsTxHistory");
@@ -174,14 +248,14 @@ function showSettingsDialog() {
 
         dialog.querySelector(".settingsSave").addEventListener("click", () => {
 
-            const newSettings = {
+            Object.assign(settings, {
                 txHistory: parseInt(inputTxHistory.value),
                 explorerUrl: inputExplorerUrl.value.trim().replace(/\/?$/, ""),
                 apiUrls: inputApiUrls.value.split(/\s+/).filter(s => !/^\s*$/.test(s)).map(s => s.replace(/\/?$/, "")),
                 fiatCurrency: inputFiatCurrency.value,
                 lang: inputLanguages[inputLanguages.selectedIndex].value
-            };
-            ipcRenderer.send("save-settings", JSON.stringify(newSettings));
+            });
+            saveModifiedSettings();
             let zenBalance = getZenBalance();
             setFiatBalanceText(zenBalance, inputFiatCurrency.value);
 
@@ -237,6 +311,7 @@ function loadLang() {
 function tr(key, defaultVal) {
     if (!langDict)
         return defaultVal;
+
     function iter(dict, trPath) {
         switch (typeof(dict)) {
             case "object":
@@ -251,6 +326,7 @@ function tr(key, defaultVal) {
         console.warn("Untranslated key: " + key);
         return defaultVal;
     }
+
     return iter(langDict, key.split("."));
 }
 
