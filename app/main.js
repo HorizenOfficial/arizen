@@ -21,6 +21,7 @@ const request = require("request");
 const updater = require("electron-simple-updater");
 const fetch = require("node-fetch");
 const {List} = require("immutable");
+const {translate} = require("./util.js");
 
 // Press F12 to open the DevTools. See https://github.com/sindresorhus/electron-debug.
 // FIXME: comment this for release versions!
@@ -55,22 +56,17 @@ const defaultSettings = {
     lang: "en"
 };
 let settings = defaultSettings;
-
-let editSubmenu = [
-    {label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:"},
-    {label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:"},
-    {type: "separator"},
-    {label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:"},
-    {label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:"},
-    {label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:"},
-    {label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:"}
-];
+let langDict;
 
 const dbStructWallet = "CREATE TABLE wallet (id INTEGER PRIMARY KEY AUTOINCREMENT, pk TEXT, addr TEXT UNIQUE, lastbalance REAL, name TEXT);";
 // FIXME: dbStructContacts is unused
 const dbStructContacts = "CREATE TABLE contacts (id INTEGER PRIMARY KEY AUTOINCREMENT, addr TEXT UNIQUE, name TEXT, nick TEXT);";
 const dbStructSettings = "CREATE TABLE settings (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE, value TEXT);";
 const dbStructTransactions = "CREATE TABLE transactions (id INTEGER PRIMARY KEY AUTOINCREMENT, txid TEXT, time INTEGER, address TEXT, vins TEXT, vouts TEXT, amount REAL, block INTEGER);";
+
+function tr(key, defaultVal) {
+    return (settings && settings.lang) ? translate(langDict, key, defaultVal) : defaultVal;
+}
 
 function attachUpdaterHandlers() {
     updater.on("update-downloaded", onUpdateDownloaded);
@@ -292,44 +288,6 @@ function upgradeDb() {
         sqlRun("ALTER TABLE wallet ADD COLUMN name TEXT DEFAULT ''");
 }
 
-function setDarwin(template) {
-    if (os.platform() === "darwin") {
-        template.unshift({
-            label: app.getName(),
-            submenu: [
-                {
-                    role: "about"
-                },
-                {
-                    type: "separator"
-                },
-                {
-                    role: "services",
-                    submenu: []
-                },
-                {
-                    type: "separator"
-                },
-                {
-                    role: "hide"
-                },
-                {
-                    role: "hideothers"
-                },
-                {
-                    role: "unhide"
-                },
-                {
-                    type: "separator"
-                },
-                {
-                    role: "quit"
-                }
-            ]
-        });
-    }
-}
-
 function exportWalletArizen(ext, encrypt) {
     dialog.showSaveDialog({
         title: "Save wallet." + ext,
@@ -374,128 +332,148 @@ function importWalletArizen(ext, encrypted) {
     }
 }
 
-function updateMenuAtLogin(langData) {
-    let menuData = [];
-    if (langData === undefined) {
-       menuData = [
-           {
-               label: "File",
-               submenu: [
-                   {
-                       label: "Backup ENCRYPTED wallet",
-                       click() {
-                           exportWalletArizen("awd", true);
-                       }
-                   }, {
-                       label: "Backup UNENCRYPTED wallet",
-                       click() {
-                           exportWalletArizen("uawd", false);
-                       }
-                   }, {
-                       type: "separator"
-                   }, {
-                       label: "Import UNENCRYPTED Arizen wallet",
-                       click() {
-                           importWalletArizen("uawd", false);
-                       }
-                   }, {
-                       label: "Import ENCRYPTED Arizen wallet",
-                       click() {
-                           importWalletArizen("awd", true);
-                       }
-                   }, {
-                       type: "separator"
-                   }, {
-                       label: "Exit",
-                       click() {
-                           app.quit();
-                       }
-                   }
-               ]
-           },
-           {
-               label: "Edit",
-               submenu: editSubmenu
-           }
-       ];
-    } else {
-        if (langData.editSubmenu) {
-            editSubmenu = [
-                {label: langData.editSubmenu.undo , accelerator: "CmdOrCtrl+Z", selector: "undo:"},
-                {label: langData.editSubmenu.redo, accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:"},
-                {type: "separator"},
-                {label: langData.editSubmenu.cut, accelerator: "CmdOrCtrl+X", selector: "cut:"},
-                {label: langData.editSubmenu.copy, accelerator: "CmdOrCtrl+C", selector: "copy:"},
-                {label: langData.editSubmenu.paste, accelerator: "CmdOrCtrl+V", selector: "paste:"},
-                {label: langData.editSubmenu.selectAll, accelerator: "CmdOrCtrl+A", selector: "selectAll:"}
-            ];
-        }
-        menuData = [
-            {
-                label: langData.file,
-                submenu: [
-                    {
-                        label: langData.backupEncrypted,
-                        click() {
-                            exportWalletArizen("awd", true);
-                        }
-                    }, {
-                        label: langData.backupUnencrypted,
-                        click() {
-                            exportWalletArizen("uawd", false);
-                        }
-                    }, {
-                        type: "separator"
-                    }, {
-                        label:  langData.importUnencrypted,
-                        click() {
-                            importWalletArizen("uawd", false);
-                        }
-                    }, {
-                        label:  langData.importEncrypted,
-                        click() {
-                            importWalletArizen("awd", true);
-                        }
-                    }, {
-                        type: "separator"
-                    }, {
-                        label:  langData.exit,
-                        click() {
-                            app.quit();
-                        }
-                    }
-                ]
-            },
-            {
-                label: langData.edit,
-                submenu: editSubmenu
-            }
-        ];
+function updateMenuForDarwin(template) {
+    if (os.platform() === "darwin") {
+        template.unshift({
+            label: app.getName(),
+            submenu: [
+                {
+                    role: "about"
+                },
+                {
+                    type: "separator"
+                },
+                {
+                    role: "services",
+                    submenu: []
+                },
+                {
+                    type: "separator"
+                },
+                {
+                    role: "hide"
+                },
+                {
+                    role: "hideothers"
+                },
+                {
+                    role: "unhide"
+                },
+                {
+                    type: "separator"
+                },
+                {
+                    role: "quit"
+                }
+            ]
+        });
     }
-    const template = menuData;
+}
 
-    setDarwin(template);
+function createEditSubmenu() {
+    return [
+        {
+            label: tr("menu.editSubmenu.undo", "Undo"),
+            accelerator: "CmdOrCtrl+Z",
+            selector: "undo:"
+        },
+        {
+            label: tr("menu.editSubmenu.redo", "Redo"),
+            accelerator: "Shift+CmdOrCtrl+Z",
+            selector: "redo:"
+        },
+        { type: "separator" },
+        {
+            label: tr("menu.editSubmenu.cut", "Cut"),
+            accelerator: "CmdOrCtrl+X",
+            selector: "cut:"
+        },
+        {
+            label: tr("menu.editSubmenu.copy", "Copy"),
+            accelerator: "CmdOrCtrl+C",
+            selector: "copy:"
+        },
+        {
+            label: tr("menu.editSubmenu.paste", "Paste"),
+            accelerator: "CmdOrCtrl+V",
+            selector: "paste:"
+        },
+        {
+            label: tr("menu.editSubmenu.selectAll", "Select All"),
+            accelerator: "CmdOrCtrl+A",
+            selector: "selectAll:"
+        }
+    ];
+}
+
+function updateMenuAtLogin(langData) {
+    const template = [
+        {
+            label: tr("menu.file", "File"),
+            submenu: [
+                {
+                    label: tr("menu.backupEncrypted", "Backup ENCRYPTED wallet"),
+                    click() {
+                        exportWalletArizen("awd", true);
+                    }
+                },
+                {
+                    label: tr("menu.backupUnencrypted", "Backup UNENCRYPTED wallet"),
+                    click() {
+                        exportWalletArizen("uawd", false);
+                    }
+                },
+                { type: "separator" },
+                {
+                    label: tr("menu.importUnencrypted", "Import UNENCRYPTED Arizen wallet"),
+                    click() {
+                        importWalletArizen("uawd", false);
+                    }
+                },
+                {
+                    label: tr("menu.importEncrypted", "Import ENCRYPTED Arizen wallet"),
+                    click() {
+                        importWalletArizen("awd", true);
+                    }
+                },
+                { type: "separator" },
+                {
+                    label: tr("menu.exit", "Exit"),
+                    click() {
+                        app.quit();
+                    }
+                }
+            ]
+        },
+        {
+            label: tr("menu.edit", "Edit"),
+            submenu: createEditSubmenu()
+        }
+    ];
+
+    updateMenuForDarwin(template);
     Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 
 function updateMenuAtLogout() {
     const template = [
         {
-            label: "File",
+            label: tr("menu.file", "File"),
             submenu: [
                 {
-                    label: "Exit",
+                    label: tr("menu.exit", "Exit"),
                     click() {
                         app.quit();
                     }
                 }
             ]
-        }, {
-            label: "Edit",
-            submenu: editSubmenu
+        },
+        {
+            label: tr("menu.edit", "Edit"),
+            submenu: createEditSubmenu()
         }
     ];
-    setDarwin(template);
+    updateMenuForDarwin(template);
     Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 
@@ -554,10 +532,9 @@ app.on("before-quit", function () {
     }
 });
 
-// In this file you can include the rest of your app"s specific main process
-// code. You can also put them in separate files and require them here.
-ipcMain.on("set-menu", function (event, data) {
-    updateMenuAtLogin(JSON.parse(data));
+ipcMain.on("set-lang", function (event, lang) {
+    langDict = require("./lang/lang_" + lang + ".json");
+    updateMenuAtLogin();
 });
 
 ipcMain.on("write-login-info", function (event, data) {
@@ -950,57 +927,72 @@ ipcMain.on("show-notification", function (event, title, message, duration) {
     }
 });
 
-function checkSendParameters(fromAddress, toAddress, fee, amount){
-    let errString = "";
-    if (fromAddress.length !== 35) {
-        errString += "fromAddressBadLength";
-        errString += "<br />\n\n";
+function checkSendParameters(fromAddresses, toAddresses, fee) {
+    let errors = [];
+
+    for (const fromAddress of fromAddresses) {
+        if (fromAddress.length !== 35) {
+            errors.push(tr("wallet.tabWithdraw.messages.fromAddressBadLength", "Bad length of the source address!"));
+        }
+
+        if (fromAddress.substring(0, 2) !== "zn") {
+            errors.push(tr("wallet.tabWithdraw.messages.fromAddressBadPrefix", "Bad source address prefix - it has to be 'zn'!"));
+        }
     }
 
-    if (fromAddress.substring(0, 2) !== "zn") {
-        errString += "fromAddressBadPrefix";
-        errString += "<br />\n\n";
+    for (const toAddress of toAddresses) {
+        if (toAddress.length !== 35) {
+            errors.push(tr("wallet.tabWithdraw.messages.toAddressBadLength", "Bad length of the destination address!"));
+        }
+
+        if (toAddress.substring(0, 2) !== "zn") {
+            errors.push(tr("wallet.tabWithdraw.messages.toAddressBadPrefix", "Bad destination address prefix - it has to be 'zn'!"));
+        }
     }
 
-    if (toAddress.length !== 35) {
-        errString += "toAddressBadLength";
-        errString += "<br />\n\n";
-    }
-
-    if (toAddress.substring(0, 2) !== "zn") {
-        errString += "toAddressBadPrefix";
-        errString += "<br />\n\n";
-    }
-
-    if (typeof parseInt(amount, 10) !== "number" || amount === "") {
-        errString += "amounNotNumber";
-        errString += "<br />\n\n";
-    }
-
-    if (amount <= 0){
-        errString += "amountIsZero";
-        errString += "<br />\n\n";
-    }
-
-    if (typeof parseInt(fee, 10) !== "number" || fee === ""){
-        errString += "feeNotNumber";
-        errString += "<br />\n\n";
+    if (typeof parseInt(fee, 10) !== "number" || fee === "") {
+        errors.push(tr("wallet.tabWithdraw.messages.feeNotNumber", "Fee is NOT a number!"));
     }
 
     // fee can be zero, in block can be few transactions with zero fee
-    if (fee < 0){
-        errString += "feeIsNegative";
-        errString += "<br />\n\n";
+    if (fee < 0) {
+        errors.push(tr("wallet.tabWithdraw.messages.feeIsNegative", "Fee has to be greater than or equal to zero!"));
     }
 
-    return errString;
+    return errors;
+}
+
+function checkStandardSendParameters(fromAddress, toAddress, fee, amount) {
+    let errors = checkSendParameters([fromAddress], [toAddress], fee);
+
+    if (typeof parseInt(amount, 10) !== "number" || amount === "") {
+        errors.push(tr("wallet.tabWithdraw.messages.amountNotNumber", "Amount is NOT a number"));
+    }
+
+    if (amount <= 0) {
+        errors.push(tr("wallet.tabWithdraw.messages.amountIsZero", "Amount has to be greater than zero!"));
+    }
+
+    return errors;
+}
+
+function checkSweepSendParameters(fromAddresses, toAddress, fee, thresholdLimit) {
+    let errors = checkSendParameters(fromAddresses, [toAddress], fee);
+
+    if (thresholdLimit < 0) {
+        errors.push(tr("wallet.tabWithdraw.messages.amountIsZero", "Threshold limit has to be greater than or equal to zero!"));
+    }
+
+    return errors;
 }
 
 ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
-    let errString = checkSendParameters(fromAddress, toAddress, fee, amount);
-    if (errString !== ""){
+    let paramErrors = checkStandardSendParameters(fromAddress, toAddress, fee, amount);
+    if (paramErrors.length) {
+        // TODO: Come up with better message. For now, just make a HTML out of it.
+        const errString = paramErrors.join("<br/>\n\n");
         event.sender.send("send-finish", "error", errString);
-    }else{
+    } else {
         // Convert to satoshi
         let amountInSatoshi = Math.round(amount * 100000000);
         let feeInSatoshi = Math.round(fee * 100000000);
@@ -1133,50 +1125,6 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
     }
 });
 
-function checkSendParametersSendMany(fromAddresses, toAddress, fee, thresholdLimit){
-    let errString = "";
-
-    for (let i = 0; i < fromAddresses.length; i++) {
-        if (fromAddresses[i].length !== 35) {
-            errString += "Bad length of source address!";
-            errString += "\n\n";
-        }
-
-        if (fromAddresses[i].substring(0, 2) !== "zn") {
-            errString += "Bad source address prefix - have to be 'zn'!";
-            errString += "\n\n";
-        }
-    }
-
-    if (toAddress.length !== 35) {
-        errString += "Bad length of destination address!";
-        errString += "\n\n";
-    }
-
-    if (toAddress.substring(0, 2) !== "zn") {
-        errString += "Bad destination address prefix - have to be 'zn'!";
-        errString += "\n\n";
-    }
-
-    if (typeof parseInt(fee, 10) !== "number" || fee === ""){
-        errString += "Fee is NOT number!";
-        errString += "\n\n";
-    }
-
-    // fee can be zero, in block can be few transactions with zero fee
-    if (fee < 0){
-        errString += "Fee has to be greater or equal zero!";
-        errString += "\n\n";
-    }
-
-    if (thresholdLimit < 0){
-        errString += "Threshold limit has to be greater or equal zero!";
-        errString += "\n\n";
-    }
-
-    return errString;
-}
-
 /**
  * @param event
  * @param {array} fromAddresses - Array of strings, array of ZEN addresses
@@ -1185,11 +1133,11 @@ function checkSendParametersSendMany(fromAddresses, toAddress, fee, thresholdLim
  * @param thresholdLimit - How many ZENs will remain in every fromAddresses
  */
 ipcMain.on("send-many", function (event, fromAddresses, toAddress, fee, thresholdLimit = 42.0) {
-    let errParametersString = checkSendParametersSendMany(fromAddresses, toAddress, fee, thresholdLimit);
-
-    if (errParametersString !== "") {
-        console.log("Parameter check: " + errParametersString);
-        event.sender.send("send-finish", "error", "Parameter check: " + errParametersString);
+    let paramErrors = checkSweepSendParameters(fromAddresses, toAddress, fee, thresholdLimit);
+    if (paramErrors.length) {
+        // TODO: Come up with better message. For now, just make a HTML out of it.
+        const errString = paramErrors.join("<br/>\n\n");
+        event.sender.send("send-finish", "error", errString);
     } else {
         // VARIABLES ---------------------------------------------------------------------------------------------------
         let err = "";

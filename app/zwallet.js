@@ -568,7 +568,6 @@ function validateWithdrawForm() {
 
 
 function updateWithdrawalStatus(result, msg) {
-    msg = localizeErrString(msg);
     if (result === "error") {
         withdrawStatusTitleNode.classList.add("withdrawStatusBad");
         setNodeTrText(withdrawStatusTitleNode, "wallet.tabWithdraw.messages.error", "Error:");

@@ -4,6 +4,7 @@
 "use strict";
 
 const {DateTime} = require("luxon");
+const {translate} = require("./util.js");
 
 function assert(condition, message) {
     if (!condition)
@@ -210,15 +211,15 @@ function showAboutDialog() {
 }
 
 // TODO this doesn't belong here
-let settings;
+let settings = {};
 let langDict;
 (() => {
     const {ipcRenderer} = require("electron");
     ipcRenderer.on("settings", (sender, settingsStr) => {
-        settings = JSON.parse(settingsStr);
-        loadLang();
-        translateCurrentPage();
-        setMenuLang();
+        const newSettings = JSON.parse(settingsStr);
+        if (settings.lang !== newSettings.lang)
+            changeLanguage(newSettings.lang);
+        settings = newSettings;
     });
 })();
 
@@ -247,29 +248,26 @@ function showSettingsDialog() {
         console.log(settings);
 
         dialog.querySelector(".settingsSave").addEventListener("click", () => {
-
-            Object.assign(settings, {
+            const newSettings = {
                 txHistory: parseInt(inputTxHistory.value),
                 explorerUrl: inputExplorerUrl.value.trim().replace(/\/?$/, ""),
                 apiUrls: inputApiUrls.value.split(/\s+/).filter(s => !/^\s*$/.test(s)).map(s => s.replace(/\/?$/, "")),
                 fiatCurrency: inputFiatCurrency.value,
                 lang: inputLanguages[inputLanguages.selectedIndex].value
-            });
+            };
+
+            if (settings.lang !== newSettings.lang)
+                changeLanguage(newSettings.lang);
+
+            Object.assign(settings, newSettings);
             saveModifiedSettings();
+
             let zenBalance = getZenBalance();
             setFiatBalanceText(zenBalance, inputFiatCurrency.value);
 
             dialog.close();
         });
     });
-}
-
-function setMenuLang() {
-    if (!langDict)
-        return;
-    if (!langDict.menu)
-        return;
-    ipcRenderer.send("set-menu",JSON.stringify(langDict.menu));
 }
 
 function openZenExplorer(path) {
@@ -301,33 +299,16 @@ function loadAvailableLangs(select, selected) {
     });
 }
 
-function loadLang() {
-    if (!settings.lang)
-        return;
-    // TODO: there can be invalid language in DB, fail gracefully
-    langDict = require("./lang/lang_" + settings.lang + ".json");
+function changeLanguage(lang) {
+    // translation functions depend on this global
+    settings.lang = lang;
+    ipcRenderer.send("set-lang", lang);
+    langDict = require("./lang/lang_" + lang + ".json");
+    translateCurrentPage();
 }
 
 function tr(key, defaultVal) {
-    if (!langDict)
-        return defaultVal;
-
-    function iter(dict, trPath) {
-        switch (typeof(dict)) {
-            case "object":
-                if (trPath.length)
-                    return iter(dict[trPath[0]], trPath.slice(1));
-                break;
-            case "string":
-                if (!trPath.length)
-                    return dict;
-                break;
-        }
-        console.warn("Untranslated key: " + key);
-        return defaultVal;
-    }
-
-    return iter(langDict, key.split("."));
+    return (settings && settings.lang) ? translate(langDict, key, defaultVal) : defaultVal;
 }
 
 /**
@@ -356,51 +337,6 @@ function translateCurrentPage() {
         return;
     querySelectorAllDeep("[data-tr]").forEach(node =>
         node.textContent = tr(node.dataset.tr, node.textContent));
-}
-
-
-function localizeErrString(errString){
-    if (langDict.wallet.tabWithdraw.messages.fromAddressBadLength) {
-        errString = errString.replace("fromAddressBadLength", langDict.wallet.tabWithdraw.messages.fromAddressBadLength);
-    } else {
-        errString = errString.replace("fromAddressBadLength", "Bad length of source address!");
-    }
-    if (langDict.wallet.tabWithdraw.messages.fromAddressBadPrefix) {
-        errString = errString.replace("fromAddressBadPrefix", langDict.wallet.tabWithdraw.messages.fromAddressBadPrefix);
-    } else {
-        errString = errString.replace("fromAddressBadPrefix", "Bad source address prefix - have to be 'zn'!");
-    }
-    if (langDict.wallet.tabWithdraw.messages.toAddressBadLength) {
-        errString = errString.replace("toAddressBadLength", langDict.wallet.tabWithdraw.messages.toAddressBadLength);
-    } else {
-        errString = errString.replace("toAddressBadLength", "Bad length of destination address!");
-    }
-    if (langDict.wallet.tabWithdraw.messages.toAddressBadPrefix) {
-        errString = errString.replace("toAddressBadPrefix", langDict.wallet.tabWithdraw.messages.toAddressBadPrefix);
-    } else {
-        errString = errString.replace("toAddressBadPrefix", "Bad destination address prefix - have to be 'zn'!");
-    }
-    if (langDict.wallet.tabWithdraw.messages.amountNotNumber) {
-        errString = errString.replace("amountNotNumber", langDict.wallet.tabWithdraw.messages.amountNotNumber);
-    } else {
-        errString = errString.replace("amountNotNumber", "Amount is NOT number");
-    }
-    if (langDict.wallet.tabWithdraw.messages.amountIsZero) {
-        errString = errString.replace("amountIsZero", langDict.wallet.tabWithdraw.messages.amountIsZero);
-    } else {
-        errString = errString.replace("amountIsZero", "Amount has to be greater than zero!");
-    }
-    if (langDict.wallet.tabWithdraw.messages.feeNotNumber) {
-        errString = errString.replace("feeNotNumber", langDict.wallet.tabWithdraw.messages.feeNotNumber);
-    } else {
-        errString = errString.replace("feeNotNumber", "Fee is NOT number!");
-    }
-    if (langDict.wallet.tabWithdraw.messages.feeIsNegative) {
-        errString = errString.replace("feeIsNegative", langDict.wallet.tabWithdraw.messages.feeIsNegative);
-    } else {
-        errString = errString.replace("feeIsNegative", "Fee has to be greater or equal zero!");
-    }
-    return errString;
 }
 
 // TODO this doesn't belong here
