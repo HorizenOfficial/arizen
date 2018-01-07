@@ -859,13 +859,18 @@ function importPKs() {
     function importFromFile(filename) {
         let i = 1;
         fs.readFileSync(filename).toString().split('\n').filter(x => x).forEach(line => {
-            const matches = line.match(/^(\w+)\s+(\w+)$/);
+            const matches = line.match(/^\w+/);
             if (!matches)
                 console.log(`Invalid line ${i} in private keys file "${filename}"`);
             else {
-                const pk = matches[1];
-                const addr = matches[2];
-                sqlRun("insert or ignore into wallet (pk, addr) values (?, ?)", [pk, addr]);
+                const pk = matches[0];
+                try {
+                    const pub = zencashjs.address.privKeyToPubKey(pk, true);
+                    const addr = zencashjs.address.pubKeyToAddr(pub);
+                    sqlRun("insert or ignore into wallet (pk, addr) values (?, ?)", [pk, addr]);
+                } catch(err) {
+                    console.log(`Invalid private key on line ${i} in private keys file "${filename}": `, err);
+                }
             }
             i++;
         });
