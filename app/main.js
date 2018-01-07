@@ -25,7 +25,7 @@ const {translate} = require("./util.js");
 
 // Press F12 to open the DevTools. See https://github.com/sindresorhus/electron-debug.
 // FIXME: comment this for release versions!
-require("electron-debug")();
+// require("electron-debug")();
 
 // Uncomment if you want to run in production
 // process.env.NODE_ENV !== "production"
@@ -251,7 +251,7 @@ function getNewAddress(name) {
 }
 
 function tableExists(table) {
-    return sqlSelectColumns(`select count(*) from sqlite_master where type = 'table' and name = '${table}'`)[0][0] == 1;
+    return sqlSelectColumns(`select count(*) from sqlite_master where type = 'table' and name = '${table}'`)[0][0] === 1;
 }
 
 function loadSettings() {
@@ -268,7 +268,7 @@ function loadSettings() {
         sqlRun("create table new_settings (name text unique, value text)");
 
     const b64settings = sqlSelectColumns("select value from new_settings where name = 'settings'");
-    if (b64settings.length == 0)
+    if (b64settings.length === 0)
         return defaultSettings;
 
     /* Later we'll want to merge user settings with default settings. */
@@ -784,7 +784,7 @@ function fetchBlockchainChanges(addrObjs, knownTxIds) {
         const txIdSet = new Set();
 
         for (const [obj, info] of results) {
-            if (obj.lastbalance != info.balance) {
+            if (obj.lastbalance !== info.balance) {
                 obj.balanceDiff = info.balance - (obj.lastbalance || 0);
                 obj.lastbalance = info.balance;
                 result.changedAddrs.push(obj);
@@ -817,7 +817,9 @@ function updateBlockchainView(webContents) {
                 total: totalBalance
             }));
         }
-        webContents.send('send-refreshed-wallet-balance', totalBalance); // Why here ? In case balance is unchanged the 'update-wallet-balance' is never sent, but the Zen/Fiat balance will change.
+
+        // Why here ? In case balance is unchanged the 'update-wallet-balance' is never sent, but the Zen/Fiat balance will change.
+        webContents.send('send-refreshed-wallet-balance', totalBalance);
 
         for (const tx of result.newTxs) {
             if (tx.block >= 0) {
