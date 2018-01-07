@@ -1130,6 +1130,7 @@ ipcMain.on("get-me-settings", function (event) {
 
 ipcMain.on("export-pdf", function (event, newWalletNamePaper) {
     const win = BrowserWindow.fromWebContents(event.sender);
+    console.log(win);
     const app = require("electron");
     const dialog = app.dialog;
     console.log("print-to-pdf received");

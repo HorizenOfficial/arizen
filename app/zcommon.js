@@ -351,8 +351,8 @@ function showGeneratePaperWalletDialog() {
                 dialog.querySelector(".newWalletNamePaperLabel").textContent = "Name: " + newWalletNamePaper;
             }
             // Add ZenCash logo for PDF print
-            let logoarea = document.getElementById("zenCashLogoWallet");
-            logoarea.innerHTML = "<a><img id=zenImg src='resources/zen_icon.png' height='50' width='50' /></a>";
+            //let logoarea = document.getElementById("zenCashLogoWallet");
+            //logoarea.innerHTML = "<a><img id=zenImg src='resources/zen_icon.png' height='50' width='50' /></a>";
 
             let getback = ipcRenderer.sendSync("get-paper-address-wif", addressInWallet, newWalletNamePaper);
             let wif = getback.wif;
@@ -388,7 +388,7 @@ function showGeneratePaperWalletDialog() {
             QRCode.toCanvas(canvasPriv, privateKey, function (error) {
                 if (error) console.error(error)
             });
-
+            document.getElementById("NewAddressPrintArea").style.display=  "block";
             console.log(canvasPriv);
             ButtonArea.innerHTML = " ";
 

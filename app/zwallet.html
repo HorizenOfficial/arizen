@@ -123,32 +123,18 @@
                     <p></p>
                 </div>
             </div>
-            <a id=zenCashLogoWallet class=zenLogo ></a>
-            <div class=form id=NewAddressPrintArea disabled>
+            <div id=NewAddressPrintArea style="text-align: center; margin:auto; display:none;">
+                <span id=zenCashLogoWallet class=zenLogo style="text-align:center;" ><img src='resources/zen_icon.png' height='50' width='50' /></span>
                 <label id=newWalletNamePaperLabel class=newWalletNamePaperLabel></label>
-                <ul style="list-style: none; text-align: center;">
-                    <li><label id=newWalletNamePaperLabel class=newWalletNamePaperLabel style="font-weight:bold"></label></li>
-                    <li>
-                        <p>
-                            <ul style="list-style: none; text-align: center; ">
-                                <li class=namePrivateKey style="color:red;"></li>
-                                <li class=qrPrivate><canvas id=canvasPriv></canvas></li>
-                                <li class=keyPrivate style="font-size: 75%; color:red;"></li>
-                            </ul>
-                        </p>
-                    </li>
-                    <li>
-                        <p>
-                            <ul style="list-style: none; text-align: center; ">
-                                <li class=nametAddr style="color:green;"></li>
-                                <li class=qrtAddr><canvas id=canvasT></canvas></li>
-                                <li class=tAddr style="font-size: 75%; color:green;"></li>
-                            </ul>
-                        </p>
-                    </li>
-                </ul>
+                <div class=namePrivateKey style="color:red; display:block;"></div>
+                <div class=qrPrivate style="display:block;"><canvas id=canvasPriv></canvas></div>
+                <div class=keyPrivate style="font-size: 75%; color:red;"></div><br />
+                <div class=nametAddr style="color:green;display:block;"></div>
+                <div class=qrtAddr style="display:block;"><canvas id=canvasT></canvas></div>
+                <div class=tAddr style="font-size: 75%; color:green;"></div><br />
+                <div id=pdfButton class=pdfButton></div>
             </div>
-            <div id=pdfButton class=pdfButton></div>
+
         </div>
     </arizen-dialog>
 </template>
