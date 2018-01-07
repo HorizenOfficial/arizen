@@ -711,7 +711,11 @@ function fetchApi(path) {
 function mapSync(seq, asyncFunc) {
     let results = [];
     return seq.reduce(
-            (promise, item) => promise.then(() => asyncFunc(item).then(r => results.push(r))),
+            (promise, item) => promise.then(() =>
+                asyncFunc(item)
+                    .then(r => results.push(r))
+                    .catch(() => promise) // skip this item
+            ),
             Promise.resolve())
         .then(() => results);
 }
@@ -772,18 +776,16 @@ function fetchTransactions(txIds, myAddrs) {
 }
 
 function fetchBlockchainChanges(addrObjs, knownTxIds) {
-    return mapSync(addrObjs, obj => fetchApi("addr/" + obj.addr)).then(addrInfos => {
+    return mapSync(addrObjs, obj => fetchApi("addr/" + obj.addr).then(info => [obj, info])).then(results => {
         const result = {
             changedAddrs: [],
             newTxs: []
         };
         const txIdSet = new Set();
 
-        for (let i = 0; i < addrObjs.length; i++) {
-            const obj = addrObjs[i];
-            const info = addrInfos[i];
+        for (const [obj, info] of results) {
             if (obj.lastbalance != info.balance) {
-                obj.balanceDiff = info.balance - obj.lastbalance;
+                obj.balanceDiff = info.balance - (obj.lastbalance || 0);
                 obj.lastbalance = info.balance;
                 result.changedAddrs.push(obj);
             }
@@ -802,7 +804,7 @@ function fetchBlockchainChanges(addrObjs, knownTxIds) {
 function updateBlockchainView(webContents) {
     const addrObjs = sqlSelectObjects('SELECT addr, name, lastbalance FROM wallet');
     const knownTxIds = sqlSelectColumns('SELECT DISTINCT txid FROM transactions').map(row => row[0]);
-    let totalBalance = addrObjs.reduce((sum, a) => sum + a.lastbalance, 0);
+    let totalBalance = addrObjs.filter(obj => obj.lastbalance).reduce((sum, a) => sum + a.lastbalance, 0);
 
     fetchBlockchainChanges(addrObjs, knownTxIds).then(result => {
         for (const addrObj of result.changedAddrs) {
@@ -810,8 +812,8 @@ function updateBlockchainView(webContents) {
             totalBalance += addrObj.balanceDiff;
             webContents.send('update-wallet-balance', JSON.stringify({
                 response: 'OK',
-                wallet: addrObj.addr,
-                balance: addrObj.lastbalance,
+                addrObj: addrObj,
+                diff: addrObj.balanceDiff,
                 total: totalBalance
             }));
         }
@@ -857,13 +859,18 @@ function importPKs() {
     function importFromFile(filename) {
         let i = 1;
         fs.readFileSync(filename).toString().split('\n').filter(x => x).forEach(line => {
-            const matches = line.match(/^(\w+)\s+(\w+)$/);
+            const matches = line.match(/^\w+/);
             if (!matches)
                 console.log(`Invalid line ${i} in private keys file "${filename}"`);
             else {
-                const pk = matches[1];
-                const addr = matches[2];
-                sqlRun("insert or ignore into wallet (pk, addr, lastbalance) values (?, ?, 0)", [pk, addr]);
+                const pk = matches[0];
+                try {
+                    const pub = zencashjs.address.privKeyToPubKey(pk, true);
+                    const addr = zencashjs.address.pubKeyToAddr(pub);
+                    sqlRun("insert or ignore into wallet (pk, addr) values (?, ?)", [pk, addr]);
+                } catch(err) {
+                    console.log(`Invalid private key on line ${i} in private keys file "${filename}": `, err);
+                }
             }
             i++;
         });
