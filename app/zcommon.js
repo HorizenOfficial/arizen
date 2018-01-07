@@ -230,7 +230,7 @@ let langDict;
     ipcRenderer.on("settings", (sender, settingsStr) => {
         // don't notify about new settings on startup
         if (Object.keys(settings).length)
-            showNotification("Settings updated");
+            showNotification(tr("notification.settingsUpdated","Settings updated"));
         const newSettings = JSON.parse(settingsStr);
         if (settings.lang !== newSettings.lang)
             changeLanguage(newSettings.lang);

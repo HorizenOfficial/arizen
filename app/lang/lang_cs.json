@@ -8,7 +8,13 @@
         "password": "Heslo",
         "loginButton": "Přihlásit",
         "createWalletLink": "Vytvořit novou peněženku",
-        "warningWrongUsernameOrPassword": "Špatné <strong>jméno</strong> nebo <strong>heslo</strong>"
+        "warningWrongUsernameOrPassword": "Špatné <strong>jméno</strong> nebo <strong>heslo</strong>",
+        "dataImportFailed": "Import dat selhal, pravděpodobně díky špatným přihlašovacím údajům",
+        "fileReplace": "Chcete soubor přepsat?",
+        "walletReplace": "Přepsání peněženky?",
+        "walletReplaceMsg": "Tato akce přepíše vaši aktuálné peněženku. Jste si jistý?",
+        "yes": "Ano",
+        "no": "Ne"
     },
     "createWallet": {
         "label": "Arizen: Vytvoření peněženky",
@@ -33,6 +39,17 @@
         "warningPasswordAgainIdentical": "<strong>Musí být identické</strong>",
         "errorCreationFailed": "Vytvoření peněženky selhalo"
     },
+    "notification": {
+        "settingsUpdated": "Nastavení aktualizováno",
+        "balanceUpdated": "Zůstatek aktualizován",
+        "newTrabsactions": "Nová transakce"
+    },
+    "importExportPks": {
+        "chooseFileExport" : "Vyberte soubor pro uložení privátních klíčů",
+        "chooseFileImport" : "Vyberte soubor s privátními klíči",
+        "InvalidLinePk": "Neplatná řádka ${0} v souboru s privátními klíči",
+        "InvalidPk": "Neplatný privátní klíč ${0} v souboru s privátními klíči"
+    },
     "wallet": {
         "showSettingsDialogButton" : "Nastavení",
         "showAboutDialogButton" : "O Programu",
@@ -49,6 +66,12 @@
         "showExplorer": "Otevřít v ZEN exploreru",
         "listOfAddresses": "Seznam adres",
         "showBatchWithdrawDialog": "Hromadný výběr",
+        "notLoggedIn": "Nepřihlášen",
+        "addressNotFound": "adresa nenalezena",
+        "nameNotFound": "jméno nenalezeno",
+        "renameWalletSetTo": "adresa ${0} nastavena na ${1}",
+        "fetchBlockchainFailed": "Aktualizace blockchainu selhala:",
+        "save": "Uložit",
         "tabOverview": {
             "label": "Přehled",
             "showZeroBalances" : "Nulové adresy",
@@ -80,6 +103,7 @@
                 "sumLowerThanFee": "Součet zůstatku na zdrojových adresách je menší než poplatek!",
                 "zenApi": "Zen API není nastaveno v předvolbách aplikace!",
                 "unknownAddress": "Zdrojová adresa nepatří do této peněženky!",
+                "insufficientFundsSourceAddr": "Nedostatečný zůstatek na zdrojové adrese",
                 "emptyToAddr": "Cílová adresa není zadána",
                 "zeroAmount": "Množství není větší než nula",
                 "insufficientFunds": "Nedostatečný zůstatek na zdrojové adrese",
