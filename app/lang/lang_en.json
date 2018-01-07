@@ -69,10 +69,17 @@
       "help": "Click the red button next to the desired address for withdrawal.",
       "availableBalance": "Available balance",
       "fee": "Transaction fee",
+      "txStatus" : "Transaction status",
       "withdrawConfirmQuestion": "Do you really want to send this transaction?",
       "messages": {
         "emptyFromAddr": "The from address is empty",
         "unknownFromAddr": "The from address does not belong to this wallet",
+        "insufficientFirstSource" : "Insufficient funds on 1st source (Minimum: threshold limit + fee)!",
+        "insufficientNextSource" : "Insufficient funds on 2nd or next source (Minimum: threshold limit + fee)!",
+        "numberOfKeys": "# private keys and # addresses are not equal!",
+        "sumLowerThanFee": "Your summed balance over all source addresses is lower than the fee!",
+        "zenApi": "Zen API is not set in settings!",
+        "unknownAddress": "Source address is not in your wallet!",
         "emptyToAddr": "The to address is empty",
         "zeroAmount": "The amount is not positive",
         "insufficientFunds": "Insufficient funds on the from address",
@@ -133,6 +140,7 @@
       "addWalletToArizen": "Add this wallet to Arizen"
     },
     "batchWithdraw": {
+      "label": "Batch Withdraw",
       "keepAmount": "Amount to keep",
       "txFee": "Transaction fee"
     }
@@ -143,6 +151,8 @@
     "backupUnencrypted": "Backup UNENCRYPTED wallet",
     "importEncrypted": "Import UNENCRYPTED Arizen wallet",
     "importUnencrypted": "Import ENCRYPTED Arizen wallet",
+    "importPrivateKeys": "Import private keys",
+    "exportPrivateKeys": "Export private keys",
     "exit": "Exit",
     "edit": "Edit",
     "editSubmenu": {

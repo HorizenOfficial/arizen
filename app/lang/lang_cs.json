@@ -69,10 +69,17 @@
             "help": "Klikem na červené tlačítko vedle adresy provedete výběr.",
             "availableBalance": "Dostupný zůstatek",
             "fee": "Poplatek za transakci",
-            "withdrawConfirmQuestion": "Do you really want to send this transaction?",
+            "txStatus" : "Stav transakce",
+            "withdrawConfirmQuestion": "Opravdu chcete provést tuto transakci?",
             "messages": {
                 "emptyFromAddr": "Zdrojová adresa není zadána",
                 "unknownFromAddr": "Zdrojová adresa nepatří do této peněženky",
+                "insufficientFirstSource" : "Nedostatečný zůstatek na první adrese (Minimum: minimální zůstatek + poplatek)!",
+                "insufficientNextSource" : "Nedostatečný zůstatek na druhé nebo některé další adrese (Minimum: minimální zůstatek + poplatek)!",
+                "numberOfKeys": "# privátních klíčů a # adres se nerovná!",
+                "sumLowerThanFee": "Součet zůstatku na zdrojových adresách je menší než poplatek!",
+                "zenApi": "Zen API není nastaveno v předvolbách aplikace!",
+                "unknownAddress": "Zdrojová adresa nepatří do této peněženky!",
                 "emptyToAddr": "Cílová adresa není zadána",
                 "zeroAmount": "Množství není větší než nula",
                 "insufficientFunds": "Nedostatečný zůstatek na zdrojové adrese",
@@ -133,6 +140,7 @@
             "addWalletToArizen": "Přidat vytvořenou peněženku do Arizen"
         },
         "batchWithdraw": {
+            "label": "Hromadný výběr",
             "keepAmount": "Minimální zůstatek",
             "txFee": "Poplatek za transakci"
         }
@@ -143,6 +151,8 @@
         "backupUnencrypted": "Záloha nezabezpečené peněženky",
         "importEncrypted": "Import zabezpečené peněženky",
         "importUnencrypted": "Import nezabezpečené peněženky",
+        "importPrivateKeys": "Import privátních klíčů",
+        "exportPrivateKeys": "Export privátních klíčů",
         "exit": "Konec",
         "edit": "Upravit",
         "editSubmenu": {
