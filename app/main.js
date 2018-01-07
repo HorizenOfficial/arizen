@@ -438,6 +438,15 @@ function updateMenuAtLogin(langData) {
                 },
                 { type: "separator" },
                 {
+                    label: tr("menu.importPrivateKeys", "Export private keys"),
+                    click() { exportPKs() }
+                },
+                {
+                    label: tr("menu.exportPrivateKeys", "Import private keys"),
+                    click() { importPKs() }
+                },
+                { type: "separator" },
+                {
                     label: tr("menu.exit", "Exit"),
                     click() {
                         app.quit();
@@ -776,7 +785,7 @@ function fetchBlockchainChanges(addrObjs, knownTxIds) {
 
         for (const [obj, info] of results) {
             if (obj.lastbalance != info.balance) {
-                obj.balanceDiff = info.balance - obj.lastbalance;
+                obj.balanceDiff = info.balance - (obj.lastbalance || 0);
                 obj.lastbalance = info.balance;
                 result.changedAddrs.push(obj);
             }
@@ -795,7 +804,7 @@ function fetchBlockchainChanges(addrObjs, knownTxIds) {
 function updateBlockchainView(webContents) {
     const addrObjs = sqlSelectObjects('SELECT addr, name, lastbalance FROM wallet');
     const knownTxIds = sqlSelectColumns('SELECT DISTINCT txid FROM transactions').map(row => row[0]);
-    let totalBalance = addrObjs.reduce((sum, a) => sum + a.lastbalance, 0);
+    let totalBalance = addrObjs.filter(obj => obj.lastbalance).reduce((sum, a) => sum + a.lastbalance, 0);
 
     fetchBlockchainChanges(addrObjs, knownTxIds).then(result => {
         for (const addrObj of result.changedAddrs) {
@@ -820,6 +829,61 @@ function updateBlockchainView(webContents) {
     })
 	.catch(err => {
         console.log('Failed to fetch blockchain changes: ', err);
+    });
+}
+
+
+function exportPKs() {
+    function exportToFile(filename, overwrite = false) {
+        fs.open(filename, 'w', 0o600, (err, fd) => {
+            if (err)
+                console.error(`Couldn't open "${filename}" for writing: `, err);
+            else {
+                const keys = sqlSelectObjects("select pk, addr from wallet");
+                for (let k of keys)
+                    fs.write(fd, k.pk + " " + k.addr + "\n");
+            }
+        });
+    }
+
+    dialog.showSaveDialog({
+        title: "Choose file for private keys",
+        defaultPath: "arizen-private-keys.txt"
+    }, filename => {
+        if (filename)
+            exportToFile(filename);
+    });
+}
+
+function importPKs() {
+    function importFromFile(filename) {
+        let i = 1;
+        fs.readFileSync(filename).toString().split('\n').filter(x => x).forEach(line => {
+            const matches = line.match(/^\w+/);
+            if (!matches)
+                console.log(`Invalid line ${i} in private keys file "${filename}"`);
+            else {
+                const pk = matches[0];
+                try {
+                    const pub = zencashjs.address.privKeyToPubKey(pk, true);
+                    const addr = zencashjs.address.pubKeyToAddr(pub);
+                    sqlRun("insert or ignore into wallet (pk, addr) values (?, ?)", [pk, addr]);
+                } catch(err) {
+                    console.log(`Invalid private key on line ${i} in private keys file "${filename}": `, err);
+                }
+            }
+            i++;
+        });
+    }
+
+    dialog.showOpenDialog({
+        title: "Choose file with private keys"
+    }, filenames => {
+        if (filenames) {
+            for (let f of filenames)
+                importFromFile(f);
+            updateBlockchainView(mainWindow.webContents);
+        }
     });
 }
 
