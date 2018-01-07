@@ -928,56 +928,52 @@ ipcMain.on("show-notification", function (event, title, message, duration) {
 });
 
 function checkSendParameters(fromAddress, toAddress, fee, amount){
-    let errString = "";
+    let errors = [];
     if (fromAddress.length !== 35) {
-        errString += "fromAddressBadLength";
-        errString += "<br />\n\n";
+        errors.push(tr("wallet.tabWithdraw.messages.fromAddressBadLength", "Bad length of the source address!"));
     }
 
     if (fromAddress.substring(0, 2) !== "zn") {
-        errString += "fromAddressBadPrefix";
-        errString += "<br />\n\n";
+        errors.push(tr("wallet.tabWithdraw.messages.fromAddressBadPrefix", "Bad source address prefix - it has to be 'zn'!"));
     }
 
     if (toAddress.length !== 35) {
-        errString += "toAddressBadLength";
-        errString += "<br />\n\n";
+        errors.push(tr("wallet.tabWithdraw.messages.toAddressBadLength", "Bad length of the destination address!"));
     }
 
     if (toAddress.substring(0, 2) !== "zn") {
-        errString += "toAddressBadPrefix";
-        errString += "<br />\n\n";
+        errors.push(tr("wallet.tabWithdraw.messages.toAddressBadPrefix", "Bad destination address prefix - it has to be 'zn'!"));
     }
 
     if (typeof parseInt(amount, 10) !== "number" || amount === "") {
-        errString += "amounNotNumber";
-        errString += "<br />\n\n";
+        errors.push(tr("wallet.tabWithdraw.messages.amountNotNumber", "Amount is NOT a number"));
     }
 
     if (amount <= 0){
-        errString += "amountIsZero";
-        errString += "<br />\n\n";
+        errors.push(tr("wallet.tabWithdraw.messages.amountIsZero", "Amount has to be greater than zero!"));
     }
 
-    if (typeof parseInt(fee, 10) !== "number" || fee === ""){
-        errString += "feeNotNumber";
-        errString += "<br />\n\n";
+    if (typeof parseInt(fee, 10) !== "number" || fee === "") {
+        errors.push(tr("wallet.tabWithdraw.messages.feeNotNumber", "Fee is NOT a number!"));
     }
 
     // fee can be zero, in block can be few transactions with zero fee
     if (fee < 0){
-        errString += "feeIsNegative";
-        errString += "<br />\n\n";
+        errors.push(tr("wallet.tabWithdraw.messages.feeIsNegative", "Fee has to be greater or equal to zero!"));
     }
 
-    return errString;
+    // fee can be zero, in block can be one transaction with zero fee
+
+    return errors;
 }
 
 ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
-    let errString = checkSendParameters(fromAddress, toAddress, fee, amount);
-    if (errString !== ""){
+    let paramErrors = checkSendParameters(fromAddress, toAddress, fee, amount);
+    if (paramErrors.length) {
+        // TODO: Come up with better message. For now, just make a HTML out of it.
+        const errString = paramErrors.join("<br/>\n\n");
         event.sender.send("send-finish", "error", errString);
-    }else{
+    } else {
         // Convert to satoshi
         let amountInSatoshi = Math.round(amount * 100000000);
         let feeInSatoshi = Math.round(fee * 100000000);
