@@ -110,7 +110,7 @@
             "createButton": "Vytvořit"
         },
         "about": {
-            "label": "O Arizenu",
+            "label": "O Arizen",
             "homepage": "Web",
             "version": "Verze",
             "license": "Licence",
@@ -127,10 +127,10 @@
             "save": "Uložit"
         },
         "paperWallet": {
-            "label": "Vytvořit Paper Wallet",
+            "label": "Papírová peněženka",
             "generateNewWallet": "Vytvořit novou peněženku",
             "name": "Jméno (nepovinné)",
-            "addWalletToArizen": "Přidat vytvořenou peněženku do Arizenu"
+            "addWalletToArizen": "Přidat vytvořenou peněženku do Arizen"
         },
         "batchWithdraw": {
             "keepAmount": "Minimální zůstatek",
