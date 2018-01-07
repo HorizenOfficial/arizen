@@ -438,11 +438,11 @@ function updateMenuAtLogin(langData) {
                 },
                 { type: "separator" },
                 {
-                    label: tr("menu.importPrivateKeys", "Export private keys"),
+                    label: tr("menu.exportPrivateKeys", "Export private keys"),
                     click() { exportPKs() }
                 },
                 {
-                    label: tr("menu.exportPrivateKeys", "Import private keys"),
+                    label: tr("menu.importPrivateKeys", "Import private keys"),
                     click() { importPKs() }
                 },
                 { type: "separator" },
@@ -1215,7 +1215,7 @@ ipcMain.on("send-many", function (event, fromAddresses, toAddress, fee, threshol
         // CHECK ZEN API -----------------------------------------------------------------------------------------------
         let zenApi = settings.apiUrls[0];
         if (!zenApi) {
-            err = "Zen API is not set in settings!";
+            err = tr("wallet.tabWithdraw.messages.zenApi", "Zen API is not set in settings!");
             console.log(err);
             event.sender.send("send-finish", "error", err);
             return;
@@ -1232,7 +1232,7 @@ ipcMain.on("send-many", function (event, fromAddresses, toAddress, fee, threshol
             let sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet WHERE addr = '" + fromAddresses[i] + "'");
 
             if (!sqlRes.length) {
-                err = "Source address is not in your wallet!";
+                err = tr("wallet.tabWithdraw.messages.unknownAddress", "Source address is not in your wallet!");
                 console.log(err);
                 event.sender.send("send-finish", "error", err);
                 return;
@@ -1241,7 +1241,7 @@ ipcMain.on("send-many", function (event, fromAddresses, toAddress, fee, threshol
             balanceInSatoshi = sqlRes[0].values[0][3];
             if (i === 0) {
                 if (balanceInSatoshi < (parseFloat(thresholdLimit) + parseFloat(fee))) {
-                    err = "Insufficient funds on 1st source '" + fromAddresses[i] + "' (Minimum: threshold limit + fee)!";
+                    err = tr("wallet.tabWithdraw.messages.insufficientFirstSource", "Insufficient funds on 1st source (Minimum: threshold limit + fee)!");
                     console.log(err);
                     event.sender.send("send-finish", "error", err);
                     return;
@@ -1249,7 +1249,7 @@ ipcMain.on("send-many", function (event, fromAddresses, toAddress, fee, threshol
                 amountsInSatoshi[i] = Math.round((balanceInSatoshi - parseFloat(fee)) * satoshi);
             } else {
                 if (balanceInSatoshi < (parseFloat(thresholdLimit))) {
-                    err = "Insufficient funds on 2nd or next source address!";
+                    err = tr("wallet.tabWithdraw.messages.insufficientNextSource", "Insufficient funds on 2nd or next source (Minimum: threshold limit + fee)!");
                     console.log(err);
                     event.sender.send("send-finish", "error", err);
                     return;
@@ -1260,7 +1260,7 @@ ipcMain.on("send-many", function (event, fromAddresses, toAddress, fee, threshol
         }
 
         if (privateKeys.length !== nFromAddresses) {
-            err = "# private keys and # addresses are not equal!";
+            err = tr("wallet.tabWithdraw.messages.numberOfKeys", "# private keys and # addresses are not equal!");
             console.log(err);
             event.sender.send("send-finish", "error", err);
             return;
@@ -1327,7 +1327,7 @@ ipcMain.on("send-many", function (event, fromAddresses, toAddress, fee, threshol
                                 }
 
                                 if ((satoshisSoFar - (nFromAddresses * thresholdLimitInSatoshi)) < feeInSatoshi) {
-                                    err = "Your summed balance over all source addresses is lower than the fee!";
+                                    err = tr("wallet.tabWithdraw.messages.sumLowerThanFee", "Your summed balance over all source addresses is lower than the fee!");
                                     console.log(err);
                                     event.sender.send("send-finish", "error", err);
                                 } else {
