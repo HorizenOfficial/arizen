@@ -59,6 +59,14 @@ function warnUser(msg, onOk, onCancel) {
         onCancel();
 }
 
+function showNotification(message) {
+    const notif = new Notification("Arizen", {
+        body: message,
+        icon: "resources/zen_icon.png"
+    });
+    notif.onclick = () =>  notif.close();
+}
+
 function logout() {
     ipcRenderer.send("do-logout");
     location.href = "./login.html";
@@ -113,6 +121,10 @@ function formatBalance(balance, localeTag = undefined) {
 
 function formatFiatBalance(balance, localeTag = undefined) {
     return parseFloat(balance).toLocaleString(localeTag, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+}
+
+function formatBalanceDiff(diff, localeTag = undefined) {
+    return diff >= 0 ? "+" + formatBalance(balance, localeTag) : "-" + formatBalance(-balance, localeTag);
 }
 
 function formatEpochTime(epochSeconds) {
@@ -216,6 +228,9 @@ let langDict;
 (() => {
     const {ipcRenderer} = require("electron");
     ipcRenderer.on("settings", (sender, settingsStr) => {
+        // don't notify about new settings on startup
+        if (Object.keys(settings).length)
+            showNotification("Settings updated");
         const newSettings = JSON.parse(settingsStr);
         if (settings.lang !== newSettings.lang)
             changeLanguage(newSettings.lang);
