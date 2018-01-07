@@ -8,7 +8,13 @@
     "password": "Password",
     "loginButton": "Login",
     "createWalletLink": "Create Wallet",
-    "warningWrongUsernameOrPassword": "Wrong <strong>username</strong> or <strong>password</strong>"
+    "warningWrongUsernameOrPassword": "Wrong <strong>username</strong> or <strong>password</strong>",
+    "dataImportFailed": "Data import failed, possible reason is wrong credentials",
+    "fileReplace": "Do you want to replace file?",
+    "walletReplace": "Replace wallet?",
+    "walletReplaceMsg": "This will replace your actual wallet. Are you sure?",
+    "yes": "Yes",
+    "no": "No"
   },
   "createWallet": {
     "label": "Arizen: Create Wallet",
@@ -33,6 +39,17 @@
     "warningPasswordAgainIdentical": "<strong>Identical</strong>",
     "errorCreationFailed": "Wallet creation failed"
   },
+  "notification": {
+    "settingsUpdated": "Settings updated",
+    "balanceUpdated": "Balance Updated",
+    "newTrabsactions": "New transaction"
+  },
+  "importExportPks": {
+    "chooseFileExport" : "Choose file for private keys",
+    "chooseFileImport" : "Choose file with private keys",
+    "InvalidLinePk": "Invalid line ${0} in private keys file",
+    "InvalidPk": "Invalid private key on line ${0} in private keys file"
+  },
   "wallet": {
     "showSettingsDialogButton" : "Settings",
     "showAboutDialogButton" : "About",
@@ -49,6 +66,12 @@
     "showExplorer": "Show in ZEN Explorer",
     "listOfAddresses": "List Of Addresses",
     "showBatchWithdrawDialog": "Batch Withdraw",
+    "notLoggedIn": "Not logged in",
+    "addressNotFound": "address not found",
+    "nameNotFound": "name not found",
+    "renameWalletSetTo": "address ${0} set to ${1}",
+    "fetchBlockchainFailed": "Failed to fetch blockchain changes:",
+    "save": "Save",
     "tabOverview": {
       "label": "Overview",
       "showZeroBalances" : "Show zero balances",
@@ -80,6 +103,7 @@
         "sumLowerThanFee": "Your summed balance over all source addresses is lower than the fee!",
         "zenApi": "Zen API is not set in settings!",
         "unknownAddress": "Source address is not in your wallet!",
+        "insufficientFundsSourceAddr": "Insufficient funds on the source address",
         "emptyToAddr": "The to address is empty",
         "zeroAmount": "The amount is not positive",
         "insufficientFunds": "Insufficient funds on the from address",

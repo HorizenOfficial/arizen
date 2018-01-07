@@ -1066,11 +1066,11 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
         let feeInSatoshi = Math.round(fee * 100000000);
         let sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet WHERE addr = '" + fromAddress + "'");
 		if (!sqlRes.length) {
-			event.sender.send("send-finish", "error", "Source address is not in your wallet!");
+			event.sender.send("send-finish", "error",  tr("wallet.tabWithdraw.messages.unknownAddress","Source address is not in your wallet!"));
 			return;
         }
         if (sqlRes[0].values[0][3] < (parseFloat(amount) + parseFloat(fee))) {
-			event.sender.send("send-finish", "error", "Insufficient funds on source address!");
+			event.sender.send("send-finish", "error", tr("wallet.tabWithdraw.messages.insufficientFundsSourceAddr", "Insufficient funds on source address!"));
 			return;
         }
         let privateKey = sqlRes[0].values[0][1];
@@ -1078,7 +1078,7 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
         // Get previous transactions
         let zenApi = settings.apiUrls[0];
         if (!zenApi) {
-            console.log("No Zen api in settings");
+            console.log( tr("wallet.tabWithdraw.messages.zenApi","No Zen api in settings"));
             return;
         }
         if ((zenApi.substr(zenApi.length - 1)) === "/"){
@@ -1138,9 +1138,10 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
 
                                 // If we don't have enough address - fail and tell it to the user
                                 if (satoshisSoFar < amountInSatoshi + feeInSatoshi) {
-                                    let errStr = "You don't have so many funds! You wanted to send: " +
+                                    let errStr = tr("wallet.tabWithdraw.messages.insufficientFundsSourceAddr", "Insufficient funds on source address!");
+                                    /*let errStr = "You don't have so many funds! You wanted to send: " +
                                         Number((amountInSatoshi + feeInSatoshi) / 100000000).toFixed(8) + " ZEN, but your balance is only: " +
-                                        Number(satoshisSoFar / 100000000).toFixed(8) + " ZEN.";
+                                        Number(satoshisSoFar / 100000000).toFixed(8) + " ZEN.";*/
                                     console.log(errStr);
                                     event.sender.send("send-finish", "error", errStr);
                                 } else {
