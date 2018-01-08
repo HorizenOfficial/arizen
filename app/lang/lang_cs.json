@@ -162,7 +162,7 @@
             "generateNewWallet": "Vytvořit novou peněženku",
             "name": "Jméno (nepovinné)",
             "addWalletToArizen": "Přidat vytvořenou peněženku do Arizen",
-            "zenCashWallet" : "ZenCash peněženka",
+            "zenCashWalletLabel" : "ZenCash peněženka",
             "tAddrLabel" : "Veřejný klíč - T adresa",
             "privateKeyLabel": "Privátní klíč",
             "namePrint": "Jméno",
