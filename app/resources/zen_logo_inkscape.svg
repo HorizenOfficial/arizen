@@ -26,8 +26,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="2.0000001"
-     inkscape:cx="356.40496"
-     inkscape:cy="580.03203"
+     inkscape:cx="301.89055"
+     inkscape:cy="571.14153"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -44,7 +44,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -58,7 +58,8 @@
        id="g29"
        inkscape:export-xdpi="14.222222"
        inkscape:export-ydpi="14.222222"
-       style="opacity:0.89">
+       style="opacity:0.89"
+       inkscape:export-filename="/home/gsfakianakis/Desktop/imgs/32x32.png">
       <g
          transform="scale(0.1)"
          id="g31"
@@ -112,21 +113,23 @@
     </g>
     <rect
        id="rect62-3"
-       width="3.4000001"
+       width="3.5"
        height="56.425377"
        x="103.31979"
        y="115.3746"
-       style="fill:none;stroke-width:0.17271793"
+       style="fill:none;stroke-width:0.17523949"
        inkscape:export-xdpi="14.222222"
-       inkscape:export-ydpi="14.222222" />
+       inkscape:export-ydpi="14.222222"
+       inkscape:export-filename="/home/gsfakianakis/Desktop/imgs/32x32.png" />
     <rect
        id="rect62-3-6"
        width="3.4000001"
        height="56.425381"
-       x="50.217106"
+       x="49.687939"
        y="115.3746"
        style="fill:none;stroke-width:0.17271793"
        inkscape:export-xdpi="14.222222"
-       inkscape:export-ydpi="14.222222" />
+       inkscape:export-ydpi="14.222222"
+       inkscape:export-filename="/home/gsfakianakis/Desktop/imgs/32x32.png" />
   </g>
 </svg>
