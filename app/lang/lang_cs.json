@@ -42,7 +42,7 @@
     "notification": {
         "settingsUpdated": "Nastavení aktualizováno",
         "balanceUpdated": "Zůstatek aktualizován",
-        "newTrabsactions": "Nová transakce"
+        "newTransactions": "Nová transakce"
     },
     "importExportPks": {
         "chooseFileExport" : "Vyberte soubor pro uložení privátních klíčů",

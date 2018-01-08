@@ -42,7 +42,7 @@
   "notification": {
     "settingsUpdated": "Settings updated",
     "balanceUpdated": "Balance Updated",
-    "newTrabsactions": "New transaction"
+    "newTransactions": "New transaction"
   },
   "importExportPks": {
     "chooseFileExport" : "Choose file for private keys",
