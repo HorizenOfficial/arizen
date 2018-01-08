@@ -24,8 +24,7 @@ const {List} = require("immutable");
 const {translate} = require("./util.js");
 
 // Press F12 to open the DevTools. See https://github.com/sindresorhus/electron-debug.
-// FIXME: comment this for release versions!
-// require("electron-debug")();
+require("electron-debug")();
 
 // Uncomment if you want to run in production
 // process.env.NODE_ENV !== "production"
