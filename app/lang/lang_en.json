@@ -161,7 +161,12 @@
       "label": "Paper Wallet",
       "generateNewWallet": "Generate New Wallet",
       "name": "Name (optional)",
-      "addWalletToArizen": "Add this wallet to Arizen"
+      "addWalletToArizen": "Add this wallet to Arizen",
+      "zenCashWalletLabel" : "ZenCash Wallet",
+      "tAddrLabel" : "Public Key - T Address",
+      "privateKeyLabel": "Private Key",
+      "namePrint": "Name",
+      "exportPDFLabel": "Export PDF"
     },
     "batchWithdraw": {
       "label": "Batch Withdraw",

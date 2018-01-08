@@ -161,7 +161,12 @@
             "label": "Papírová peněženka",
             "generateNewWallet": "Vytvořit novou peněženku",
             "name": "Jméno (nepovinné)",
-            "addWalletToArizen": "Přidat vytvořenou peněženku do Arizen"
+            "addWalletToArizen": "Přidat vytvořenou peněženku do Arizen",
+            "zenCashWalletLabel" : "ZenCash Wallet CS",
+            "tAddrLabel" : "Public Key - T Address CS",
+            "privateKeyLabel": "Private Key CS",
+            "namePrint": "Name CS",
+            "exportPDFLabel": "Export PDF CS"
         },
         "batchWithdraw": {
             "label": "Hromadný výběr",

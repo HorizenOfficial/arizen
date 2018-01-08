@@ -371,11 +371,11 @@ function showGeneratePaperWalletDialog() {
             ButtonArea.innerHTML = " ";
 
             // Style the new screen
-            dialog.querySelector(".generateNewWalletTitle").textContent = "ZenCash Wallet";
-            dialog.querySelector(".nametAddr").textContent = "Public Key - T Address";
-            dialog.querySelector(".namePrivateKey").textContent = "Private Key";
+            dialog.querySelector(".generateNewWalletTitle").textContent = tr("wallet.paperWallet.zenCashWalletLabel", "ZenCash Wallet");
+            dialog.querySelector(".nametAddr").textContent = tr("wallet.paperWallet.tAddrLabel", "Public Key - T Address");
+            dialog.querySelector(".namePrivateKey").textContent = tr("wallet.paperWallet.privateKeyLabel", "Private Key");
             if (newWalletNamePaper) {
-                dialog.querySelector(".newWalletNamePaperLabel").textContent = "Name: " + newWalletNamePaper;
+                dialog.querySelector(".newWalletNamePaperLabel").textContent = tr("wallet.paperWallet.namePrint", "Name")+": " + newWalletNamePaper;
             }
             // Add ZenCash logo for PDF print
             //let logoarea = document.getElementById("zenCashLogoWallet");
@@ -423,7 +423,7 @@ function showGeneratePaperWalletDialog() {
             // Print to PDF
             let pdfButton = document.createElement("BUTTON");
             pdfButton.setAttribute("id", "exportPDFButton");
-            let t = document.createTextNode("Export PDF");
+            let t = document.createTextNode(tr("wallet.paperWallet.exportPDFLabel", "Export PDF"));
             pdfButton.appendChild(t);
             dialog.querySelector(".pdfButton").appendChild(pdfButton);
 
