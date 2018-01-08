@@ -81,6 +81,7 @@
     "tabDeposit": {
       "label": "Deposit",
       "help": "Click the green button next to the desired address for deposit.",
+      "saveQrcode": "Save QR code",
       "messages": {
         "emptyToAddr": "The to address is empty",
         "unknownToAddr": "The to address does not belong to this wallet",

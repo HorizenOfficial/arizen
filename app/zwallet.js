@@ -7,6 +7,7 @@ const {ipcRenderer} = require("electron");
 // FIXME: unused List
 const {List} = require("immutable");
 const Qrcode = require("qrcode");
+const jsPDF = require("jspdf");
 
 function logIpc(msgType) {
     ipcRenderer.on(msgType, (...args) => {
@@ -45,6 +46,7 @@ const depositToAddrInput = document.getElementById("depositToAddr");
 const depositAmountInput = document.getElementById("depositAmount");
 const depositMsg = document.getElementById("depositMsg");
 const depositQrcodeImage = document.getElementById("depositQrcodeImg");
+const depositSaveQrcodeButton = document.getElementById("depositSaveQrcodeButton");
 const withdrawTabButton = document.getElementById("withdrawTabButton");
 // FIXME: withdrawAvailBalanceNode unused
 const withdrawAvailBalanceNode = document.getElementById("withdrawAvailBalance");
@@ -465,10 +467,17 @@ function initDepositView() {
     depositToAddrInput.addEventListener("input", () => updateDepositQrcode(qrcodeTypeDelay));
     depositAmountInput.addEventListener("input", () => updateDepositQrcode(qrcodeTypeDelay));
     depositToButton.addEventListener("click", () => showAddrSelectDialog(true, addr => {
-    depositToAddrInput.addEventListener("input", () => updateDepositQrcode(qrcodeTypeDelay));
         depositToAddrInput.value = addr;
         updateDepositQrcode();
     }));
+    depositSaveQrcodeButton.addEventListener("click", () => {
+        const pdf = new jsPDF({ unit: 'mm', format: [100, 100] });
+        const w = pdf.internal.pageSize.width;
+        const h = pdf.internal.pageSize.height;
+        pdf.addImage(depositQrcodeImage.src, 'JPEG', 0, 0, w, h);
+        const addr = depositToAddrInput.value;
+        pdf.save(`arizen-deposit-${addr}.pdf`);
+    });
 }
 
 function updateDepositQrcode(qrcodeDelay = 0) {
@@ -478,12 +487,21 @@ function updateDepositQrcode(qrcodeDelay = 0) {
         color: {dark: "#000000ff", light: "#fefefeff"}
     };
 
+    depositQrcodeImage.classList.add("hidden");
+    depositSaveQrcodeButton.disabled = true;
+
     const toAddr = depositToAddrInput.value;
     const amount = parseFloat(depositAmountInput.value || 0);
 
     if (!toAddr) {
         setNodeTrText(depositMsg, "wallet.tabDeposit.messages.emptyToAddr", "The to address is empty");
-    } else if (!addrIdxByAddr.has(toAddr)) {
+        return;
+    }
+
+    depositQrcodeImage.classList.remove("hidden");
+    depositSaveQrcodeButton.disabled = false;
+
+    if (!addrIdxByAddr.has(toAddr)) {
         setNodeTrText(depositMsg, "wallet.tabDeposit.messages.unknownToAddr", "The to address does not belong to this wallet");
     } else if (amount <= 0) {
         setNodeTrText(depositMsg, "wallet.tabDeposit.messages.zeroAmount", "The amount is not positive");

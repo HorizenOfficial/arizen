@@ -81,6 +81,7 @@
         "tabDeposit": {
             "label": "Vklad",
             "help": "Klikem na zelené tlačítko vedle adresy provedete vklad.",
+            "saveQrcode": "Uložit QR kód",
             "messages": {
                 "emptyToAddr": "Cílová adresa není zadána",
                 "unknownToAddr": "Cílová adresa nepatří do této peněženky",
