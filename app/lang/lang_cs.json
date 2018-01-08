@@ -166,7 +166,7 @@
             "tAddrLabel" : "Veřejný klíč - T adresa",
             "privateKeyLabel": "Privátní klíč",
             "namePrint": "Jméno",
-            "exportPDFLabel": "Export do PDF",
+            "exportPDFLabel": "Export do PDF"
         },
         "batchWithdraw": {
             "label": "Hromadný výběr",
