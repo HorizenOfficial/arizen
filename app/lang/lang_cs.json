@@ -162,11 +162,11 @@
             "generateNewWallet": "Vytvořit novou peněženku",
             "name": "Jméno (nepovinné)",
             "addWalletToArizen": "Přidat vytvořenou peněženku do Arizen",
-            "zenCashWalletLabel" : "ZenCash Wallet CS",
-            "tAddrLabel" : "Public Key - T Address CS",
-            "privateKeyLabel": "Private Key CS",
-            "namePrint": "Name CS",
-            "exportPDFLabel": "Export PDF CS"
+            "zenCashWallet" : "ZenCash peněženka",
+            "tAddrLabel" : "Veřejný klíč - T adresa",
+            "privateKeyLabel": "Privátní klíč",
+            "namePrint": "Jméno",
+            "exportPDFLabel": "Export do PDF",
         },
         "batchWithdraw": {
             "label": "Hromadný výběr",
