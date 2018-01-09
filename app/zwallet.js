@@ -409,7 +409,7 @@ function addTransactions(txs, newTx = false) {
         const oldTxItem = txListNode.querySelector(`[data-txid='${txObj.txid}']`);
         if (oldTxItem) {
             if (oldTxItem.dataset.blockheight !== "-1") {
-                console.error("Attempting to replace transaction in block");
+                console.error(tr("wallet.transactionHistory.replaceAttempt","Attempting to replace transaction in block"));
             } else if (txObj.block >= 0) {
                 txListNode.replaceChild(createTxItem(txObj, newTx), oldTxItem);
             }

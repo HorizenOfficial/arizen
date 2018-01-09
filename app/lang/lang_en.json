@@ -13,6 +13,8 @@
     "fileReplace": "Do you want to replace file?",
     "walletReplace": "Replace wallet?",
     "walletReplaceMsg": "This will replace your actual wallet. Are you sure?",
+    "walletImported": "Wallet imported succesfully",
+    "walletImportFailed": "Import failed",
     "yes": "Yes",
     "no": "No"
   },
@@ -37,7 +39,8 @@
     "warningPasswordLength": "Be at least <strong>8 characters</strong>",
     "warningPasswordAgain": "Password must meet the following requirements:",
     "warningPasswordAgainIdentical": "<strong>Identical</strong>",
-    "errorCreationFailed": "Wallet creation failed"
+    "errorCreationFailed": "Wallet creation failed",
+    "errorFailedResponse": "Failed response"
   },
   "notification": {
     "settingsUpdated": "Settings updated",
@@ -72,11 +75,13 @@
     "renameWalletSetTo": "address ${0} set to ${1}",
     "fetchBlockchainFailed": "Failed to fetch blockchain changes:",
     "save": "Save",
+    "pdfExported": "PDF exported",
     "tabOverview": {
       "label": "Overview",
       "showZeroBalances" : "Show zero balances",
       "newAddress": "Get a new address",
-      "unnamedAddress": "Unnamed address"
+      "unnamedAddress": "Unnamed address",
+      "newAddressExists": "Address ${0} is already in the list"
     },
     "tabDeposit": {
       "label": "Deposit",
@@ -122,7 +127,8 @@
     },
     "transactionHistory": {
       "label": "Transaction History",
-      "unconfirmed": "UNCONFIRMED"
+      "unconfirmed": "UNCONFIRMED",
+      "replaceAttempt": "Attempting to replace transaction in block"
     },
     "transactionDetail": {
       "label": "Transaction Detail",

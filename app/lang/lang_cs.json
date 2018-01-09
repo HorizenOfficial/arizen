@@ -13,6 +13,8 @@
         "fileReplace": "Chcete soubor přepsat?",
         "walletReplace": "Přepsání peněženky?",
         "walletReplaceMsg": "Tato akce přepíše vaši aktuálné peněženku. Jste si jistý?",
+        "walletImported": "Peněženky byla importována",
+        "walletImportFailed": "Import selhal",
         "yes": "Ano",
         "no": "Ne"
     },
@@ -37,7 +39,8 @@
         "warningPasswordLength": "Být dlouhé minimálně <strong>8 znaků</strong>",
         "warningPasswordAgain": "Hesla musejí splnit následující požadavky",
         "warningPasswordAgainIdentical": "<strong>Musí být identické</strong>",
-        "errorCreationFailed": "Vytvoření peněženky selhalo"
+        "errorCreationFailed": "Vytvoření peněženky selhalo",
+        "errorFailedResponse": "Nezdařilo se"
     },
     "notification": {
         "settingsUpdated": "Nastavení aktualizováno",
@@ -72,11 +75,13 @@
         "renameWalletSetTo": "adresa ${0} nastavena na ${1}",
         "fetchBlockchainFailed": "Aktualizace blockchainu selhala:",
         "save": "Uložit",
+        "pdfExported": "PDF exportováno",
         "tabOverview": {
             "label": "Přehled",
             "showZeroBalances" : "Nulové adresy",
             "newAddress": "Nová adresa",
-            "unnamedAddress": "Nepojmenovaná adresa"
+            "unnamedAddress": "Nepojmenovaná adresa",
+            "newAddressExists": "Addresa ${0} je již v seznamu"
         },
         "tabDeposit": {
             "label": "Vklad",
@@ -122,7 +127,8 @@
         },
         "transactionHistory": {
             "label": "Historie transakcí",
-            "unconfirmed": "Čeká na potvrzení"
+            "unconfirmed": "Čeká na potvrzení",
+            "transactionReplaceAttempt": "Pokus o nahrazení transakce v bloku"
         },
         "transactionDetail": {
             "label": "Detail transakce",
