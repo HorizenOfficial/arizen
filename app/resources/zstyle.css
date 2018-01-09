@@ -31,18 +31,20 @@ body, .body {
 /* main look and feel */
 
 :root {
-    --arizen-fg: #f88900;
-    --panel-bg: #fefefe;
-    --border-color: #c4cddb;
-    --money-negative: #880000;
-    --money-positive: #00a820;
+    --arizen-fg: #244972;
+    --panel-bg:  #eeeeee;
+    --border-color:  #c4cddb;
+    --money-negative: #942824;
+    --money-positive: #69FFBD;
     --odd-bg: #eeeeee;
-    --hover-bg: yellow;
+    --hover-bg:  #69FFBD;
+    --hover-fg: #69FFBD;
 }
+/* #1B2F59; */
 
 body {
-    color: #444444;
-    background: #eeeeee;
+    color: #1B2F59;
+    background:  #eeeeee;
     font-family: 'Raleway', 'Lato', sans-serif;
 }
 
@@ -53,23 +55,25 @@ div {
 button {
     font: inherit;
     outline: none;
-    color: white;
+    color: var(--panel-bg);
     border: none;
     border-radius: 2px;
     padding: 4px 8px;
-    background: var(--arizen-fg) -webkit-linear-gradient(90deg,
+    background: var(--arizen-fg);
+    /*background: var(--arizen-fg) -webkit-linear-gradient(90deg,
         rgba(255, 255, 255, .1) 0%,
         transparent 0%,
         transparent 50%,
         rgba(255, 255, 255, .1) 50%,
         rgba(255, 255, 255, .1) 100%,
         transparent 100%,
-        transparent);
+        transparent);*/
 }
 
 button:not(:disabled):hover,
 button:not(:disabled):focus {
     filter: brightness(90%);
+    color: var(--hover-bg);
 }
 
 button:disabled {
@@ -77,7 +81,7 @@ button:disabled {
 }
 
 .smallButton {
-    padding: 1px 6px;
+    padding: 3px 6px;
 }
 
 input[type="text"],
@@ -85,7 +89,8 @@ input[type="number"],
 select,
 textarea {
     font: inherit;
-    color: inherit;
+    background: var(--panel-bg);
+    color:  var(--arizen-fg);
     outline: none;
     transition: all 0.2s;
 }
@@ -102,7 +107,7 @@ select
 input[type="text"]:focus,
 input[type="number"]:focus,
 select{
-    border-bottom: 3px solid var(--arizen-fg);
+    border-bottom: 3px solid var(--hover-fg);
     margin-bottom: 0;
 }
 
@@ -126,7 +131,7 @@ textarea {
 }
 
 textarea:focus {
-    border: 3px solid var(--arizen-fg);
+    border: 3px solid var(--hover-fg);
     margin: 0;
 }
 
