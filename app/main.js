@@ -22,6 +22,7 @@ const updater = require("electron-simple-updater");
 const fetch = require("node-fetch");
 const {List} = require("immutable");
 const {translate} = require("./util.js");
+const {DateTime} = require("luxon");
 
 // Press F12 to open the DevTools. See https://github.com/sindresorhus/electron-debug.
 require("electron-debug")();
@@ -192,6 +193,24 @@ function exportWallet(filename, encrypt) {
     storeFile(filename, data);
 }
 
+function saveWallet() {
+    const walletPath = getWalletPath() + userInfo.login + ".awd";
+
+    if (fs.existsSync(walletPath)) {
+        const backupDir = getWalletPath() + "backups";
+        if (!fs.existsSync(backupDir))
+            fs.mkdirSync(backupDir);
+        const timestamp = DateTime.local().toFormat("yyyyLLddHHmmss");
+        const backupPath = backupDir + "/" + userInfo.login + "-" + timestamp + ".awd";
+        //fs.copyFileSync(walletPath, backupPath);
+        // piece of shit node.js ecosystem, why the fuck do we have to deal with fs-extra crap here?
+        fs.copySync(walletPath, backupPath);
+    }
+
+    exportWallet(walletPath, true);
+    userInfo.dbChanged = false;
+}
+
 function generateNewAddress(count, password) {
     let i;
     let seedHex = passwordHash.generate(password, {
@@ -244,7 +263,7 @@ function getNewAddress(name) {
     pk = zencashjs.address.WIFToPrivKey(privateKeys[0]);
     addr = zencashjs.address.pubKeyToAddr(zencashjs.address.privKeyToPubKey(pk, true));
     userInfo.walletDb.run("INSERT INTO wallet VALUES (?,?,?,?,?)", [null, pk, addr, 0, name]);
-    userInfo.dbChanged = true;
+    saveWallet();
 
     return { addr: addr, name: name, lastbalance: 0, pk: pk, wif: privateKeys[0]};
 }
@@ -277,7 +296,7 @@ function loadSettings() {
 function saveSettings(settings) {
     const b64settings = Buffer.from(JSON.stringify(settings)).toString("base64");
     sqlRun("insert or replace into new_settings (name, value) values ('settings', ?)", [b64settings]);
-    userInfo.dbChanged = true;
+    saveWallet();
 }
 
 function upgradeDb() {
@@ -534,10 +553,8 @@ app.on("activate", function () {
 
 app.on("before-quit", function () {
     console.log("quitting");
-    if (true === userInfo.loggedIn && true === userInfo.dbChanged) {
-        userInfo.dbChanged = false;
-        exportWallet(getWalletPath() + userInfo.login + ".awd", true);
-    }
+    if (true === userInfo.loggedIn && true === userInfo.dbChanged)
+        saveWallet();
 });
 
 ipcMain.on("set-lang", function (event, lang) {
@@ -633,10 +650,8 @@ ipcMain.on("check-login-info", function (event) {
 
 ipcMain.on("do-logout", function () {
     updateMenuAtLogout();
-    if (true === userInfo.dbChanged) {
-        userInfo.dbChanged = false;
-        exportWallet(getWalletPath() + userInfo.login + ".awd", true);
-    }
+    if (true === userInfo.dbChanged)
+        saveWallet();
     userInfo.login = "";
     userInfo.pass = "";
     userInfo.walletDb = [];
@@ -883,6 +898,8 @@ function importPKs() {
         if (filenames) {
             for (let f of filenames)
                 importFromFile(f);
+            // TODO: save only if at least one key was inserted
+            saveWallet();
             updateBlockchainView(mainWindow.webContents);
         }
     });
@@ -926,7 +943,7 @@ ipcMain.on("rename-wallet", function (event, address, name) {
         sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet WHERE addr = '" + address + "'");
         if (sqlRes.length > 0) {
             userInfo.walletDb.exec("UPDATE wallet SET name = '" + name + "' WHERE addr = '" + address + "'");
-            userInfo.dbChanged = true;
+            saveWallet();
             resp = {
                 response: "OK",
                 msg: "address " + address + " set to " + name,
