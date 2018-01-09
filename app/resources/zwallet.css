@@ -52,7 +52,7 @@ header > *:nth-child(3) {
 }
 
 header button {
-	padding: 1px 6px;
+	padding: 2px 6px;
 }
 
 /* Wallet operations */
@@ -84,8 +84,8 @@ header button {
 
 .walletOpsTabs > button[selected] {
     background: inherit;
-    color: var(--arizen-fg);
-    border: 2px solid var(--arizen-fg);
+    color: var(--button-fg);
+    border: 1px solid var(--button-fg);
 }
 
 .tabContent {

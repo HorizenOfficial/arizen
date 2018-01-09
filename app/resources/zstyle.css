@@ -31,18 +31,22 @@ body, .body {
 /* main look and feel */
 
 :root {
-    --arizen-fg: #f88900;
-    --panel-bg: #fefefe;
-    --border-color: #c4cddb;
-    --money-negative: #880000;
-    --money-positive: #00a820;
-    --odd-bg: #eeeeee;
-    --hover-bg: yellow;
+    --arizen-fg: #115D95;
+    --panel-bg:  #ffffff;
+    --button-bg: #f3f3f3;
+    --button-fg: #115D95;
+    --border-color:  #c4cddb;
+    --money-negative: #942824;
+    --money-positive: #61b884;
+    --odd-bg: #f3f3f3;
+    --hover-bg:  #69FFBD;
+    --hover-fg: #69FFBD;
 }
+/* #1B2F59; */
 
 body {
-    color: #444444;
-    background: #eeeeee;
+    color: #115D95;;
+    background:  #f3f3f3;
     font-family: 'Raleway', 'Lato', sans-serif;
 }
 
@@ -53,31 +57,25 @@ div {
 button {
     font: inherit;
     outline: none;
-    color: white;
+    color: var(--button-fg);
     border: none;
-    border-radius: 2px;
-    padding: 4px 8px;
-    background: var(--arizen-fg) -webkit-linear-gradient(90deg,
-        rgba(255, 255, 255, .1) 0%,
-        transparent 0%,
-        transparent 50%,
-        rgba(255, 255, 255, .1) 50%,
-        rgba(255, 255, 255, .1) 100%,
-        transparent 100%,
-        transparent);
+    /*border-radius: 2px;*/
+    padding: 4px 10px;
+    background: var(--button-bg);
 }
 
 button:not(:disabled):hover,
 button:not(:disabled):focus {
-    filter: brightness(90%);
+    /*filter: brightness(90%);*/
+    background: var(--hover-bg);
 }
 
 button:disabled {
-    background: gray;
+    background: lightgray;
 }
 
 .smallButton {
-    padding: 1px 6px;
+    padding: 3px 6px;
 }
 
 input[type="text"],
@@ -85,7 +83,8 @@ input[type="number"],
 select,
 textarea {
     font: inherit;
-    color: inherit;
+    background: var(--panel-bg);
+    color:  var(--arizen-fg);
     outline: none;
     transition: all 0.2s;
 }
@@ -101,13 +100,12 @@ select
 
 input[type="text"]:focus,
 input[type="number"]:focus,
-select{
-    border-bottom: 3px solid var(--arizen-fg);
-    margin-bottom: 0;
+select:focus{
+    border-bottom: 1px solid var(--hover-fg);
 }
 
 select {
-    background: var(--arizen-bg);
+    background: var(--panel-bg);
 }
 
 select option {
@@ -122,12 +120,11 @@ select:focus > option:checked {
 
 textarea {
     border: 1px solid var(--arizen-fg);
-    margin: 2px;
+    margin: 0;
 }
 
 textarea:focus {
-    border: 3px solid var(--arizen-fg);
-    margin: 0;
+    border: 1px solid var(--hover-fg);
 }
 
 hr {
@@ -135,7 +132,7 @@ hr {
     width: 100%;
     border: 0;
     height: 1px;
-    background: var(--arizen-fg);
+    background: var(--hover-fg);
     flex-shrink: 0;
 }
 
