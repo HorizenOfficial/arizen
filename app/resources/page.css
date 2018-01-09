@@ -1,8 +1,7 @@
 .panel {
     padding: 5px;
     background: var(--panel-bg);
-    /*border: 1px solid var(--border-color);*/
-    /*box-shadow: 0 1px 1px #ccc;*/
+    border: 1px solid var(--border-color);
 }
 
 header {
