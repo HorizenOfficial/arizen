@@ -103,7 +103,12 @@
 
 <template id=addrMultiselectRowTemplate>
     <tr class=addrSelectRow>
-        <td><input class=addrSelectCheckbox type=checkbox /></td>
+        <td>
+          <label class=container>
+              <input class=addrSelectCheckbox type=checkbox />
+              <span class=checkmark></span>
+          </label>
+        </td>
         <td class=addrSelectRowName></td>
         <td class="addrSelectRowAddr monospace"></td>
         <td class=addrSelectRowBalance><span></span> ZEN</td>
