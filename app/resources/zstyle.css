@@ -218,7 +218,6 @@ arizen-dialog > [slot="content"] {
     min-width: 600px;
 }
 
-/* The container */
 .container {
     display: block;
     position: relative;
@@ -226,21 +225,18 @@ arizen-dialog > [slot="content"] {
     padding-right: 10px;
     margin-bottom: 12px;
     cursor: pointer;
-    /*font-size: 22px;*/
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
 }
 
-/* Hide the browser's default checkbox */
+
 .container input {
-    /*position: absolute;*/
     opacity: 0;
     cursor: pointer;
 }
 
-/* Create a custom checkbox */
 .checkmark {
     position: absolute;
     top: 0;
@@ -250,29 +246,24 @@ arizen-dialog > [slot="content"] {
     background-color: #bbb;
 }
 
-/* On mouse-over, add a grey background color */
 .container:hover input ~ .checkmark {
     background-color: var(--hover-fg);
 }
 
-/* When the checkbox is checked, add a blue background */
 .container input:checked ~ .checkmark {
     background-color: var(--arizen-fg);
 }
 
-/* Create the checkmark/indicator (hidden when not checked) */
 .checkmark:after {
     content: "";
     position: absolute;
     display: none;
 }
 
-/* Show the checkmark when checked */
 .container input:checked ~ .checkmark:after {
     display: block;
 }
 
-/* Style the checkmark/indicator */
 .container .checkmark:after {
     left: 9px;
     top: 5px;
@@ -284,3 +275,50 @@ arizen-dialog > [slot="content"] {
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
 }
+
+
+.createButtonCheck{
+    align-items: center;
+}
+
+.createWalletContainer{
+    text-align: center;
+}
+
+.newAddressPrintArea{
+    text-align: center;
+    margin:auto;
+    display:none;
+  }
+
+  .zenLogo {
+    text-align:center;
+  }
+
+  .namePrivateKey {
+    color:red;
+    display:block;
+  }
+
+  .qrPrivate {
+    display:block;
+  }
+
+  .keyPrivate {
+    font-size: 75%;
+    color:red;
+}
+
+  .nametAddr {
+    style="color:green;
+    display:block;
+  }
+
+  .qrtAddr {
+    display:block;
+  }
+
+  .tAddr {
+    font-size: 75%;
+    color:green;
+  }
