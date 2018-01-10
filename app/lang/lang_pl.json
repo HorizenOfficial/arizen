@@ -1,0 +1,89 @@
+{
+  "languageName": "Polski",
+  "languageValue": "pl",
+  "wallet": {
+    "showSettingsDialogButton" : "Ustawienia",
+    "showAboutDialogButton" : "O Programie",
+    "refreshWallet" : "Odśwież",
+    "logout" : "Wyloguj",
+    "exit" : "Wyjscie",
+    "date" : "Czas",
+    "from": "Nadawca",
+    "to": "Odbiorca",
+    "amount" : "Kwota",
+    "balance" : "Saldo",
+    "totalBalance": "Saldo Calkowite",
+    "lastUpdate": "Aktualizacja",
+    "showExplorer": "Pokaż ZEN Explorer",
+    "listOfAddresses": "Lista Adresow",
+    "tabOverview": {
+      "label": "Przegląd",
+      "showZeroBalances" : "Pokaż zerowe saldo",
+      "newAddress": "Nowy Adres",
+      "unnamedAddress": "Bez Nazwy"
+    },
+    "tabDeposit": {
+      "label": "Wpłacać",
+      "help": "Naciśnij zielony przycisk obok żądanego adresu, aby dokonać wpłaty.",
+      "messages": {
+        "emptyToAddr": "Adres odbiorcy jest pusty",
+        "unknownToAddr": "Adres do nie należy do tego portfela",
+        "zeroAmount": "Brak środków"
+      }
+    },
+    "tabWithdraw": {
+      "label": "Wyślij",
+      "help": "Naciśnij czerwony przycisk obok żądanego adresu, aby dokonać wypłaty.",
+      "availableBalance": "Dostępne saldo",
+      "fee": "Opłata transakcyjna",
+      "withdrawConfirmQuestion": "Czy na pewno chcesz realizować tę transakcję",
+      "messages": {
+        "emptyFromAddr": "Adres nadawcy jest pusty",
+        "unknownFromAddr": "Adres nadawcy nie należy do tego portfela",
+        "emptyToAddr": "Adres odbiorcy jest pusty",
+        "zeroAmount": "Brak środków",
+        "insufficientFunds": "Niewystarczające środki na adresie nadawcy",
+        "error": "Wystąpił Błąd",
+        "success": "Transakcja została pomyślnie zrealizowana"
+      }
+    },
+    "transactionHistory": {
+      "label": "Historia transakcji",
+      "unconfirmed": "NIEPOTWIERDZONE"
+    },
+    "transactionDetail": {
+      "label": "Szczegóły transakcji",
+      "txid": "ID Transakcji",
+      "blockHeight": "Wysokość Bloku",
+      "unconfirmedTx": "NIEPOTWIERDZONE TRANSAKCJE"
+    },
+    "addressDetail": {
+      "label": "Szczegóły Adresu",
+      "name": "Nazwa",
+      "address": "Adres",
+      "saveButton": "Zapisz Zmiany"
+    },
+    "newAddress": {
+      "label": "Utwórz Nowy Adres",
+      "name": "Nazwa (niewymagane)",
+      "createButton": "Utwórz"
+    },
+    "about": {
+      "label": "Klient Arizen",
+      "homepage": "Panel główny",
+      "version": "Wersja",
+      "license": "Licencja",
+      "authors": "Autorzy"
+    },
+    "settings": {
+      "label": "Ustawienia",
+      "limit": "Limity Transakcji",
+      "items": "Pozycja",
+      "language": "Jezyk",
+      "explorerUrl": "ZEN Explorer URL",
+      "apiUrl": "API URLs",
+      "fiat": "Wartosc Fiat",
+      "save": "Zapisz"
+    }
+  }
+}
