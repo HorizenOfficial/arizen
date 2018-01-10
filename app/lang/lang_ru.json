@@ -1,0 +1,203 @@
+{
+  "languageName": "Русский",
+  "languageValue": "ru",
+  "langFileVersion": "1",
+  "login": {
+    "label": "Arizen: Войти",
+    "username": "Имя пользователя",
+    "password": "Пароль",
+    "loginButton": "Войти",
+    "createWalletLink": "Создать кошелёк",
+    "warningWrongUsernameOrPassword": "Неверное <strong>имя пользователя</strong> или <strong>пароль</strong>",
+    "dataImportFailed": "Импорт данных не удался, возможная причина неверные учётные данные",
+    "fileReplace": "Вы действительно хотите заменить файл?",
+    "walletReplace": "Заменить кошелёк?",
+    "walletReplaceMsg": "Это действие заменит Ваш нынешний кошелёк. Вы уверенны?",
+    "walletImported": "Кошелёк успешно импортирован",
+    "walletImportFailed": "Не удалось импортировать",
+    "yes": "Да",
+    "no": "Нет"
+  },
+  "createWallet": {
+    "label": "Arizen: Создать кошелёк",
+    "username": "Имя пользователя",
+    "password": "Пароль",
+    "passwordAgain": "Повторите пароль" ,
+    "oldUsername": "Предыдущее имя пользователя: ",
+    "oldPassword": "Предыдущий пароль: ",
+    "selectWallet": "Выбрать кошелёк",
+    "selectWalletButton": "Поиск",
+    "createWalletButton": "Создать кошелёк",
+    "loginLink": "Войти",
+    "warningUsername": "Имя пользователя должно соответствовать данным требованиям:",
+    "warningUsernameLength": "Как минимум <strong>четыри буквы</strong>",
+    "warningPassword": "Пароль должен соответствовать данным требованиям:",
+    "warningPasswordLetter": "Как минимум <strong>одна буква</strong>",
+    "warningPasswordCapitalLetter": "Как минимум <strong>одна заглавная буква</strong>",
+    "warningPasswordNumber": "Как минимум <strong>одна цифра</strong>",
+    "warningPasswordSpecial": "Как минимум <strong>один специальный символ</strong>",
+    "warningPasswordLength": "Содержать как минимум <strong>8 букв</strong>",
+    "warningPasswordAgain": "Пароль должен соответствовать данным требованиям:",
+    "warningPasswordAgainIdentical": "<strong>Идентичный</strong>",
+    "errorCreationFailed": "Не удалось создать кошелёк",
+    "errorFailedResponse": "Нет ответа"
+  },
+  "notification": {
+    "settingsUpdated": "Настройки обновлены",
+    "balanceUpdated": "Баланс обновлён",
+    "newTransactions": "Новая транзакция"
+  },
+  "importExportPks": {
+    "chooseFileExport" : "Выберите файл для хранения приватных ключей",
+    "chooseFileImport" : "Выберите файл с приватными ключами",
+    "InvalidLinePk": "Неверная строка ${0} в файле с приватными ключами",
+    "InvalidPk": "Неверный приватный ключ в строке ${0} в файле с приватными ключами"
+  },
+  "wallet": {
+    "showSettingsDialogButton" : "Настройки",
+    "showAboutDialogButton" : "О программе",
+    "refreshWallet" : "Обновить",
+    "logout" : "Сменить пользователя",
+    "exit" : "Выйти",
+    "date" : "Дата",
+    "from": "От",
+    "to": "Кому",
+    "amount" : "Сумма",
+    "balance" : "Баланс",
+    "totalBalance": "Общий Баланс",
+    "lastUpdate": "Последнее Обновление",
+    "showExplorer": "Показать в ZEN Explorer",
+    "listOfAddresses": "Список Адресов",
+    "showBatchWithdrawDialog": "Массовое Снятие",
+    "notLoggedIn": "Не вошли в пользователя",
+    "addressNotFound": "адрес не найден",
+    "nameNotFound": "имя не найдено",
+    "renameWalletSetTo": "Адресс ${0} переименован в ${1}",
+    "fetchBlockchainFailed": "Ошибка обновления изменений в блокчейне:",
+    "save": "Сохранить",
+    "pdfExported": "PDF экспортирован",
+    "tabOverview": {
+      "label": "Обзор",
+      "showZeroBalances" : "Показывать нулевые балансы",
+      "newAddress": "Получить новый адрес",
+      "unnamedAddress": "Адрес без имени",
+      "newAddressExists": "Адрес ${0} уже есть в списке"
+    },
+    "tabDeposit": {
+      "label": "Получить",
+      "help": "Нажмите на зелёную кнопку возле необходимого адреса для депозита.",
+      "saveQrcode": "Сохранить QR код",
+      "messages": {
+        "emptyToAddr": "Отсутствует адрес получателя",
+        "unknownToAddr": "Адрес отправителя отсутствует на этом кошельке",
+        "zeroAmount": "Сумма не положительная"
+      }
+    },
+    "tabWithdraw": {
+      "label": "Отправить",
+      "help": "Нажмите на красную кнопку возле необходимого адреса для снятия.",
+      "availableBalance": "Доступный баланс",
+      "fee": "Комиссия",
+      "txStatus" : "Статус транзакции",
+      "withdrawConfirmQuestion": "Вы уверенны что хотите совершить эту транзакцию?",
+      "messages": {
+        "emptyFromAddr": "Отсутствует адрес отправителя",
+        "unknownFromAddr": "Адреса отправителя нет на Вашем кошельке",
+        "insufficientFirstSource" : "Недостаточно средств в 1 источнике (Минимум: пороговое значение + комиссия)!",
+        "insufficientNextSource" : "Недостаточно средств в 2 и следующих источниках (Минимум: пороговое значение + комиссия)!",
+        "numberOfKeys": "# приватных ключей и # адресов не совпадают!",
+        "sumLowerThanFee": "Ваш суммарный баланс со всех адрессов меньше комиссии за транзакцию!",
+        "zenApi": "Zen API не установлен в настройках!",
+        "unknownAddress": "Адресс отправителя отсутствует в Вашем кошельке!",
+        "insufficientFundsSourceAddr": "Недостаточно средств на адресе отправителя",
+        "emptyToAddr": "Отсутствует адрес получателя",
+        "zeroAmount": "Сумма не положительная",
+        "insufficientFunds": "Недостаточно средств на адресе отправителя",
+        "fromAddressBadLength" : "Неверная длинна адреса отправителя!",
+        "fromAddressBadPrefix" : "Неверный префикс адреса отправителя - он должен начинаться с 'zn'!",
+        "toAddressBadLength": "Неверная длинна адреса получателя!",
+        "toAddressBadPrefix": "Неверный префикс адреса получателя - он должен начинаться с 'zn'!",
+        "amounNotNumber": "Сумма не является числом",
+        "amountIsZero": "Сумма должна быть больше нуля!",
+        "feeNotNumber": "Комиссия не является числом!",
+        "feeIsNegative": "Комиссия должна быть более или равняться нулю!",
+        "error": "Ошибка",
+        "success": "Транзакция была успешно отправлена"
+      }
+    },
+    "transactionHistory": {
+      "label": "История Транзакций",
+      "unconfirmed": "НЕПОДТВЕРЖДЕНО",
+      "replaceAttempt": "Попытка заменить транзакцию в блоке"
+    },
+    "transactionDetail": {
+      "label": "Детали Транзакции",
+      "txid": "Номер Транзакции",
+      "blockHeight": "Размер Блока",
+      "unconfirmedTx": "НЕПОДТВЕРЖДЕННАЯ ТРАНЗАКЦИЯ"
+    },
+    "addressDetail": {
+      "label": "Детали Адреса",
+      "name": "Имя",
+      "address": "Адрес",
+      "saveButton": "Сохранить изменения"
+    },
+    "newAddress": {
+      "label": "Создать Новый Адрес",
+      "name": "Имя (опционально)",
+      "createButton": "Создать"
+    },
+    "about": {
+      "label": "Про Arizen",
+      "homepage": "Домашняя Страница",
+      "version": "Версия",
+      "license": "Лицензия",
+      "authors": "Разработчики"
+    },
+    "settings": {
+      "label": "Настройки",
+      "limit": "Лимит транзакции",
+      "items": "items",
+      "language": "Язык",
+      "explorerUrl": "Ссылка на ZEN Explorer",
+      "apiUrl": "Ссылка на API",
+      "fiat": "Денежный Эквивалент",
+      "save": "Сохранить"
+    },
+    "paperWallet": {
+      "label": "Бумажный кошелёк",
+      "generateNewWallet": "Создать новый кошелёк",
+      "name": "Имя (опционально)",
+      "addWalletToArizen": "Добавить этот кошелёк в Arizen",
+      "zenCashWalletLabel" : "ZenCash кошелёк",
+      "tAddrLabel" : "Публичный Ключ - T Адрес",
+      "privateKeyLabel": "Приватный Ключ",
+      "namePrint": "Имя",
+      "exportPDFLabel": "Экспортировать в PDF"
+    },
+    "batchWithdraw": {
+      "label": "Массовое Снятие",
+      "keepAmount": "Оставить Сумму",
+      "txFee": "Комиссия"
+    }
+  },
+  "menu": {
+    "file" : "Файл",
+    "backupEncrypted":  "Создать резервную копию ЗАШИФРОВАННОГО кошелька",
+    "backupUnencrypted": "Создать резервную копию НЕЗАШИФРОВАННОГО кошелька",
+    "importEncrypted": "Импортировать ЗАШИФРОВАННЫЙ Arizen кошелёк",
+    "importUnencrypted": "Импортировать НЕЗАШИФРОВАННЫЙ Arizen кошелёк",
+    "importPrivateKeys": "Импортировать приватные ключи",
+    "exportPrivateKeys": "Экспортировать приватные ключи",
+    "exit": "Выйти",
+    "edit": "Изменить",
+    "editSubmenu": {
+      "undo": "Отменить",
+      "redo": "Вернуть",
+      "cut": "Вырезать",
+      "copy": "Копировать",
+      "paste": "Вставить",
+      "selectAll": "Выбрать всё"
+    }
+  }
+}
