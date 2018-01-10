@@ -55,7 +55,7 @@
   },
   "wallet": {
     "showSettingsDialogButton" : "Ρυθμίσεις",
-    "showAboutDialogButton" : "Περί",
+    "showAboutDialogButton" : "Σχετικά",
     "refreshWallet" : "Ανανέωση",
     "logout" : "Αποσύνδεση",
     "exit" : "Έξοδος",
@@ -64,11 +64,11 @@
     "to": "Σε",
     "amount" : "Ποσό",
     "balance" : "Υπόλοιπο",
-    "totalBalance": "Ολικό υπόλοιπο",
+    "totalBalance": "Συνολικό υπόλοιπο",
     "lastUpdate": "Τελευταία ενημέρωση",
-    "showExplorer": "Δες το στον εξερευνητή ZEN",
+    "showExplorer": "Προβολή στον εξερευνητή ZEN",
     "listOfAddresses": "Λίστα διευθύνσεων",
-    "showBatchWithdrawDialog": "Ανάληψη παρτίδας",
+    "showBatchWithdrawDialog": "Ομαδική ανάληψη",
     "notLoggedIn": "Δεν έχετε συνδεθεί",
     "addressNotFound": "η διεύθυνση δεν βρέθηκε",
     "nameNotFound": "το όνομα δεν βρέθηκε",
@@ -78,8 +78,8 @@
     "pdfExported": "Το PDF εξήλθε",
     "tabOverview": {
       "label": "Επισκόπηση",
-      "showZeroBalances" : "Εμφάνιση μηδενικού υπολοίπου",
-      "newAddress": "Πάρε καινούρια διεύθυνση",
+      "showZeroBalances" : "Εμφάνιση μηδενικών υπολοίπων",
+      "newAddress": "Δημιουργία καινούριας διεύθυνσης",
       "unnamedAddress": "Ανώνυμη διεύθυνση",
       "newAddressExists": "Η διεύθυνση ${0} βρίσκεται ήδη στη λίστα"
     },
@@ -97,7 +97,7 @@
       "label": "Ανάληψη",
       "help": "Κάντε κλικ στο κόκκινο κουμπί δίπλα στην επιθυμητή διεύθυνση για ανάληψη.",
       "availableBalance": "Διαθέσιμο υπόλοιπο",
-      "fee": "Τέλη συναλλαγής",
+      "fee": "Τέλος συναλλαγής (fee)",
       "txStatus" : "Κατάσταση συναλλαγής",
       "withdrawConfirmQuestion": "Θέλετε πραγματικά να στείλετε αυτήν τη συναλλαγή;",
       "messages": {
@@ -106,7 +106,7 @@
         "insufficientFirstSource" : "Ανεπαρκής κεφάλαια στην 1η πηγή (Ελάχιστο όριο: όριο + τέλη)!",
         "insufficientNextSource" : "Ανεπαρκής κεφάλαια στην 2η ή στην επόμενη πηγή (Ελάχιστο όριο: όριο + τέλη)!",
         "numberOfKeys": "# ιδιωτικά κλειδιά και # διευθύνσεις δεν είναι ίσες!",
-        "sumLowerThanFee": "Το αθροισμένο υπόλοιπό σας σε όλες τις διευθύνσεις πηγής είναι χαμηλότερο από τα τέλη!",
+        "sumLowerThanFee": "Το συνολικό υπόλοιπό σας σε όλες τις διευθύνσεις πηγής είναι χαμηλότερο από τα τέλη!",
         "zenApi": "Το Zen API δεν έχει οριστεί στις ρυθμίσεις!",
         "unknownAddress": "Η διεύθυνση πηγής δεν βρίσκεται στο πορτοφόλι σας!",
         "insufficientFundsSourceAddr": "Ανεπαρκής κεφάλαια στη διεύθυνση προέλευσης",
@@ -126,7 +126,7 @@
       }
     },
     "transactionHistory": {
-      "label": "Ιστορικό συναλλαγών",
+      "label": "Ιστορικό Συναλλαγών",
       "unconfirmed": "ανεπιβεβαίωτες",
       "replaceAttempt": "Προσπάθεια αντικατάστασης συναλλαγής στο block"
     },
@@ -148,9 +148,9 @@
       "createButton": "Δημιουργία"
     },
     "about": {
-      "label": "Περί Arizen",
+      "label": "Σχετικά με το Arizen",
       "homepage": "Αρχική σελίδα",
-      "version": "Εκδοχή",
+      "version": "Έκδοση",
       "license": "Άδεια",
       "authors": "Συγγραφείς"
     },
@@ -162,7 +162,7 @@
       "explorerUrl": "ZEN Εξερευνητής URL",
       "apiUrl": "API URLs",
       "fiat": "Ισοδύναμο πραγματικών χρημάτων",
-      "save": "Αποθηκεύση"
+      "save": "Αποθήκευση"
     },
     "paperWallet": {
       "label": "Χάρτινο Πορτοφόλι",
@@ -176,9 +176,9 @@
       "exportPDFLabel": "Εξαγωγή PDF"
     },
     "batchWithdraw": {
-      "label": "Ανάληψη παρτίδας",
+      "label": "Ομαδική ανάληψη",
       "keepAmount": "Ποσό να κρατηθεί",
-      "txFee": "Τέλη συναλλαγής"
+      "txFee": "Τέλος συναλλαγής"
     }
   },
   "menu": {
