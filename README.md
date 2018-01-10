@@ -98,12 +98,17 @@ npm run dist
       <span id=totalBalance class=bigLabel>
 
 # Screenshots
-![Overview of walet](https://i.imgur.com/rQKZ3FL.png)
-![Overview of walet 2](https://i.imgur.com/wm4SXkY.png)
-![List of addresses](https://i.imgur.com/zCxibuz.png)
-![Transaction detail](https://i.imgur.com/4oFREfR.png)
-![Settings](https://i.imgur.com/TFfrQMD.png)
-![About](https://i.imgur.com/Vb3ao6m.png)
+![Login](https://i.imgur.com/XHrnuPW.png)
+![Create wallet](https://i.imgur.com/lz5MqmT.png)
+![Batch withdraw](https://i.imgur.com/BupAdvT.png)
+![Paper wallet](https://i.imgur.com/4xv5CJ7.png)
+![Send function](https://i.imgur.com/Et9brcA.png)
+![Send function 2](https://i.imgur.com/8vGUBm7.png)
+![Deposit](https://i.imgur.com/vlDC6ZT.png)
+![Settings](https://i.imgur.com/BvefqHy.png)
+![About](https://i.imgur.com/66z29EY.png)
+![Notification](https://i.imgur.com/WdW0WMK.png)
+
 
 [david-img]: https://david-dm.org/ZencashOfficial/arizen.svg?style=flat-square
 [david-url]: https://david-dm.org/ZencashOfficial/arizen
