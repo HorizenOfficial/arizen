@@ -105,6 +105,7 @@ npm run dist
 ![Create wallet](https://i.imgur.com/lz5MqmT.png)
 ![Batch withdraw](https://i.imgur.com/BupAdvT.png)
 ![Paper wallet](https://i.imgur.com/4xv5CJ7.png)
+![Paper wallet 2](https://i.imgur.com/yifwnaW.png)
 ![Send function](https://i.imgur.com/Et9brcA.png)
 ![Send function 2](https://i.imgur.com/8vGUBm7.png)
 ![Deposit](https://i.imgur.com/vlDC6ZT.png)
