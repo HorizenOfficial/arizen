@@ -2,6 +2,8 @@
 <html>
 <head>
     <title>Arizen: Create Wallet</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
     <link rel="stylesheet" href="resources/login_styles.css">
     <link rel="stylesheet" href="resources/create_wallet.css">
 
@@ -9,30 +11,30 @@
 </head>
 
 <body>
-<div id="topHeader" class="topHeader">
+<div id="topHeader" class="topHeader" style="text-align:center; margin:auto; vertical-align: middle;">
     <!-- Inspection tool is to verbose here, it is only information that the size of the source image is different than
          the size in the page (image is resized)-->
-    <img style="padding-left:500px; vertical-align: middle;" src="resources/zen_icon.png" width="40px"/>
+    <img src="resources/zen_icon.png" width="40px"/>
 </div>
 
 <div id="container">
     <form>
         <ul>
             <li>
-                <span style="text-align:center;"><label for="username">Username</label></span>
+                <span style="text-align:center;"><label id="username_label" for="username" data-tr=createWallet.username>Username</label></span>
                 <span><input id="username" class="inputs" name="username" tabindex="1" onkeyup="checkLogin();" onfocus="selectColumn(true, false, false);"/></span>
             </li>
             <li>
-                <span style="text-align:center;"><label for="pswd">Password</label></span>
+                <span style="text-align:center;"><label id="pswd_label" for="pswd" data-tr=createWallet.password>Password</label></span>
                 <span><input id="pswd" class="inputs" name="pswd" type="password" onkeyup="checkPasswd();" tabindex="2" onfocus="selectColumn(false, true, false);"/></span>
             </li>
             <li>
-                <span style="text-align:center;"><label for="pswd_again">Password again</label></span>
+                <span style="text-align:center;"><label id="pswd_again_label" for="pswd_again" data-tr=createWallet.passwordAgain>Password again</label></span>
                 <span><input id="pswd_again" class="inputs" name="pswd_again" type="password" onkeyup="checkPasswdAgain();" tabindex="3" onfocus="selectColumn(false, false, true);checkPasswdAgain();"/></span>
             </li>
             <li>
-                    <span class="marginLeft5p">Select Wallet
-                    <input id="btWalletButton" class="buttons btWalletButtonClass" name="btWalletButton" type="button" value="Browse" tabindex="4" onclick="document.getElementById('btWallet').click();"/>
+                    <span class="marginLeft5p" data-tr=createWallet.selectWallet>Select Wallet
+                    <input id="btWalletButton" class="buttons btWalletButtonClass" name="btWalletButton" type="button" data-tr=createWallet.selectWalletButton value="Browse" tabindex="4" onclick="document.getElementById('btWallet').click();"/>
                     <input id="btWallet" name="btWallet" style="display: none;" type='file' accept=".awd,.uawd" onchange="handleWalletFile()"/>
                     </span>
                     <span id="btWalletFilename" class="right"></span>
@@ -40,8 +42,14 @@
             </li>
             <li>
                 <div id="old_username_area">
-                    <span><input id="old_username" class="inputs_small" name="old_username" onfocus="" placeholder="Old Username" /></span>
-                    <span><input id="old_pswd" class="inputs_small" name="old_pswd" type="password" onfocus="" placeholder="Old Password"/></span>
+                    <span>
+                      <label data-tr=createWallet.oldUsername>Old username: </label>
+                      <input id="old_username" class="inputs_small input_smaller" name="old_username" onfocus="" />
+                    </span>
+                    <span>
+                      <label data-tr=createWallet.oldPassword>Old password: </label>
+                      <input id="old_pswd" class="inputs_small input_smaller" name="old_pswd" type="password" onfocus=""/>
+                    </span>
                 </div>
             </li>
             <li>
@@ -49,35 +57,35 @@
             </li>
         </ul>
         <div class="right">
-            <a href="./login.html" class="create_wallet_link">Login</a>
+            <a href="./login.html" class="create_wallet_link" data-tr=createWallet.loginLink>Login</a>
         </div>
     </form>
 
     <div id="username_info">
-        <h4>Username must meet the following requirements:</h4>
+        <h4 data-tr=createWallet.warningUsername>Username must meet the following requirements:</h4>
         <ul>
-            <li id="usrnm_length_info" class="invalid">At least <strong>four letters</strong></li>
+            <li id="usrnm_length_info" class="invalid" data-tr=createWallet.warningUsernameLength>At least <strong>four letters</strong></li>
         </ul>
     </div>
-    <div id="pswd_info">
+    <div id="pswd_info"  data-tr=createWallet.warningPassword>
         <h4>Password must meet the following requirements:</h4>
         <ul>
-            <li id="letter_info" class="invalid">At least <strong>one letter</strong></li>
-            <li id="capital_info" class="invalid">At least <strong>one capital letter</strong></li>
-            <li id="number_info" class="invalid">At least <strong>one number</strong></li>
-            <li id="special_info" class="invalid">At least <strong>one special character</strong></li>
-            <li id="length_info" class="invalid">Be at least <strong>8 characters</strong></li>
+            <li id="letter_info" class="invalid" data-tr=createWallet.warningPasswordLetter>At least <strong>one letter</strong></li>
+            <li id="capital_info" class="invalid" data-tr=createWallet.warningPasswordCapitalLetter>At least <strong>one capital letter</strong></li>
+            <li id="number_info" class="invalid" data-tr=createWallet.warningPasswordNumber>At least <strong>one number</strong></li>
+            <li id="special_info" class="invalid" data-tr=createWallet.warningPasswordSpecial>At least <strong>one special character</strong></li>
+            <li id="length_info" class="invalid" data-tr=createWallet.warningPasswordLength>Be at least <strong>8 characters</strong></li>
         </ul>
     </div>
     <div id="pswd_identical_info">
-        <h4>Password must meet the following requirements:</h4>
+        <h4 data-tr=createWallet.warningPasswordAgain>Password must meet the following requirements:</h4>
         <ul>
-            <li id="identical_info" class="invalid"><strong>Identical</strong></li>
+            <li id="identical_info" class="invalid" data-tr=createWallet.warningPasswordAgainIdentical><strong>Identical</strong></li>
         </ul>
     </div>
 
     <div id="wallet_creation_info_area">
-        <h4>Wallet creation failed</h4>
+        <h4 data-tr=createWallet.errorCreationFailed>Wallet creation failed</h4>
         <ul>
             <li id="wallet_creation_info" class="invalid"></li>
         </ul>

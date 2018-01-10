@@ -1,35 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Arizen: Login</title>
+    <title data-tr=login.title>Arizen: Login</title>
     <link rel="stylesheet" href="resources/login_styles.css">
     <script src="login.js"></script>
 </head>
 
 <body>
-<div id="topHeader" class="topHeader">
+<div id="topHeader" class="topHeader" style="text-align:center; margin:auto; vertical-align: middle;">
     <!-- same as in create_wallet.html -->
-    <img style="padding-left:500px; vertical-align: middle;" src="resources/zen_icon.png" width="40px">
+    <img src="resources/zen_icon.png" width="40px">
 </div>
 <div id="container">
     <!--<h1>Password Authentication</h1> -->
-    <form>
+    <form onsubmit="return false;">
         <ul>
             <li>
-                <span style="text-align:center;"><label for="username">Username</label></span>
+                <span style="text-align:center;"><label for="username" data-tr=login.username>Username</label></span>
                 <span><input id="username" class="inputs" name="username" tabindex="1" required autofocus></span>
             </li>
             <li>
-                <span style="text-align:center;"><label for="pswd">Password</label></span>
+                <span style="text-align:center;"><label for="pswd" data-tr=login.password>Password</label></span>
                 <span><input id="pswd" class="inputs" name="pswd" type="password" tabindex="2" required autofocus></span>
             </li>
             <li>
                 <!-- type has to be "submit" -- ENTER doesnt work with button -->
-                <input id="btSubmit" class="buttons" name="btSubmit" type="submit" value="Login" onclick="doLogin();" tabindex="3">
+                <input id="btSubmit" class="buttons" name="btSubmit" type="submit" data-tr=login.loginButton value="Login" onclick="doLogin();" tabindex="3">
             </li>
         </ul>
         <div class="right">
-            <a href="create_wallet.html" class="create_wallet_link">Create Wallet</a>
+            <a href="create_wallet.html" class="create_wallet_link" data-tr=login.createWalletLink>Create Wallet</a>
         </div>
     </form>
     <div id="login_pswd_info" style="display:none">
