@@ -1,0 +1,203 @@
+{
+  "languageName": "Español",
+  "languageValue": "es",
+  "langFileVersion": "1",
+  "login": {
+    "label": "Arizen: Acceder",
+    "username": "Nombre de usuario",
+    "password": "Contraseña",
+    "loginButton": "Iniciar sesión",
+    "createWalletLink": "Crear Billetera",
+    "warningWrongUsernameOrPassword": "Incorrecto <strong>nombre de usuario</strong> o <strong>contraseña</strong>",
+    "dataImportFailed": "Error en la importación de datos. Por favor, compruebe su nombre de usuario o contraseña",
+    "fileReplace": "¿Desea reemplazar el archivo?",
+    "walletReplace": "¿Quieres reemplazar esta billetera?",
+    "walletReplaceMsg": "Esto reemplazará tu billetera actual. ¿Estás seguro?",
+    "walletImported": "Su billetera importada con éxito",
+    "walletImportFailed": "La importación falló",
+    "yes": "Sí",
+    "no": "No"
+  },
+  "createWallet": {
+    "label": "Arizen: Crear billetera",
+    "username": "Nombre de usuario",
+    "password": "Contraseña",
+    "passwordAgain": "Ingresa tu contraseña nuevamente" ,
+    "oldUsername": "Nombre de usuario anterior: ",
+    "oldPassword": "Contraseña anterior: ",
+    "selectWallet": "Seleccione una billetera",
+    "selectWalletButton": "Vistazo",
+    "createWalletButton": "Crear billetera",
+    "loginLink": "Iniciar sesión",
+    "warningUsername": "Su nombre de usuario debe cumplir con los siguientes requisitos:",
+    "warningUsernameLength": "Al menos <strong>cuatro letras</strong>",
+    "warningPassword": "Su contraseña debe cumplir los siguientes requisitos:",
+    "warningPasswordLetter": "Al menos <strong>uno letra</strong>",
+    "warningPasswordCapitalLetter": "Al menos <strong>una mayúscula</strong>",
+    "warningPasswordNumber": "Al menos <strong>un número</strong>",
+    "warningPasswordSpecial": "Al menos <strong>uno tipo de letra de imprenta special</strong>",
+    "warningPasswordLength": "Tener al menos <strong>8 caracteres</strong>",
+    "warningPasswordAgain": "Su contraseña debe cumplir los siguientes requisitos:",
+    "warningPasswordAgainIdentical": "<strong>Idéntico</strong>",
+    "errorCreationFailed": "Creación de billetera fallida",
+    "errorFailedResponse": "Respuesta fallida"
+  },
+  "notification": {
+    "settingsUpdated": "Tu configuración está actualizada",
+    "balanceUpdated": "Su saldo se actualiza",
+    "newTransactions": "Nueva transacción"
+  },
+  "importExportPks": {
+    "chooseFileExport" : "Elija un archivo para claves privadas",
+    "chooseFileImport" : "Elija un archivo con claves privadas",
+    "InvalidLinePk": "Línea no válida ${0} en el archivo de claves privadas",
+    "InvalidPk": "Clave privada no válida en línea ${0} en el archivo de claves privadas"
+  },
+  "wallet": {
+    "showSettingsDialogButton" : "Configuraciones",
+    "showAboutDialogButton" : "Acerca de",
+    "refreshWallet" : "Actualizar",
+    "logout" : "Cerrar sesión",
+    "exit" : "Salida",
+    "date" : "Fecha",
+    "from": "De",
+    "to": "A",
+    "amount" : "Cantidad",
+    "balance" : "Balance",
+    "totalBalance": "Balance total",
+    "lastUpdate": "Última actualización",
+    "showExplorer": "Mostrar en ZEN explorer",
+    "listOfAddresses": "Lista de direcciones",
+    "showBatchWithdrawDialog": "Retirada múltiple",
+    "notLoggedIn": "Sin iniciar sesión",
+    "addressNotFound": "dirección no encontrada",
+    "nameNotFound": "nombre no encontrado",
+    "renameWalletSetTo": "direccion ${0} ajustado a ${1}",
+    "fetchBlockchainFailed": "Error al refrescar los cambios de cadena de bloques:",
+    "save": "Salvar",
+    "pdfExported": "PDF exportado",
+    "tabOverview": {
+      "label": "Visión de conjunto",
+      "showZeroBalances" : "Mostrar saldos cero",
+      "newAddress": "Obtener una nueva dirección",
+      "unnamedAddress": "Dirección sin nombre",
+      "newAddressExists": "Dirección ${0} ya está en la lista"
+    },
+    "tabDeposit": {
+      "label": "Depositar",
+      "help": "Haga clic en el botón verde al lado de la dirección deseada para depositar.",
+      "saveQrcode": "Guardar código QR",
+      "messages": {
+        "emptyToAddr": "La dirección a está vacía",
+        "unknownToAddr": "The to address does not belong to this wallet",
+        "zeroAmount": "La cantidad no es positiva"
+      }
+    },
+    "tabWithdraw": {
+      "label": "Retirar",
+      "help": "Haga clic en el botón rojo al lado de la dirección deseada para la extracción.",
+      "availableBalance": "Saldo disponible",
+      "fee": "Tarifa de transacción",
+      "txStatus" : "Estado de la transacción",
+      "withdrawConfirmQuestion": "¿Quieres enviar esta transacción?",
+      "messages": {
+        "emptyFromAddr": "La dirección desde está vacía",
+        "unknownFromAddr": "La dirección de origen no pertenece a esta billetera",
+        "insufficientFirstSource" : "¡Fondos insuficientes en la primera fuente (mínimo: límite de límite más cargo)!",
+        "insufficientNextSource" : "¡Fondos insuficientes en la segunda o la próxima fuente (mínimo: límite de límite más cargo)!",
+        "numberOfKeys": "# las claves privadas y # las direcciones no son iguales!",
+        "sumLowerThanFee": "¡Su saldo total entre las direcciones de origen es inferior a la tarifa!",
+        "zenApi": "¡ZEN API no está configurado en la configuración!",
+        "unknownAddress": "¡La dirección de la fuente no está en su billetera!",
+        "insufficientFundsSourceAddr": "Fondos insuficientes en la dirección de origen",
+        "emptyToAddr": "La dirección a está vacía",
+        "zeroAmount": "La cantidad no es positiva",
+        "insufficientFunds": "La dirección de origen tiene fondos insuficientes",
+        "fromAddressBadLength" : "¡Longitud incorrecta de la dirección de origen!",
+        "fromAddressBadPrefix" : "Malo desde el prefijo de la dirección - ¡debe ser 'zn'!",
+        "toAddressBadLength": "¡Longitud incorrecta de la dirección de destino!",
+        "toAddressBadPrefix": "Prefijo de dirección de destino incorrecto: debe ser 'zn'!",
+        "amounNotNumber": "La cantidad no es un número",
+        "amountIsZero": "¡La cantidad tiene que ser mayor que cero!",
+        "feeNotNumber": "¡La tarifa no es un número!",
+        "feeIsNegative": "¡La tarifa tiene que ser mayor o igual a cero!",
+        "error": "Error",
+        "success": "La transacción fue completada"
+      }
+    },
+    "transactionHistory": {
+      "label": "Historial de transacciones",
+      "unconfirmed": "Inconfirmado",
+      "replaceAttempt": "Intentando reemplazar la transacción en bloque"
+    },
+    "transactionDetail": {
+      "label": "Detalles de la transacción",
+      "txid": "Identificación de transacción",
+      "blockHeight": "Altura del bloque",
+      "unconfirmedTx": "Transacción no confirmada"
+    },
+    "addressDetail": {
+      "label": "Detalles de dirección",
+      "name": "Nombre",
+      "address": "Dirección",
+      "saveButton": "Guarde los cambios"
+    },
+    "newAddress": {
+      "label": "Crear una nueva dirección",
+      "name": "Nombre (Opcional)",
+      "createButton": "Crear"
+    },
+    "about": {
+      "label": "Sobre Arizen",
+      "homepage": "Página principal",
+      "version": "Versión",
+      "license": "Licencia",
+      "authors": "Autores"
+    },
+    "settings": {
+      "label": "Configuraciones",
+      "limit": "Límite de transacción",
+      "items": "artículos",
+      "language": "Idioma",
+      "explorerUrl": "ZEN Explorador URL",
+      "apiUrl": "API URLs",
+      "fiat": "Equivalente de Fiat",
+      "save": "Salvar"
+    },
+    "paperWallet": {
+      "label": "Billetera de papel",
+      "generateNewWallet": "Generar una nueva billetera",
+      "name": "Nombre: (Opcional)",
+      "addWalletToArizen": "Agrega esta billetera a Arizen",
+      "zenCashWalletLabel" : "Billetera ZenCash",
+      "tAddrLabel" : "Clave pública - Dirección transparente",
+      "privateKeyLabel": "Llave privada",
+      "namePrint": "Nombre",
+      "exportPDFLabel": "Exportar PDF"
+    },
+    "batchWithdraw": {
+      "label": "Retirada múltiple",
+      "keepAmount": "Cantidad para mantener",
+      "txFee": "Tarifa de transacción"
+    }
+  },
+  "menu": {
+    "file" : "Archivo",
+    "backupEncrypted":  "Copia de seguridad de la billetera cifrada",
+    "backupUnencrypted": "Copia de seguridad de la billetera sin encriptar",
+    "importEncrypted": "Import ENCRYPTED Arizen wallet",
+    "importUnencrypted": "Importar cartera cifrada de Arizen",
+    "importPrivateKeys": "Importar claves privadas",
+    "exportPrivateKeys": "Exportar claves privadas",
+    "exit": "Salida",
+    "edit": "Editar",
+    "editSubmenu": {
+      "undo": "Deshacer",
+      "redo": "Rehacer",
+      "cut": "Cortar",
+      "copy": "Copiar",
+      "paste": "Pegar",
+      "selectAll": "Seleccionar todo"
+    }
+  }
+}
