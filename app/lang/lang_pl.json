@@ -1,0 +1,203 @@
+{
+  "languageName": "Polski",
+  "languageValue": "pl",
+  "langFileVersion": "1",
+  "login": {
+    "label": "Arizen: Logowanie",
+    "username": "Nazwa Użytkownika",
+    "password": "Hasło",
+    "loginButton": "Zaloguj",
+    "createWalletLink": "Nowy Portfel",
+    "warningWrongUsernameOrPassword": "Uwaga <strong>Nazwa Użytkownika</strong> albo <strong>Hasło</strong>",
+    "dataImportFailed": "Import danych nie powiódł się, możliwe przyczyny to nieprawidłowe dane uwierzytelniające",
+    "fileReplace": "Czy chcesz zastąpić plik?",
+    "walletReplace": "Wymienić portfel?",
+    "walletReplaceMsg": "To zastąpi twój aktualny portfel. Jesteś pewny?",
+    "walletImported": "Portfel został pomyślnie zaimportowany",
+    "walletImportFailed": "Operacja importu portfela nieudana.",
+    "yes": "Tak",
+    "no": "Nie"
+  },
+  "createWallet": {
+    "label": "Arizen: Nowy Portfel",
+    "username": "Nazwa Użytkownika",
+    "password": "Hasło",
+    "passwordAgain": "Powtórz Hasło" ,
+    "oldUsername": "Poprzednia Nazwa Użytkownika: ",
+    "oldPassword": "Poprzednie Hasło: ",
+    "selectWallet": "Wybierz Portfel",
+    "selectWalletButton": "Przeglądaj",
+    "createWalletButton": "Utwórz Portfel",
+    "loginLink": "Logowanie",
+    "warningUsername": "Nazwa użytkownika musi spełniać następujące wymagania:",
+    "warningUsernameLength": "Przynajmniej <strong>Cztery Litery</strong>",
+    "warningPassword": "Hasło musi spełniać następujące wymagania:",
+    "warningPasswordLetter": "Przynajmniej <strong>jedna litera</strong>",
+    "warningPasswordCapitalLetter": "Przynajmniej <strong>Jedna Wielka Litera</strong>",
+    "warningPasswordNumber": "Przynajmniej <strong>Jedną Liczbę</strong>",
+    "warningPasswordSpecial": "Przynajmniej <strong>Jeden Znak Specjalny</strong>",
+    "warningPasswordLength": "Posiadać Przynajmniej <strong>8 Znaków</strong>",
+    "warningPasswordAgain": "Hasło musi spełniać następujące wymagania:",
+    "warningPasswordAgainIdentical": "<strong>Muszą Być Identyczne</strong>",
+    "errorCreationFailed": "Utworzenie Portfela Nie Powiodło Się",
+    "errorFailedResponse": "Nieudana Odpowiedź"
+  },
+  "notification": {
+    "settingsUpdated": "Ustawienia Zaktualizowane",
+    "balanceUpdated": "Saldo Zaktualizowane",
+    "newTransactions": "Nowa Transakcja"
+  },
+  "importExportPks": {
+    "chooseFileExport" : "Wybierz plik dla kluczy prywatnych",
+    "chooseFileImport" : "Wybierz plik z kluczami prywatnymi",
+    "InvalidLinePk": "Niepoprawny wiersz ${0} w pliku kluczy prywatnych",
+    "InvalidPk": "Nieprawidłowy prywatny klucz w wierszu ${0} w pliku kluczy prywatnych"
+  },
+  "wallet": {
+    "showSettingsDialogButton" : "Ustawienia",
+    "showAboutDialogButton" : "O Programie",
+    "refreshWallet" : "Odśwież",
+    "logout" : "Wyloguj",
+    "exit" : "Wyjscie",
+    "date" : "Czas",
+    "from": "Nadawca",
+    "to": "Odbiorca",
+    "amount" : "Kwota",
+    "balance" : "Saldo",
+    "totalBalance": "Saldo Calkowite",
+    "lastUpdate": "Aktualizacja",
+    "showExplorer": "Pokaż w ZEN Explorer",
+    "listOfAddresses": "Lista Adresow",
+    "showBatchWithdrawDialog": "Wypłaty Seryjne",
+    "notLoggedIn": "Nie Zalogowany",
+    "addressNotFound": "Adres Nie Znaleziony",
+    "nameNotFound": "Nie Znaleziono Nazwy",
+    "renameWalletSetTo": "Adres ${0} Ustawić ${1}",
+    "fetchBlockchainFailed": "Nie udało się pobrać zmian z blockchain:",
+    "save": "Zapisz",
+    "pdfExported": "Eksport PDF",
+    "tabOverview": {
+      "label": "Przegląd",
+      "showZeroBalances" : "Pokaż Zerowe Saldo",
+      "newAddress": "Nowy Adres",
+      "unnamedAddress": "Bez Nazwy",
+      "newAddressExists": "Adres ${0} jest już na liście"
+    },
+    "tabDeposit": {
+      "label": "Wpłacać",
+      "help": "Naciśnij zielony przycisk obok żądanego adresu, aby dokonać wpłaty.",
+      "saveQrcode": "Zapisz Kod QR",
+      "messages": {
+        "emptyToAddr": "Adres odbiorcy jest pusty",
+        "unknownToAddr": "Adres do nie należy do tego portfela",
+        "zeroAmount": "Brak środków"
+      }
+    },
+    "tabWithdraw": {
+      "label": "Wyślij",
+      "help": "Naciśnij czerwony przycisk obok żądanego adresu, aby dokonać wypłaty.",
+      "availableBalance": "Dostępne Saldo",
+      "fee": "Opłata Transakcyjna",
+      "txStatus" : "Status Transakcji",
+      "withdrawConfirmQuestion": "Czy na pewno chcesz realizować tę transakcję?",
+      "messages": {
+        "emptyFromAddr": "Adres nadawcy jest pusty",
+        "unknownFromAddr": "Adres nadawcy nie należy do tego portfela",
+        "insufficientFirstSource" : "Niewystarczające środki na 1-szym źródle (Minimum: limit progowy + opłata)!",
+        "insufficientNextSource" : "Niewystarczające środki na 2-gim albo kolejnych źródlach (Minimum: limit progowy + opłata)!",
+        "numberOfKeys": "# prywatne klucze i # adresy nie są równe!",
+        "sumLowerThanFee": "Zsumowane saldo wszystkich adresów źródłowych jest niższe niż opłata!",
+        "zenApi": "Zen API nie jest zdefiniowany w ustawieniach!",
+        "unknownAddress": "Adres źródłowy nie znajduje się w Twoim portfelu!",
+        "insufficientFundsSourceAddr": "Niewystarczające środki na adresie źródłowym",
+        "emptyToAddr": "Adres odbiorcy jest pusty",
+        "zeroAmount": "Brak środków",
+        "insufficientFunds": "Niewystarczające środki na adresie nadawcy",
+        "fromAddressBadLength" : "Zła długość adresu nadawcy!",
+        "fromAddressBadPrefix" : "Niepoprawny przedrostek adresu nadawcy - musi być 'zn'!",
+        "toAddressBadLength": "Zła długość adresu odbiorcy!",
+        "toAddressBadPrefix": "Niepoprawny przedrostek adresu odbiorcy - musi być  'zn'!",
+        "amounNotNumber": "Kwota NIE jest liczbą",
+        "amountIsZero": "Kwota musi być większa od zera!",
+        "feeNotNumber": "Opłata NIE jest liczbą!",
+        "feeIsNegative": "Opłata musi być większa lub równa zero!",
+        "error": "Wystąpił Błąd",
+        "success": "Transakcja została pomyślnie zrealizowana"
+      }
+    },
+    "transactionHistory": {
+      "label": "Historia transakcji",
+      "unconfirmed": "NIEPOTWIERDZONE",
+      "replaceAttempt": "Próba zamiany transakcji w bloku"
+    },
+    "transactionDetail": {
+      "label": "Szczegóły transakcji",
+      "txid": "ID Transakcji",
+      "blockHeight": "Wysokość Bloku",
+      "unconfirmedTx": "NIEPOTWIERDZONE TRANSAKCJE"
+    },
+    "addressDetail": {
+      "label": "Szczegóły Adresu",
+      "name": "Nazwa",
+      "address": "Adres",
+      "saveButton": "Zapisz Zmiany"
+    },
+    "newAddress": {
+      "label": "Utwórz Nowy Adres",
+      "name": "Nazwa (niewymagane)",
+      "createButton": "Utwórz"
+    },
+    "about": {
+      "label": "Klient Arizen",
+      "homepage": "Panel główny",
+      "version": "Wersja",
+      "license": "Licencja",
+      "authors": "Autorzy"
+    },
+    "settings": {
+      "label": "Ustawienia",
+      "limit": "Limity Transakcji",
+      "items": "Pozycja",
+      "language": "Język",
+      "explorerUrl": "ZEN Explorer URL",
+      "apiUrl": "API URLs",
+      "fiat": "Wartosc Fiat",
+      "save": "Zapisz"
+    },
+    "paperWallet": {
+      "label": "Portfel Papierowy",
+      "generateNewWallet": "Wygeneruj Nowy Portfel",
+      "name": "Nazwa (niewymagane)",
+      "addWalletToArizen": "Dodaj ten portfel do Arizen",
+      "zenCashWalletLabel" : "ZenCash Portfel",
+      "tAddrLabel" : "Klucz publiczny - T Adres",
+      "privateKeyLabel": "Prywatny klucz",
+      "namePrint": "Nazwa",
+      "exportPDFLabel": "Export PDF"
+    },
+    "batchWithdraw": {
+      "label": "Wypłaty Seryjne",
+      "keepAmount": "Kwota do zatrzymania",
+      "txFee": "Opłata transakcyjna"
+    }
+  },
+  "menu": {
+    "file" : "Plik",
+    "backupEncrypted":  "Tworzenie ZASZYFROWANEJ kopii zapasowej portfelu",
+    "backupUnencrypted": "Tworzenie NIESZYFROWANEJ kopii zapasowej portfelu",
+    "importEncrypted": "Importuj SZYFROWANY Portfel Arizen",
+    "importUnencrypted": "Importuj NIESZYFROWANY Portfel Arizen",
+    "importPrivateKeys": "Importuj klucze prywatne",
+    "exportPrivateKeys": "Expportuj klucze prywatne",
+    "exit": "Wyjście",
+    "edit": "Edytowanie",
+    "editSubmenu": {
+      "undo": "Cofnij",
+      "redo": "Przywróć",
+      "cut": "Wytnij",
+      "copy": "Kopiuj",
+      "paste": "Wklej",
+      "selectAll": "Zaznacz wszystko"
+    }
+  }
+}
