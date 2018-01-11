@@ -2,7 +2,7 @@
     display: grid !important;
     grid-gap: 5px;
     grid-template-rows: min-content auto 30px;
-    grid-template-columns: minmax(520px, min-content) auto;
+    grid-template-columns: minmax(550px, min-content) auto;
     grid-template-areas: "header header" "walletOps transactions" "statusLine statusLine";
 }
 
@@ -52,7 +52,7 @@ header > *:nth-child(3) {
 }
 
 header button {
-	padding: 1px 6px;
+	padding: 2px 6px;
 }
 
 /* Wallet operations */
@@ -84,8 +84,8 @@ header button {
 
 .walletOpsTabs > button[selected] {
     background: inherit;
-    color: var(--arizen-fg);
-    border: 2px solid var(--arizen-fg);
+    color: var(--button-fg);
+    border: 1px solid var(--button-fg);
 }
 
 .tabContent {
@@ -345,15 +345,19 @@ header button {
  See also https://bugs.chromium.org/p/chromium/issues/detail?id=657748
 */
 .addrSelectList {
-    display: flex;
-    flex-direction: column;
+    display: block;
+    overflow: auto;
+    border: none;
+    border-collapse: collapse;
 }
 .addrSelectList > :nth-child(odd) {
     background: var(--odd-bg);
 }
+.addrSelectList > tr > td:not(:first-child) {
+    padding-left: 10px;
+}
+
 .addrSelectRow {
-    display: flex;
-    flex-shrink: 0;
     cursor: pointer;
 }
 .addrSelectRow:hover {
@@ -362,13 +366,12 @@ header button {
 .addrSelectRow > * {
     margin-right: 15px;
 }
-.addrSelectRowName {
-    width: 200px;
-}
-.addrSelectRowAddr {
-    width: 400px;
-}
 .addrSelectRowBalance {
     justify-self: flex-end;
     flex-grow: 2;
+}
+
+.batchWithdrawContent .addrSelectList {
+    max-height: 300px; /* cannot make table to not overflow in any otther way sadly */
+    margin-bottom: 20px;
 }
