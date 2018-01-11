@@ -1,0 +1,203 @@
+{
+  "languageName": "Deutsche",
+  "languageValue": "de",
+  "langFileVersion": "1",
+  "login": {
+    "label": "Arizen: Einloggen",
+    "username": "Nutzername",
+    "password": "Passwort",
+    "loginButton": "Anmeldung",
+    "createWalletLink": "Brieftasche erstellen",
+    "warningWrongUsernameOrPassword": "<strong>Benutzername</strong> oder <strong>Passwort</strong> falsch",
+    "dataImportFailed": "Der Datenimport ist fehlgeschlagen, Ihre Anmeldeinformationen sind möglicherweise falsch",
+    "fileReplace": "Möchten Sie die Datei ersetzen?",
+    "walletReplace": "Ersetzen Sie die Brieftasche?",
+    "walletReplaceMsg": "Dies wird Ihre tatsächliche Brieftasche ersetzen. Bist du sicher?",
+    "walletImported": "Geldbörse wurde erfolgreich importiert",
+    "walletImportFailed": "Der Import ist fehlgeschlagen",
+    "yes": "Ja",
+    "no": "Nein"
+  },
+  "createWallet": {
+    "label": "Arizen: Brieftasche erstellen",
+    "username": "Nutzername",
+    "password": "Passwort",
+    "passwordAgain": "Passwort erneut eingeben" ,
+    "oldUsername": "Geben Sie den alten Benutzernamen ein: ",
+    "oldPassword": "Altes Passwort eingeben: ",
+    "selectWallet": "Wählen Sie eine Brieftasche",
+    "selectWalletButton": "Durchsuche",
+    "createWalletButton": "Erstellen Sie eine Brieftasche",
+    "loginLink": "Einloggen",
+    "warningUsername": "Der Benutzername muss folgende Anforderungen erfüllen:",
+    "warningUsernameLength": "Mindestens <strong>vier Buchstaben</strong>",
+    "warningPassword": "Das Passwort muss folgende Voraussetzungen erfüllen:",
+    "warningPasswordLetter": "Mindestens <strong>ein Brief</strong>",
+    "warningPasswordCapitalLetter": "Mindestens <strong>ein Großbuchstabe</strong>",
+    "warningPasswordNumber": "Mindestens <strong>eine Nummer</strong>",
+    "warningPasswordSpecial": "Mindestens <strong>ein Sonderzeichen</strong>",
+    "warningPasswordLength": "Seien Sie mindestens <strong>acht Zeichen lang</strong>",
+    "warningPasswordAgain": "Das Passwort muss folgende Voraussetzungen erfüllen:",
+    "warningPasswordAgainIdentical": "<strong>Identisch</strong>",
+    "errorCreationFailed": "Wallet-Erstellung fehlgeschlagen",
+    "errorFailedResponse": "Fehlgeschlagene Antwort"
+  },
+  "notification": {
+    "settingsUpdated": "Einstellungen aktualisiert",
+    "balanceUpdated": "Saldo aktualisiert",
+    "newTransactions": "Neue Transaktion"
+  },
+  "importExportPks": {
+    "chooseFileExport" : "Wählen Sie die Datei für private Schlüssel",
+    "chooseFileImport" : "Wählen Sie eine Datei mit privaten Schlüsseln",
+    "InvalidLinePk": "Ungültige Zeile ${0} in der privaten Schlüsseldatei",
+    "InvalidPk": "Ungültiger privater Schlüssel in der Zeile ${0} in der privaten Schlüsseldatei"
+  },
+  "wallet": {
+    "showSettingsDialogButton" : "die Einstellungen",
+    "showAboutDialogButton" : "Über",
+    "refreshWallet" : "Aktualisierung",
+    "logout" : "Ausloggen",
+    "exit" : "Ausgang",
+    "date" : "Datum",
+    "from": "Von",
+    "to": "Zu",
+    "amount" : "Menge",
+    "balance" : "Balance",
+    "totalBalance": "Gesamtsaldo",
+    "lastUpdate": "Letztes Update",
+    "showExplorer": "Im ZEN-Explorer anzeigen",
+    "listOfAddresses": "Liste der Adressen",
+    "showBatchWithdrawDialog": "Mehrfacher Rückzug",
+    "notLoggedIn": "Nicht eingeloggt",
+    "addressNotFound": "Adresse nicht gefunden",
+    "nameNotFound": "Name nicht gefunden",
+    "renameWalletSetTo": "Adresse ${0} einstellen ${1}",
+    "fetchBlockchainFailed": "Blockchain-Änderungen konnten nicht abgerufen werden:",
+    "save": "sparen",
+    "pdfExported": "PDF exportiert",
+    "tabOverview": {
+      "label": "Überblick",
+      "showZeroBalances" : "Nullsalden anzeigen",
+      "newAddress": "Erhalte eine neue Adresse",
+      "unnamedAddress": "Unbenannte Adresse",
+      "newAddressExists": "Adresse ${0} ist bereits in der Liste"
+    },
+    "tabDeposit": {
+      "label": "Anzahlung",
+      "help": "Klicken Sie neben Einlagen auf den grünen Button neben der gewünschten Adresse.",
+      "saveQrcode": "QR-Code speichern",
+      "messages": {
+        "emptyToAddr": "Die 'an' Adresse ist leer",
+        "unknownToAddr": "Die An-Adresse gehört nicht zu dieser Brieftasche",
+        "zeroAmount": "Der Betrag ist nicht positiv"
+      }
+    },
+    "tabWithdraw": {
+      "label": "Abheben",
+      "help": "Klicken Sie auf den roten Knopf neben der gewünschten Adresse für den Widerruf.",
+      "availableBalance": "Verfügbares Guthaben",
+      "fee": "Transaktionsgebühr",
+      "txStatus" : "Transaktionsstatus",
+      "withdrawConfirmQuestion": "Möchten Sie diese Transaktion wirklich senden?",
+      "messages": {
+        "emptyFromAddr": "Die Absenderadresse ist leer",
+        "unknownFromAddr": "Die Absenderadresse gehört nicht zu dieser Brieftasche",
+        "insufficientFirstSource" : "Unzureichende Mittel bei der ersten Quelle (Mindestgrenze ist die Grenze plus die Gebühr)",
+        "insufficientNextSource" : "Zu wenig Geld bei der zweiten oder nächsten Quelle (Die Mindestgrenze ist die Grenze plus die Gebühr)",
+        "numberOfKeys": "# private Schlüssel und # adressen sind nicht gleich",
+        "sumLowerThanFee": "Ihr Gesamtbetrag ist niedriger als die Gebühr!",
+        "zenApi": "ZEN API ist nicht in den Einstellungen eingestellt!",
+        "unknownAddress": "Quelladresse ist nicht in Ihrer Brieftasche!",
+        "insufficientFundsSourceAddr": "Zu wenig Geld auf der Quelladresse",
+        "emptyToAddr": "Die 'an' Adresse ist leer",
+        "zeroAmount": "Der Betrag ist nicht positiv",
+        "insufficientFunds": "Unzureichende Mittel an der Von-Adresse",
+        "fromAddressBadLength" : "Falsche Länge der Quelladresse!",
+        "fromAddressBadPrefix" : "Inkorrektes Adresspräfix, muss 'zn' sein!",
+        "toAddressBadLength": "Falsche Länge der Zieladresse!",
+        "toAddressBadPrefix": "Falsches Ziel-Präfix, muss 'zn' sein!",
+        "amounNotNumber": "Betrag ist keine Zahl",
+        "amountIsZero": "Betrag muss größer als Null sein!",
+        "feeNotNumber": "Die Gebühr ist keine Nummer!",
+        "feeIsNegative": "Die Gebühr muss größer oder gleich null sein!",
+        "error": "Error",
+        "success": "Die Transaktion wurde abgeschlossen"
+      }
+    },
+    "transactionHistory": {
+      "label": "Verlauf der Transaktionen",
+      "unconfirmed": "Unbestätigt",
+      "replaceAttempt": "Versuch, die Transaktion im Block zu ersetzen"
+    },
+    "transactionDetail": {
+      "label": "Transaktionsdetails",
+      "txid": "Transaktionsidentifikation",
+      "blockHeight": "Blockhöhe",
+      "unconfirmedTx": "Unbestätigte Transaktion"
+    },
+    "addressDetail": {
+      "label": "Adressdetail",
+      "name": "Name",
+      "address": "Adresse",
+      "saveButton": "Speichern Sie die Änderungen"
+    },
+    "newAddress": {
+      "label": "Erstellen Sie eine neue Adresse",
+      "name": "Name (Wahlweise)",
+      "createButton": "Erstellen"
+    },
+    "about": {
+      "label": "Über Arizen",
+      "homepage": "Startseite",
+      "version": "Ausführung",
+      "license": "Lizenz",
+      "authors": "Autoren"
+    },
+    "settings": {
+      "label": "die Einstellungen",
+      "limit": "Transaktionslimit insgesamt",
+      "items": "Artikel",
+      "language": "Sprache",
+      "explorerUrl": "ZEN Forscher URL",
+      "apiUrl": "API URLs",
+      "fiat": "Fiat entspricht",
+      "save": "sparen"
+    },
+    "paperWallet": {
+      "label": "Geldbörse aus Papier",
+      "generateNewWallet": "Erstellen Sie neue Brieftasche",
+      "name": "Name (Wahlweise)",
+      "addWalletToArizen": "Fügen Sie diese Brieftasche Arizen hinzu",
+      "zenCashWalletLabel" : "ZenCash Geldbörse",
+      "tAddrLabel" : "Öffentlicher Schlüssel - Transparente Adresse",
+      "privateKeyLabel": "Privat Schlüssel",
+      "namePrint": "Name",
+      "exportPDFLabel": "PDF exportieren"
+    },
+    "batchWithdraw": {
+      "label": "Mehrfacher Rückzug",
+      "keepAmount": "Betrag zu behalten",
+      "txFee": "Transaktionsgebühr"
+    }
+  },
+  "menu": {
+    "file" : "Datei",
+    "backupEncrypted":  "Verschlüsselte Brieftasche sichern",
+    "backupUnencrypted": "Sichern Sie unverschlüsselte Brieftasche",
+    "importEncrypted": "Importieren Sie die verschlüsselte Arizen-Brieftasche",
+    "importUnencrypted": "Importieren Sie unverschlüsselte Arizen-Wallet",
+    "importPrivateKeys": "Importieren Sie private Schlüssel",
+    "exportPrivateKeys": "Exportieren Sie private Schlüssel",
+    "exit": "Ausgang",
+    "edit": "Bearbeiten",
+    "editSubmenu": {
+      "undo": "Rückgängig machen",
+      "redo": "Wiederholen",
+      "cut": "Schnitt",
+      "copy": "Kopieren",
+      "paste": "Einfügen",
+      "selectAll": "Wählen Sie Alle"
+    }
+  }
+}
