@@ -231,7 +231,6 @@ arizen-dialog > [slot="content"] {
     user-select: none;
 }
 
-
 .container input {
     opacity: 0;
     cursor: pointer;
@@ -276,49 +275,48 @@ arizen-dialog > [slot="content"] {
     transform: rotate(45deg);
 }
 
-
-.createButtonCheck{
+.createButtonCheck {
     align-items: center;
 }
 
-.createWalletContainer{
+.createWalletContainer {
     text-align: center;
 }
 
-.newAddressPrintArea{
+.newAddressPrintArea {
     text-align: center;
     margin:auto;
     display:none;
-  }
+}
 
-  .zenLogo {
+.zenLogo {
     text-align:center;
-  }
+}
 
-  .namePrivateKey {
+.namePrivateKey {
     color:red;
     display:block;
-  }
+}
 
-  .qrPrivate {
+.qrPrivate {
     display:block;
-  }
+}
 
-  .keyPrivate {
+.keyPrivate {
     font-size: 75%;
     color:red;
 }
 
-  .nametAddr {
+.nametAddr {
     style="color:green;
     display:block;
-  }
+}
 
-  .qrtAddr {
+.qrtAddr {
     display:block;
-  }
+}
 
-  .tAddr {
+.tAddr {
     font-size: 75%;
     color:green;
-  }
+}
