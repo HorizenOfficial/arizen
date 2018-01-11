@@ -1,0 +1,203 @@
+{
+  "languageName": "French",
+  "languageValue": "fr",
+  "langFileVersion": "1",
+  "login": {
+    "label": "Arizen: Connexion",
+    "username": "Nom d'utilisateur",
+    "password": "Mot de passe",
+    "loginButton": "Connexion",
+    "createWalletLink": "Créer Portefeuille",
+    "warningWrongUsernameOrPassword": "Mauvais <strong>nom d'utilisateur</strong> ou <strong>mot de passe</strong>",
+    "dataImportFailed": "L'import des données a échouer. Une des raisons possible est un mauvais mot de passe",
+    "fileReplace": "Voulez-vous remplacer le fichier?",
+    "walletReplace": "Remplacer le portefeuille?",
+    "walletReplaceMsg": "Celà remplacera votre portefeuille actuel. Etes-vous sûr?",
+    "walletImported": "Portefeuille correctement importé",
+    "walletImportFailed": "L'import a échoué",
+    "yes": "Oui",
+    "no": "Non"
+  },
+  "createWallet": {
+    "label": "Arizen: Créer un Portefeuille",
+    "username": "Nom d'utilisateur",
+    "password": "Mot de passe",
+    "passwordAgain": "Retapez le mot de passe" ,
+    "oldUsername": "Ancien nom d'utilisateur: ",
+    "oldPassword": "Ancien mot de passe: ",
+    "selectWallet": "Selectionner le portefeuille",
+    "selectWalletButton": "Parcourir",
+    "createWalletButton": "Créer un portefeuille",
+    "loginLink": "Login",
+    "warningUsername": "Le nom d'utilisateur doit respecter les spécificités suivantes:",
+    "warningUsernameLength": "Au moins <strong>quatre lettres</strong>",
+    "warningPassword": "Le mot de passe doit respecter les spécificités suivantes:",
+    "warningPasswordLetter": "Au moins <strong>une lettre</strong>",
+    "warningPasswordCapitalLetter": "Au moins <strong>une lettre majuscule</strong>",
+    "warningPasswordNumber": "Au moins <strong>un chiffre</strong>",
+    "warningPasswordSpecial": "Au moins <strong>un caractère spécial</strong>",
+    "warningPasswordLength": "Doit au moins avoir <strong>8 caractères</strong>",
+    "warningPasswordAgain": "Le mot de passe doit respecter les spécificités suivantes:",
+    "warningPasswordAgainIdentical": "<strong>Identique</strong>",
+    "errorCreationFailed": "La création du portefeuille a échoué",
+    "errorFailedResponse": "Requête échoué"
+  },
+  "notification": {
+    "settingsUpdated": "Parametres mis à jour",
+    "balanceUpdated": "Solde mis à jour",
+    "newTransactions": "Nouvelle transaction"
+  },
+  "importExportPks": {
+    "chooseFileExport" : "Choisissez le fichier de clés privées",
+    "chooseFileImport" : "Choisissez le fichier contenant les clés privées",
+    "InvalidLinePk": "Ligne incorrect ${0} dans le fichier contenant les clés privés",
+    "InvalidPk": "Clé privée invalide à la ligne ${0} dans le fichier de clés privées"
+  },
+  "wallet": {
+    "showSettingsDialogButton" : "Paramètres",
+    "showAboutDialogButton" : "A propos",
+    "refreshWallet" : "Rafraichir",
+    "logout" : "Déconnexion",
+    "exit" : "Quitter",
+    "date" : "Date",
+    "from": "De",
+    "to": "Vers",
+    "amount" : "Montant",
+    "balance" : "Disponible",
+    "totalBalance": "Total Disponible",
+    "lastUpdate": "Dernière mise à jour",
+    "showExplorer": "Voir dans l'explorer ZEN",
+    "listOfAddresses": "Carnet d'Adresses",
+    "showBatchWithdrawDialog": "Batch Withdraw",
+    "notLoggedIn": "Non connecté",
+    "addressNotFound": "adresse incorrecte",
+    "nameNotFound": "nom incorrect",
+    "renameWalletSetTo": "addresse ${0} renommé en tant que ${1}",
+    "fetchBlockchainFailed": "Impossible de chercher les modifications de la blockchain:",
+    "save": "Sauvegarder",
+    "pdfExported": "PDF exporté",
+    "tabOverview": {
+      "label": "Aperçu",
+      "showZeroBalances" : "Montrer les adresses à zéro",
+      "newAddress": "Obtenir une nouvelle adresse",
+      "unnamedAddress": "Adresse sans nom",
+      "newAddressExists": "L'adresse ${0} fait déjà partie de la liste d'adresses"
+    },
+    "tabDeposit": {
+      "label": "Déposer",
+      "help": "Cliquez sur le bouton vert à côté de l'adresse désirée pour déposer des fonds",
+      "saveQrcode": "Sauvegarder le QR code",
+      "messages": {
+        "emptyToAddr": "Le champ d'adresse du destinataire est vide",
+        "unknownToAddr": "L'adresse d'envoi ne fait pas partie du portefeuille",
+        "zeroAmount": "Le montant n'est pas positif"
+      }
+    },
+    "tabWithdraw": {
+      "label": "Envoyer",
+      "help": "Cliquez sur le bouton rouge à côté de l'adresse désirée pour envoyer.",
+      "availableBalance": "Solde disponible",
+      "fee": "Frais de transaction",
+      "txStatus" : "Statut de transaction",
+      "withdrawConfirmQuestion": "Voulez-vous vraiment effectuer cette transaction",
+      "messages": {
+        "emptyFromAddr": "L'adresse d'envoie est vide",
+        "unknownFromAddr": "L'adresse d'envoie ne fait pas partie du portefeuille",
+        "insufficientFirstSource" : "Fonds insuffisants pour la 1ère source (Minimum : montant minimum + frais de transactions) !",
+        "insufficientNextSource" : "Fonds insuffisants pour la source suivante (Minimum: montant minimum + frais de transactions)!",
+        "numberOfKeys": "# Les clés privées et # les adresses ne concordent pas!",
+        "sumLowerThanFee": "La somme de vos fonds sur l'ensemble de vos adresses est inférieure aux frais de transaction!",
+        "zenApi": "L'API Zen n'est pas activée dans les parametres!",
+        "unknownAddress": "L'adresse d'envoie n'est pas dans votre portefeuille!",
+        "insufficientFundsSourceAddr": "L'adresse d'envoie ne dispose pas de fonds suffisants",
+        "emptyToAddr": "L'adresse de reception n'est pas renseignée",
+        "zeroAmount": "Le montant doit être supérieur à zero",
+        "insufficientFunds": "Fonds insuffisants sur l'adresse d'envoie",
+        "fromAddressBadLength" : "Mauvais longueur de l'adresse source!",
+        "fromAddressBadPrefix" : "Mauvais préfixe dans l'adresse source - doit être 'zn'!",
+        "toAddressBadLength": "Mauvaise longueur de l'adresse de destination!",
+        "toAddressBadPrefix": "Mauvais préfixe dans l'adresse de destination - doit être 'zn'!",
+        "amounNotNumber": "La somme DOIT être un nombre!",
+        "amountIsZero": "Le montant doit être supérieur a zéro!",
+        "feeNotNumber": "Les frais de transaction DOIVENT être un nombre!",
+        "feeIsNegative": "Les frais de transaction DOIVENT être supérieur ou égale zero!",
+        "error": "Erreur",
+        "success": "La transaction a été envoyée avec succès!"
+      }
+    },
+    "transactionHistory": {
+      "label": "Historique des transactions",
+      "unconfirmed": "En attente de confirmation",
+      "replaceAttempt": "Tentative pour placer la transaction dans un bloc"
+    },
+    "transactionDetail": {
+      "label": "Détail de la transaction",
+      "txid": "ID de transaction",
+      "blockHeight": "Taille du bloc",
+      "unconfirmedTx": "TRANSACTION NON CONFIRMÉE"
+    },
+    "addressDetail": {
+      "label": "Détail de l'adresse",
+      "name": "Nom",
+      "address": "Adresse",
+      "saveButton": "Sauvegarder les changements"
+    },
+    "newAddress": {
+      "label": "Créer une nouvelle adresse",
+      "name": "Nom (optionnel)",
+      "createButton": "Créer"
+    },
+    "about": {
+      "label": "À propos d'Arizen",
+      "homepage": "Page d'accueil",
+      "version": "Version",
+      "license": "Licence",
+      "authors": "Auteurs"
+    },
+    "settings": {
+      "label": "Paramètres",
+      "limit": "Limite de transaction",
+      "items": "Objets",
+      "language": "Langue",
+      "explorerUrl": "URL de l'explorer ZEN",
+      "apiUrl": "URLs de l'API",
+      "fiat": "Équivalent fiat",
+      "save": "Sauvegarder"
+    },
+    "paperWallet": {
+      "label": "Portefeuille Papier",
+      "generateNewWallet": "Générer un nouveau portefeuille",
+      "name": "Nom (optionnel)",
+      "addWalletToArizen": "Ajouter ce portefeuille dans Arizen",
+      "zenCashWalletLabel" : "Portefeuille Zencash",
+      "tAddrLabel" : "Clé publique - T Address",
+      "privateKeyLabel": "Clé privée",
+      "namePrint": "Nom",
+      "exportPDFLabel": "Exporter en PDF"
+    },
+    "batchWithdraw": {
+      "label": "Tout envoyer",
+      "keepAmount": "Montant à garder",
+      "txFee": "Frais de transaction"
+    }
+  },
+  "menu": {
+    "file" : "Fichier",
+    "backupEncrypted":  "Sauvegarder le portefeuille CHIFFRÉ",
+    "backupUnencrypted": "Sauvegarder le portefeuille NON CHIFFRÉ",
+    "importEncrypted": "Importer un portefeuille CHIFFRÉ Arizen",
+    "importUnencrypted": "Importer un portefeuille NON CHIFFRÉ Arizen",
+    "importPrivateKeys": "Importer des clés privées",
+    "exportPrivateKeys": "Exporter des clés privées",
+    "exit": "Quitter",
+    "edit": "Editer",
+    "editSubmenu": {
+      "undo": "annuler",
+      "redo": "rétablir",
+      "cut": "Couper",
+      "copy": "Copier",
+      "paste": "Coller",
+      "selectAll": "Tout selectionner"
+    }
+  }
+}
