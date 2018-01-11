@@ -104,59 +104,59 @@
         "emptyFromAddr": "Die Absenderadresse ist leer",
         "unknownFromAddr": "Die Absenderadresse gehört nicht zu dieser Wallet",
         "insufficientFirstSource" : "Unzureichendes Guthaben auf der ersten Quelle (Minimum: Grenzwert + Gebühr)!",
-        "insufficientNextSource" : "Unzureichendes Guthaben auf der zweiten oder weiteren Quelle (Minimum: Grenzwert + Gebühr)!",
-        "numberOfKeys": "# private keys and # addresses are not equal!",
-        "sumLowerThanFee": "Your summed balance over all source addresses is lower than the fee!",
-        "zenApi": "Zen API is not set in settings!",
-        "unknownAddress": "Source address is not in your wallet!",
-        "insufficientFundsSourceAddr": "Insufficient funds on the source address",
-        "emptyToAddr": "The to address is empty",
-        "zeroAmount": "The amount is not positive",
-        "insufficientFunds": "Insufficient funds on the from address",
-        "fromAddressBadLength" : "Bad length of source address!",
-        "fromAddressBadPrefix" : "Bad source address prefix - have to be 'zn'!",
-        "toAddressBadLength": "Bad length of destination address!",
-        "toAddressBadPrefix": "Bad destination address prefix - have to be 'zn'!",
-        "amounNotNumber": "Amount is NOT number",
-        "amountIsZero": "Amount has to be greater than zero!",
-        "feeNotNumber": "Fee is NOT number!",
-        "feeIsNegative": "Fee has to be greater or equal zero!",
+        "insufficientNextSource" : "Unzureichendes Guthaben auf der zweiten oder nächsten Quelle (Minimum: Grenzwert + Gebühr)!",
+        "numberOfKeys": "# private Schlüssel und # Adressen stimmen nicht überein!",
+        "sumLowerThanFee": "Ihr Gesamtguthaben auf allen Adressen ist niedriger als die Gebühr!",
+        "zenApi": "Zen API ist in den Einstellungen nicht eingestellt!",
+        "unknownAddress": "Absenderadresse ist nicht in Ihrer Wallet!",
+        "insufficientFundsSourceAddr": "Unzureichendes Guthaben auf der Absenderadresse",
+        "emptyToAddr": "Die Empfängeradresse ist leer",
+        "zeroAmount": "Der Betrag ist nicht positiv",
+        "insufficientFunds": "Unzureichendes Guthaben auf der Empfängeradresse",
+        "fromAddressBadLength" : "Absenderadresse hat nicht die korrekte Länge!",
+        "fromAddressBadPrefix" : "Absenderadresse muss mit 'zn' beginnen!",
+        "toAddressBadLength": "Empfängeradresse hat nicht die korrekte Länge!",
+        "toAddressBadPrefix": "Empfängeradresse muss mit 'zn' beginnen!",
+        "amounNotNumber": "Betrag ist keine Zahl",
+        "amountIsZero": "Betrag muss größer als Null sein!",
+        "feeNotNumber": "Gebühr ist keine Zahl!",
+        "feeIsNegative": "Gebühr muss größer oder gleich Null sein!",
         "error": "Error",
-        "success": "The transaction has been successfully sent"
+        "success": "Die Transaktion wurde erfolgreich gesendet"
       }
     },
     "transactionHistory": {
-      "label": "Transaction History",
-      "unconfirmed": "UNCONFIRMED",
-      "replaceAttempt": "Attempting to replace transaction in block"
+      "label": "Transaktionsverlauf",
+      "unconfirmed": "UNBESTÄTIGT",
+      "replaceAttempt": "Versuche, die Transaktion im Block zu ersetzen"
     },
     "transactionDetail": {
-      "label": "Transaction Detail",
-      "txid": "Transaction ID",
-      "blockHeight": "Block Height",
-      "unconfirmedTx": "UNCONFIRMED TRANSACTION"
+      "label": "Transaktionsdetails",
+      "txid": "Transaktions-ID",
+      "blockHeight": "Blockhöhe",
+      "unconfirmedTx": "Unbestätigte Transaktion"
     },
     "addressDetail": {
-      "label": "Address Detail",
+      "label": "Adressdetails",
       "name": "Name",
-      "address": "Address",
-      "saveButton": "Save changes"
+      "address": "Adresse",
+      "saveButton": "Änderungen speichern"
     },
     "newAddress": {
-      "label": "Create a New Address",
+      "label": "Neue Adresse erstellen",
       "name": "Name (optional)",
-      "createButton": "Create"
+      "createButton": "Erstellen"
     },
     "about": {
-      "label": "About Arizen",
+      "label": "Über Arizen",
       "homepage": "Homepage",
       "version": "Version",
-      "license": "License",
-      "authors": "Authors"
+      "license": "Lizenz",
+      "authors": "Authoren"
     },
     "settings": {
-      "label": "Settings",
-      "limit": "Transaction limit",
+      "label": "Einstellungen",
+      "limit": "Transaktionslimit",
       "items": "items",
       "language": "Language",
       "explorerUrl": "ZEN Explorer URL",
