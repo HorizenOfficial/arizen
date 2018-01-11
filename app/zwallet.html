@@ -94,17 +94,91 @@
 </template>
 
 <template id=addrSelectRowTemplate>
-    <div class=addrSelectRow>
-        <div class=addrSelectRowName></div>
-        <div class="addrSelectRowAddr monospace"></div>
-        <div class=addrSelectRowBalance><span></span> ZEN</div>
-    </div>
+    <tr class=addrSelectRow>
+        <td class=addrSelectRowName></td>
+        <td class="addrSelectRowAddr monospace"></td>
+        <td class=addrSelectRowBalance><span></span> ZEN</td>
+    </tr>
 </template>
+
+<template id=addrMultiselectRowTemplate>
+    <tr class=addrSelectRow>
+        <td><input class=addrSelectCheckbox type=checkbox /></td>
+        <td class=addrSelectRowName></td>
+        <td class="addrSelectRowAddr monospace"></td>
+        <td class=addrSelectRowBalance><span></span> ZEN</td>
+    </tr>
+</template>
+
 <template id=addrSelectDialogTemplate>
     <arizen-dialog>
         <h2 slot=headerText data-tr=wallet.listOfAddresses>List of Addresses</h2>
-        <div slot=content class=addrSelectList>
-       </div>
+        <table slot=content class=addrSelectList>
+        </table>
+    </arizen-dialog>
+</template>
+
+<template id=batchWithdrawDialogTemplate>
+    <arizen-dialog>
+        <h2 slot=headerText data-tr=wallet.batchWithdraw.label>Batch Withdraw</h2>
+        <div slot=content class=batchWithdrawContent>
+            <table class=addrSelectList></table>
+            <div class=form>
+                <button id=batchWithdrawToAddrSelect data-tr=wallet.to>To</button>
+                <input type=text id=batchWithdrawToAddr name=batchWithdrawToAddr class=monospace />
+
+                <label for=batchWithdrawKeepAmount data-tr=wallet.batchWithdraw.keepAmount>Amount to keep</label>
+                <input type=number id=batchWithdrawKeepAmount name=batchWithdrawKeepAmount
+                    class=amountInput value=42.00000000 min=0 step=0.1 />
+
+                <label for=batchWithdrawFee data-tr=wallet.batchWithdraw.txFee>Transaction fee</label>
+                <input type=number id=batchWithdrawFee name=batchWithdrawFee
+                    class=amountInput value=0.00000000 min=0 step=0.1 />
+            </div>
+            <div class=formButtons>
+                <button id=batchWithdrawButton data-tr=wallet.tabWithdraw.label>Withdraw</button>
+            </div>
+        </div>
+    </arizen-dialog>
+</template>
+
+<template id=txSendStatusDialogTemplate>
+    <arizen-dialog>
+        <h2 slot=headerText data-tr=wallet.tabWithdraw.txStatus>Transaction Status</h2>
+        <div slot=content id=txStatusText>
+            Sending transaction. Please wait...
+        </div>
+    </arizen-dialog>
+</template>
+
+<!-- TODO this doesn't belong here -->
+<template id=generatePaperWalletDialogTemplate>
+    <arizen-dialog>
+        <h2 slot=headerText id=generateNewWalletTitle class=generateNewWalletTitle data-tr=wallet.paperWallet.generateNewWallet>Generate New Wallet</h2>
+        <div slot=content class=generatePaperWalletDialogTemplate>
+            <div id=createButtonCheck class=createButtonCheck style="align-items: center">
+                <div class="" style="text-align: center">
+                    <p><div data-tr=wallet.paperWallet.name>Name (optional)</div><input id=newWalletNamePaper type=text class=newAddrDialogName /></p>
+                    <p></p>
+                    <p><input id=addPaperWalletArizen type=checkbox><span data-tr=wallet.paperWallet.addWalletToArizen>Add this wallet to Arizen</span></input></p>
+                    <p></p>
+                    <p><button type=button class=generateNewWallet data-tr=wallet.paperWallet.generateNewWallet>Generate New Wallet</button></p>
+                    <p></p>
+                </div>
+            </div>
+            <div id=NewAddressPrintArea style="text-align: center; margin:auto; display:none;">
+                <span id=zenCashLogoWallet class=zenLogo style="text-align:center;" ><img src='resources/zen_icon.png' height='50' width='50' /></span>
+                <div id=newWalletNamePaperLabel class=newWalletNamePaperLabel></div>
+                <div class=namePrivateKey style="color:red; display:block;"></div>
+                <div class=qrPrivate style="display:block;"><canvas id=canvasPriv></canvas></div>
+                <div class=keyPrivate style="font-size: 75%; color:red;"></div><br />
+                <div class=nametAddr style="color:green;display:block;"></div>
+                <div class=qrtAddr style="display:block;"><canvas id=canvasT></canvas></div>
+                <div class=tAddr style="font-size: 75%; color:green;"></div><br />
+                <div id=pdfButton class=pdfButton></div>
+            </div>
+
+        </div>
     </arizen-dialog>
 </template>
 
@@ -123,7 +197,7 @@
                 <div data-tr=wallet.about.authors>Authors</div>
                 <div class=aboutAuthors></div>
             </div>
-            <a class=zenLogo href='https://zensystem.io'><img src='resources/zen_icon.png' /></a>
+            <a class=zenLogo><img src='resources/zen_icon.png' /></a>
         </div>
     </arizen-dialog>
 </template>
@@ -191,10 +265,12 @@
 <header class='panel'>
     <div class=headerLeft>
         <span><button onclick="showSettingsDialog()" data-tr=wallet.showSettingsDialogButton>Settings</button></span>
+        <span><button onclick="showGeneratePaperWalletDialog()" data-tr=wallet.paperWallet.label>Paper Wallet</button></span>
+        <span><button onclick="showBatchWithdrawDialog()" data-tr=wallet.showBatchWithdrawDialog>Batch Withdraw</button></span>
     </div>
     <div class=headerCenter>
         <a class=arizenTitle href='https://github.com/ZencashOfficial/arizen'>Arizen</a>
-        <a class=zenLogo href='https://zensystem.io'><img id=zenImg src='resources/zen_icon.png' /></a>
+        <a class=zenLogo><img id=zenImg src='resources/zen_icon.png' /></a>
     </div>
     <div class=headerRight>
         <span><button id=refreshButton data-tr=wallet.refreshWallet>Refresh</button></span>
@@ -254,8 +330,9 @@
             </div>
             <span id=depositMsg>&nbsp;</span>
             <div>
-            <img id=depositQrcodeImg  src=""/>
-        </div>
+                <img id=depositQrcodeImg  class=hidden src=""/>
+            </div>
+            <button id=depositSaveQrcodeButton data-tr=wallet.tabDeposit.saveQrcode disabled>Save QR code</button>
         </div>
     </div>
     <div data-tab-content=withdraw class='walletWithdraw tabContent'>

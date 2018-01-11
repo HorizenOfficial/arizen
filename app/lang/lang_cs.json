@@ -1,6 +1,58 @@
 {
     "languageName": "Czech",
     "languageValue": "cs",
+    "langFileVersion": "1",
+    "login": {
+        "label": "Arizen: Přihlášení",
+        "username": "Jméno",
+        "password": "Heslo",
+        "loginButton": "Přihlásit",
+        "createWalletLink": "Vytvořit novou peněženku",
+        "warningWrongUsernameOrPassword": "Špatné <strong>jméno</strong> nebo <strong>heslo</strong>",
+        "dataImportFailed": "Import dat selhal, pravděpodobně díky špatným přihlašovacím údajům",
+        "fileReplace": "Chcete soubor přepsat?",
+        "walletReplace": "Přepsání peněženky?",
+        "walletReplaceMsg": "Tato akce přepíše vaši aktuálné peněženku. Jste si jistý?",
+        "walletImported": "Peněženky byla importována",
+        "walletImportFailed": "Import selhal",
+        "yes": "Ano",
+        "no": "Ne"
+    },
+    "createWallet": {
+        "label": "Arizen: Vytvoření peněženky",
+        "username": "Jméno",
+        "password": "Heslo",
+        "oldUsername": "Staré jméno: ",
+        "oldPassword": "Staré heslo: ",
+        "passwordAgain": "Heslo znovu" ,
+        "selectWallet": "Vybrat soubor s peněženkou",
+        "selectWalletButton": "Procházet",
+        "createWalletButton": "Vytvořit peněženku",
+        "loginLink": "Přihlásit se ",
+        "warningUsername": "Jméno musí",
+        "warningUsernameLength": "Být dlouhé minimálně <strong>4 znaky</strong>",
+        "warningPassword": "Heslo musí",
+        "warningPasswordLetter": "Obsahovat alespoň <strong>jeden znak abecedy</strong>",
+        "warningPasswordCapitalLetter": "Obsahovat alespoň <strong>jedno velké písmeno</strong>",
+        "warningPasswordNumber": "Obsahovat alespoň <strong>jednu číslici</strong>",
+        "warningPasswordSpecial": "Obsahovat alespoň <strong>jeden speciální znak</strong></strong>",
+        "warningPasswordLength": "Být dlouhé minimálně <strong>8 znaků</strong>",
+        "warningPasswordAgain": "Hesla musejí splnit následující požadavky",
+        "warningPasswordAgainIdentical": "<strong>Musí být identické</strong>",
+        "errorCreationFailed": "Vytvoření peněženky selhalo",
+        "errorFailedResponse": "Nezdařilo se"
+    },
+    "notification": {
+        "settingsUpdated": "Nastavení aktualizováno",
+        "balanceUpdated": "Zůstatek aktualizován",
+        "newTransactions": "Nová transakce"
+    },
+    "importExportPks": {
+        "chooseFileExport" : "Vyberte soubor pro uložení privátních klíčů",
+        "chooseFileImport" : "Vyberte soubor s privátními klíči",
+        "InvalidLinePk": "Neplatná řádka ${0} v souboru s privátními klíči",
+        "InvalidPk": "Neplatný privátní klíč ${0} v souboru s privátními klíči"
+    },
     "wallet": {
         "showSettingsDialogButton" : "Nastavení",
         "showAboutDialogButton" : "O Programu",
@@ -16,15 +68,25 @@
         "lastUpdate": "Čas poslední aktualizace",
         "showExplorer": "Otevřít v ZEN exploreru",
         "listOfAddresses": "Seznam adres",
+        "showBatchWithdrawDialog": "Hromadný výběr",
+        "notLoggedIn": "Nepřihlášen",
+        "addressNotFound": "adresa nenalezena",
+        "nameNotFound": "jméno nenalezeno",
+        "renameWalletSetTo": "adresa ${0} nastavena na ${1}",
+        "fetchBlockchainFailed": "Aktualizace blockchainu selhala:",
+        "save": "Uložit",
+        "pdfExported": "PDF exportováno",
         "tabOverview": {
             "label": "Přehled",
             "showZeroBalances" : "Nulové adresy",
             "newAddress": "Nová adresa",
-            "unnamedAddress": "Nepojmenovaná adresa"
+            "unnamedAddress": "Nepojmenovaná adresa",
+            "newAddressExists": "Addresa ${0} je již v seznamu"
         },
         "tabDeposit": {
             "label": "Vklad",
             "help": "Klikem na zelené tlačítko vedle adresy provedete vklad.",
+            "saveQrcode": "Uložit QR kód",
             "messages": {
                 "emptyToAddr": "Cílová adresa není zadána",
                 "unknownToAddr": "Cílová adresa nepatří do této peněženky",
@@ -36,20 +98,37 @@
             "help": "Klikem na červené tlačítko vedle adresy provedete výběr.",
             "availableBalance": "Dostupný zůstatek",
             "fee": "Poplatek za transakci",
-            "withdrawConfirmQuestion": "Do you really want to send this transaction?",
+            "txStatus" : "Stav transakce",
+            "withdrawConfirmQuestion": "Opravdu chcete provést tuto transakci?",
             "messages": {
                 "emptyFromAddr": "Zdrojová adresa není zadána",
                 "unknownFromAddr": "Zdrojová adresa nepatří do této peněženky",
+                "insufficientFirstSource" : "Nedostatečný zůstatek na první adrese (Minimum: minimální zůstatek + poplatek)!",
+                "insufficientNextSource" : "Nedostatečný zůstatek na druhé nebo některé další adrese (Minimum: minimální zůstatek + poplatek)!",
+                "numberOfKeys": "# privátních klíčů a # adres se nerovná!",
+                "sumLowerThanFee": "Součet zůstatku na zdrojových adresách je menší než poplatek!",
+                "zenApi": "Zen API není nastaveno v předvolbách aplikace!",
+                "unknownAddress": "Zdrojová adresa nepatří do této peněženky!",
+                "insufficientFundsSourceAddr": "Nedostatečný zůstatek na zdrojové adrese",
                 "emptyToAddr": "Cílová adresa není zadána",
                 "zeroAmount": "Množství není větší než nula",
                 "insufficientFunds": "Nedostatečný zůstatek na zdrojové adrese",
+                "fromAddressBadLength" : "Špatná délka zdrojové adresy!",
+                "fromAddressBadPrefix" : "Špatný prefix zdrojové adresy - musí být 'zn'!",
+                "toAddressBadLength": "Špatná délka cílové adresy!",
+                "toAddressBadPrefix": "Špatný prefix cílové adresy - musí být 'zn'!",
+                "amounNotNumber": "Množství není číslo",
+                "amountIsZero": "Množství musí být větší než 0!",
+                "feeNotNumber": "Poplatek není číslo!",
+                "feeIsNegative": "Poplatek nesmí být záporný!",
                 "error": "Chyba",
                 "success": "Transakce úspěšně odeslána"
             }
         },
         "transactionHistory": {
             "label": "Historie transakcí",
-            "unconfirmed": "Čeká na potvrzení"
+            "unconfirmed": "Čeká na potvrzení",
+            "transactionReplaceAttempt": "Pokus o nahrazení transakce v bloku"
         },
         "transactionDetail": {
             "label": "Detail transakce",
@@ -69,7 +148,7 @@
             "createButton": "Vytvořit"
         },
         "about": {
-            "label": "O Arizenu",
+            "label": "O Arizen",
             "homepage": "Web",
             "version": "Verze",
             "license": "Licence",
@@ -84,6 +163,41 @@
             "apiUrl": "Adresa API",
             "fiat": "Zůstatek ve FIAT měně",
             "save": "Uložit"
+        },
+        "paperWallet": {
+            "label": "Papírová peněženka",
+            "generateNewWallet": "Vytvořit novou peněženku",
+            "name": "Jméno (nepovinné)",
+            "addWalletToArizen": "Přidat vytvořenou peněženku do Arizen",
+            "zenCashWalletLabel" : "ZenCash peněženka",
+            "tAddrLabel" : "Veřejný klíč - T adresa",
+            "privateKeyLabel": "Privátní klíč",
+            "namePrint": "Jméno",
+            "exportPDFLabel": "Export do PDF"
+        },
+        "batchWithdraw": {
+            "label": "Hromadný výběr",
+            "keepAmount": "Minimální zůstatek",
+            "txFee": "Poplatek za transakci"
+        }
+    },
+    "menu": {
+        "file" : "Soubor",
+        "backupEncrypted": "Záloha zabezpečené peněženky",
+        "backupUnencrypted": "Záloha nezabezpečené peněženky",
+        "importEncrypted": "Import zabezpečené peněženky",
+        "importUnencrypted": "Import nezabezpečené peněženky",
+        "importPrivateKeys": "Import privátních klíčů",
+        "exportPrivateKeys": "Export privátních klíčů",
+        "exit": "Konec",
+        "edit": "Upravit",
+        "editSubmenu": {
+            "undo": "Zpět",
+            "redo": "Vpřed",
+            "cut": "Vyjmout",
+            "copy": "Kopírovat",
+            "paste": "Vložit",
+            "selectAll": "Vybrat vše"
         }
     }
 }

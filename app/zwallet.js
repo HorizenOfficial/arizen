@@ -7,6 +7,7 @@ const {ipcRenderer} = require("electron");
 // FIXME: unused List
 const {List} = require("immutable");
 const Qrcode = require("qrcode");
+const jsPDF = require("jspdf");
 
 function logIpc(msgType) {
     ipcRenderer.on(msgType, (...args) => {
@@ -45,6 +46,7 @@ const depositToAddrInput = document.getElementById("depositToAddr");
 const depositAmountInput = document.getElementById("depositAmount");
 const depositMsg = document.getElementById("depositMsg");
 const depositQrcodeImage = document.getElementById("depositQrcodeImg");
+const depositSaveQrcodeButton = document.getElementById("depositSaveQrcodeButton");
 const withdrawTabButton = document.getElementById("withdrawTabButton");
 // FIXME: withdrawAvailBalanceNode unused
 const withdrawAvailBalanceNode = document.getElementById("withdrawAvailBalance");
@@ -85,20 +87,26 @@ ipcRenderer.on("get-wallets-response", (event, msgStr) => {
 ipcRenderer.on("update-wallet-balance", (event, msgStr) => {
     const msg = JSON.parse(msgStr);
     checkResponse(msg);
-    setAddressBalance(msg.wallet, msg.balance);
+    setAddressBalance(msg.addrObj.addr, msg.addrObj.balance);
     setTotalBalance(msg.total);
+    showNotification(`${tr("notification.balanceUpdated", "Balance updated")} (${formatBalanceDiff(msg.diff)})`);
 });
 
 ipcRenderer.on("get-transaction-update", (event, msgStr) => {
     const txObj = JSON.parse(msgStr);
     txObj.amount = parseFloat(txObj.amount);
     addTransactions([txObj], true);
+    showNotification(tr("notification.newTransactions", "New transaction"));
 });
 
 ipcRenderer.on("refresh-wallet-response", (event, msgStr) => {
     const msg = JSON.parse(msgStr);
     checkResponse(msg);
     scheduleRefresh();
+});
+
+ipcRenderer.on("send-refreshed-wallet-balance", (event, totalBalance) => {
+    setTotalBalance(totalBalance);
 });
 
 ipcRenderer.on("send-finish", (event, result, msg) =>
@@ -126,6 +134,12 @@ function checkResponse(resp) {
     }
 }
 
+function warnTxSend(onOk) {
+    const msg = tr("wallet.tabWithdraw.withdrawConfirmQuestion", "Do you really want to send this transaction?");
+    if (confirm(msg))
+        onOk();
+}
+
 function getAddrData(addr) {
     const idx = addrIdxByAddr.get(addr);
     let addrObj, addrNode;
@@ -146,7 +160,7 @@ function setBalanceText(balanceNode, balance) {
         balanceNode.classList.remove("positive");
 }
 
-function setFiatBalanceText(balanceZEN, fiatCurrencySymbol = "") {
+function setFiatBalanceText(balanceZen, fiatCurrencySymbol = "") {
     const totalBalanceFiatNode = document.getElementById("totalBalanceFiat");
     const balanceFiatAmountNode = totalBalanceFiatNode.firstElementChild;
     const lastUpdateTimeNode = document.getElementById("lastUpdateTime");
@@ -157,28 +171,21 @@ function setFiatBalanceText(balanceZEN, fiatCurrencySymbol = "") {
             fiatCurrencySymbol = "USD";
         }
     }
-    zenToFiat(fiatCurrencySymbol).then(function (ZENPrice) {
+    
+    const axios = require("axios");
+    const BASE_API_URL = "https://api.coinmarketcap.com/v1/ticker";
+    let API_URL = BASE_API_URL + "/zencash/?convert=" + fiatCurrencySymbol;
+
+    axios.get(API_URL).then(response => {
+        let resp = response.data;
+        let zenPrice = parseFloat(resp[0]["price_" + fiatCurrencySymbol.toLowerCase()]);
         const now = new Date().toLocaleTimeString();
-        let balance = (balanceZEN) * ZENPrice;
+        let balance = parseFloat(balanceZen) * zenPrice;
         balanceFiatAmountNode.textContent = formatFiatBalance(balance) + " " + fiatCurrencySymbol;
         lastUpdateTimeNode.textContent = now;
-    });
-}
-
-function zenToFiat(fiat) {
-    const fetch = require("node-fetch");
-    const BASE_API_URL = "https://api.coinmarketcap.com/v1//ticker";
-    let API_URL = BASE_API_URL + "/zencash/?convert=" + fiat;
-
-    console.log("GET " + API_URL);
-    return fetch(API_URL).then(function (resp) {
-        console.log(`GET ${API_URL} done, status: ${resp.status} ${resp.statusText}`);
-        if (!resp.ok)
-            throw new Error(`HTTP GET status: ${resp.status} ${resp.statusText}, URL: ${API_URL}`);
-        return resp.json()
-    }).then(function (responseAsJson) {
-        return parseFloat(responseAsJson[0]["price_" + fiat.toLowerCase()]);
-    });
+      }).catch(error => {
+            console.log(error);
+      });
 }
 
 function setAddressNodeName(addrObj, addrNode) {
@@ -213,6 +220,7 @@ function createAddrItem(addrObj) {
     return addrItem;
 }
 
+
 function setAddrItemBalance(addrItem, balance) {
     addrItem.dataset.balance = balance;
     hideElement(addrItem, balance === 0 && !showZeroBalances);
@@ -235,7 +243,7 @@ function showAddrDetail(addr) {
             ipcRenderer.send("rename-wallet", addr, nameNode.value);
         });
         dialog.addEventListener("keypress", ev => {
-            if (event.keyCode == 13)
+            if (event.keyCode === 13)
                 saveButton.click();
         });
     });
@@ -379,7 +387,7 @@ function showNewAddrDialog() {
             dialog.close();
         });
         dialog.addEventListener("keypress", ev => {
-            if (event.keyCode == 13)
+            if (event.keyCode === 13)
                 createButton.click();
         });
     });
@@ -401,7 +409,7 @@ function addTransactions(txs, newTx = false) {
         const oldTxItem = txListNode.querySelector(`[data-txid='${txObj.txid}']`);
         if (oldTxItem) {
             if (oldTxItem.dataset.blockheight !== "-1") {
-                console.error("Attempting to replace transaction in block");
+                console.error(tr("wallet.transactionHistory.replaceAttempt","Attempting to replace transaction in block"));
             } else if (txObj.block >= 0) {
                 txListNode.replaceChild(createTxItem(txObj, newTx), oldTxItem);
             }
@@ -411,9 +419,9 @@ function addTransactions(txs, newTx = false) {
     }
 }
 
-function setTotalBalance(balanceZEN) {
-    setBalanceText(totalBalanceNode, balanceZEN);
-    setFiatBalanceText(balanceZEN);
+function setTotalBalance(balanceZen) {
+    setBalanceText(totalBalanceNode, balanceZen);
+    setFiatBalanceText(balanceZen);
 }
 
 function toggleZeroBalanceAddrs() {
@@ -459,10 +467,17 @@ function initDepositView() {
     depositToAddrInput.addEventListener("input", () => updateDepositQrcode(qrcodeTypeDelay));
     depositAmountInput.addEventListener("input", () => updateDepositQrcode(qrcodeTypeDelay));
     depositToButton.addEventListener("click", () => showAddrSelectDialog(true, addr => {
-    depositToAddrInput.addEventListener("input", () => updateDepositQrcode(qrcodeTypeDelay));
         depositToAddrInput.value = addr;
         updateDepositQrcode();
     }));
+    depositSaveQrcodeButton.addEventListener("click", () => {
+        const pdf = new jsPDF({ unit: 'mm', format: [100, 100] });
+        const w = pdf.internal.pageSize.width;
+        const h = pdf.internal.pageSize.height;
+        pdf.addImage(depositQrcodeImage.src, 'JPEG', 0, 0, w, h);
+        const addr = depositToAddrInput.value;
+        pdf.save(`arizen-deposit-${addr}.pdf`);
+    });
 }
 
 function updateDepositQrcode(qrcodeDelay = 0) {
@@ -472,12 +487,21 @@ function updateDepositQrcode(qrcodeDelay = 0) {
         color: {dark: "#000000ff", light: "#fefefeff"}
     };
 
+    depositQrcodeImage.classList.add("hidden");
+    depositSaveQrcodeButton.disabled = true;
+
     const toAddr = depositToAddrInput.value;
     const amount = parseFloat(depositAmountInput.value || 0);
 
     if (!toAddr) {
         setNodeTrText(depositMsg, "wallet.tabDeposit.messages.emptyToAddr", "The to address is empty");
-    } else if (!addrIdxByAddr.has(toAddr)) {
+        return;
+    }
+
+    depositQrcodeImage.classList.remove("hidden");
+    depositSaveQrcodeButton.disabled = false;
+
+    if (!addrIdxByAddr.has(toAddr)) {
         setNodeTrText(depositMsg, "wallet.tabDeposit.messages.unknownToAddr", "The to address does not belong to this wallet");
     } else if (amount <= 0) {
         setNodeTrText(depositMsg, "wallet.tabDeposit.messages.zeroAmount", "The amount is not positive");
@@ -562,6 +586,7 @@ function validateWithdrawForm() {
     withdrawButton.disabled = false;
 }
 
+
 function updateWithdrawalStatus(result, msg) {
     if (result === "error") {
         withdrawStatusTitleNode.classList.add("withdrawStatusBad");
@@ -573,8 +598,82 @@ function updateWithdrawalStatus(result, msg) {
     withdrawStatusBodyNode.innerHTML = msg;
 }
 
+function showBatchWithdrawDialog() {
+    showDialogFromTemplate("batchWithdrawDialogTemplate", dialog => {
+        const bwSettings = deepClone(settings.batchWithdraw) || {
+            fromAddrs: [],
+            toAddr: "",
+            keepAmount: 42,
+            txFee: 0.0001,
+        };
+        const fromAddrsSet = new Set(bwSettings.fromAddrs);
+        const listNode = dialog.querySelector(".addrSelectList");
+
+        for (const addrObj of addrObjList) {
+            const row = cloneTemplate("addrMultiselectRowTemplate");
+            row.dataset.addr = addrObj.addr;
+
+            const selectCheckbox = row.querySelector(".addrSelectCheckbox");
+            const nameNode = row.querySelector(".addrSelectRowName");
+            const addrNode = row.querySelector(".addrSelectRowAddr");
+            const balanceNode = row.querySelector(".addrSelectRowBalance");
+
+            if (fromAddrsSet.has(addrObj.addr))
+                selectCheckbox.checked = true;
+            nameNode.textContent = addrObj.name;
+            addrNode.textContent = addrObj.addr;
+            setBalanceText(balanceNode, addrObj.lastbalance);
+
+            listNode.appendChild(row)
+        }
+
+        const keepAmountInput = dialog.querySelector("#batchWithdrawKeepAmount");
+        const txFeeInput = dialog.querySelector("#batchWithdrawFee");
+        const toAddrSelectButton = dialog.querySelector("#batchWithdrawToAddrSelect");
+        const toAddrInput = dialog.querySelector("#batchWithdrawToAddr");
+        const withdrawButton = dialog.querySelector("#batchWithdrawButton");
+
+        setInputNodeValue(toAddrInput, bwSettings.toAddr);
+        setInputNodeValue(keepAmountInput, bwSettings.keepAmount);
+        setInputNodeValue(txFeeInput, bwSettings.txFee);
+        toAddrSelectButton.addEventListener("click", () => showAddrSelectDialog(true, addr => {
+            toAddrInput.value = addr;
+            // TODO validate form
+        }));
+
+        withdrawButton.addEventListener("click", () => {
+            bwSettings.fromAddrs = [];
+            [... listNode.children].forEach(row => {
+                if (row.querySelector(".addrSelectCheckbox").checked)
+                    bwSettings.fromAddrs.push(row.dataset.addr);
+            });
+            bwSettings.toAddr = toAddrInput.value;
+            bwSettings.keepAmount = keepAmountInput.value;
+            bwSettings.txFee = txFeeInput.value;
+
+            settings.batchWithdraw = bwSettings;
+            saveModifiedSettings();
+
+            warnTxSend(() => {
+                const statusDialog = createDialogFromTemplate("txSendStatusDialogTemplate");
+                const statusText = statusDialog.querySelector("#txStatusText");
+                ipcRenderer.once("send-finish", (event, result, msg) => {
+                    statusText.innerHTML = msg;
+                });
+                ipcRenderer.send("send-many", bwSettings.fromAddrs, bwSettings.toAddr, bwSettings.txFee, bwSettings.keepAmount);
+                dialog.close();
+                statusDialog.showModal();
+            });
+        });
+    });
+}
+
+function showTxStatusDialog() {
+
+}
+
 function initWallet() {
-    fixLinks();
+    fixPage();
     initDepositView();
     initWithdrawView();
     document.getElementById("actionShowZeroBalances").addEventListener("click", toggleZeroBalanceAddrs);

@@ -1,0 +1,203 @@
+{
+  "languageName": "Dutch",
+  "languageValue": "nl",
+  "langFileVersion": "1",
+  "login": {
+    "label": "Arizen: Inloggen",
+    "username": "Gebruikersnaam",
+    "password": "Wachtwoord",
+    "loginButton": "Inloggen",
+    "createWalletLink": "Portefeuille maken",
+    "warningWrongUsernameOrPassword": "Verkeerde <strong>gebruikersnaam</strong> of <strong>wachtwoord</strong>",
+    "dataImportFailed": "Importeren van data niet gelukt, mogelijk omdat de gegevens niet kloppen",
+    "fileReplace": "Wil je het bestand vervangen?",
+    "walletReplace": "Vervang portefeuille?",
+    "walletReplaceMsg": "Dit vervangt je huidige portefeuille. Weet je het zeker?",
+    "walletImported": "Portefeuille succesvol geimporteerd",
+    "walletImportFailed": "Importeren mislukt",
+    "yes": "Ja",
+    "no": "Nee"
+  },
+  "createWallet": {
+    "label": "Arizen: Portefeuille Aanmaken",
+    "username": "Gebruikersnaam",
+    "password": "Wachtwoord",
+    "passwordAgain": "Herhaal wachtwoord" ,
+    "oldUsername": "Oude gebruikersnaam: ",
+    "oldPassword": "Oude wachtwoord: ",
+    "selectWallet": "Selecteer portefeuille",
+    "selectWalletButton": "Bladeren",
+    "createWalletButton": "Portefeuille aanmaken",
+    "loginLink": "Inloggen",
+    "warningUsername": "Gebruikersnaam moet aan de volgende eisen voldoen:",
+    "warningUsernameLength": "Minimaal <strong>vier letters</strong>",
+    "warningPassword": "Wachtwoord moet aan de volgende eisen voldoen:",
+    "warningPasswordLetter": "Minimaal <strong>één letter</strong>",
+    "warningPasswordCapitalLetter": "Minimaal <strong>één hoofdletter</strong>",
+    "warningPasswordNumber": "Minimaal <strong>één cijfer</strong>",
+    "warningPasswordSpecial": "Minimaal <strong>één speciaal karakter</strong>",
+    "warningPasswordLength": "Minimale lengte van <strong>8 karakters</strong>",
+    "warningPasswordAgain": "Wachtwoord moet aan de volgende eisen voldoen:",
+    "warningPasswordAgainIdentical": "<strong>Identiek</strong>",
+    "errorCreationFailed": "Portefeuille aanmaken mislukt",
+    "errorFailedResponse": "Mislukte poging"
+  },
+  "notification": {
+    "settingsUpdated": "Instellingen geupdate",
+    "balanceUpdated": "Saldo geupdate",
+    "newTransactions": "Nieuwe transactie"
+  },
+  "importExportPks": {
+    "chooseFileExport" : "Kies een locatie om de prive sleutels op te slaan",
+    "chooseFileImport" : "Kies een bestand met prive sleutels",
+    "InvalidLinePk": "Ongeldige regel ${0} in prive sleutel bestand",
+    "InvalidPk": "Ongeldige prive sleutel op regel ${0} in prive sleutel bestand"
+  },
+  "wallet": {
+    "showSettingsDialogButton" : "Instellingen",
+    "showAboutDialogButton" : "Over",
+    "refreshWallet" : "Vernieuwen",
+    "logout" : "Uitloggen",
+    "exit" : "Afsluiten",
+    "date" : "Datum",
+    "from": "Van",
+    "to": "Aan",
+    "amount" : "Aantal",
+    "balance" : "Saldo",
+    "totalBalance": "Totaal Saldo",
+    "lastUpdate": "Laatste update",
+    "showExplorer": "Bekijk in ZEN Explorer",
+    "listOfAddresses": "Lijst Van Adressen",
+    "showBatchWithdrawDialog": "Meerdere Opnamen",
+    "notLoggedIn": "Niet ingelogd",
+    "addressNotFound": "adres niet gevonden",
+    "nameNotFound": "naam niet gevonden",
+    "renameWalletSetTo": "adres ${0} ingesteld op ${1}",
+    "fetchBlockchainFailed": "Niet gelukt om blockchain update op te halen:",
+    "save": "Opslaan",
+    "pdfExported": "PDF geëxporteerd ",
+    "tabOverview": {
+      "label": "Overzicht",
+      "showZeroBalances" : "Laat nul saldi zien",
+      "newAddress": "Maak een nieuw adres aan",
+      "unnamedAddress": "Naamloos adres",
+      "newAddressExists": "Adres ${0} komt al voor in de lijst"
+    },
+    "tabDeposit": {
+      "label": "Storten",
+      "help": "Klik op de groene knop naast het gewenste adres om te storten.",
+      "saveQrcode": "Sla QR code op",
+      "messages": {
+        "emptyToAddr": "Het aan adres is leeg",
+        "unknownToAddr": "Het aan adres behoord niet tot deze portefeuille",
+        "zeroAmount": "Het aantal is negatief"
+      }
+    },
+    "tabWithdraw": {
+      "label": "Opnemen",
+      "help": "Klik op de rode knop naast het gewenste adres om op te nemen.",
+      "availableBalance": "Beschikbaar saldo",
+      "fee": "Transactiekosten",
+      "txStatus" : "Transactie status",
+      "withdrawConfirmQuestion": "Weet je zeker dat je deze transactie wilt verzenden?",
+      "messages": {
+        "emptyFromAddr": "Het van adres is leeg",
+        "unknownFromAddr": "Het van adres behoort niet tot deze portefeuille",
+        "insufficientFirstSource" : "Onvoldoende saldo op het eerste adres (Minimum: minimum saldo + kosten)!",
+        "insufficientNextSource" : "Onvoldoende saldo op een ander of een ander adres (Minimum: minimum saldo + kosten)!",
+        "numberOfKeys": "# prive sleutels en # adressen zijn niet gelijk!",
+        "sumLowerThanFee": "Je totale saldo van alle adressen is lager dan de transactiekosten!",
+        "zenApi": "Zen API is niet ingesteld in de instellingen!",
+        "unknownAddress": "Het van adres staat niet in deze portefeuille!",
+        "insufficientFundsSourceAddr": "Onvoldoende saldo op het van adres",
+        "emptyToAddr": "Het aan adres is leeg",
+        "zeroAmount": "Het aantal is negatief",
+        "insufficientFunds": "Onvoldoende saldo op het van adres",
+        "fromAddressBadLength" : "Verkeerde lengte van het van adres!",
+        "fromAddressBadPrefix" : "Verkeerd begin van het van nadres - het adres moet beginnen met 'zn'!",
+        "toAddressBadLength": "Verkeerde lengte van het aan adres!",
+        "toAddressBadPrefix": "Verkeerd begin van het aan nadres - het adres moet beginnen met 'zn'!",
+        "amounNotNumber": "Aantal is GEEN cijfer",
+        "amountIsZero": "Aantal moet groter zijn dan nul!",
+        "feeNotNumber": "Transactiekosten is GEEN cijfer!",
+        "feeIsNegative": "Transactiekosten moeten groter of gelijk zijn aan nul!",
+        "error": "Fout",
+        "success": "De transactie is succesvol verzonden"
+      }
+    },
+    "transactionHistory": {
+      "label": "Transactie Geschiedenis",
+      "unconfirmed": "ONBEVESTIGD",
+      "replaceAttempt": "Poging om een transactie in een blok te vervangen"
+    },
+    "transactionDetail": {
+      "label": "Transactie Details",
+      "txid": "Transactie ID",
+      "blockHeight": "Blok Hoogte",
+      "unconfirmedTx": "ONBEVESTIGDE TRANSACTIE"
+    },
+    "addressDetail": {
+      "label": "Adres detail",
+      "name": "Naam",
+      "address": "Adres",
+      "saveButton": "Aanpassingen opslaan"
+    },
+    "newAddress": {
+      "label": "Maak een Nieuw Adres",
+      "name": "Naam (optioneel)",
+      "createButton": "Aanmaken"
+    },
+    "about": {
+      "label": "Over Arizen",
+      "homepage": "Homepagina",
+      "version": "Versie",
+      "license": "Licentie",
+      "authors": "Auteurs"
+    },
+    "settings": {
+      "label": "Instellingen",
+      "limit": "Transactie limiet",
+      "items": "stuks",
+      "language": "Taal",
+      "explorerUrl": "ZEN Explorer adres",
+      "apiUrl": "API adres",
+      "fiat": "Saldo in FIAT-valuta",
+      "save": "Opslaan"
+    },
+    "paperWallet": {
+      "label": "Papieren Portefeuille",
+      "generateNewWallet": "Genereer Nieuwe Portefeuille",
+      "name": "Naam (optioneel)",
+      "addWalletToArizen": "Voeg deze portefeuille toe aan Arizen",
+      "zenCashWalletLabel" : "ZenCash Portefeuille",
+      "tAddrLabel" : "Publieke Sleutel - T Adres",
+      "privateKeyLabel": "Prive Sleutel",
+      "namePrint": "Naam",
+      "exportPDFLabel": "Exporteer PDF"
+    },
+    "batchWithdraw": {
+      "label": "Meerdere Opnamen",
+      "keepAmount": "Te behouden bedrag",
+      "txFee": "Transactiekosten"
+    }
+  },
+  "menu": {
+    "file" : "Bestand",
+    "backupEncrypted":  "Backup van BEVEILIGDE portefeuille",
+    "backupUnencrypted": "Backup van ONBEVEILIGDE portefeuille",
+    "importEncrypted": "Importeer BEVEILIGDE Arizen portefeuille",
+    "importUnencrypted": "Importeer ONBEVEILIGDE Arizen portefeuille",
+    "importPrivateKeys": "Importer prive sleutels",
+    "exportPrivateKeys": "Exporteer prive sleutels",
+    "exit": "Afsluiten",
+    "edit": "Bewerken",
+    "editSubmenu": {
+      "undo": "Ongedaan maken",
+      "redo": "Opnieuw doen",
+      "cut": "Knippen",
+      "copy": "Kopiëren",
+      "paste": "Plakken",
+      "selectAll": "Alles Selecteren"
+    }
+  }
+}
