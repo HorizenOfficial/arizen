@@ -103,7 +103,12 @@
 
 <template id=addrMultiselectRowTemplate>
     <tr class=addrSelectRow>
-        <td><input class=addrSelectCheckbox type=checkbox /></td>
+        <td>
+          <label class=container>
+              <input class=addrSelectCheckbox type=checkbox />
+              <span class=checkmark></span>
+          </label>
+        </td>
         <td class=addrSelectRowName></td>
         <td class="addrSelectRowAddr monospace"></td>
         <td class=addrSelectRowBalance><span></span> ZEN</td>
@@ -156,28 +161,27 @@
     <arizen-dialog>
         <h2 slot=headerText id=generateNewWalletTitle class=generateNewWalletTitle data-tr=wallet.paperWallet.generateNewWallet>Generate New Wallet</h2>
         <div slot=content class=generatePaperWalletDialogTemplate>
-            <div id=createButtonCheck class=createButtonCheck style="align-items: center">
-                <div class="" style="text-align: center">
+            <div id=createButtonCheck class=createButtonCheck>
+                <div class=createWalletContainer>
                     <p><div data-tr=wallet.paperWallet.name>Name (optional)</div><input id=newWalletNamePaper type=text class=newAddrDialogName /></p>
                     <p></p>
-                    <p><input id=addPaperWalletArizen type=checkbox><span data-tr=wallet.paperWallet.addWalletToArizen>Add this wallet to Arizen</span></input></p>
+                    <p><label class=container><span data-tr=wallet.paperWallet.addWalletToArizen>Add this wallet to Arizen</span><input id=addPaperWalletArizen type=checkbox><span class=checkmark></span></label></p>
                     <p></p>
                     <p><button type=button class=generateNewWallet data-tr=wallet.paperWallet.generateNewWallet>Generate New Wallet</button></p>
                     <p></p>
                 </div>
             </div>
-            <div id=NewAddressPrintArea style="text-align: center; margin:auto; display:none;">
-                <span id=zenCashLogoWallet class=zenLogo style="text-align:center;" ><img src='resources/zen_icon.png' height='50' width='50' /></span>
+            <div id=newAddressPrintArea class=newAddressPrintArea >
+                <span id=zenCashLogoWallet class=zenLogo><img src='resources/zen_icon.png' height='50' width='50' /></span>
                 <div id=newWalletNamePaperLabel class=newWalletNamePaperLabel></div>
-                <div class=namePrivateKey style="color:red; display:block;"></div>
-                <div class=qrPrivate style="display:block;"><canvas id=canvasPriv></canvas></div>
-                <div class=keyPrivate style="font-size: 75%; color:red;"></div><br />
-                <div class=nametAddr style="color:green;display:block;"></div>
-                <div class=qrtAddr style="display:block;"><canvas id=canvasT></canvas></div>
-                <div class=tAddr style="font-size: 75%; color:green;"></div><br />
+                <div class=namePrivateKey></div>
+                <div class=qrPrivate><canvas id=canvasPriv></canvas></div>
+                <div class=keyPrivate></div><br/>
+                <div class=nametAddr></div>
+                <div class=qrtAddr><canvas id=canvasT></canvas></div>
+                <div class=tAddr></div><br/>
                 <div id=pdfButton class=pdfButton></div>
             </div>
-
         </div>
     </arizen-dialog>
 </template>
@@ -289,8 +293,11 @@
     <div data-tab-content=overview class='walletOverview tabContent'>
         <div class='tabContentHeader walletOverviewControl'>
             <span class=tabContentHeaderLabel data-tr=wallet.listOfAddresses>List of Addresses</span>
-            <input type=checkbox id=actionShowZeroBalances name=actionShowZeroBalances>
-            <label for=actionShowZeroBalances data-tr=wallet.tabOverview.showZeroBalances>Show zero balances</label>
+            <label class=container>
+                <input type=checkbox id=actionShowZeroBalances name=actionShowZeroBalances>
+                <label for=actionShowZeroBalances data-tr=wallet.tabOverview.showZeroBalances>Show zero balances</label>
+                <span class=checkmark></span>
+            </label>
             <button id=createNewAddrButton class=smallButton data-tr=wallet.tabOverview.newAddress>Get a new address</button>
         </div>
         <template id=addrItemTemplate>
