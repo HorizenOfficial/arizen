@@ -1,0 +1,203 @@
+{
+  "languageName": "日本語",
+  "languageValue": "jp",
+  "langFileVersion": "1",
+  "login": {
+    "label": "Arizen：ログイン",
+    "username": "ユーザー名",
+    "password": "パスワード",
+    "loginButton": "ログイン",
+    "createWalletLink": "ウォレット作成",
+    "warningWrongUsernameOrPassword": "<strong>ユーザー名</strong>または<strong>パスワード</strong>が間違っています。",
+    "dataImportFailed": "データのインポートに失敗しました。資格情報が間違えたかもしれません。",
+    "fileReplace": "ファイルを置き換えますか？",
+    "walletReplace": "ウォレットを置き換えますか？",
+    "walletReplaceMsg": "現在のウォレットが置き換えられますが、よろしいですか？",
+    "walletImported": "ウォレットをインポートしました。",
+    "walletImportFailed": "ウォレットのインポートに失敗しました。",
+    "yes": "はい",
+    "no": "いいえ"
+  },
+  "createWallet": {
+    "label": "Arizen：ウォレット作成",
+    "username": "ユーザー名",
+    "password": "パスワード",
+    "passwordAgain": "パスワード再入力" ,
+    "oldUsername": "以前のユーザー名：",
+    "oldPassword": "以前のパスワード：",
+    "selectWallet": "ウォレット選択",
+    "selectWalletButton": "ブラウズ",
+    "createWalletButton": "ウォレット作成",
+    "loginLink": "ログイン",
+    "warningUsername": "ユーザー名は次の要件を満たす必要があります：",
+    "warningUsernameLength": "<strong>4文字</strong>以上",
+    "warningPassword": "パスワードは次の要件を満たす必要があります：",
+    "warningPasswordLetter": "少なくとも<strong>1つの小文字</strong>",
+    "warningPasswordCapitalLetter": "少なくとも<strong>1つの大文字</strong>",
+    "warningPasswordNumber": "少なくとも<strong>1つの数字</strong>",
+    "warningPasswordSpecial": "少なくとも<strong>1つの特殊文字</strong>",
+    "warningPasswordLength": "少なくとも<strong>8文字</strong>",
+    "warningPasswordAgain": "パスワードは次の要件を満たす必要があります：",
+    "warningPasswordAgainIdentical": "<strong>同様</strong>",
+    "errorCreationFailed": "ウォレットの作成に失敗しました。",
+    "errorFailedResponse": "レスポンスに失敗しました。"
+  },
+  "notification": {
+    "settingsUpdated": "設定が更新されました。",
+    "balanceUpdated": "残高が更新されました。",
+    "newTransactions": "新しい取引"
+  },
+  "importExportPks": {
+    "chooseFileExport" : "秘密鍵のファイルを選択する",
+    "chooseFileImport" : "秘密鍵でファイルを選択する",
+    "InvalidLinePk": "秘密鍵ファイルの${0}行が無効です。",
+    "InvalidPk": "秘密鍵ファイルの${0}行の秘密鍵が無効です。"
+  },
+  "wallet": {
+    "showSettingsDialogButton" : "設定",
+    "showAboutDialogButton" : "ヘルプ",
+    "refreshWallet" : "リフレッシュ",
+    "logout" : "ログアウト",
+    "exit" : "終了(X)",
+    "date" : "日付",
+    "from": "FROM",
+    "to": "TO",
+    "amount" : "金額",
+    "balance" : "残高",
+    "totalBalance": "トータル残高",
+    "lastUpdate": "最後の更新",
+    "showExplorer": "ZENエクスプローラで見る",
+    "listOfAddresses": "アドレス一覧",
+    "showBatchWithdrawDialog": "バッチ撤退",
+    "notLoggedIn": "ログインしていません。",
+    "addressNotFound": "アドレスが見つかりません。",
+    "nameNotFound": "名前が見つかりません。",
+    "renameWalletSetTo": "アドレス${0}は${1}に設定されています。",
+    "fetchBlockchainFailed": "ブロックチェーンの変更を取得できませんでした：",
+    "save": "保存",
+    "pdfExported": "PDF出力",
+    "tabOverview": {
+      "label": "概要",
+      "showZeroBalances" : "ゼロ残高を表示",
+      "newAddress": "新しいアドレスを取得する",
+      "unnamedAddress": "無名のアドレス",
+      "newAddressExists": "アドレス${0}は既にリストに存在しています"
+    },
+    "tabDeposit": {
+      "label": "預金",
+      "help": "入金したいアドレスの横にある緑色のボタンをクリックする。",
+      "saveQrcode": "QRコードを保存する",
+      "messages": {
+        "emptyToAddr": "宛先アドレスは空です。",
+        "unknownToAddr": "宛先アドレスはこのウォレットに属していません。",
+        "zeroAmount": "金額は正ではありません"
+      }
+    },
+    "tabWithdraw": {
+      "label": "撤退",
+      "help": "引き出したいアドレスの横にある赤いボタンをクリックする。",
+      "availableBalance": "利用可能残高",
+      "fee": "取引手数料",
+      "txStatus" : "取引ステータス",
+      "withdrawConfirmQuestion": "本当にこの取引を行いますか？",
+      "messages": {
+        "emptyFromAddr": "送信元アドレスが空です。",
+        "unknownFromAddr": "送信元アドレスはこのウォレットに属していません。",
+        "insufficientFirstSource" : "1番目の送信元に十分な資金がありません（最小：閾値限界+手数料）！",
+        "insufficientNextSource" : "2番目又は次の送信元に十分な資金がありません（最小：閾値限界+手数料）！",
+        "numberOfKeys": "秘密鍵とアドレスが一致しない！",
+        "sumLowerThanFee": "すべての送信元アドレスの合計残高が料金より安い！",
+        "zenApi": "Zen APIが設定にセットされていません！",
+        "unknownAddress": "ソースアドレスはあなたのウォレットにありません！",
+        "insufficientFundsSourceAddr": "送信元アドレスに十分な資金がありません。",
+        "emptyToAddr": "送信元アドレスが空です。",
+        "zeroAmount": "金額は正ではありません。",
+        "insufficientFunds": "送信元アドレスに十分な資金がありません。",
+        "fromAddressBadLength" : "ソースアドレスの長さが間違っています！",
+        "fromAddressBadPrefix" : "送信元アドレスにはプレフィックス'zn'が必要です。",
+        "toAddressBadLength": "宛先アドレスの長さが間違っています！",
+        "toAddressBadPrefix": "宛先アドレスにはプレフィックス'zn'が必要です。",
+        "amounNotNumber": "金額は数字ではありません",
+        "amountIsZero": "金額はゼロより大きくなければなりません！",
+        "feeNotNumber": "料金は数字ではありません！",
+        "feeIsNegative": "料金はゼロより大きくなければなりません！",
+        "error": "エラー",
+        "success": "取引は正常に終了しました。"
+      }
+    },
+    "transactionHistory": {
+      "label": "取引履歴",
+      "unconfirmed": "未確認",
+      "replaceAttempt": "ブロック内の取引を置換しようとしています"
+    },
+    "transactionDetail": {
+      "label": "取引詳細",
+      "txid": "取引ID",
+      "blockHeight": "ブロックの高さ",
+      "unconfirmedTx": "未確認の取引"
+    },
+    "addressDetail": {
+      "label": "アドレス詳細",
+      "name": "名前",
+      "address": "アドレス",
+      "saveButton": "変更内容を保存する"
+    },
+    "newAddress": {
+      "label": "新しいアドレスを作成する",
+      "name": "名前（任意）",
+      "createButton": "作成"
+    },
+    "about": {
+      "label": "Arizenについて",
+      "homepage": "ホームページ",
+      "version": "バージョン",
+      "license": "ライセンス",
+      "authors": "作者"
+    },
+    "settings": {
+      "label": "設定",
+      "limit": "取引限度額",
+      "items": "アイテム",
+      "language": "言語",
+      "explorerUrl": "ZEN ExplorerのURL",
+      "apiUrl": "APIのURL",
+      "fiat": "フィアット相当品",
+      "save": "保存"
+    },
+    "paperWallet": {
+      "label": "ペーパーウォレット",
+      "generateNewWallet": "ウォレット作成",
+      "name": "名前（任意）",
+      "addWalletToArizen": "このウォレットをArizenに追加する",
+      "zenCashWalletLabel" : "ZenCashウォレット",
+      "tAddrLabel" : "公開鍵-Tアドレス",
+      "privateKeyLabel": "秘密鍵",
+      "namePrint": "名前",
+      "exportPDFLabel": "PDF出力"
+    },
+    "batchWithdraw": {
+      "label": "一括撤退",
+      "keepAmount": "維持する量",
+      "txFee": "取引手数料"
+    }
+  },
+  "menu": {
+    "file" : "ファイル",
+    "backupEncrypted":  "暗号化済みのウォレットのバックアップ",
+    "backupUnencrypted": "復号化済みのウォレットのバックアップ",
+    "importEncrypted": "Arizen暗号化ウォレットのインポート",
+    "importUnencrypted": "Arizen復号化ウォレットのインポート",
+    "importPrivateKeys": "秘密鍵のインポート",
+    "exportPrivateKeys": "秘密鍵のエクスポート",
+    "exit": "終了(X)",
+    "edit": "編集",
+    "editSubmenu": {
+      "undo": "元に戻す",
+      "redo": "やり直す",
+      "cut": "カット",
+      "copy": "コピー",
+      "paste": "貼付",
+      "selectAll": "すべて選択"
+    }
+  }
+}
