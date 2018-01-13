@@ -3,9 +3,13 @@
 [![Build status][travis-img]][travis-url]
 [![Code Climate][codeclimate-img]][codeclimate-url]
 
-
 # Arizen
 Arizen is ZenCash light wallet.
+
+# User Manuals
+- v1.1.2: [Arizen v1.1.2 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.2/Arizen.v1.1.2.Wallet.User.Manual.pdf)
+- v1.1.1: [Arizen v1.1.1 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.1/Arizen.v1.1.1.Wallet.User.Manual.pdf)
+- v1.0.0: [Arizen v1.0.0 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.0.0/Arizen.Wallet.User.Manual.pdf)
 
 # Version History
 ## v1.1.2
