@@ -217,3 +217,106 @@ arizen-dialog > [slot="content"] {
 .settingsDialogContent {
     min-width: 600px;
 }
+
+.container {
+    display: block;
+    position: relative;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.container input {
+    opacity: 0;
+    cursor: pointer;
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 19px;
+    width: 19px;
+    background-color: #bbb;
+}
+
+.container:hover input ~ .checkmark {
+    background-color: var(--hover-fg);
+}
+
+.container input:checked ~ .checkmark {
+    background-color: var(--arizen-fg);
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.container .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.createButtonCheck {
+    align-items: center;
+}
+
+.createWalletContainer {
+    text-align: center;
+}
+
+.newAddressPrintArea {
+    text-align: center;
+    margin:auto;
+    display:none;
+}
+
+.zenLogo {
+    text-align:center;
+}
+
+.namePrivateKey {
+    color:red;
+    display:block;
+}
+
+.qrPrivate {
+    display:block;
+}
+
+.keyPrivate {
+    font-size: 75%;
+    color:red;
+}
+
+.nametAddr {
+    style="color:green;
+    display:block;
+}
+
+.qrtAddr {
+    display:block;
+}
+
+.tAddr {
+    font-size: 75%;
+    color:green;
+}

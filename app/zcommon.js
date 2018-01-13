@@ -415,7 +415,7 @@ function showGeneratePaperWalletDialog() {
             QRCode.toCanvas(canvasPriv, privateKey, function (error) {
                 if (error) console.error(error)
             });
-            document.getElementById("NewAddressPrintArea").style.display=  "block";
+            document.getElementById("newAddressPrintArea").style.display=  "block";
             console.log(canvasPriv);
             ButtonArea.innerHTML = " ";
 
