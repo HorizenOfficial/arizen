@@ -160,9 +160,7 @@
       "items": "articles",
       "language": "Langue",
       "explorerUrl": "URL ZEN explorateur",
-      "apiUrl": ""
-      L
-      'interface de programmation (API) URLs",
+      "apiUrl": "Interface de programmation (API) URLs",
       "fiat": "Équivalent Fiat",
       "save": "Sauvegarder"
     },
