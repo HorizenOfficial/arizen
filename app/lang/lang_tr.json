@@ -114,7 +114,7 @@
         "zeroAmount": "Miktar pozitif degil",
         "insufficientFunds": "Gönderici bakiyesi yetersiz",
         "fromAddressBadLength": "Kaynak adresi uzunlugu hatalı!",
-        "fromAddressBadPrefix": "Gönderici adresi hatalı, 'zn' ile başlamalıdır!,
+        "fromAddressBadPrefix": "Gönderici adresi hatalı, 'zn' ile başlamalıdır!",
         "toAddressBadLength": "Alıcı adresi uzunlugu hatalı!",
         "toAddressBadPrefix": "Alıcı adresi hatalı, 'zn' ile başlamalıdır!",
         "amounNotNumber": "Miktar rakam DEĞİL!",
