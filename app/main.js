@@ -24,6 +24,8 @@ const {List} = require("immutable");
 const {translate} = require("./util.js");
 const {DateTime} = require("luxon");
 
+
+const DEBUG_WORKER_WINDOW = false;
 // Press F12 to open the DevTools. See https://github.com/sindresorhus/electron-debug.
 require("electron-debug")();
 
@@ -36,6 +38,7 @@ attachUpdaterHandlers();
 // Keep a global reference of the window object, if you don"t, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
+let workerWindow;
 let userInfo = {
     loggedIn: false,
     login: "",
@@ -532,10 +535,24 @@ function createWindow() {
     });
 }
 
+// FIXME main should wait for ready
+function createWorkerWindow() {
+    const win = new BrowserWindow({ show: DEBUG_WORKER_WINDOW });
+    win.loadURL(url.format({
+        pathname: path.join(__dirname, "workerwindow.html"),
+        protocol: "file:",
+        slashes: true
+    }));
+    return win;
+}
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on("ready", createWindow);
+app.on("ready", () => {
+    createWindow();
+    workerWindow = createWorkerWindow();
+});
 
 // Quit when all windows are closed.
 app.on("window-all-closed", function () {
