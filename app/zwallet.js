@@ -667,8 +667,18 @@ function showBatchWithdrawDialog() {
     });
 }
 
-function showTxStatusDialog() {
-
+function showPaperWalletDialog() {
+    showDialogFromTemplate("paperWalletDialogTemplate", dialog => {
+		const createButton = dialog.querySelector(".paperWalletCreateButton");
+		const nameInput = dialog.querySelector(".paperWalletName");
+		const addToWalletCheckbox = dialog.querySelector(".paperWalletAdd");
+		createButton.addEventListener("click", () => {
+			const name = nameInput.value ? nameInput.value : null;
+			const addToWallet = addToWalletCheckbox.checked;
+			ipcRenderer.send("create-paper-wallet", name, addToWallet);
+			dialog.close();
+		});
+	});
 }
 
 function initWallet() {

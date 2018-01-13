@@ -156,31 +156,18 @@
     </arizen-dialog>
 </template>
 
-<!-- TODO this doesn't belong here -->
-<template id=generatePaperWalletDialogTemplate>
+<template id=paperWalletDialogTemplate>
     <arizen-dialog>
-        <h2 slot=headerText id=generateNewWalletTitle class=generateNewWalletTitle data-tr=wallet.paperWallet.generateNewWallet>Generate New Wallet</h2>
-        <div slot=content class=generatePaperWalletDialogTemplate>
-            <div id=createButtonCheck class=createButtonCheck>
-                <div class=createWalletContainer>
-                    <p><div data-tr=wallet.paperWallet.name>Name (optional)</div><input id=newWalletNamePaper type=text class=newAddrDialogName /></p>
-                    <p></p>
-                    <p><label class=container><span data-tr=wallet.paperWallet.addWalletToArizen>Add this wallet to Arizen</span><input id=addPaperWalletArizen type=checkbox><span class=checkmark></span></label></p>
-                    <p></p>
-                    <p><button type=button class=generateNewWallet data-tr=wallet.paperWallet.generateNewWallet>Generate New Wallet</button></p>
-                    <p></p>
-                </div>
+        <h2 slot=headerText data-tr=wallet.paperWallet.generateNewWallet>Generate New Wallet</h2>
+        <div slot=content>
+            <div class=form>
+                <label for=paperWalletName data-tr=wallet.paperWallet.name>Name (optional)</label>
+                <input type=text class=paperWalletName name=paperWalletName />
+                <label for=paperWalletAdd data-tr=wallet.paperWallet.addWalletToArizen>Also add to Arizen</label>
+                <input type=checkbox class=paperWalletAdd name=paperWalletAdd />
             </div>
-            <div id=newAddressPrintArea class=newAddressPrintArea >
-                <span id=zenCashLogoWallet class=zenLogo><img src='resources/zen_icon.png' height='50' width='50' /></span>
-                <div id=newWalletNamePaperLabel class=newWalletNamePaperLabel></div>
-                <div class=namePrivateKey></div>
-                <div class=qrPrivate><canvas id=canvasPriv></canvas></div>
-                <div class=keyPrivate></div><br/>
-                <div class=nametAddr></div>
-                <div class=qrtAddr><canvas id=canvasT></canvas></div>
-                <div class=tAddr></div><br/>
-                <div id=pdfButton class=pdfButton></div>
+            <div class=formButtons>
+                <button class=paperWalletCreateButton data-tr=wallet.paperWallet.exportPDFLabel>Export PDF</button>
             </div>
         </div>
     </arizen-dialog>
@@ -269,7 +256,7 @@
 <header class='panel'>
     <div class=headerLeft>
         <span><button onclick="showSettingsDialog()" data-tr=wallet.showSettingsDialogButton>Settings</button></span>
-        <span><button onclick="showGeneratePaperWalletDialog()" data-tr=wallet.paperWallet.label>Paper Wallet</button></span>
+        <span><button onclick="showPaperWalletDialog()" data-tr=wallet.paperWallet.label>Paper Wallet</button></span>
         <span><button onclick="showBatchWithdrawDialog()" data-tr=wallet.showBatchWithdrawDialog>Batch Withdraw</button></span>
     </div>
     <div class=headerCenter>

@@ -1429,55 +1429,17 @@ ipcMain.on("send-many", function (event, fromAddresses, toAddress, fee, threshol
     }
 });
 
-ipcMain.on("get-me-settings", function (event) {
-    event.returnValue = loadSettings();
-});
-
-ipcMain.on("export-pdf", function (event, newWalletNamePaper) {
-    const win = BrowserWindow.fromWebContents(event.sender);
-    console.log(win);
-    const app = require("electron");
-    const dialog = app.dialog;
-    console.log("print-to-pdf received");
-    console.log(newWalletNamePaper);
-
-    let defaultPathPDF;
-    if (!(newWalletNamePaper === "")) {
-        defaultPathPDF = "*/" + newWalletNamePaper + " Wallet - " + userInfo.login;
-    } else {
-        defaultPathPDF = "*/ZenCash Wallet - " + userInfo.login;
+ipcMain.on("create-paper-wallet", (event, name, addToWallet) => {
+    let wif;
+    if (addToWallet) {
+        const addr = getNewAddress(name);
+        mainWindow.webContents.send("generate-wallet-response",
+            JSON.stringify({ response: "OK", addr: addr }));
+        wif = addr.wif;
     }
-
-    dialog.showSaveDialog(win, {
-        title: "Save",
-        filters: [{name: "PDF", extensions: ["pdf"]}],
-        defaultPath: defaultPathPDF
-    }, (fileName) => {
-        if (fileName === undefined) {
-            console.log("Cancel pressed");
-            event.sender.send("export-pdf-done", "PDF export: Canceled by user.");
-            return;
-        }
-        win.webContents.printToPDF({landscape: false}, function (error, data) {
-            fs.writeFile(fileName, data, function (err) {
-                if (err) return console.log(err.message);
-                shell.openExternal("file://" + fileName);
-                event.sender.send("export-pdf-done", "PDF exported")
-            });
-        });
-    });
-});
-
-ipcMain.on("get-paper-address-wif", function (event, addressInWallet, name) {
-    if (!addressInWallet) {
-        let wifTmp = generateNewAddress(1, userInfo.pass);
-        let wif = wifTmp[0];
-        event.returnValue = {wif: wif, resp: null};
-    } else if (addressInWallet) {
-        let resp = getNewAddress(name);
-        //ipcMain.send("generate-wallet-response", JSON.stringify(resp));
-        event.returnValue = {wif: resp.wif, resp: resp};
-    }
+    else
+        wif = generateNewAddress(1, userInfo.pass)[0];
+    workerWindow.webContents.send("export-paper-wallet", wif, name);
 });
 
 // Unused
