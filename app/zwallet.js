@@ -164,9 +164,8 @@ function setFiatBalanceText(balanceZen, fiatCurrencySymbol = "") {
     const totalBalanceFiatNode = document.getElementById("totalBalanceFiat");
     const balanceFiatAmountNode = totalBalanceFiatNode.firstElementChild;
     const lastUpdateTimeNode = document.getElementById("lastUpdateTime");
-    let userSettings = ipcRenderer.sendSync("get-me-settings");
     if (fiatCurrencySymbol === "") {
-        fiatCurrencySymbol = userSettings.fiatCurrency;
+        fiatCurrencySymbol = settings.fiatCurrency;
         if (fiatCurrencySymbol === undefined || fiatCurrencySymbol === null ){
             fiatCurrencySymbol = "USD";
         }
