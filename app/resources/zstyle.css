@@ -225,10 +225,6 @@ arizen-dialog > [slot="content"] {
     padding-right: 10px;
     margin-bottom: 12px;
     cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
 }
 
 .container input {
@@ -243,10 +239,6 @@ arizen-dialog > [slot="content"] {
     height: 19px;
     width: 19px;
     background-color: #bbb;
-}
-
-.container:hover input ~ .checkmark {
-    background-color: var(--hover-fg);
 }
 
 .container input:checked ~ .checkmark {
