@@ -15,7 +15,7 @@ Arizen is ZenCash light wallet.
 ## v1.1.2
 - [x] Feature: Paper wallet - you can create QR codes (private key and address) which can be exported into PDF file and
 printed. This created address can by included to your Arizen or not.
-- [x] Feature: Arizen was translated in many languages (see Settings: Czech, Dutch, English, ... ).
+- [x] Feature: Arizen has been translated to 14 languages see Settings.
 - [x] Feature: Your total balance is shown in selected fiat currency with actual exchange rate (see Settings).
 - [x] Feature: Import and export your private keys.
 - [x] Feature: Sweeping (batch withdrawal) functionality for security node operators - you can now withdraw only ZENs
