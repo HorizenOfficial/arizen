@@ -245,10 +245,6 @@ arizen-dialog > [slot="content"] {
     background-color: #bbb;
 }
 
-.container:hover input ~ .checkmark {
-    background-color: var(--hover-fg);
-}
-
 .container input:checked ~ .checkmark {
     background-color: var(--arizen-fg);
 }
