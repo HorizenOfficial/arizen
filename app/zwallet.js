@@ -88,7 +88,7 @@ ipcRenderer.on("get-wallets-response", (event, msgStr) => {
 ipcRenderer.on("update-wallet-balance", (event, msgStr) => {
     const msg = JSON.parse(msgStr);
     checkResponse(msg);
-    setAddressBalance(msg.addrObj.addr, msg.addrObj.balance);
+    setAddressBalance(msg.addrObj.addr, msg.addrObj.lastbalance);
     setTotalBalance(msg.total);
     showNotification(`${tr("notification.balanceUpdated", "Balance updated")} (${formatBalanceDiff(msg.diff)})`);
 });

@@ -124,7 +124,7 @@ function formatFiatBalance(balance, localeTag = undefined) {
 }
 
 function formatBalanceDiff(diff, localeTag = undefined) {
-    return diff >= 0 ? "+" + formatBalance(balance, localeTag) : "-" + formatBalance(-balance, localeTag);
+    return diff >= 0 ? "+" + formatBalance(diff, localeTag) : "-" + formatBalance(-diff, localeTag);
 }
 
 function formatEpochTime(epochSeconds) {
