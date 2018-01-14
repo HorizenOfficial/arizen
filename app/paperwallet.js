@@ -5,8 +5,6 @@ const Qrcode = require("qrcode");
 const jsPDF = require("jspdf");
 const zencashjs = require("zencashjs");
 
-webFrame.registerURLSchemeAsPrivileged("file");
-
 ipcRenderer.on("export-paper-wallet", (sender, wif, name) => {
     const privateKey = zencashjs.address.WIFToPrivKey(wif);
     const pubKey = zencashjs.address.privKeyToPubKey(privateKey, true);
@@ -75,4 +73,17 @@ ipcRenderer.on("export-paper-wallet", (sender, wif, name) => {
         });
 });
 
-ipcRenderer.send("ready");
+function showPaperWalletDialog() {
+	showDialogFromTemplate("paperWalletDialogTemplate", dialog => {
+		const createButton = dialog.querySelector(".paperWalletCreateButton");
+		const nameInput = dialog.querySelector(".paperWalletName");
+		const addToWalletCheckbox = dialog.querySelector(".paperWalletAdd");
+		createButton.addEventListener("click", () => {
+			const name = nameInput.value ? nameInput.value : null;
+			const addToWallet = addToWalletCheckbox.checked;
+			ipcRenderer.send("create-paper-wallet", name, addToWallet);
+			dialog.close();
+		});
+	});
+}
+exports.showPaperWalletDialog = showPaperWalletDialog;

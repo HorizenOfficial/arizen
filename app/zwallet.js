@@ -8,6 +8,7 @@ const {ipcRenderer} = require("electron");
 const {List} = require("immutable");
 const Qrcode = require("qrcode");
 const jsPDF = require("jspdf");
+const {showPaperWalletDialog} = require("./paperwallet.js");
 
 function logIpc(msgType) {
     ipcRenderer.on(msgType, (...args) => {
@@ -665,20 +666,6 @@ function showBatchWithdrawDialog() {
             });
         });
     });
-}
-
-function showPaperWalletDialog() {
-    showDialogFromTemplate("paperWalletDialogTemplate", dialog => {
-		const createButton = dialog.querySelector(".paperWalletCreateButton");
-		const nameInput = dialog.querySelector(".paperWalletName");
-		const addToWalletCheckbox = dialog.querySelector(".paperWalletAdd");
-		createButton.addEventListener("click", () => {
-			const name = nameInput.value ? nameInput.value : null;
-			const addToWallet = addToWalletCheckbox.checked;
-			ipcRenderer.send("create-paper-wallet", name, addToWallet);
-			dialog.close();
-		});
-	});
 }
 
 function initWallet() {
