@@ -3,28 +3,27 @@
 [![Build status][travis-img]][travis-url]
 [![Code Climate][codeclimate-img]][codeclimate-url]
 
-# User Manuals
-- v1.1.1: [Arizen v1.1.1 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.1/Arizen.v1.1.1.Wallet.User.Manual.pdf)
-- v1.0.0: [Arizen v1.0.0 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.0.0/Arizen.Wallet.User.Manual.pdf)
-
 # Arizen
 Arizen is ZenCash light wallet.
+
+# User Manuals
+- v1.1.2: [Arizen v1.1.2 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.2/Arizen.v1.1.2.Wallet.User.Manual.pdf)
+- v1.1.1: [Arizen v1.1.1 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.1/Arizen.v1.1.1.Wallet.User.Manual.pdf)
+- v1.0.0: [Arizen v1.0.0 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.0.0/Arizen.Wallet.User.Manual.pdf)
 
 # Version History
 ## v1.1.2
 - [x] Feature: Paper wallet - you can create QR codes (private key and address) which can be exported into PDF file and
 printed. This created address can by included to your Arizen or not.
-- [x] Feature: Arizen was translated in many languages (see Settings: Czech, Dutch, English, ... ).
-- [x] Feature: Your total balance is shown in selected fiat currency with actual exchange rate (see Settings).
+- [x] Feature: Arizen has been translated into 14 languages see Settings.
+- [x] Feature: Your total balance is shown in selected fiat currency with the actual exchange rate (see Settings).
 - [x] Feature: Import and export your private keys.
-- [x] Feature: Sweeping (batch withdrawal) functionality for security node operators - you can now withdraw only ZENs
-above a selected threshold (e.g. 42 ZENs, or 0 ZENs when you want to consolidate your ZEN to one address) from multiple
-addresses at once only with one fee!
+- [x] Feature: Sweeping (batch withdrawal) functionality for security node operators - you can now withdraw only ZENs above a selected threshold (e.g. 42 ZENs or 0 ZENs when you want to consolidate your ZEN to one address) from multiple addresses at once only with one fee!
 - [x] Feature: Rebranding - new logo and colors.
 - [x] Fix: Notifications has been enabled again.
-- [x] Fix: Problem with antiviruses has been solved (false positive detection with AVG, Avast, etc.).
-- [x] Fix: Problem when user can't log in should be solved.
-- [x] Fix: Problem when newly generated address can disappear has been solved.
+- [x] Fix: Problem with antiviruses have been solved (false positive detection with AVG, Avast, etc.).
+- [x] Fix: Problem, when a user can't log in, should be solved.
+- [x] Fix: Problem when a newly generated address can disappear has been solved.
 
 ## v1.1.1
 - [x] Fixed auto-updater issue

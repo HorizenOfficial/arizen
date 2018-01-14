@@ -1,0 +1,203 @@
+{
+  "languageName": "Türkçe",
+  "languageValue": "tr",
+  "langFileVersion": "1",
+  "login": {
+    "label": "Arizen: Oturum Aç",
+    "username": "Kullanıcı Adı",
+    "password": "Şifre",
+    "loginButton": "Oturum Aç",
+    "createWalletLink": "Cüzdan Oluştur",
+    "warningWrongUsernameOrPassword": "Hatalı <strong>kullanıcı adı</strong> veya <strong>şifre</strong>",
+    "dataImportFailed": "Veri aktarimi başarısız, kullanıcı bilgileri hatalı olabilir",
+    "fileReplace": "Dosya degiştirilsin mi?",
+    "walletReplace": "Cüzdan degiştirilsin mi?",
+    "walletReplaceMsg": "Asıl cüzdanınızla degiştirilecek. Emin misiniz?",
+    "walletImported": "Cüzdan başarılı bir şekilde eklendi",
+    "walletImportFailed": "Içe Aktarma başarısız",
+    "yes": "Evet",
+    "no": "Hayır"
+  },
+  "createWallet": {
+    "label": "Arizen: Cüzdan Oluştur",
+    "username": "Kullanıcı Adı",
+    "password": "Şifre",
+    "passwordAgain": "Şifre Tekrarı",
+    "oldUsername": "Eski kullanıcı adı: ",
+    "oldPassword": "Eski şifre: ",
+    "selectWallet": "Cüzdan seç",
+    "selectWalletButton": "Gözden geçir",
+    "createWalletButton": "Cüzdan Oluştur",
+    "loginLink": "Oturum Aç",
+    "warningUsername": "Kullanıcı Adı şu kurallara uygun olmalıdır:",
+    "warningUsernameLength": "En az <strong>dört harf</strong>",
+    "warningPassword": "Şifre şu kurallara uygun olmalıdır:",
+    "warningPasswordLetter": "En az <strong>bir harf</strong>",
+    "warningPasswordCapitalLetter": "En az <strong>bir büyük harf</strong>",
+    "warningPasswordNumber": "En az <strong>bir rakam</strong>",
+    "warningPasswordSpecial": "En az <strong>bir özel karakter</strong>",
+    "warningPasswordLength": "Toplamda en az <strong>8 karakter</strong>",
+    "warningPasswordAgain": "Şifre şu kurallara uygun olmalıdır:",
+    "warningPasswordAgainIdentical": "<strong>Eşleşme</strong>",
+    "errorCreationFailed": "Cüzdan oluşturma hatası",
+    "errorFailedResponse": "Yanıt alınamadı"
+  },
+  "notification": {
+    "settingsUpdated": "Ayarlar Güncellendi",
+    "balanceUpdated": "Bakiye Güncellendi",
+    "newTransactions": "Yeni İşlem"
+  },
+  "importExportPks": {
+    "chooseFileExport": "Özel anahtarlar için dosya seç",
+    "chooseFileImport": "Özel anahtarlı dosya seçin",
+    "InvalidLinePk": "Özel anahtar dosyasında geçersiz satır ${0} ",
+    "InvalidPk": "Özel anahtarlar dosyasında geçersiz özel anahtar satırı ${0}"
+  },
+  "wallet": {
+    "showSettingsDialogButton": "Ayarlar",
+    "showAboutDialogButton": "Hakkında",
+    "refreshWallet": "Yenile",
+    "logout": "Oturumu Kapat",
+    "exit": "Çıkış",
+    "date": "Tarih",
+    "from": "Tarafından",
+    "to": "Bu kişiye",
+    "amount": "Miktar",
+    "balance": "Bakiye",
+    "totalBalance": "Toplam Bakiye",
+    "lastUpdate": "Son güncelleme",
+    "showExplorer": "ZEN Dosya Yöneticisi'nde göster",
+    "listOfAddresses": "Adres Listesi",
+    "showBatchWithdrawDialog": "Toplu Çekim İşlemi",
+    "notLoggedIn": "Giriş yapmadınız",
+    "addressNotFound": "adres bulunamadı",
+    "nameNotFound": "isim bulunamadı",
+    "renameWalletSetTo": "${0} adresini ${1} olarak ayarla",
+    "fetchBlockchainFailed": "Blockchain değişiklikleri alınamadı:",
+    "save": "Kaydet",
+    "pdfExported": "PDF dışarı aktarma",
+    "tabOverview": {
+      "label": "Görüntüle",
+      "showZeroBalances": "Sıfır bakiyelileri goster",
+      "newAddress": "Yeni bir adres alın",
+      "unnamedAddress": "Adsız adres",
+      "newAddressExists": "${0} adresi zaten listede mevcut"
+    },
+    "tabDeposit": {
+      "label": "Para Yatır",
+      "help": "Para yatırmak istediğiniz adresin yanındaki yeşil düğmeyi tıklayın.",
+      "saveQrcode": "QR kodu kaydet",
+      "messages": {
+        "emptyToAddr": "Alıcı adresi boş",
+        "unknownToAddr": "Alıcı adresi bu cuzdana uygun değil",
+        "zeroAmount": "Pozitif miktar giriniz"
+      }
+    },
+    "tabWithdraw": {
+      "label": "Para Çek",
+      "help": "Parayı çekmek istediğiniz adresin yanındakı kırmızı düğmeyi tıklayın.",
+      "availableBalance": "Kalan bakiye",
+      "fee": "İşlem ücreti",
+      "txStatus": "İşlem durumu",
+      "withdrawConfirmQuestion": "Bu işlemi gerçekleştirmek istediğinize emin misiniz?",
+      "messages": {
+        "emptyFromAddr": "Gönderici adresi boş",
+        "unknownFromAddr": "Gönderici adresi bu cüzdana ait değil",
+        "insufficientFirstSource": "1. kaynakta yetersiz bakiye (En az: alt limit + islem ucreti)!",
+        "insufficientNextSource": "2. veya sonraki kaynakta yetersiz bakiye (En az: alt limit + işlem ücreti)!",
+        "numberOfKeys": "# özel anahtarlar ve # adresler eşleşmedi!",
+        "sumLowerThanFee": "Tüm adresleriniz üzerindeki toplam bakiye işlem ücretinden daha düşük!",
+        "zenApi": "Zen Uygulama Arayüzü ayarları yapılandırılmadı!",
+        "unknownAddress": "Kaynak adres cüzdaninizda değil!",
+        "insufficientFundsSourceAddr": "Kaynak adresinde yetersiz bakiye",
+        "emptyToAddr": "Alıcı adresi boş",
+        "zeroAmount": "Miktar pozitif degil",
+        "insufficientFunds": "Gönderici bakiyesi yetersiz",
+        "fromAddressBadLength": "Kaynak adresi uzunlugu hatalı!",
+        "fromAddressBadPrefix": "Gönderici adresi hatalı, 'zn' ile başlamalıdır!",
+        "toAddressBadLength": "Alıcı adresi uzunlugu hatalı!",
+        "toAddressBadPrefix": "Alıcı adresi hatalı, 'zn' ile başlamalıdır!",
+        "amounNotNumber": "Miktar rakam DEĞİL!",
+        "amountIsZero": "Miktar sıfırdan büyük olmalıdır!",
+        "feeNotNumber": "İşlem ücreti rakam DEĞİL!",
+        "feeIsNegative": "İşlem ücreti sıfırdan büyük ya da eşit olmalıdır!",
+        "error": "Hata",
+        "success": "İşlem başarılı bir şekilde gerçekleşti"
+      }
+    },
+    "transactionHistory": {
+      "label": "İşlem Geçmişi",
+      "unconfirmed": "DOĞRULANMAMIS",
+      "replaceAttempt": "Bloktaki işlem değiştirilmeye çalışılıyor"
+    },
+    "transactionDetail": {
+      "label": "İşlem Detayları",
+      "txid": "İşlem Kimliği",
+      "blockHeight": "Block Büyüklüğü",
+      "unconfirmedTx": "DOĞRULANMAMIS İŞLEM"
+    },
+    "addressDetail": {
+      "label": "Adres Detayları",
+      "name": "Isim",
+      "address": "Adres",
+      "saveButton": "Değişiklikleri Kaydet"
+    },
+    "newAddress": {
+      "label": "Yeni bir adres olustur",
+      "name": "Isim (isteğe bağlı)",
+      "createButton": "Oluştur"
+    },
+    "about": {
+      "label": "Arizen Hakkında",
+      "homepage": "Ana Sayfa",
+      "version": "Versiyon",
+      "license": "Lisans",
+      "authors": "Yaratıcılar"
+    },
+    "settings": {
+      "label": "Ayarlar",
+      "limit": "İşlem sınırı",
+      "items": "ürün",
+      "language": "Dil",
+      "explorerUrl": "ZEN Dosya Yöneticisi URL",
+      "apiUrl": "API URLs",
+      "fiat": "Fiat Karşılığı",
+      "save": "Kaydet"
+    },
+    "paperWallet": {
+      "label": "Kağıt Cuzdan",
+      "generateNewWallet": "Yeni Cüzdan Oluştur",
+      "name": "İsim (isteğe bağlı)",
+      "addWalletToArizen": "Bu cüzdanı Arizen'e ekle",
+      "zenCashWalletLabel": "ZenCash Cüzdan",
+      "tAddrLabel": "Genel Anahtar - T Adresi",
+      "privateKeyLabel": "Özel Anahtar",
+      "namePrint": "İsim",
+      "exportPDFLabel": "PDF Dışa Aktar"
+    },
+    "batchWithdraw": {
+      "label": "Toplu Çekim",
+      "keepAmount": "Bırakılacak Miktar",
+      "txFee": "İşlem ücreti"
+    }
+  },
+  "menu": {
+    "file": "Dosya",
+    "backupEncrypted": "ŞİFRELİ cüzdan yedekleme",
+    "backupUnencrypted": "ŞİFRESİZ cüzdan yedekleme",
+    "importEncrypted": "ŞİFRELİ Arizen cuzdanını dışa aktar",
+    "importUnencrypted": "ŞİFRELENMEMİŞ Arizen cüzdanını içe aktar",
+    "importPrivateKeys": "Özel anahtarları içe aktar",
+    "exportPrivateKeys": "Özel anahtarları dışa aktar",
+    "exit": "Çıkış",
+    "edit": "Düzenle",
+    "editSubmenu": {
+      "undo": "Geri al",
+      "redo": "Yenile",
+      "cut": "Kes",
+      "copy": "Kopyala",
+      "paste": "Yapıştır",
+      "selectAll": "Tümünü Seç"
+    }
+  }
+}
