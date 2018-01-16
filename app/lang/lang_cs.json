@@ -104,7 +104,7 @@
         "emptyFromAddr": "Zdrojová adresa není zadána",
         "unknownFromAddr": "Zdrojová adresa nepatří do této peněženky",
         "insufficientFirstSource": "Nedostatečný zůstatek na první adrese (Minimum: minimální zůstatek + poplatek)!",
-        "insufficientNextSource": "Nedostatečný zůstatek na druhé nebo některé další adrese (Minimum: minimální zůstatek + poplatek)!",
+        "insufficientNextSource": "Nedostatečný zůstatek na druhé nebo některé další adrese (Minimum: minimální zůstatek)!",
         "numberOfKeys": "# privátních klíčů a # adres se nerovná!",
         "sumLowerThanFee": "Součet zůstatku na zdrojových adresách je menší než poplatek!",
         "zenApi": "Zen API není nastaveno v předvolbách aplikace!",

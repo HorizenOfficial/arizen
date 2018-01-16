@@ -104,7 +104,7 @@
         "emptyFromAddr": "L'adresse de l'expéditeur est vide",
         "unknownFromAddr": "L'adresse 'De' n'appartient pas à ce portefeuille",
         "insufficientFirstSource": "Fonds insuffisants pour la 1ère source (Minimum : la limite de seuil + les frais)",
-        "insufficientNextSource": "Fonds insuffisants à la 2e ou à la source suivante (Minimum: la limite de seuil + les frais)",
+        "insufficientNextSource": "Fonds insuffisants à la 2e ou à la source suivante (Minimum: la limite de seuil)",
         "numberOfKeys": "# clés privées et # des adresses ne sont pas égales",
         "sumLowerThanFee": "Votre solde cumulé sur toutes les adresses source est inférieur aux frais!",
         "zenApi": "L'interface de programmation (API) Zen n'est pas définie dans les paramètres",

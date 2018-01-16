@@ -104,7 +104,7 @@
         "emptyFromAddr": "Polje za unos adrese Od je prazno",
         "unknownFromAddr": "Adresa od ne pripada ovom novčaniku",
         "insufficientFirstSource": "Nedovoljno sredstva na prvoj adresi (Minimum: ograničen prag + fee)!",
-        "insufficientNextSource": "Nedovoljno sredstava na drugoj ili na sledećoj izvornoj adresi (Minimum: ograničen prag + fee)!",
+        "insufficientNextSource": "Nedovoljno sredstava na drugoj ili na sledećoj izvornoj adresi (Minimum: ograničen prag)!",
         "numberOfKeys": "# privatni ključevi i # adrese nisu jednaki!",
         "sumLowerThanFee": "Suma svih stanja na izvornim adresama manja je od nadoknade!",
         "zenApi": "Zen API nije podešen u podešavanjima!",

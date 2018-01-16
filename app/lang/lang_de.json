@@ -104,7 +104,7 @@
         "emptyFromAddr": "Die Absenderadresse ist leer",
         "unknownFromAddr": "Die Absenderadresse gehört nicht zu dieser Wallet",
         "insufficientFirstSource": "Nicht genügend Guthaben auf der ersten Quelle (Minimum: Grenzwert + Gebühr)!",
-        "insufficientNextSource": "Nicht genügend Guthaben auf der zweiten oder nächsten Quelle (Minimum: Grenzwert + Gebühr)!",
+        "insufficientNextSource": "Nicht genügend Guthaben auf der zweiten oder nächsten Quelle (Minimum: Grenzwert)!",
         "numberOfKeys": "# private Schlüssel und # Adressen stimmen nicht überein!",
         "sumLowerThanFee": "Ihr Gesamtguthaben auf allen Adressen ist niedriger als die Gebühr!",
         "zenApi": "Zen API ist in den Einstellungen nicht eingestellt!",

@@ -104,7 +104,7 @@
         "emptyFromAddr": "Het van adres is leeg",
         "unknownFromAddr": "Het van adres behoort niet tot deze portefeuille",
         "insufficientFirstSource": "Onvoldoende saldo op het eerste adres (Minimum: minimum saldo + kosten)!",
-        "insufficientNextSource": "Onvoldoende saldo op een ander of een ander adres (Minimum: minimum saldo + kosten)!",
+        "insufficientNextSource": "Onvoldoende saldo op een ander of een ander adres (Minimum: minimum saldo)!",
         "numberOfKeys": "# prive sleutels en # adressen zijn niet gelijk!",
         "sumLowerThanFee": "Je totale saldo van alle adressen is lager dan de transactiekosten!",
         "zenApi": "Zen API is niet ingesteld in de instellingen!",

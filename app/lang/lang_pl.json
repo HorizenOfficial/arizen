@@ -104,7 +104,7 @@
         "emptyFromAddr": "Adres nadawcy jest pusty",
         "unknownFromAddr": "Adres nadawcy nie należy do tego portfela",
         "insufficientFirstSource": "Niewystarczające środki na 1-szym źródle (Minimum: limit progowy + opłata)!",
-        "insufficientNextSource": "Niewystarczające środki na 2-gim albo kolejnych źródlach (Minimum: limit progowy + opłata)!",
+        "insufficientNextSource": "Niewystarczające środki na 2-gim albo kolejnych źródlach (Minimum: limit progowy)!",
         "numberOfKeys": "# prywatne klucze i # adresy nie są równe!",
         "sumLowerThanFee": "Zsumowane saldo wszystkich adresów źródłowych jest niższe niż opłata!",
         "zenApi": "Zen API nie jest zdefiniowany w ustawieniach!",

@@ -104,7 +104,7 @@
         "emptyFromAddr": "送付元アドレスが入力されていません",
         "unknownFromAddr": "送付元アドレスがこのウォレットに登録されていません",
         "insufficientFirstSource": "1番目の送付元に十分な資金がありません（「付可能最低額 + 手数料」以上が必要です）",
-        "insufficientNextSource": "2番目またはそれ以降の送付元に十分な資金がありません（「送付可能最低額 + 手数料」以上が必要です）",
+        "insufficientNextSource": "2番目またはそれ以降の送付元に十分な資金がありません（「送付可能最低額）",
         "numberOfKeys": "秘密鍵の数とアドレスの数が一致していません",
         "sumLowerThanFee": "送付元アドレス全ての合計残高が送付額を下回っています",
         "zenApi": "Zen APIが設定されていません",

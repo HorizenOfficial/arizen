@@ -104,7 +104,7 @@
         "emptyFromAddr": "La dirección de origen está vacía",
         "unknownFromAddr": "La dirección de origen no pertenece a esta cartera",
         "insufficientFirstSource" : "¡Fondos insuficientes en la primera fuente (mínimo: saldo mínimo + comisión)!",
-        "insufficientNextSource" : "¡Fondos insuficientes en la segunda o la próxima fuente (mínimo: saldo mínimo + comisión)!",
+        "insufficientNextSource" : "¡Fondos insuficientes en la segunda o la próxima fuente (mínimo: saldo mínimo)!",
         "numberOfKeys": "# las claves privadas y # las direcciones no son iguales!",
         "sumLowerThanFee": "¡Su saldo total entre las direcciones de origen es inferior a la comisión!",
         "zenApi": "¡El parámetro API URLs no está configurado. Revise la configuración!",

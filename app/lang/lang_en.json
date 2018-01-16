@@ -104,7 +104,7 @@
         "emptyFromAddr": "The from address is empty",
         "unknownFromAddr": "The from address does not belong to this wallet",
         "insufficientFirstSource": "Insufficient funds on 1st source (Minimum: threshold limit + fee)!",
-        "insufficientNextSource": "Insufficient funds on 2nd or next source (Minimum: threshold limit + fee)!",
+        "insufficientNextSource": "Insufficient funds on 2nd or next source (Minimum: threshold limit)!",
         "numberOfKeys": "# private keys and # addresses are not equal!",
         "sumLowerThanFee": "Your summed balance over all source addresses is lower than the fee!",
         "zenApi": "Zen API is not set in settings!",

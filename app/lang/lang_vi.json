@@ -104,7 +104,7 @@
         "emptyFromAddr": "Địa chỉ gửi trống",
         "unknownFromAddr": "Đại chỉ gửi không có trong ví",
         "insufficientFirstSource" : "Không đủ tiền ở nguồn thứ nhất (Tối thiểu: Ngưỡng giới hạn + phí giao dịch)!",
-        "insufficientNextSource" : "Không đủ tiền ở nguồn thứ hai hoặc nguồn kế tiếp (Tối thiểu: Ngưỡng giới hạn + phí giao dịch)!",
+        "insufficientNextSource" : "Không đủ tiền ở nguồn thứ hai hoặc nguồn kế tiếp (Tối thiểu: Ngưỡng giới hạn)!",
         "numberOfKeys": "# khoá riêng tư và # địa chỉ không khớp!",
         "sumLowerThanFee": "Tổng số dư của tất cả các nguồn nhỏ hơn phí giao dịch!",
         "zenApi": "Zen API chưa được cài đặt!",

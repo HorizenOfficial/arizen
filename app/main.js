@@ -1269,7 +1269,7 @@ ipcMain.on("send-many", function (event, fromAddresses, toAddress, fee, threshol
                 amountsInSatoshi[i] = Math.round((balanceInSatoshi - parseFloat(fee)) * satoshi);
             } else {
                 if (balanceInSatoshi < (parseFloat(thresholdLimit))) {
-                    err = tr("wallet.tabWithdraw.messages.insufficientNextSource", "Insufficient funds on 2nd or next source (Minimum: threshold limit + fee)!");
+                    err = tr("wallet.tabWithdraw.messages.insufficientNextSource", "Insufficient funds on 2nd or next source (Minimum: threshold limit)!");
                     console.log(err);
                     event.sender.send("send-finish", "error", err);
                     return;

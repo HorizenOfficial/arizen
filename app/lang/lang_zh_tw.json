@@ -104,7 +104,7 @@
         "emptyFromAddr": "欲取款的地址是空的",
         "unknownFromAddr": "欲取款的地址並不屬於這個錢包",
         "insufficientFirstSource": "第一個來源地址的餘額不足。（至少需要：最小值 + 交易費）",
-        "insufficientNextSource": "第二個來源或其他來源地址的餘額不足。（至少須鑰：最小值 + 交易費）",
+        "insufficientNextSource": "第二個來源或其他來源地址的餘額不足。（至少須鑰：最小值）",
         "numberOfKeys": "私鑰數量與地址數量不相等！",
         "sumLowerThanFee": "目前所有來源地址的總餘額低於交易費！",
         "zenApi": "設定中尚未設定 Zen API！",

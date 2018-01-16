@@ -104,7 +104,7 @@
         "emptyFromAddr": "Gönderici adresi boş",
         "unknownFromAddr": "Gönderici adresi bu cüzdana ait değil",
         "insufficientFirstSource": "1. kaynakta yetersiz bakiye (En az: alt limit + islem ucreti)!",
-        "insufficientNextSource": "2. veya sonraki kaynakta yetersiz bakiye (En az: alt limit + işlem ücreti)!",
+        "insufficientNextSource": "2. veya sonraki kaynakta yetersiz bakiye (En az: alt limit)!",
         "numberOfKeys": "# özel anahtarlar ve # adresler eşleşmedi!",
         "sumLowerThanFee": "Tüm adresleriniz üzerindeki toplam bakiye işlem ücretinden daha düşük!",
         "zenApi": "Zen Uygulama Arayüzü ayarları yapılandırılmadı!",
