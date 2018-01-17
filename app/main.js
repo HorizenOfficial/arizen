@@ -1213,24 +1213,33 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
 
 /**
  * @param event
- * @param {array} fromAddresses - Array of strings, array of ZEN addresses
+ * @param {array} fromAddressesAll - Array of strings, array of ZEN addresses
  * @param toAddress - one destination ZEN address
  * @param fee - fee for the whole transaction
  * @param thresholdLimit - How many ZENs will remain in every fromAddresses
  */
-ipcMain.on("send-many", function (event, fromAddresses, toAddress, fee, thresholdLimit = 42.0) {
-    let paramErrors = checkSweepSendParameters(fromAddresses, toAddress, fee, thresholdLimit);
+ipcMain.on("send-many", function (event, fromAddressesAll, toAddress, fee, thresholdLimit = 42.0) {
+    let paramErrors = checkSweepSendParameters(fromAddressesAll, toAddress, fee, thresholdLimit);
     if (paramErrors.length) {
         // TODO: Come up with better message. For now, just make a HTML out of it.
         const errString = paramErrors.join("<br/>\n\n");
         event.sender.send("send-finish", "error", errString);
     } else {
         // VARIABLES ---------------------------------------------------------------------------------------------------
-        let err = "";
+        // filter out all zero balanced wallets
+        let fromAddresses = [];
+        for (let i = 0; i < fromAddressesAll.length; i++) {
+            let sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet WHERE addr = '" + fromAddressesAll[i] + "'");
+            if (sqlRes[0].values[0][3] !== 0) {
+                fromAddresses.push(fromAddressesAll[i]);
+            }
+        }
+
         const nFromAddresses = fromAddresses.length;
-        const satoshi = 100000000;
         let privateKeys = new Array(nFromAddresses);
         let amountsInSatoshi = new Array(nFromAddresses);
+        let err = "";
+        const satoshi = 100000000;
 
         // CHECK ZEN API -----------------------------------------------------------------------------------------------
         let zenApi = settings.apiUrls[0];
