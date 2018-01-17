@@ -821,6 +821,7 @@ function updateBlockchainView(webContents) {
     const knownTxIds = sqlSelectColumns('SELECT DISTINCT txid FROM transactions').map(row => row[0]);
     let totalBalance = addrObjs.filter(obj => obj.lastbalance).reduce((sum, a) => sum + a.lastbalance, 0);
 
+    // TODO send updates in batch
     fetchBlockchainChanges(addrObjs, knownTxIds).then(result => {
         for (const addrObj of result.changedAddrs) {
             sqlRun('UPDATE wallet SET lastbalance = ? WHERE addr = ?', [addrObj.lastbalance, addrObj.addr]);
@@ -886,7 +887,7 @@ function importPKs() {
 						pk = zencashjs.address.WIFToPrivKey(pk);
                     const pub = zencashjs.address.privKeyToPubKey(pk, true);
                     const addr = zencashjs.address.pubKeyToAddr(pub);
-                    sqlRun("insert or ignore into wallet (pk, addr) values (?, ?)", [pk, addr]);
+                    sqlRun("insert or ignore into wallet (pk, addr, lastbalance) values (?, ?, 0)", [pk, addr]);
                 } catch(err) {
                     console.log(`Invalid private key on line ${i} in private keys file "${filename}": `, err);
                 }
@@ -903,12 +904,12 @@ function importPKs() {
                 importFromFile(f);
             // TODO: save only if at least one key was inserted
             saveWallet();
-            updateBlockchainView(mainWindow.webContents);
+            sendWallets();
         }
     });
 }
 
-ipcMain.on("get-wallets", function (event) {
+function sendWallets() {
     if (!userInfo.loggedIn)
         return;
     const resp = {};
@@ -918,9 +919,13 @@ ipcMain.on("get-wallets", function (event) {
     resp.transactions = sqlSelectObjects('SELECT * FROM transactions ORDER BY time DESC LIMIT ' + settings.txHistory);
     resp.total =  resp.wallets.reduce((sum, a) => sum + a.lastbalance, 0);
 
-    event.sender.send("get-wallets-response", JSON.stringify(resp));
-    event.sender.send("settings", JSON.stringify(settings));
-    updateBlockchainView(event.sender);
+    mainWindow.webContents.send("get-wallets-response", JSON.stringify(resp));
+    updateBlockchainView(mainWindow.webContents);
+}
+
+ipcMain.on("get-wallets", () => {
+    mainWindow.webContents.send("settings", JSON.stringify(settings));
+    sendWallets();
 });
 
 ipcMain.on("refresh-wallet", function (event) {
