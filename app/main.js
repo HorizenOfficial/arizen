@@ -476,6 +476,16 @@ function updateMenuAtLogin(langData) {
         {
             label: tr("menu.edit", "Edit"),
             submenu: createEditSubmenu()
+        },
+        {
+          label: "Dev",
+          submenu: [
+            {role: 'reload'},
+            {role: 'forcereload'},
+            {role: 'toggledevtools'},
+            {type: 'separator'},
+            {role: 'togglefullscreen'}
+          ]
         }
     ];
 
