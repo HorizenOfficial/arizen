@@ -861,7 +861,7 @@ function exportPKs() {
                 for (let k of keys) {
                     const wif = zencashjs.address.privKeyToWIF(k.pk);
                     fs.write(fd, wif + " " + k.addr + "\n");
-				}
+                }
             }
         });
     }
@@ -883,8 +883,8 @@ function importPKs() {
             if (matches) {
                 let pk = matches[0];
                 try {
-					if (pk.length !== 64)
-						pk = zencashjs.address.WIFToPrivKey(pk);
+                    if (pk.length !== 64)
+                        pk = zencashjs.address.WIFToPrivKey(pk);
                     const pub = zencashjs.address.privKeyToPubKey(pk, true);
                     const addr = zencashjs.address.pubKeyToAddr(pub);
                     sqlRun("insert or ignore into wallet (pk, addr, lastbalance) values (?, ?, 0)", [pk, addr]);
@@ -904,12 +904,12 @@ function importPKs() {
                 importFromFile(f);
             // TODO: save only if at least one key was inserted
             saveWallet();
-            sendWallets();
+            sendWallet();
         }
     });
 }
 
-function sendWallets() {
+function sendWallet() {
     if (!userInfo.loggedIn)
         return;
     const resp = {};
@@ -925,7 +925,7 @@ function sendWallets() {
 
 ipcMain.on("get-wallets", () => {
     mainWindow.webContents.send("settings", JSON.stringify(settings));
-    sendWallets();
+    sendWallet();
 });
 
 ipcMain.on("refresh-wallet", function (event) {
