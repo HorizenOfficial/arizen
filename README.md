@@ -7,11 +7,18 @@
 Arizen is ZenCash light wallet.
 
 # User Manuals
-- v1.1.2: [Arizen v1.1.2 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.2/Arizen.v1.1.2.Wallet.User.Manual.pdf)
+- v1.1.3: [Arizen v1.1.3 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.3/Arizen.v1.1.3.Wallet.User.Manual.pdf)
 - v1.1.1: [Arizen v1.1.1 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.1/Arizen.v1.1.1.Wallet.User.Manual.pdf)
 - v1.0.0: [Arizen v1.0.0 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.0.0/Arizen.Wallet.User.Manual.pdf)
 
 # Version History
+
+## v1.1.3
+- [x] FIX: Import Private Key in WIF and HEX format (Compatible with Swing wallet).
+- [x] FIX: Export Private Key in WIF and HEX format (Compatible with Swing wallet).
+- [x] FIX: About section.
+- [x] FIX: Sweeping (Batch withdrawal) ignore selected zero wallets. 
+
 ## v1.1.2
 - [x] Feature: Paper wallet - you can create QR codes (private key and address) which can be exported into PDF file and
 printed. This created address can by included to your Arizen or not.
