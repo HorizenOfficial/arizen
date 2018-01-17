@@ -1235,6 +1235,7 @@ ipcMain.on("send-many", function (event, fromAddressesAll, toAddress, fee, thres
             }
         }
 
+        // TODO: check if fromAddresses.length == 0
         const nFromAddresses = fromAddresses.length;
         let privateKeys = new Array(nFromAddresses);
         let amountsInSatoshi = new Array(nFromAddresses);
