@@ -857,8 +857,10 @@ function exportPKs() {
                 console.error(`Couldn't open "${filename}" for writing: `, err);
             else {
                 const keys = sqlSelectObjects("select pk, addr from wallet");
-                for (let k of keys)
-                    fs.write(fd, k.pk + " " + k.addr + "\n");
+                for (let k of keys) {
+                    const wif = zencashjs.address.privKeyToWIF(k.pk);
+                    fs.write(fd, wif + " " + k.addr + "\n");
+				}
             }
         });
     }
@@ -877,11 +879,11 @@ function importPKs() {
         let i = 1;
         fs.readFileSync(filename).toString().split('\n').filter(x => x).forEach(line => {
             const matches = line.match(/^\w+/);
-            if (!matches)
-                console.log(`Invalid line ${i} in private keys file "${filename}"`);
-            else {
-                const pk = matches[0];
+            if (matches) {
+                let pk = matches[0];
                 try {
+					if (pk.length !== 64)
+						pk = zencashjs.address.WIFToPrivKey(pk);
                     const pub = zencashjs.address.privKeyToPubKey(pk, true);
                     const addr = zencashjs.address.pubKeyToAddr(pub);
                     sqlRun("insert or ignore into wallet (pk, addr) values (?, ?)", [pk, addr]);
