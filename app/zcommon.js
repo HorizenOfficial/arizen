@@ -285,6 +285,22 @@ function showSettingsDialog() {
     });
 }
 
+function showImportSinglePKDialog() {
+  showDialogFromTemplate("importSinglePKDialogTemplate", dialog => {
+    const importButton = dialog.querySelector(".newPrivateKeyImportButton");
+    const nameInput = dialog.querySelector(".newPKDialogName");
+    const privateKey = dialog.querySelector(".newPKDialogKey");
+    importButton.addEventListener("click", () => {
+    	const name = nameInput.value ? nameInput.value : "";
+    	const pk = privateKey.value;
+      console.log(name);
+      console.log(pk);
+    	ipcRenderer.send("import-single-key", name, pk);
+    	dialog.close();
+    });
+  });
+}
+
 function openZenExplorer(path) {
     openUrl(settings.explorerUrl + "/" + path);
 }

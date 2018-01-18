@@ -875,6 +875,18 @@ function exportPKs() {
     });
 }
 
+function importOnePK(pk, name = ""){
+  try {
+      if (pk.length !== 64)
+          pk = zencashjs.address.WIFToPrivKey(pk);
+      const pub = zencashjs.address.privKeyToPubKey(pk, true);
+      const addr = zencashjs.address.pubKeyToAddr(pub);
+      sqlRun("insert or ignore into wallet (pk, addr, lastbalance, name) values (?, ?, 0, ?)", [pk, addr, name]);
+  } catch(err) {
+      console.log(`Invalid private key on line ${i} in private keys file "${filename}": `, err);
+  }
+}
+
 function importPKs() {
     function importFromFile(filename) {
         let i = 1;
@@ -882,15 +894,7 @@ function importPKs() {
             const matches = line.match(/^\w+/);
             if (matches) {
                 let pk = matches[0];
-                try {
-                    if (pk.length !== 64)
-                        pk = zencashjs.address.WIFToPrivKey(pk);
-                    const pub = zencashjs.address.privKeyToPubKey(pk, true);
-                    const addr = zencashjs.address.pubKeyToAddr(pub);
-                    sqlRun("insert or ignore into wallet (pk, addr, lastbalance) values (?, ?, 0)", [pk, addr]);
-                } catch(err) {
-                    console.log(`Invalid private key on line ${i} in private keys file "${filename}": `, err);
-                }
+                importOnePK(pk, "");
             }
             i++;
         });
@@ -922,6 +926,17 @@ function sendWallet() {
     mainWindow.webContents.send("get-wallets-response", JSON.stringify(resp));
     updateBlockchainView(mainWindow.webContents);
 }
+
+ipcMain.on("import-single-key", function(event,name,pk) {
+    console.log(name);
+    console.log(pk);
+
+    importOnePK(pk, name);
+    saveWallet();
+    sendWallet();
+
+    // event.sender.send("import-single-key-done");
+});
 
 ipcMain.on("get-wallets", () => {
     mainWindow.webContents.send("settings", JSON.stringify(settings));
