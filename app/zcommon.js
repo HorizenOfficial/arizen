@@ -209,16 +209,16 @@ function showAboutDialog() {
         dialog.querySelector(".aboutHomepage").appendChild(createLink(pkg.homepage, pkg.homepage));
         dialog.querySelector(".aboutVersion").textContent = pkg.version;
         dialog.querySelector(".aboutLicense").textContent = pkg.license;
-        const authorsNode = dialog.querySelector(".aboutAuthors");
-        pkg.contributors.forEach(function (person) {
-            const row = document.createElement("div");
-            row.textContent = person.name;
-            if (/@/.test(person.email)) {
-                row.textContent += " ";
-                row.appendChild(createLink("mailto: " + person.email, person.email));
-            }
-            authorsNode.appendChild(row);
-        });
+        // const authorsNode = dialog.querySelector(".aboutAuthors");
+        // pkg.contributors.forEach(function (person) {
+        //     const row = document.createElement("div");
+        //     row.textContent = person.name;
+        //     if (/@/.test(person.email)) {
+        //         row.textContent += " ";
+        //         row.appendChild(createLink("mailto: " + person.email, person.email));
+        //     }
+        //     authorsNode.appendChild(row);
+        // });
     });
 }
 
