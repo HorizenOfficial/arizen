@@ -318,6 +318,11 @@ header button {
     animation: txItemNew 2s;
 }
 
+.txDetailFrom, .txDetailTo {
+	max-height: 200px;
+	overflow: auto;
+}
+
 /* Status line */
 
 .statusLine {
