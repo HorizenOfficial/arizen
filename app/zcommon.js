@@ -292,32 +292,43 @@ function showImportSinglePKDialog() {
     const nameInput = dialog.querySelector(".newPrivateKeyDialogName");
     const privateKeyInput = dialog.querySelector(".newPrivateKeyDialogKey");
     importButton.addEventListener("click", () => {
-    	const name = nameInput.value ? nameInput.value : "";
-    	const pk = privateKeyInput.value;
-      let pkIsRealpk = true;
-      try {
-          let pktmp = zencashjs.address.WIFToPrivKey(pk);
+        const name = nameInput.value ? nameInput.value : "";
+    	  const pk = privateKeyInput.value;
+        // To-Do: Find a batter way to check if valid OK
+        let pkIsRealWIF = true;
+        try {
+            let pktmp = zencashjs.address.WIFToPrivKey(pk);
         } catch(err){
-          pkIsRealpk = false;
+            pkIsRealWIF = false;
         }
 
-      if(pkIsRealpk === true){
-        console.log(name);
-        console.log(pk);
-        // let pktmp = zencashjs.address.WIFToPrivKey(pk);
-        // let pubKey = zencashjs.address.privKeyToPubKey(pktmp);
-        // let zAddress = zencashjs.address.pubKeyToAddr(pubKey);
-        // let result = sqlRun("Select 1 from wallet where addr = ?", [zAddress]);
-        // console.log(result);
-        let zAddrExists = false
+        let pkIsRealpk = true;
+        try {
+                let pktmp = zencashjs.address.privKeyToPubKey(pk);
+            } catch(err){
+                pkIsRealpk = false;
+        }
 
-        if (zAddrExists){
-          alert("Z address exist in your wallet")
+        let pkIsValid = (pkIsRealpk || pkIsRealWIF);
+        // To-Do: Find a batter way to check if valid OK
+
+       if(pkIsValid === true){
+           console.log(name);
+           console.log(pk);
+           // let pktmp = zencashjs.address.WIFToPrivKey(pk);
+           // let pubKey = zencashjs.address.privKeyToPubKey(pktmp);
+           // let zAddress = zencashjs.address.pubKeyToAddr(pubKey);
+           // let result = sqlRun("Select 1 from wallet where addr = ?", [zAddress]);
+           // console.log(result);
+           let zAddrExists = false
+
+           if (zAddrExists){
+               alert("Z address exist in your wallet")
+           } else {
+               ipcRenderer.send("import-single-key", name, pk);
+               dialog.close();
+            }
         } else {
-          ipcRenderer.send("import-single-key", name, pk);
-          dialog.close();
-        }
-      } else {
         alert("This is not a valid Private Key.")
       }
     });
