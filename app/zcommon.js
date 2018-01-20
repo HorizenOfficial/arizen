@@ -5,6 +5,7 @@
 
 const {DateTime} = require("luxon");
 const {translate} = require("./util.js");
+const zencashjs = require("zencashjs");
 
 function assert(condition, message) {
     if (!condition)
@@ -293,10 +294,21 @@ function showImportSinglePKDialog() {
     importButton.addEventListener("click", () => {
     	const name = nameInput.value ? nameInput.value : "";
     	const pk = privateKeyInput.value;
-      console.log(name);
-      console.log(pk);
-    	ipcRenderer.send("import-single-key", name, pk);
-    	dialog.close();
+      let pkIsRealpk = 1;
+      try {
+          let pktmp = zencashjs.address.WIFToPrivKey(pk);
+        } catch(err){
+          pkIsRealpk = 0;
+        }
+
+      if(pkIsRealpk === 1){
+        console.log(name);
+        console.log(pk);
+        ipcRenderer.send("import-single-key", name, pk);
+        dialog.close();
+      } else {
+        alert("This is not a valid Private Key.")
+      }
     });
   });
 }
