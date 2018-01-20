@@ -93,15 +93,15 @@
     </arizen-dialog>
 </template>
 
-<template id=importSinglePKDialogTemplate>
+<template id=importSinglePrivateKeyDialogTemplate>
     <arizen-dialog>
         <h2 slot=headerText data-tr=wallet.newPK.label>Import Single Private Key</h2>
         <div slot=content>
             <div class=form>
                 <div data-tr=wallet.newAddress.name>Name (optional)</div>
-                <input type=text class=newPKDialogName />
+                <input type=text class=newPrivateKeyDialogName />
                 <div data-tr=wallet.newAddress.PK>Private Key</div>
-                <input type=text class=newPKDialogKey />
+                <input type=text class=newPrivateKeyDialogKey />
             </div>
             <div class=formButtons>
                 <button class=newPrivateKeyImportButton data-tr=wallet.newAddress.importPrivateKey>Import</button>

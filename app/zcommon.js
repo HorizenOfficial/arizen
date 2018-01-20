@@ -286,13 +286,13 @@ function showSettingsDialog() {
 }
 
 function showImportSinglePKDialog() {
-  showDialogFromTemplate("importSinglePKDialogTemplate", dialog => {
+  showDialogFromTemplate("importSinglePrivateKeyDialogTemplate", dialog => {
     const importButton = dialog.querySelector(".newPrivateKeyImportButton");
-    const nameInput = dialog.querySelector(".newPKDialogName");
-    const privateKey = dialog.querySelector(".newPKDialogKey");
+    const nameInput = dialog.querySelector(".newPrivateKeyDialogName");
+    const privateKeyInput = dialog.querySelector(".newPrivateKeyDialogKey");
     importButton.addEventListener("click", () => {
     	const name = nameInput.value ? nameInput.value : "";
-    	const pk = privateKey.value;
+    	const pk = privateKeyInput.value;
       console.log(name);
       console.log(pk);
     	ipcRenderer.send("import-single-key", name, pk);
