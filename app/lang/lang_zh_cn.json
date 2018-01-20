@@ -179,6 +179,14 @@
       "label": "批次取款",
       "keepAmount": "留置金额",
       "txFee": "交易费"
+    },
+    "importSinglePrivateKey":{
+      "openButtonLabel":"Import Private Key",
+      "titleLabel":"Import Single Private Key",
+      "privateKeyLabel":"Private Key",
+      "importButtonLabel":"Import",
+      "warningNotValidAddress":"Z address exist in your wallet",
+      "warningNotValidPK": "This is not a valid Private Key."
     }
   },
   "menu": {

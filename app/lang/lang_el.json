@@ -179,6 +179,14 @@
       "label": "Ομαδική ανάληψη",
       "keepAmount": "Ποσό να κρατηθεί",
       "txFee": "Τέλος συναλλαγής"
+    },
+    "importSinglePrivateKey":{
+      "openButtonLabel":"Εισαγωγή ιδιωτικού κλειδιού",
+      "titleLabel":"Εισαγωγή ενός ιδιωτικού κλειδιού",
+      "privateKeyLabel":"Ιδιωτικού κλειδί",
+      "importButtonLabel":"Εισαγωγή",
+      "warningNotValidAddress":"Η διεύθυνση υπάρχει στο πορτοφόλι σας",
+      "warningNotValidPK": "Μή έγκυρο κλειδί"
     }
   },
   "menu": {
