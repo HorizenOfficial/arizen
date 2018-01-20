@@ -883,7 +883,7 @@ function importOnePK(pk, name = ""){
       const addr = zencashjs.address.pubKeyToAddr(pub);
       sqlRun("insert or ignore into wallet (pk, addr, lastbalance, name) values (?, ?, 0, ?)", [pk, addr, name]);
   } catch(err) {
-      console.log(`Invalid private key on line ${i} in private keys file "${filename}": `, err);
+      console.log(`Invalid private key on line in private keys file : `, err);
   }
 }
 
