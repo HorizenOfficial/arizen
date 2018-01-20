@@ -46,7 +46,7 @@ ipcRenderer.on("export-paper-wallet", (sender, wif, name) => {
 
         y += centeredText("PRIVATE KEY", y);
         y += 0;
-        y += centeredText(privateKey, y);
+        y += centeredText(wif, y);
         y += 0;
         y += centerSquareImage(pkHexQrCode, "JPEG", y);
         y += 10;
@@ -65,7 +65,7 @@ ipcRenderer.on("export-paper-wallet", (sender, wif, name) => {
         pdf.save(filename);
     }
 
-    Promise.all([ createQrCodeAsync(privateKey), createQrCodeAsync(tAddr) ])
+    Promise.all([ createQrCodeAsync(wif), createQrCodeAsync(tAddr) ])
         .then(results => {
             const privKeyQrCode = results[0];
             const tAddrQrCode = results[1];
