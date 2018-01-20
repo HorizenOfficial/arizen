@@ -294,18 +294,29 @@ function showImportSinglePKDialog() {
     importButton.addEventListener("click", () => {
     	const name = nameInput.value ? nameInput.value : "";
     	const pk = privateKeyInput.value;
-      let pkIsRealpk = 1;
+      let pkIsRealpk = true;
       try {
           let pktmp = zencashjs.address.WIFToPrivKey(pk);
         } catch(err){
-          pkIsRealpk = 0;
+          pkIsRealpk = false;
         }
 
-      if(pkIsRealpk === 1){
+      if(pkIsRealpk === true){
         console.log(name);
         console.log(pk);
-        ipcRenderer.send("import-single-key", name, pk);
-        dialog.close();
+        // let pktmp = zencashjs.address.WIFToPrivKey(pk);
+        // let pubKey = zencashjs.address.privKeyToPubKey(pktmp);
+        // let zAddress = zencashjs.address.pubKeyToAddr(pubKey);
+        // let result = sqlRun("Select 1 from wallet where addr = ?", [zAddress]);
+        // console.log(result);
+        let zAddrExists = false
+
+        if (zAddrExists){
+          alert("Z address exist in your wallet")
+        } else {
+          ipcRenderer.send("import-single-key", name, pk);
+          dialog.close();
+        }
       } else {
         alert("This is not a valid Private Key.")
       }
