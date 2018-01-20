@@ -286,7 +286,7 @@ function showSettingsDialog() {
     });
 }
 
-ipcMain.on("open-dialog-single-pk"){
+function showImportSinglePKDialog() {
   showDialogFromTemplate("importSinglePrivateKeyDialogTemplate", dialog => {
     const importButton = dialog.querySelector(".newPrivateKeyImportButton");
     const nameInput = dialog.querySelector(".newPrivateKeyDialogName");
@@ -328,7 +328,7 @@ ipcMain.on("open-dialog-single-pk"){
                dialog.close();
             }
         } else {
-            alert(tr("wallet.importSinglePrivateKey.warningNotValidPK","This is not a valid Private Key."));
+           alert(tr("wallet.importSinglePrivateKey.warningNotValidPK","This is not a valid Private Key."));
       }
     });
   });
