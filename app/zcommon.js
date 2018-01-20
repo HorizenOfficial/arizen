@@ -81,12 +81,14 @@ function openUrl(url) {
     shell.openExternal(url);
 }
 
+function linkHandler(event) {
+    event.preventDefault();
+    openUrl(event.target.href);
+}
+
 function fixLinks(parent = document) {
     querySelectorAllDeep("a[href^='http']", parent).forEach(link =>
-        link.addEventListener("click", event => {
-            event.preventDefault();
-            openUrl(link.href);
-        }));
+        link.addEventListener("click", linkHandler));
 }
 
 function fixAmountInputs(parent = document) {
@@ -199,6 +201,7 @@ function createLink(url, text) {
     const link = document.createElement("a");
     link.href = url;
     link.textContent = text;
+    link.addEventListener("click", linkHandler);
     return link;
 }
 
