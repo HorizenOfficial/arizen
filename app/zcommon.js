@@ -294,7 +294,7 @@ function showImportSinglePKDialog() {
     importButton.addEventListener("click", () => {
         const name = nameInput.value ? nameInput.value : "";
     	  const pk = privateKeyInput.value;
-        // To-Do: Find a batter way to check if valid OK
+        // TODO: Find a batter way to check if valid OK
         let pkIsRealWIF = true;
         try {
             let pktmp = zencashjs.address.WIFToPrivKey(pk);
@@ -305,12 +305,11 @@ function showImportSinglePKDialog() {
         let pkIsRealpk = true;
         try {
                 let pktmp = zencashjs.address.privKeyToPubKey(pk);
-            } catch(err){
+        } catch(err){
                 pkIsRealpk = false;
         }
-
         let pkIsValid = (pkIsRealpk || pkIsRealWIF);
-        // To-Do: Find a batter way to check if valid OK
+        // TODO: Find a batter way to check if valid OK
 
        if(pkIsValid === true){
            console.log(name);
@@ -323,13 +322,13 @@ function showImportSinglePKDialog() {
            let zAddrExists = false
 
            if (zAddrExists){
-               alert("Z address exist in your wallet")
+               alert(tr("wallet.importSinglePrivateKey.warningNotValidAddress", "Z address exist in your wallet"))
            } else {
                ipcRenderer.send("import-single-key", name, pk);
                dialog.close();
             }
         } else {
-        alert("This is not a valid Private Key.")
+            alert(tr("wallet.importSinglePrivateKey.warningNotValidPK","This is not a valid Private Key."));
       }
     });
   });
