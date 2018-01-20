@@ -464,6 +464,10 @@ function updateMenuAtLogin(langData) {
                     label: tr("menu.importPrivateKeys", "Import private keys"),
                     click() { importPKs() }
                 },
+                {
+                    label: tr("importSignlePrivateKey", "Import single private key"),
+                    click() { openDialogImportSinglePK() }
+                },
                 { type: "separator" },
                 {
                     label: tr("menu.exit", "Exit"),
@@ -911,6 +915,10 @@ function importPKs() {
             sendWallet();
         }
     });
+}
+
+function openDialogImportSinglePK(){
+  ipcMain.send("open-dialog-single-pk")
 }
 
 function sendWallet() {

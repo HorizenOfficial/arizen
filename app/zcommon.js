@@ -286,7 +286,7 @@ function showSettingsDialog() {
     });
 }
 
-function showImportSinglePKDialog() {
+ipcMain.on("open-dialog-single-pk"){
   showDialogFromTemplate("importSinglePrivateKeyDialogTemplate", dialog => {
     const importButton = dialog.querySelector(".newPrivateKeyImportButton");
     const nameInput = dialog.querySelector(".newPrivateKeyDialogName");

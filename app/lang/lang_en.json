@@ -197,6 +197,7 @@
     "importUnencrypted": "Import UNENCRYPTED Arizen wallet",
     "importPrivateKeys": "Import private keys",
     "exportPrivateKeys": "Export private keys",
+    "importSignlePrivateKey":"Import single private key",
     "exit": "Exit",
     "edit": "Edit",
     "editSubmenu": {
