@@ -179,6 +179,12 @@
       "label": "Batch Withdraw",
       "keepAmount": "Amount to keep",
       "txFee": "Transaction fee"
+    },
+    "importSinglePrivateKey":{
+      "openButtonLabel":"Import Private Key",
+      "titleLabel":"Import Single Private Key",
+      "privateKeyLabel":"Private Key",
+      "importButtonLabel":"Import"
     }
   },
   "menu": {
