@@ -12,11 +12,13 @@ header {
     grid-area: header;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
+    grid-column-gap: 10px;
     align-items: center;
 }
 
 header > *:nth-child(1) {
     justify-self: start;
+    white-space: nowrap;
 }
 
 header > *:nth-child(2) {
@@ -25,6 +27,7 @@ header > *:nth-child(2) {
 
 header > *:nth-child(3) {
     justify-self: end;
+    white-space: nowrap;
 }
 
 .headerCenter > :not(:first-child) {
@@ -333,17 +336,6 @@ header button {
     font-weight: bolder;
 }
 
-/* 
-.addrSelectList {
-    overflow: auto;
-    overflow-x: hidden;
-    display: grid;
-    grid-template-columns: auto auto auto;
-    grid-gap: 10px;
-    align-items: baseline;
-    height: 100%;
-}
-*/
 /*
  Make flexbox look like table.
  Wait for Electron to support Chromium that supports "display: contents" (62 partly does).
