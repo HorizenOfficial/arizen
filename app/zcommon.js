@@ -294,7 +294,7 @@ function showImportSinglePKDialog() {
     importButton.addEventListener("click", () => {
         const name = nameInput.value ? nameInput.value : "";
     	  const pk = privateKeyInput.value;
-        // TODO: Find a batter way to check if valid OK
+        // TODO: Find a batter way to check if valid PK
         let pkIsRealWIF = true;
         try {
             let pktmp = zencashjs.address.WIFToPrivKey(pk);
@@ -309,19 +309,27 @@ function showImportSinglePKDialog() {
                 pkIsRealpk = false;
         }
         let pkIsValid = (pkIsRealpk || pkIsRealWIF);
-        // TODO: Find a batter way to check if valid OK
+        // TODO: Find a batter way to check if valid PK
 
        if(pkIsValid === true){
            console.log(name);
            console.log(pk);
-           // let pktmp = zencashjs.address.WIFToPrivKey(pk);
-           // let pubKey = zencashjs.address.privKeyToPubKey(pktmp);
-           // let zAddress = zencashjs.address.pubKeyToAddr(pubKey);
-           // let result = sqlRun("Select 1 from wallet where addr = ?", [zAddress]);
-           // console.log(result);
-           let zAddrExists = false
+           let pktmp = zencashjs.address.WIFToPrivKey(pk);
+           let pubKey = zencashjs.address.privKeyToPubKey(pktmp, true);
+           let zAddress = zencashjs.address.pubKeyToAddr(pubKey);
+           let zAddrExists, result
+           let resp = ipcRenderer.sendSync("check-if-z-address-in-wallet",zAddress)
+           zAddrExists = resp.exist;
+           result = resp.result;
 
-           if (zAddrExists){
+           console.log(zAddrExists);
+           console.log(result);
+           console.log(result.length);
+           console.log(zAddress);
+           console.log(typeof zAddress);
+          //  console.log(typeof result[0].addr);
+
+           if (zAddrExists === true){
                alert(tr("wallet.importSinglePrivateKey.warningNotValidAddress", "Z address exist in your wallet"))
            } else {
                ipcRenderer.send("import-single-key", name, pk);
