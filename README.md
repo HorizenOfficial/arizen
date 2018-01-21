@@ -65,7 +65,7 @@ printed. This created address can by included to your Arizen or not.
 ## Development
 
 ### How to create distribution
-npm run dist
+      npm run dist
 
 ### Coding rules
 
@@ -93,7 +93,7 @@ npm run dist
 - Prefer cloning HTML `<template>`s to constructing DOM trees manually.
 
 #### HTML
-- Do not quote _simple_ HTML attribute values. For example write
+- Do not quote _simple_ HTML attribute values, for example
 
       <span id=foo class=bar>
 
@@ -101,7 +101,7 @@ npm run dist
 
       <span id="foo" class="bar">
 
-  unless you have to, for example in
+  unless you have to, for example
 
       <span id=foo class="bar baz">
 
