@@ -7,7 +7,6 @@
 Arizen is ZenCash light wallet.
 
 # User Manuals
-- v1.1.3: [Arizen v1.1.3 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.3/Arizen.v1.1.3.Wallet.User.Manual.pdf)
 - v1.1.1: [Arizen v1.1.1 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.1/Arizen.v1.1.1.Wallet.User.Manual.pdf)
 - v1.0.0: [Arizen v1.0.0 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.0.0/Arizen.Wallet.User.Manual.pdf)
 
@@ -65,7 +64,7 @@ printed. This created address can by included to your Arizen or not.
 ## Development
 
 ### How to create distribution
-npm run dist
+      npm run dist
 
 ### Coding rules
 
@@ -93,7 +92,7 @@ npm run dist
 - Prefer cloning HTML `<template>`s to constructing DOM trees manually.
 
 #### HTML
-- Do not quote _simple_ HTML attribute values. For example write
+- Do not quote _simple_ HTML attribute values, for example
 
       <span id=foo class=bar>
 
@@ -101,7 +100,7 @@ npm run dist
 
       <span id="foo" class="bar">
 
-  unless you have to, for example in
+  unless you have to, for example
 
       <span id=foo class="bar baz">
 
