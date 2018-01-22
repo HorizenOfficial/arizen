@@ -125,10 +125,6 @@ ipcRenderer.on("generate-wallet-response", (event, msgStr) => {
     addNewAddress(msg.addr);
 });
 
-// ipcRenderer.on("import-single-key-done", (event)=>{
-//   console.log("import-single-key-done");
-// });
-
 window.addEventListener("load", initWallet);
 
 // FUNCTIONS
