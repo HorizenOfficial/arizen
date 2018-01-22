@@ -55,6 +55,7 @@ div {
 }
 
 button {
+    cursor: pointer;
     font: inherit;
     outline: none;
     color: var(--button-fg);
@@ -71,6 +72,7 @@ button:not(:disabled):focus {
 }
 
 button:disabled {
+    cursor: default;
     background: lightgray;
 }
 
