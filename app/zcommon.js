@@ -293,29 +293,32 @@ function showImportSinglePKDialog() {
     const privateKeyInput = dialog.querySelector(".newPrivateKeyDialogKey");
     importButton.addEventListener("click", () => {
         const name = nameInput.value ? nameInput.value : "";
-    	  const pk = privateKeyInput.value;
-        // TODO: Find a batter way to check if valid PK
-        let pkIsRealWIF = true;
-        try {
-            let pktmp = zencashjs.address.WIFToPrivKey(pk);
-        } catch(err){
-            pkIsRealWIF = false;
-        }
+    	  let pk = privateKeyInput.value;
+        // // TODO: Find a batter way to check if valid PK
+        // let pkIsRealWIF = true;
+        // try {
+        //     let pktmp = zencashjs.address.WIFToPrivKey(pk);
+        // } catch(err){
+        //     pkIsRealWIF = false;
+        // }
+        //
+        // let pkIsRealpk = true;
+        // try {
+        //         let pktmp = zencashjs.address.privKeyToPubKey(pk);
+        // } catch(err){
+        //         pkIsRealpk = false;
+        // }
+        // let pkIsValid = (pkIsRealpk || pkIsRealWIF);
+        // // TODO: Find a batter way to check if valid PK
 
-        let pkIsRealpk = true;
-        try {
-                let pktmp = zencashjs.address.privKeyToPubKey(pk);
-        } catch(err){
-                pkIsRealpk = false;
-        }
-        let pkIsValid = (pkIsRealpk || pkIsRealWIF);
-        // TODO: Find a batter way to check if valid PK
 
-       if(pkIsValid === true){
+       if(isPKorWif(pk) === true){
            console.log(name);
            console.log(pk);
-           let pktmp = zencashjs.address.WIFToPrivKey(pk);
-           let pubKey = zencashjs.address.privKeyToPubKey(pktmp, true);
+           if (isWif(pk) === true) {
+             pk = zencashjs.address.WIFToPrivKey(pk);
+           }
+           let pubKey = zencashjs.address.privKeyToPubKey(pk, true);
            let zAddress = zencashjs.address.pubKeyToAddr(pubKey);
            let zAddrExists, result
            let resp = ipcRenderer.sendSync("check-if-z-address-in-wallet",zAddress)
@@ -409,4 +412,28 @@ function translateCurrentPage() {
         return;
     querySelectorAllDeep("[data-tr]").forEach(node =>
         node.textContent = tr(node.dataset.tr, node.textContent));
+}
+
+function isWif(pk){
+  let isWif = true;
+  try {
+      let pktmp = zencashjs.address.WIFToPrivKey(pk);
+  } catch(err){
+      isWif = false;
+  }
+  return isWif
+}
+
+function isPK(pk){
+  let isPK = true;
+  try {
+          let pktmp = zencashjs.address.privKeyToPubKey(pk);
+  } catch(err){
+          isPK = false;
+  }
+  return isPK
+}
+
+function isPKorWif(pk){
+  return ( isWif(pk) || isPK(pk))
 }
