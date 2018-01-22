@@ -1036,15 +1036,10 @@ ipcMain.on("show-notification", function (event, title, message, duration) {
 
 ipcMain.on("check-if-z-address-in-wallet", function(event,zAddress){
     let exist = false;
-    //let result = sqlSelectObjects("Select * from wallet where addr = ?", [zAddress]);
-    let result = sqlSelectObjects("Select * from wallet");
+    let result = sqlSelectObjects("Select * from wallet"); // or ("Select * from wallet where addr = ?", [zAddress]);
     for (let k of result){
       if (k.addr === zAddress) {exist = true ; break;}
     }
-
-    // if (result.length > 0){
-    //   exist = true;
-    // }
     event.returnValue = {exist: exist, result: result}
 });
 
