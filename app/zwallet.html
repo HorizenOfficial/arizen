@@ -93,6 +93,23 @@
     </arizen-dialog>
 </template>
 
+<template id=importSinglePrivateKeyDialogTemplate>
+    <arizen-dialog>
+        <h2 slot=headerText data-tr=wallet.importSinglePrivateKey.titleLabel>Import Single Private Key</h2>
+        <div slot=content>
+            <div class=form>
+                <div data-tr=wallet.newAddress.name>Name (optional)</div>
+                <input type=text class=newPrivateKeyDialogName />
+                <div data-tr=wallet.importSinglePrivateKey.privateKeyLabel>Private Key</div>
+                <input type=text class=newPrivateKeyDialogKey />
+            </div>
+            <div class=formButtons>
+                <button class=newPrivateKeyImportButton data-tr=wallet.importSinglePrivateKey.importButtonLabel>Import</button>
+            </div>
+        </div>
+    </arizen-dialog>
+</template>
+
 <template id=addrSelectRowTemplate>
     <tr class=addrSelectRow>
         <td class=addrSelectRowName></td>
@@ -261,6 +278,7 @@
         <span><button onclick="showSettingsDialog()" data-tr=wallet.showSettingsDialogButton>Settings</button></span>
         <span><button onclick="showPaperWalletDialog()" data-tr=wallet.paperWallet.label>Paper Wallet</button></span>
         <span><button onclick="showBatchWithdrawDialog()" data-tr=wallet.showBatchWithdrawDialog>Batch Withdraw</button></span>
+        <span><button onclick="showImportSinglePKDialog()" data-tr=wallet.importSinglePrivateKey.openButtonLabel>Import Private Key</button></span>
     </div>
     <div class=headerCenter>
         <a class=arizenTitle href='https://github.com/ZencashOfficial/arizen'>Arizen</a>

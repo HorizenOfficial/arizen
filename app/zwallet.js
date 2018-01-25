@@ -171,7 +171,7 @@ function setFiatBalanceText(balanceZen, fiatCurrencySymbol = "") {
             fiatCurrencySymbol = "USD";
         }
     }
-    
+
     const axios = require("axios");
     const BASE_API_URL = "https://api.coinmarketcap.com/v1/ticker";
     let API_URL = BASE_API_URL + "/zencash/?convert=" + fiatCurrencySymbol;
