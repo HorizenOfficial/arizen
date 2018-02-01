@@ -1,0 +1,147 @@
+.registration {
+  @extend .login;
+
+
+  @include el('row') {
+    @extend .login__row;
+    @include mod('mb0') {
+      margin-bottom: 0 !important;
+    }
+    @include mod('my0') {
+      margin-bottom: 0 !important;
+      margin-top: 0 !important;
+    }
+    @include mod('checklist') {
+      align-items: flex-start;
+      display: flex;
+      height: 30px;
+      justify-content: flex-start;
+      padding: 0;
+      margin: 0;
+    }
+  }
+
+  @include el('form') {
+    @extend .login__form;
+    left: 60px;
+    @include mod('hide') {
+      @extend .login__form--hide;
+      left: 510px;
+
+      & .registration__btn {
+        color: $aqua;
+        transform: rotate(-90deg) scale(1.25) translate(92px, -35px);
+      }
+      @include bp('sm') {
+        left: calc(90vw - 50px);
+      }
+    }
+  }
+
+  @include el('field') {
+    @extend .login__field;
+    @include mod('hidden') {
+      display: none;
+      opacity: 0;
+      visibility: hidden;
+      width: 0;
+    }
+    @include mod('fileButton') {
+      align-items: center;
+      background: transparent;
+      border: solid 2px $biscay;
+      color: $biscay;
+      cursor: pointer;
+      display: inline-flex;
+      font-family: $helvetica;
+      font-size: 24px;
+      height: 46px;
+      justify-content: center;
+      min-width: 146px;
+      padding: 4px 20px;
+      transition: all 0.3s ease-in-out;
+      &:hover {
+        background: $biscay;
+        color: $aqua;
+      }
+      &:focus, &:active {
+        outline: none;
+      }
+      @include bp('xs') {
+        font-size: 18px;
+        height: auto;
+        min-width: 100px;
+      }
+    }
+  }
+
+  @include el('icon') {
+    @extend .login__icon;
+    cursor: pointer;
+  }
+
+  @include el('fileLabel') {
+    align-items: flex-end;
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+  }
+
+  @include el('walletFileName') {
+    @extend .registration__field;
+    font-family: $helvetica;
+    font-weight: 300;
+    text-align: left;
+    width: 100%;
+  }
+
+  @include el('btn') {
+    @extend .login__btn;
+  }
+
+  @include el('button') {
+    @extend .login__button;
+  }
+
+  @include el('pwChecklist') {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    white-space: nowrap;
+    @include bp('sm') {
+      white-space: normal;
+    }
+  }
+
+  @include el('pwChecklistItem') {
+    background: transparent;
+    color: $biscay;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 700;
+    margin: 2px 3px;
+    padding: 2px 4px;
+    transition: all 0.3s $cubic-ease-in-out;
+    @include bp('sm') {
+      font-size: 10px;
+      margin: 2px;
+      padding: 0;
+    }
+      &.valid {
+        background: lighten($green, 35%);
+        color: $green;
+      }
+      &.invalid {
+        background: lighten($red, 40%);
+        color: $red;
+      }
+  }
+}
+
+#registration__walletFileName {
+  width: calc(100% - 146px);
+  @include bp('xs') {
+    width: calc(100% - 100px);
+  }
+}
