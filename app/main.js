@@ -164,6 +164,10 @@ function decryptWallet(login, password, path) {
 }
 
 function importWallet(filename, encrypt) {
+	
+    //check if file format correct. dat file brake the app
+    if (filename.indexOf("awd") !=-1) {
+	    
     let data;
     if (encrypt === true) {
         data = decryptWallet(userInfo.login, userInfo.pass, filename);
@@ -182,6 +186,10 @@ function importWallet(filename, encrypt) {
         mainWindow.webContents.send("show-notification-response", "Import", tr("login.walletImported","Wallet imported succesfully"), 3);
     } else {
         dialog.showErrorBox(tr("login.walletImportFailed", "Import failed"), tr("login.dataImportFailed","Data import failed, possible reason is wrong credentials"));
+    }
+    }else
+    {
+        dialog.showErrorBox(tr("login.walletImportFailed", "Import failed"), tr("login.dataImportFailed","Wallet Data format is incorrect. Use swing wallet to export to Arizen format, then try again"));
     }
 }
 
