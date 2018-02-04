@@ -16,6 +16,7 @@ Arizen is ZenCash light wallet.
 ## v1.1.4
 - [x] Automatic pruning of old backups (maximum of 25 last backups)
 - [x] Settings for disabling notifications
+- [x] Fix: link from About section is not opened in Arizen
 
 ## v1.1.3
 - [x] FIX: Import Private Key in WIF and HEX format (Compatible with Swing wallet).
