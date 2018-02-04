@@ -200,6 +200,73 @@ function exportWallet(filename, encrypt) {
     storeFile(filename, data);
 }
 
+function pruneBackups(backupDir, walletName) {
+    // shamelessly inspired by borg backup
+
+    const pruneConfig = {
+        last: 5,
+        hourly: 10,
+        daily: 10,
+    };
+
+    const PRUNING_PATTERNS = [
+        ["secondly", 'yyyy-LL-dd HH:mm:ss'],
+        ["minutely", 'yyyy-LL-dd HH:mm'],
+        ["hourly",   'yyyy-LL-dd HH'],
+        ["daily",    'yyyy-LL-dd'],
+        ["weekly",   'kkkk-WW'],
+        ["monthly",  'yyyy-LL'],
+        ["yearly",   'yyyy']];
+
+    const PRUNING_PATTERNS_DICT = {};
+    PRUNING_PATTERNS.forEach(x => PRUNING_PATTERNS_DICT[x[0]] = x[1]);
+
+    function listBackupFiles() {
+        const filterRE = new RegExp('^' + walletName + '-\\d{14}\\.awd$');
+        let files = fs.readdirSync(backupDir);
+        files = files.filter(filename => filterRE.test(filename));
+        files.sort();
+        files.reverse();
+        return files;
+    }
+
+    function pruneLast(files, n) {
+        return files.slice(0, n || 0);
+    }
+
+    function pruneSplit(files, rule, n) {
+        let last = null;
+        let keep = [];
+        if (!n)
+            return keep;
+        for (let f of files) {
+            let stats = fs.statSync(backupDir + '/' + f);
+            let period = DateTime
+                .fromJSDate(stats.mtime)
+                .toFormat(PRUNING_PATTERNS_DICT[rule]);
+            if (period !== last) {
+                last = period;
+                keep.push(f);
+                if (keep.length === n)
+                    break;
+            }
+        }
+        return keep;
+    }
+
+    let files = listBackupFiles();
+    let toDelete = new Set(files);
+
+    pruneLast(files, pruneConfig.last)
+        .forEach(f => toDelete.delete(f));
+    PRUNING_PATTERNS.forEach(rule =>
+        pruneSplit(files, rule[0], pruneConfig[rule[0]])
+            .forEach(f => toDelete.delete(f)))
+
+    for (let f of toDelete)
+        fs.unlinkSync(backupDir + '/' + f);
+}
+
 function saveWallet() {
     const walletPath = getWalletPath() + userInfo.login + ".awd";
 
@@ -212,6 +279,7 @@ function saveWallet() {
         //fs.copyFileSync(walletPath, backupPath);
         // piece of shit node.js ecosystem, why the fuck do we have to deal with fs-extra crap here?
         fs.copySync(walletPath, backupPath);
+        pruneBackups(backupDir, userInfo.login);
     }
 
     exportWallet(walletPath, true);
