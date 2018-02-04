@@ -165,6 +165,12 @@ function decryptWallet(login, password, path) {
 }
 
 function importWallet(filename, encrypt) {
+    // check if file format is correct. Allow only awd and uawd file formats.
+    if (filename.indexOf("awd") === -1 && filename.indexOf("uawd") === -1) {
+        // TODO: add it to translation
+        dialog.showErrorBox(tr("login.walletImportFailedBadFileFormat", "Import failed"), tr("login.dataImportFailed", "Wallet data format is incorrect - only awd and uawd file formats are supported."));
+    }
+
     let data;
     if (encrypt === true) {
         data = decryptWallet(userInfo.login, userInfo.pass, filename);
@@ -180,9 +186,9 @@ function importWallet(filename, encrypt) {
         userInfo.dbChanged = true;
         userInfo.walletDb = new sql.Database(data);
         mainWindow.webContents.send("call-get-wallets");
-        mainWindow.webContents.send("show-notification-response", "Import", tr("login.walletImported","Wallet imported succesfully"), 3);
+        mainWindow.webContents.send("show-notification-response", "Import", tr("login.walletImported", "Wallet imported succesfully"), 3);
     } else {
-        dialog.showErrorBox(tr("login.walletImportFailed", "Import failed"), tr("login.dataImportFailed","Data import failed, possible reason is wrong credentials"));
+        dialog.showErrorBox(tr("login.walletImportFailed", "Import failed"), tr("login.dataImportFailed", "Data import failed, possible reason is wrong credentials"));
     }
 }
 
