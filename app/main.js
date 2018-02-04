@@ -200,17 +200,17 @@ function pruneBackups(backupDir, walletName) {
     const pruneConfig = {
         last: 5,
         hourly: 10,
-        daily: 7,
+        daily: 10,
     };
 
     const PRUNING_PATTERNS = [
-        ["secondly", '%yyyy-%LL-%dd %HH:%mm:%ss'],
-        ["minutely", '%yyyy-%LL-%dd %HH:%mm'],
-        ["hourly",   '%yyyy-%LL-%dd %HH'],
-        ["daily",    '%yyyy-%LL-%dd'],
-        ["weekly",   '%kkkk-%WW'],
-        ["monthly",  '%yyyy-%LL'],
-        ["yearly",   '%yyyy']];
+        ["secondly", 'yyyy-LL-dd HH:mm:ss'],
+        ["minutely", 'yyyy-LL-dd HH:mm'],
+        ["hourly",   'yyyy-LL-dd HH'],
+        ["daily",    'yyyy-LL-dd'],
+        ["weekly",   'kkkk-WW'],
+        ["monthly",  'yyyy-LL'],
+        ["yearly",   'yyyy']];
 
     const PRUNING_PATTERNS_DICT = {};
     PRUNING_PATTERNS.forEach(x => PRUNING_PATTERNS_DICT[x[0]] = x[1]);
