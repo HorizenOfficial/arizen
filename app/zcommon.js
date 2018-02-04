@@ -61,6 +61,8 @@ function warnUser(msg, onOk, onCancel) {
 }
 
 function showNotification(message) {
+    if (settings && !settings.notifications)
+        return;
     const notif = new Notification("Arizen", {
         body: message,
         icon: "resources/zen_icon.png"
@@ -253,12 +255,14 @@ function showSettingsDialog() {
         const inputApiUrls = dialog.querySelector(".settingsApiUrls");
         const inputFiatCurrency = dialog.querySelector(".settingsFiatCurrency");
         const inputLanguages = dialog.querySelector(".settingsLanguage");
+        const inputNotifications = dialog.querySelector(".enableNotifications");
 
         inputTxHistory.value = settings.txHistory;
         inputExplorerUrl.value = settings.explorerUrl;
         loadAvailableLangs(inputLanguages, settings.lang);
         inputApiUrls.value = settings.apiUrls.join("\n");
         inputFiatCurrency.value = settings.fiatCurrency;
+        inputNotifications.checked = settings.notifications;
 
         // An existing user has empty value settings.fiatCurrency
         if (settings.fiatCurrency === "" || settings.fiatCurrency === undefined || settings.fiatCurrency === null) {
@@ -272,7 +276,8 @@ function showSettingsDialog() {
                 explorerUrl: inputExplorerUrl.value.trim().replace(/\/?$/, ""),
                 apiUrls: inputApiUrls.value.split(/\s+/).filter(s => !/^\s*$/.test(s)).map(s => s.replace(/\/?$/, "")),
                 fiatCurrency: inputFiatCurrency.value,
-                lang: inputLanguages[inputLanguages.selectedIndex].value
+                lang: inputLanguages[inputLanguages.selectedIndex].value,
+                notifications: inputNotifications.checked ? 1 : 0,
             };
 
             if (settings.lang !== newSettings.lang)
