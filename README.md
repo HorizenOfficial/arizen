@@ -67,6 +67,11 @@ printed. This created address can by included to your Arizen or not.
 - [x] Needs connection to the insight and API (you can change servers in settings)
 - [x] Arizen is API wallet
 
+## Arizen file locations
+Linux: ~/.arizen/wallets/wallet_username.awd
+Windows: C:\Users\username\AppData\Roaming\Arizen\wallets\wallet_username.awd
+Mac: /Users/username/Library/Application Support/Arizen/wallet_username.awd
+
 ## Development
 
 ### How to create distribution
