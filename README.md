@@ -69,7 +69,7 @@ printed. This created address can by included to your Arizen or not.
 
 ## Arizen file locations
 - **Linux:** ~/.arizen/wallets/wallet_username.awd
-- **Windows:** C:\Users\_username_\AppData\Roaming\Arizen\wallets\_wallet_username_.awd
+- **Windows:** C://Users//_username_//AppData//Roaming//Arizen//wallets//_wallet_username_.awd
 - **MacOS:** /Users/_username_/Library/Application Support/Arizen/_wallet_username_.awd
 
 ## Development
