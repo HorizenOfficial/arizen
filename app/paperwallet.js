@@ -1,3 +1,6 @@
+// @flow
+/*jshint esversion: 6 */
+/*jslint node: true */
 "use strict";
 
 const {ipcRenderer, webFrame} = require("electron");
@@ -31,7 +34,7 @@ ipcRenderer.on("export-paper-wallet", (sender, wif, name) => {
 
         function centerSquareImage(img, format, y) {
             const WIDTH = 80;
-            const x = (pdfW - WIDTH)/2;
+            const x = (pdfW - WIDTH) / 2;
             pdf.addImage(img, format, x, y, WIDTH, WIDTH);
             return WIDTH + 10; // FIXME + 10
         }
@@ -65,7 +68,7 @@ ipcRenderer.on("export-paper-wallet", (sender, wif, name) => {
         pdf.save(filename);
     }
 
-    Promise.all([ createQrCodeAsync(wif), createQrCodeAsync(tAddr) ])
+    Promise.all([createQrCodeAsync(wif), createQrCodeAsync(tAddr)])
         .then(results => {
             const privKeyQrCode = results[0];
             const tAddrQrCode = results[1];
@@ -74,16 +77,17 @@ ipcRenderer.on("export-paper-wallet", (sender, wif, name) => {
 });
 
 function showPaperWalletDialog() {
-	showDialogFromTemplate("paperWalletDialogTemplate", dialog => {
-		const createButton = dialog.querySelector(".paperWalletCreateButton");
-		const nameInput = dialog.querySelector(".paperWalletName");
-		const addToWalletCheckbox = dialog.querySelector(".paperWalletAdd");
-		createButton.addEventListener("click", () => {
-			const name = nameInput.value ? nameInput.value : null;
-			const addToWallet = addToWalletCheckbox.checked;
-			ipcRenderer.send("create-paper-wallet", name, addToWallet);
-			dialog.close();
-		});
-	});
+    showDialogFromTemplate("paperWalletDialogTemplate", dialog => {
+        const createButton = dialog.querySelector(".paperWalletCreateButton");
+        const nameInput = dialog.querySelector(".paperWalletName");
+        const addToWalletCheckbox = dialog.querySelector(".paperWalletAdd");
+        createButton.addEventListener("click", () => {
+            const name = nameInput.value ? nameInput.value : null;
+            const addToWallet = addToWalletCheckbox.checked;
+            ipcRenderer.send("create-paper-wallet", name, addToWallet);
+            dialog.close();
+        });
+    });
 }
+
 exports.showPaperWalletDialog = showPaperWalletDialog;

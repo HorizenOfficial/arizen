@@ -50,7 +50,7 @@ const depositQrcodeImage = document.getElementById("depositQrcodeImg");
 const depositSaveQrcodeButton = document.getElementById("depositSaveQrcodeButton");
 const withdrawTabButton = document.getElementById("withdrawTabButton");
 // FIXME: withdrawAvailBalanceNode unused
-const withdrawAvailBalanceNode = document.getElementById("withdrawAvailBalance");
+// const withdrawAvailBalanceNode = document.getElementById("withdrawAvailBalance");
 const withdrawFromButton = document.getElementById("withdrawFromButton");
 const withdrawFromAddrInput = document.getElementById("withdrawFromAddr");
 const withdrawToButton = document.getElementById("withdrawToButton");

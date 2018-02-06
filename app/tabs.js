@@ -1,4 +1,7 @@
-'use strict';
+// @flow
+/*jshint esversion: 6 */
+/*jslint node: true */
+"use strict";
 
 /*
 	Tabs like in Firefox.
@@ -27,86 +30,86 @@
 */
 class XTabsElement extends HTMLElement {
 
-	constructor() {
-		super();
-	}
+    constructor() {
+        super();
+    }
 
-	connectedCallback() {
-		this.init();
-		this.observer = new MutationObserver(changes => this.init());
-		this.observer.observe(this, {childList: true});
-	}
+    connectedCallback() {
+        this.init();
+        this.observer = new MutationObserver(changes => this.init());
+        this.observer.observe(this, {childList: true});
+    }
 
-	disconnectedCallback() {
-		this.oserver.disconnect();
-	}
+    disconnectedCallback() {
+        this.oserver.disconnect();
+    }
 
-	init() {
-		function hideElement(node, yes) {
-			if (yes) {
-				node.classList.add('hidden');
-				node.setAttribute('hidden', '');
-			} else {
-				node.classList.remove('hidden')
-				node.removeAttribute('hidden');
-			}
-		}
-				
-		const buttons = [...this.querySelectorAll('[data-tab-button]')]
-			.map(elm => {
-				const key = elm.dataset.tabButton;
-				return [key, elm];
-			});
-		const contents = [...this.querySelectorAll('[data-tab-content]')]
-			.map(elm => {
-				hideElement(elm, true);
-				const key = elm.dataset.tabContent;
-				return [key, elm];
-			});
-		const contentsByKeys = new Map(contents);
+    init() {
+        function hideElement(node, yes) {
+            if (yes) {
+                node.classList.add('hidden');
+                node.setAttribute('hidden', '');
+            } else {
+                node.classList.remove('hidden')
+                node.removeAttribute('hidden');
+            }
+        }
 
-		let selectedButton, selectedContent;
+        const buttons = [...this.querySelectorAll('[data-tab-button]')]
+            .map(elm => {
+                const key = elm.dataset.tabButton;
+                return [key, elm];
+            });
+        const contents = [...this.querySelectorAll('[data-tab-content]')]
+            .map(elm => {
+                hideElement(elm, true);
+                const key = elm.dataset.tabContent;
+                return [key, elm];
+            });
+        const contentsByKeys = new Map(contents);
 
-		for (const [key, button] of buttons) {
-			const content = contentsByKeys.get(key);
+        let selectedButton, selectedContent;
 
-			if (!content) {
-				console.log(`button ${key} has no content`);
-				continue;
-			}
+        for (const [key, button] of buttons) {
+            const content = contentsByKeys.get(key);
 
-			if (button.hasAttribute('selected')) {
-				if (selectedButton)
-					button.removeAttribute('selected');
-				else {
-					selectedButton = button;
-					selectedContent = content;
-					hideElement(selectedContent, false);
-				}
-			}
+            if (!content) {
+                console.log(`button ${key} has no content`);
+                continue;
+            }
 
-			button.addEventListener('click', () => {
-				selectedButton.removeAttribute('selected');
-				hideElement(selectedContent, true);
-				selectedButton = button;
-				selectedContent = content;
-				button.setAttribute('selected', '');
-				hideElement(content, false);
-			});
-		}
+            if (button.hasAttribute('selected')) {
+                if (selectedButton)
+                    button.removeAttribute('selected');
+                else {
+                    selectedButton = button;
+                    selectedContent = content;
+                    hideElement(selectedContent, false);
+                }
+            }
 
-		if (!selectedButton) {
-			for (const [key, button] of buttons) {
-				const content = contentsByKeys.get(key);
-				if (content) {
-					selectedButton = button;
-					selectedContent = content;
-					hideElement(selectedContent, false);
-					break;
-				}
-			}
-		}
-	}
+            button.addEventListener('click', () => {
+                selectedButton.removeAttribute('selected');
+                hideElement(selectedContent, true);
+                selectedButton = button;
+                selectedContent = content;
+                button.setAttribute('selected', '');
+                hideElement(content, false);
+            });
+        }
+
+        if (!selectedButton) {
+            for (const [key, button] of buttons) {
+                const content = contentsByKeys.get(key);
+                if (content) {
+                    selectedButton = button;
+                    selectedContent = content;
+                    hideElement(selectedContent, false);
+                    break;
+                }
+            }
+        }
+    }
 }
 
 customElements.define('x-tabs', XTabsElement);

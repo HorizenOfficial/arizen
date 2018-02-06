@@ -8,8 +8,9 @@ const {translate} = require("./util.js");
 const zencashjs = require("zencashjs");
 
 function assert(condition, message) {
-    if (!condition)
+    if (!condition) {
         throw new Error(message || "Assertion failed");
+    }
 }
 
 /**
@@ -175,8 +176,9 @@ function cloneTemplate(id) {
  */
 function createDialogFromTemplate(templateId) {
     const dialog = cloneTemplate(templateId);
-    if (dialog.tagName !== "ARIZEN-DIALOG")
+    if (dialog.tagName !== "ARIZEN-DIALOG") {
         throw new Error("No dialog in the template");
+    }
     document.body.appendChild(dialog);
     dialog.addEventListener("close", () => dialog.remove());
     return dialog;
@@ -185,8 +187,9 @@ function createDialogFromTemplate(templateId) {
 function showDialogFromTemplate(templateId, dialogInit, onClose = null) {
     const dialog = createDialogFromTemplate(templateId);
     dialogInit(dialog);
-    if (onClose)
+    if (onClose) {
         dialog.addEventListener("close", () => onClose());
+    }
     dialog.showModal();
 }
 
@@ -236,7 +239,7 @@ let langDict;
     ipcRenderer.on("settings", (sender, settingsStr) => {
         // don't notify about new settings on startup
         if (Object.keys(settings).length)
-            showNotification(tr("notification.settingsUpdated","Settings updated"));
+            showNotification(tr("notification.settingsUpdated", "Settings updated"));
         const newSettings = JSON.parse(settingsStr);
         if (settings.lang !== newSettings.lang)
             changeLanguage(newSettings.lang);

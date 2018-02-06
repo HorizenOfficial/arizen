@@ -137,7 +137,7 @@ function selectColumn(username, pswd, pswd_again) {
 }
 
 function handleWalletFile() {
-    let re =  /(?:\.([^.]+))?$/;
+    let re = /(?:\.([^.]+))?$/;
     let targetStyle = "none";
 
     document.getElementById("btWalletFilename").textContent = document.getElementById("btWallet").value;
