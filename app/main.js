@@ -73,10 +73,11 @@ function attachUpdaterHandlers() {
     updater.on("update-downloaded", onUpdateDownloaded);
 
     function onUpdateDownloaded() {
+        let version = updater.meta.version;
         dialog.showMessageBox({
             type: "info",
             title: "Update is here!",
-            message: `Arizen will be closed and the new ${updater.version} version will be installed. After it will be done Arizen wallet will be reopened again.`
+            message: `Arizen will be closed and the new ${version} version will be installed. After it will be done Arizen wallet will be reopened again.`
         }, function () {
             // application forces to update itself
             updater.quitAndInstall();
