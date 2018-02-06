@@ -180,13 +180,13 @@
       "keepAmount": "Minimální zůstatek",
       "txFee": "Poplatek za transakci"
     },
-    "importSinglePrivateKey":{
-      "openButtonLabel":"Import Private Key",
-      "titleLabel":"Import Single Private Key",
-      "privateKeyLabel":"Private Key",
-      "importButtonLabel":"Import",
-      "warningNotValidAddress":"Z address exist in your wallet",
-      "warningNotValidPK": "This is not a valid Private Key."
+    "importSinglePrivateKey": {
+      "openButtonLabel": "Import privátního klíče",
+      "titleLabel": "Import jednoho privátního klíče",
+      "privateKeyLabel": "Privátní klíč",
+      "importButtonLabel": "Import",
+      "warningNotValidAddress": "Z adresa již existuje v tvé peněžence.",
+      "warningNotValidPK": "Není validní privátní klíč!"
     }
   },
   "menu": {
