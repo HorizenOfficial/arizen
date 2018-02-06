@@ -295,38 +295,36 @@ function showSettingsDialog() {
 }
 
 function showImportSinglePKDialog() {
-  showDialogFromTemplate("importSinglePrivateKeyDialogTemplate", dialog => {
-    const importButton = dialog.querySelector(".newPrivateKeyImportButton");
-    const nameInput = dialog.querySelector(".newPrivateKeyDialogName");
-    const privateKeyInput = dialog.querySelector(".newPrivateKeyDialogKey");
-    importButton.addEventListener("click", () => {
-        const name = nameInput.value ? nameInput.value : "";
-    	  let pk = privateKeyInput.value;
+    showDialogFromTemplate("importSinglePrivateKeyDialogTemplate", dialog => {
+        const importButton = dialog.querySelector(".newPrivateKeyImportButton");
+        const nameInput = dialog.querySelector(".newPrivateKeyDialogName");
+        const privateKeyInput = dialog.querySelector(".newPrivateKeyDialogKey");
+        importButton.addEventListener("click", () => {
+            const name = nameInput.value ? nameInput.value : "";
+            let pk = privateKeyInput.value;
 
-        if(isPKorWif(pk) === true){
-           console.log(name);
-           console.log(pk);
-           if (isWif(pk) === true) {
-               pk = zencashjs.address.WIFToPrivKey(pk);
-           }
-           let pubKey = zencashjs.address.privKeyToPubKey(pk, true);
-           let zAddress = zencashjs.address.pubKeyToAddr(pubKey);
-           let zAddrExists, result
-           let resp = ipcRenderer.sendSync("check-if-z-address-in-wallet",zAddress)
-           zAddrExists = resp.exist;
-           result = resp.result;
+            if (isPKorWif(pk) === true) {
+                console.log(name);
+                console.log(pk);
+                if (isWif(pk) === true) {
+                    pk = zencashjs.address.WIFToPrivKey(pk);
+                }
+                let pubKey = zencashjs.address.privKeyToPubKey(pk, true);
+                let zAddress = zencashjs.address.pubKeyToAddr(pubKey);
+                let resp = ipcRenderer.sendSync("check-if-z-address-in-wallet", zAddress);
+                let zAddrExists = resp.exist;
 
-           if (zAddrExists === true){
-               alert(tr("wallet.importSinglePrivateKey.warningNotValidAddress", "Z address exist in your wallet"))
-           } else {
-               ipcRenderer.send("import-single-key", name, pk);
-               dialog.close();
+                if (zAddrExists === true) {
+                    alert(tr("wallet.importSinglePrivateKey.warningNotValidAddress", "Z address exist in your wallet"))
+                } else {
+                    ipcRenderer.send("import-single-key", name, pk);
+                    dialog.close();
+                }
+            } else {
+                alert(tr("wallet.importSinglePrivateKey.warningNotValidPK", "This is not a valid Private Key."));
             }
-        } else {
-           alert(tr("wallet.importSinglePrivateKey.warningNotValidPK","This is not a valid Private Key."));
-      }
+        });
     });
-  });
 }
 
 function openZenExplorer(path) {
@@ -398,26 +396,26 @@ function translateCurrentPage() {
         node.textContent = tr(node.dataset.tr, node.textContent));
 }
 
-function isWif(pk){
-  let isWif = true;
-  try {
-      let pktmp = zencashjs.address.WIFToPrivKey(pk);
-  } catch(err){
-      isWif = false;
-  }
-  return isWif
+function isWif(pk) {
+    let isWif = true;
+    try {
+        let pktmp = zencashjs.address.WIFToPrivKey(pk);
+    } catch (err) {
+        isWif = false;
+    }
+    return isWif
 }
 
-function isPK(pk){
-  let isPK = true;
-  try {
-          let pktmp = zencashjs.address.privKeyToPubKey(pk);
-  } catch(err){
-          isPK = false;
-  }
-  return isPK
+function isPK(pk) {
+    let isPK = true;
+    try {
+        let pktmp = zencashjs.address.privKeyToPubKey(pk);
+    } catch (err) {
+        isPK = false;
+    }
+    return isPK
 }
 
-function isPKorWif(pk){
-  return ( isWif(pk) || isPK(pk))
+function isPKorWif(pk) {
+    return (isWif(pk) || isPK(pk))
 }
