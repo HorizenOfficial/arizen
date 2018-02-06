@@ -238,8 +238,9 @@ function pruneBackups(backupDir, walletName) {
     function pruneSplit(files, rule, n) {
         let last = null;
         let keep = [];
-        if (!n)
+        if (!n) {
             return keep;
+        }
         for (let f of files) {
             let stats = fs.statSync(backupDir + '/' + f);
             let period = DateTime
@@ -262,10 +263,11 @@ function pruneBackups(backupDir, walletName) {
         .forEach(f => toDelete.delete(f));
     PRUNING_PATTERNS.forEach(rule =>
         pruneSplit(files, rule[0], pruneConfig[rule[0]])
-            .forEach(f => toDelete.delete(f)))
+            .forEach(f => toDelete.delete(f)));
 
-    for (let f of toDelete)
+    for (let f of toDelete) {
         fs.unlinkSync(backupDir + '/' + f);
+    }
 }
 
 function saveWallet() {
@@ -273,8 +275,9 @@ function saveWallet() {
 
     if (fs.existsSync(walletPath)) {
         const backupDir = getWalletPath() + "backups";
-        if (!fs.existsSync(backupDir))
+        if (!fs.existsSync(backupDir)) {
             fs.mkdirSync(backupDir);
+        }
         const timestamp = DateTime.local().toFormat("yyyyLLddHHmmss");
         const backupPath = backupDir + "/" + userInfo.login + "-" + timestamp + ".awd";
         //fs.copyFileSync(walletPath, backupPath);
@@ -362,8 +365,9 @@ function loadSettings() {
         sqlRun("create table new_settings (name text unique, value text)");
 
     const b64settings = sqlSelectColumns("select value from new_settings where name = 'settings'");
-    if (b64settings.length === 0)
+    if (b64settings.length === 0) {
         return defaultSettings;
+    }
 
     /* Later we'll want to merge user settings with default settings. */
     return JSON.parse(Buffer.from(b64settings[0][0], "base64").toString("ascii"));
@@ -378,8 +382,9 @@ function saveSettings(settings) {
 function upgradeDb() {
     // expects DB to be prefilled with addresses
     let addr = sqlSelectObjects("select * from wallet limit 1")[0];
-    if (!("name" in addr))
+    if (!("name" in addr)) {
         sqlRun("ALTER TABLE wallet ADD COLUMN name TEXT DEFAULT ''");
+    }
 }
 
 function exportWalletArizen(ext, encrypt) {
@@ -832,11 +837,13 @@ function fetchTransactions(txIds, myAddrs) {
                     if (!balanceAccounted && myAddrSet.has(addr)) {
                         balanceAccounted = true;
                         txBalance += parseFloat(vout.value);
-                        if (!firstMyAddr)
+                        if (!firstMyAddr) {
                             firstMyAddr = addr;
+                        }
                     }
-                    if (!vouts.includes(addr))
+                    if (!vouts.includes(addr)) {
                         vouts.push(addr);
+                    }
                 }
             }
 
@@ -844,11 +851,13 @@ function fetchTransactions(txIds, myAddrs) {
                 const addr = vin.addr;
                 if (myAddrSet.has(addr)) {
                     txBalance -= parseFloat(vin.value);
-                    if (!firstMyAddr)
+                    if (!firstMyAddr) {
                         firstMyAddr = addr;
+                    }
                 }
-                if (!vins.includes(addr))
+                if (!vins.includes(addr)) {
                     vins.push(addr);
+                }
             }
 
             const tx = {
@@ -1554,7 +1563,7 @@ ipcMain.on("create-paper-wallet", (event, name, addToWallet) => {
     if (addToWallet) {
         const addr = getNewAddress(name);
         mainWindow.webContents.send("generate-wallet-response",
-            JSON.stringify({ response: "OK", addr: addr }));
+            JSON.stringify({response: "OK", addr: addr}));
         wif = addr.wif;
     }
     else
