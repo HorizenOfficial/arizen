@@ -32,6 +32,7 @@ function translate(langDict, key, defaultVal) {
         console.warn("Untranslated key: " + key);
         return defaultVal;
     }
+
     return iter(langDict, key.split("."));
 }
 

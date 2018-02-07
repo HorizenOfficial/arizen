@@ -68,7 +68,7 @@ function showNotification(message) {
         body: message,
         icon: "resources/zen_icon.png"
     });
-    notif.onclick = () =>  notif.close();
+    notif.onclick = () => notif.close();
 }
 
 function logout() {
@@ -97,7 +97,10 @@ function fixLinks(parent = document) {
 
 function fixAmountInputs(parent = document) {
     querySelectorAllDeep(".amountInput", parent).forEach(node => {
-        function updateBalanceText() { node.value = formatBalance(node.valueAsNumber, "en") }
+        function updateBalanceText() {
+            node.value = formatBalance(node.valueAsNumber, "en")
+        }
+
         updateBalanceText();
         node.addEventListener("change", () => updateBalanceText());
     });

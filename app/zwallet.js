@@ -8,6 +8,7 @@ const {ipcRenderer} = require("electron");
 const {List} = require("immutable");
 const Qrcode = require("qrcode");
 const jsPDF = require("jspdf");
+// FIXME: unused showPaperWalletDialog
 const {showPaperWalletDialog} = require("./paperwallet.js");
 
 function logIpc(msgType) {
@@ -137,8 +138,9 @@ function checkResponse(resp) {
 
 function warnTxSend(onOk) {
     const msg = tr("wallet.tabWithdraw.withdrawConfirmQuestion", "Do you really want to send this transaction?");
-    if (confirm(msg))
+    if (confirm(msg)) {
         onOk();
+    }
 }
 
 function getAddrData(addr) {
@@ -167,7 +169,7 @@ function setFiatBalanceText(balanceZen, fiatCurrencySymbol = "") {
     const lastUpdateTimeNode = document.getElementById("lastUpdateTime");
     if (fiatCurrencySymbol === "") {
         fiatCurrencySymbol = settings.fiatCurrency;
-        if (fiatCurrencySymbol === undefined || fiatCurrencySymbol === null ){
+        if (fiatCurrencySymbol === undefined || fiatCurrencySymbol === null) {
             fiatCurrencySymbol = "USD";
         }
     }
@@ -183,9 +185,9 @@ function setFiatBalanceText(balanceZen, fiatCurrencySymbol = "") {
         let balance = parseFloat(balanceZen) * zenPrice;
         balanceFiatAmountNode.textContent = formatFiatBalance(balance) + " " + fiatCurrencySymbol;
         lastUpdateTimeNode.textContent = now;
-      }).catch(error => {
-            console.log(error);
-      });
+    }).catch(error => {
+        console.log(error);
+    });
 }
 
 function setAddressNodeName(addrObj, addrNode) {
@@ -577,7 +579,7 @@ function validateWithdrawForm() {
         setNodeTrText(withdrawMsg, "wallet.tabWithdraw.messages.zeroAmount", "The amount is not positive");
         return;
     }
-    if (amount + fee > fromAddrObj.lastbalance) {
+    if ((amount + fee) > fromAddrObj.lastbalance) {
         setNodeTrText(withdrawMsg, "wallet.tabWithdraw.messages.insufficientFunds", "Insufficient funds on the from address");
         return;
     }
