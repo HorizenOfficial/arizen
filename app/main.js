@@ -616,16 +616,19 @@ function fetchBlockchainChanges(addrObjs, knownTxIds) {
         };
         const txIdSet = new Set();
 
+        function addTxId(info) {
+            info.transactions.forEach(function (txId) {
+                return txIdSet.add(txId);
+            });
+        }
+
         for (const [obj, info] of results) {
             if (obj.lastbalance !== info.balance) {
                 obj.balanceDiff = info.balance - (obj.lastbalance || 0);
                 obj.lastbalance = info.balance;
                 result.changedAddrs.push(obj);
             }
-
-            info.transactions.forEach(txId => {
-                return txIdSet.add(txId);
-            });
+            addTxId(info);
         }
 
         knownTxIds.forEach(txId => txIdSet.delete(txId));
