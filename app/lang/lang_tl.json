@@ -1,0 +1,203 @@
+{
+  "languageName": "Tagalog",
+  "languageValue": "tl",
+  "langFileVersion": "1",
+  "login": {
+    "label": "Arizen: Login",
+    "username": "Pangalan ng Gumagamit",
+    "password": "Password",
+    "loginButton": "Login",
+    "createWalletLink": "Lumikha ng Wallet",
+    "warningWrongUsernameOrPassword": "Maling <strong>pangalan ng tagagamit</strong> o <strong>password</strong>",
+    "dataImportFailed": "Pumalpak ang pag-import ng datos, ang posibleng rason ay mga maling kredensyal",
+    "fileReplace": "Gusto mo bang palitan ang file?",
+    "walletReplace": "Palitan ang Wallet?",
+    "walletReplaceMsg": "Papalitan nito ang iyong aktwal na wallet. Sigurado ka ba?",
+    "walletImported": "Matagumpay na na-import ang wallet",
+    "walletImportFailed": "Pumalpak ang pag-import",
+    "yes": "Oo",
+    "no": "Hindi"
+  },
+  "createWallet": {
+    "label": "Arizen: Lumikha ng Wallet",
+    "username": "Pangalan ng Tagagamit",
+    "password": "Password",
+    "passwordAgain": "Password ulit",
+    "oldUsername": "Dating pangalan ng tagagamit: ",
+    "oldPassword": "Dating password: ",
+    "selectWallet": "Pumili ng Wallet",
+    "selectWalletButton": "Maghanap",
+    "createWalletButton": "Lumikha ng Wallet",
+    "loginLink": "Login",
+    "warningUsername": "Dapat nasunod ng pangalan ng tagagamit ang mga sumusunod na kinakailangan:",
+    "warningUsernameLength": "Lagpas sa <strong>apat na letra</strong>",
+    "warningPassword": "Dapat nasunod ng password ang mga sumusunod na kinakailangan:",
+    "warningPasswordLetter": "Lagpas sa <strong>isang letra</strong>",
+    "warningPasswordCapitalLetter": "Lagpas sa <strong>isang kapital na letra</strong>",
+    "warningPasswordNumber": "Lagpas sa <strong>isang numero</strong>",
+    "warningPasswordSpecial": "Lagpas sa <strong>isang espesyal na karakter</strong>",
+    "warningPasswordLength": "Lagpas sa <strong>8 karakter</strong>",
+    "warningPasswordAgain": "Dapat nasunod ng password ang mga sumusunod na kinakailangan:",
+    "warningPasswordAgainIdentical": "<strong>Pareho</strong>",
+    "errorCreationFailed": "Pumalpak ang paggawa ng Wallet",
+    "errorFailedResponse": "Palpak ang tugon"
+  },
+  "notification": {
+    "settingsUpdated": "Na-update na ang setting",
+    "balanceUpdated": "Na-update na ang balanse",
+    "newTransactions": "Bagong Transaksyon"
+  },
+  "importExportPks": {
+    "chooseFileExport": "Pumili ng file para sa pribadong mga key",
+    "chooseFileImport": "Pumili ng file na may pribadong mga key",
+    "InvalidLinePk": "hindi tama ang linyang ${0} sa pribadong file ng mga key",
+    "InvalidPk": "hindi tama ang pribadong key sa linyang ${0} sa pribadong file ng mga key"
+  },
+  "wallet": {
+    "showSettingsDialogButton": "Ang mga setting",
+    "showAboutDialogButton": "Tungkol sa",
+    "refreshWallet": "I-refresh",
+    "logout": "Logout",
+    "exit": "Lumabas",
+    "date": "Petsa",
+    "from": "Mula",
+    "to": "Papunta",
+    "amount": "Bilang",
+    "balance": "Balanse",
+    "totalBalance": "Kabuuang balanse",
+    "lastUpdate": "Huling update",
+    "showExplorer": "Ipakita sa ZEN Explorer",
+    "listOfAddresses": "Listahan ng mga Address",
+    "showBatchWithdrawDialog": "Sabayang Pag-withdraw",
+    "notLoggedIn": "Hindi naka-login",
+    "addressNotFound": "hindi nakita ang address",
+    "nameNotFound": "hindi nakita ang pangalan",
+    "renameWalletSetTo": "ang address ${0} ay na-set sa ${1}",
+    "fetchBlockchainFailed": "Palpak sa pagkuha ng mga pagbabago sa blockchain:",
+    "save": "I-seyb",
+    "pdfExported": "Na-export ang PDF",
+    "tabOverview": {
+      "label": "Pangkalahatang tingin",
+      "showZeroBalances": "Ipakita ang mga walang balanse",
+      "newAddress": "Gumawa ng Bagong address",
+      "unnamedAddress": "Hindi pinangalanang address",
+      "newAddressExists": "Ang address na ${0} ay nasa listahan na"
+    },
+    "tabDeposit": {
+      "label": "Mag-deposit",
+      "help": "I-click ang berdeng pipindutin sunod sa nais na address sa pagdeposit.",
+      "saveQrcode": "I-seyb ang QR code",
+      "messages": {
+        "emptyToAddr": "Ang to address ay blanko",
+        "unknownToAddr": "Ang to address ay hindi nabibilang sa wallet na ito",
+        "zeroAmount": "Ang dami ay hindi positibo"
+      }
+    },
+    "tabWithdraw": {
+      "label": "I-withdraw",
+      "help": "I-click ang pulang pipindutin sunod sa nais na address sa pag-withdraw.",
+      "availableBalance": "Ang balanseng meron",
+      "fee": "Bayad sa transaksyon",
+      "txStatus": "Estado ng transaksyon",
+      "withdrawConfirmQuestion": "Gusto mo ba talagang ipadala ang transaksyon na ito?",
+      "messages": {
+        "emptyFromAddr": "Ang from address ay bakante",
+        "unknownFromAddr": "Ang from address ay hindi nabibilang sa wallet na ito",
+        "insufficientFirstSource": "Hindi sapat ang pondo sa unang pinagmulan (Pinakamaliit: limit ng threshold + bayad)!",
+        "insufficientNextSource": "Hindi sapat ang pondo sa pangalawang pinagmulan o sa sunod (Pinakamaliit: limit ng threshold)!",
+        "numberOfKeys": "# pribadong mga key at # mga address hindi magkatumbas!",
+        "sumLowerThanFee": "Ang kabuuang balanse sa lahat ng pinagmulang address ay mas mababa pa sa bayad!",
+        "zenApi": "Ang Zen na API hindi na-set sa mga setting!",
+        "unknownAddress": "Ang pinagmulang address ay wala sa iyong wallet!",
+        "insufficientFundsSourceAddr": "Hindi sapat ang pondo para sa pinagmulang address",
+        "emptyToAddr": "Ang to address ay bakante",
+        "zeroAmount": "Ang dami ay hindi positibo",
+        "insufficientFunds": "Hindi sapat ang pondo sa from address",
+        "fromAddressBadLength": "Hindi tamang haba ng pinagmulang address!",
+        "fromAddressBadPrefix": "Hindi tamang prefix ng pinagmulang address - dapat ay 'zn'!",
+        "toAddressBadLength": "Hindi tamang haba ng patutunguhang address!",
+        "toAddressBadPrefix": "Hindi tamang prefix ng patutunguhang address - dapat ay 'zn'!",
+        "amounNotNumber": "Ang dami ay hindi numero",
+        "amountIsZero": "Ang dami ay dapat lagpas sa wala!",
+        "feeNotNumber": "Ang bayad ay HINDI numero!",
+        "feeIsNegative": "Ang bayad ay dapat lagpas o katumbas ng wala!",
+        "error": "Mali",
+        "success": "Matagumpay na naipadala ang transaksyon"
+      }
+    },
+    "transactionHistory": {
+      "label": "Kasaysayan ng Transaksyon",
+      "unconfirmed": "HINDI NAKOMPIRMA",
+      "replaceAttempt": "Sinusubukang palitan ang transaksyon sa bloke"
+    },
+    "transactionDetail": {
+      "label": "Detalye ng Transaksyon",
+      "txid": "ID ng Transaksyon",
+      "blockHeight": "Taas ng Bloke",
+      "unconfirmedTx": "HINDI NAKOMPIRMANG TRANSAKSYON"
+    },
+    "addressDetail": {
+      "label": "Detalye ng Transaksyon",
+      "name": "Pangalan",
+      "address": "Address",
+      "saveButton": "I-seyb ang mga pagbabago"
+    },
+    "newAddress": {
+      "label": "Lumikha ng bagong Address",
+      "name": "Pangalan (opsyonal)",
+      "createButton": "Lumikha"
+    },
+    "about": {
+      "label": "Tungkol sa Arizen",
+      "homepage": "Homepage",
+      "version": "Bersyon",
+      "license": "Lisensya",
+      "authors": "Mga May-akda"
+    },
+    "settings": {
+      "label": "Mga setting",
+      "limit": "Limit ng Transaksyon",
+      "items": "mga aytem",
+      "language": "Lengwahe",
+      "explorerUrl": "ZEN Explorer na URL",
+      "apiUrl": "Mga API na URL",
+      "fiat": "Katumbas na Fiat",
+      "save": "I-seyb"
+    },
+    "paperWallet": {
+      "label": "Papel Wallet",
+      "generateNewWallet": "Lumikha ng Bagong Wallet",
+      "name": "Pangalan (opsyonal)",
+      "addWalletToArizen": "Idagdag ang Wallet na ito sa Arizen",
+      "zenCashWalletLabel": "ZenCash na Wallet",
+      "tAddrLabel": "Pampublikong Key - T Address",
+      "privateKeyLabel": "Pribadong Key",
+      "namePrint": "Pangalan",
+      "exportPDFLabel": "I-export ang PDF"
+    },
+    "batchWithdraw": {
+      "label": "Sabayang Pag-withdraw",
+      "keepAmount": "Dami na itatago",
+      "txFee": "Bayad sa Transaksyon"
+    }
+  },
+  "menu": {
+    "file": "File",
+    "backupEncrypted": "I-backup ang NA-ENCRYPT na wallet",
+    "backupUnencrypted": "I-backup ang HINDI NA-ENCRYPT na wallet",
+    "importEncrypted": "I-import ang NA-ENCRYPTED na Arizen wallet",
+    "importUnencrypted": "I-import HINDI NA-ENCRYPTED na Arizen wallet",
+    "importPrivateKeys": "I-import ang mga pribadong key",
+    "exportPrivateKeys": "I-export ang mga pribadong key",
+    "exit": "Lumabas",
+    "edit": "Baguhin",
+    "editSubmenu": {
+      "undo": "Wag Gawin",
+      "redo": "Gawin Ulit",
+      "cut": "Putulin",
+      "copy": "Kopyahin",
+      "paste": "Ilagay",
+      "selectAll": "Piliin Lahat"
+    }
+  }
+}
