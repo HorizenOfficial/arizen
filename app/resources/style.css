@@ -43,7 +43,7 @@ body {
   height: 620px;
   overflow: visible;
   position: relative;
-  width: 560px; }
+  width: 100vw; }
   @media only screen and (max-width: 767px) {
     .form__wrapper {
       height: 100vh;
@@ -56,8 +56,11 @@ body {
   animation-fill-mode: forwards;
   animation-iteration-count: 1;
   animation-timing-function: ease-in-out;
+  display: flex;
+  flex-wrap: wrap;
+  height: 100vh;
+  justify-content: center;
   margin: 0 auto;
-  max-width: 560px;
   opacity: 0;
   overflow: hidden;
   padding: 20px 0 0;
@@ -68,6 +71,18 @@ body {
   @media only screen and (max-width: 767px) {
     .login, .registration {
       max-width: 90vw; } }
+  .login__error {
+    font-family: 'Montserrat', sans-serif, system-ui;
+    font-size: 20px; }
+    .login__error[data-error="hidden"] span {
+      transform: translateX(-108%); }
+    .login__error > span {
+      background-color: #ec3f41;
+      color: #fff;
+      display: block;
+      padding: 4px 8px;
+      transition: all 0.48s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+      transform: translateX(0%); }
   .login__form, .registration__form {
     display: inline-block;
     height: 620px;
@@ -79,7 +94,7 @@ body {
     top: 0;
     transform: translateX(0);
     transition: all 0.5s cubic-bezier(0.65, 0.05, 0.36, 1);
-    width: 500px; }
+    width: 100vw; }
     @media only screen and (max-width: 767px) {
       .login__form, .registration__form {
         height: 100vh;
@@ -89,8 +104,9 @@ body {
     .login__form--hide, .registration__form--hide {
       background-color: #1b2f5a;
       color: #69ffbd !important;
+      height: 100vh;
       margin: 0;
-      top: -114px;
+      top: -188px;
       transform: translateX(0) !important;
       width: 50px !important; }
       .login__form--hide .login__btn, .registration__form--hide .login__btn, .login__form--hide .registration__btn, .registration__form--hide .registration__btn {
@@ -108,7 +124,7 @@ body {
     transition: opacity 0.3s ease-in-out;
     width: 100%; }
     .login__row:first-child, .registration__row:first-child {
-      margin: 10px 0 80px; }
+      margin: 10px auto 80px; }
     @media only screen and (max-width: 767px) {
       .login__row, .registration__row {
         margin: 20px 0; } }
@@ -207,17 +223,15 @@ body {
   margin-top: 0 !important; }
 
 .registration__row--checklist {
-  align-items: flex-start;
-  display: flex;
   height: 30px;
-  justify-content: flex-start;
   padding: 0;
-  margin: 0; }
+  margin: 0 auto; }
 
 .registration__form {
-  left: 60px; }
+  left: 0; }
   .registration__form--hide {
-    left: 510px; }
+    left: calc(100vw - 50px);
+    height: 100vh; }
     .registration__form--hide .registration__btn {
       color: #69ffbd;
       transform: rotate(-90deg) scale(1.25) translate(92px, -35px); }

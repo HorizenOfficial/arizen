@@ -34,7 +34,9 @@ ipcRenderer.on("verify-login-response", function (event, resp) {
         location.href = "./zwallet.html";
         console.log("Login was successful - redirecting to wallet.html");
     } else {
-        document.getElementById("login_pswd_info").style.display = "block";
+      // Show error on login page.
+        var loginError = document.getElementById("loginError");
+        loginError.dataset.error = "visible";
     }
 });
 

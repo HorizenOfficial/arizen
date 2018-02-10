@@ -5,8 +5,11 @@
   animation-fill-mode: forwards;
   animation-iteration-count: 1;
   animation-timing-function: ease-in-out;
+  display: flex;
+  flex-wrap: wrap;
+  height: 100vh;
+  justify-content: center;
   margin: 0 auto;
-  max-width: 560px;
   opacity: 0;
   overflow: hidden;
   padding: 20px 0 0;
@@ -18,6 +21,21 @@
     max-width: 90vw;
   }
 
+  @include el('error') {
+    font-family: 'Montserrat', sans-serif, system-ui;
+    font-size: 20px;
+    &[data-error="hidden"] span {
+      transform: translateX(-108%);
+    }
+    & > span {
+      background-color: $red;
+      color: $white;
+      display: block;
+      padding: 4px 8px;
+      transition: all 0.48s $elastic-ease;
+      transform: translateX(0%);
+    }
+  }
 
   @include el('form') {
     display: inline-block;
@@ -30,7 +48,7 @@
     top: 0;
     transform: translateX(0);
     transition: all 0.5s $cubic-ease-in-out;
-    width: 500px;
+    width: 100vw;
     @include bp('sm') {
       height: 100vh;
       overflow-y: visible !important;
@@ -41,8 +59,9 @@
     @include mod('hide') {
       background-color: $biscay;
       color: $aqua !important;
+      height: 100vh;
       margin: 0;
-      top: -114px;
+      top: -188px;
       transform: translateX(0) !important;
       width: 50px !important;
 
@@ -68,7 +87,7 @@
     transition: opacity 0.3s ease-in-out;
     width: 100%;
     &:first-child {
-      margin: 10px 0 80px;
+      margin: 10px auto 80px;
     }
     @include bp('sm') {
       margin: 20px 0;

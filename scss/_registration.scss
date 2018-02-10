@@ -12,21 +12,19 @@
       margin-top: 0 !important;
     }
     @include mod('checklist') {
-      align-items: flex-start;
-      display: flex;
       height: 30px;
-      justify-content: flex-start;
       padding: 0;
-      margin: 0;
+      margin: 0 auto;
     }
   }
 
   @include el('form') {
     @extend .login__form;
-    left: 60px;
+    left: 0;
     @include mod('hide') {
       @extend .login__form--hide;
-      left: 510px;
+      left: calc(100vw - 50px);
+      height: 100vh;
 
       & .registration__btn {
         color: $aqua;

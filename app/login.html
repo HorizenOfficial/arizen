@@ -15,6 +15,9 @@
         <!-- Begin Login Form -->
         <div class="login__form" id="loginForm">
           <form onsubmit="return false;">
+            <div class="login__error" id="loginError" data-error="hidden">
+              <span>Incorrect <strong>username</strong> or <strong>password</strong>.</span>
+            </div>
             <div class="login__row">
               <img alt="User Icon" class="login__icon" src="resources/icon-user.svg" height="24" width="24">
               <input id="username" autocomplete="username" class="login__field login__field--user" type="text" name="username" placeholder="username" data-tr=login.username required autofocus>
@@ -39,7 +42,7 @@
               <div class="registration__error" id="regErrorUsername">
                 <ul class="registration__pwChecklist">
                   <li class="registration__pwChecklistItem" data-tr="createWallet.requirements">Requirements: </li>
-                  <li id="usrnm_length_info" class="registration__pwChecklistItem invalid" data-tr="createWallet.warningUsernameLength">[&gt;4 characters]</li>
+                  <li id="usrnm_length_info" class="registration__pwChecklistItem invalid" data-tr="createWallet.warningUsernameLength">[&#8805; 4 characters]</li>
                 </ul>
               </div>
             </div>
@@ -55,7 +58,7 @@
                   <li id="capital_info" class="registration__pwChecklistItem invalid">[A-Z]</li>
                   <li id="number_info" class="registration__pwChecklistItem invalid">[0-9]</li>
                   <li id="special_info" class="registration__pwChecklistItem invalid">[!@#$%^&amp;*]</li>
-                  <li id="length_info" class="registration__pwChecklistItem invalid" data-tr=createWallet.warningPasswordLength>[&gt;8 characters]</li>
+                  <li id="length_info" class="registration__pwChecklistItem invalid" data-tr=createWallet.warningPasswordLength>[&#8805; 8 characters]</li>
                 </ul>
               </div>
             </div>
