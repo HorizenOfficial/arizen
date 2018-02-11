@@ -29,11 +29,15 @@ body {
 
 .header {
   display: block;
+  height: 114px;
   margin: 25px auto;
+  max-height: 114px;
   width: 100%; }
   @media only screen and (max-width: 767px) {
     .header {
-      margin: 4px auto 14px; } }
+      height: 72px;
+      margin: 4px auto 14px;
+      width: 64px; } }
   @media only screen and (max-width: 767px) {
     .header__logo {
       height: 72px;
@@ -46,8 +50,7 @@ body {
   width: 100vw; }
   @media only screen and (max-width: 767px) {
     .form__wrapper {
-      height: 100vh;
-      width: 90vw; } }
+      height: 100vh; } }
 
 .login, .registration {
   animation-name: slideInLeft;
@@ -68,9 +71,6 @@ body {
   text-align: center;
   white-space: nowrap;
   width: 100vw; }
-  @media only screen and (max-width: 767px) {
-    .login, .registration {
-      max-width: 90vw; } }
   .login__error {
     font-family: 'Montserrat', sans-serif, system-ui;
     font-size: 20px; }
@@ -95,24 +95,21 @@ body {
     transform: translateX(0);
     transition: all 0.5s cubic-bezier(0.65, 0.05, 0.36, 1);
     width: 100vw; }
-    @media only screen and (max-width: 767px) {
-      .login__form, .registration__form {
-        height: 100vh;
-        overflow-y: visible !important;
-        overflow-x: hidden;
-        width: calc(90vw - 60px); } }
     .login__form--hide, .registration__form--hide {
       background-color: #1b2f5a;
       color: #69ffbd !important;
       height: 100vh;
       margin: 0;
-      top: -188px;
+      top: -192px;
       transform: translateX(0) !important;
       width: 50px !important; }
+      @media only screen and (max-width: 767px) {
+        .login__form--hide, .registration__form--hide {
+          top: -114px; } }
       .login__form--hide .login__btn, .registration__form--hide .login__btn, .login__form--hide .registration__btn, .registration__form--hide .registration__btn {
         color: #69ffbd;
         padding: 15px 0;
-        transform: rotate(-90deg) scale(1.25); }
+        transform: rotate(-90deg) scale(1.25) translateX(-100%); }
       .login__form--hide div:not([class$="--rotator"]), .registration__form--hide div:not([class$="--rotator"]) {
         opacity: 0; }
   .login__row, .registration__row {
@@ -127,7 +124,7 @@ body {
       margin: 10px auto 80px; }
     @media only screen and (max-width: 767px) {
       .login__row, .registration__row {
-        margin: 20px 0; } }
+        max-width: 320px; } }
   .login__icon, .registration__icon {
     animation-name: slideInRight;
     animation-duration: 0.5s;
@@ -159,17 +156,12 @@ body {
       color: rgba(27, 47, 90, 0.3);
       font-family: Helvetica, Arial, system-ui, sans-serif;
       font-weight: 100; }
-    @media only screen and (max-width: 991px) {
-      .login__field, .registration__field, .registration__walletFileName {
-        max-width: none; } }
     @media only screen and (max-width: 767px) {
       .login__field, .registration__field, .registration__walletFileName {
-        font-size: 32px;
-        padding: 8px 12px 8px 2px; } }
+        font-size: 30px; } }
     @media only screen and (max-width: 479px) {
       .login__field, .registration__field, .registration__walletFileName {
-        font-size: 26px;
-        padding: 8px 12px 8px 2px; } }
+        font-size: 26px; } }
   .login__btn, .registration__btn {
     background: #1b2f5a;
     border: 0;
@@ -190,9 +182,6 @@ body {
     .login__btn:disabled, .registration__btn:disabled {
       background: #a1a1a1;
       color: #fff; }
-    @media only screen and (max-width: 767px) {
-      .login__btn, .registration__btn {
-        margin: 18px auto 0; } }
   .login__button, .registration__button {
     align-items: center;
     background: #1b2f5a;
@@ -234,10 +223,7 @@ body {
     height: 100vh; }
     .registration__form--hide .registration__btn {
       color: #69ffbd;
-      transform: rotate(-90deg) scale(1.25) translate(92px, -35px); }
-    @media only screen and (max-width: 767px) {
-      .registration__form--hide {
-        left: calc(90vw - 50px); } }
+      transform: rotate(-90deg) scale(1.25) translate(100%, -35px); }
 
 .registration__field--hidden {
   display: none;
@@ -264,11 +250,10 @@ body {
     color: #69ffbd; }
   .registration__field--fileButton:focus, .registration__field--fileButton:active {
     outline: none; }
-  @media only screen and (max-width: 479px) {
-    .registration__field--fileButton {
-      font-size: 18px;
-      height: auto;
-      min-width: 100px; } }
+
+.registration__field--subfield {
+  margin-left: 25%;
+  width: calc(100% - 25%); }
 
 .registration__icon {
   cursor: pointer; }

@@ -16,7 +16,7 @@
         <div class="login__form" id="loginForm">
           <form onsubmit="return false;">
             <div class="login__error" id="loginError" data-error="hidden">
-              <span>Incorrect <strong>username</strong> or <strong>password</strong>.</span>
+              <span data-tr="login.warningWrongUsernameOrPassword">Wrong <strong>username</strong> or <strong>password</strong>.</span>
             </div>
             <div class="login__row">
               <img alt="User Icon" class="login__icon" src="resources/icon-user.svg" height="24" width="24">
@@ -79,6 +79,14 @@
                   <li id="letter_info" class="registration__pwChecklistItem">*.awd, *.uawd</li>
                 </ul>
               </div>
+            </div>
+            <div class="registration__row registration__row--mb0" id="old_username_area">
+              <img alt="User Icon" class="registration__icon" src="resources/icon-user.svg" height="24" width="24">
+              <input autocomplete="username" id="old_username" class="registration__field registration__field--subfield" type="text" name="oldusername" placeholder="old username">
+            </div>
+            <div class="registration__row registration__row--mb0">
+              <img alt="Password" class="registration__icon" src="resources/icon-showPw.svg" height="24" width="24">
+              <input id="old_pswd" autocomplete="new-password" class="registration__field registration__field--subfield" type="password" name="password" placeholder="password">
             </div>
             <div class="registration__row registration__row--rotator">
               <button id="btnCreateWallet" class="registration__btn" data-tr=createWallet.createWalletButton data-state="hide" onclick="createWalletToggle(event);">create wallet</button>

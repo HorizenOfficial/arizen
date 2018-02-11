@@ -120,7 +120,6 @@ ipcRenderer.on("verify-login-response", function (event, resp) {
    *  Button functionality for login button
   */
   function loginToggle(e) {
-    console.log("1");
     e.preventDefault();
     let btnLogin = document.getElementById("btnLogin"),
     btnCw = document.getElementById("btnCreateWallet");
@@ -140,7 +139,6 @@ ipcRenderer.on("verify-login-response", function (event, resp) {
   *  Button functionality for create wallet button
  */
   function createWalletToggle(e) {
-    console.log("2");
     e.preventDefault();
     let btnCw = document.getElementById("btnCreateWallet"),
     btnLogin = document.getElementById("btnLogin");
@@ -211,22 +209,6 @@ ipcRenderer.on("verify-login-response", function (event, resp) {
          changeClass("special_info", "invalid", "valid");
      }
      checkLoginInfo();
- }
-
- function selectColumn(username, pswd, pswd_again) {
-     let username_info = "none";
-     let pswd_info = "none";
-     let pswd_identical_info = "none";
-     if (username === true) {
-         username_info = "block";
-     } else if (pswd === true) {
-         pswd_info = "block";
-     } else if (pswd_again === true) {
-         pswd_identical_info = "block";
-     }
-     document.getElementById("username_info").style.display = username_info;
-     document.getElementById("pswd_info").style.display = pswd_info;
-     document.getElementById("pswd_identical_info").style.display = pswd_identical_info;
  }
 
  function handleWalletFile() {

@@ -28,10 +28,7 @@
 
       & .registration__btn {
         color: $aqua;
-        transform: rotate(-90deg) scale(1.25) translate(92px, -35px);
-      }
-      @include bp('sm') {
-        left: calc(90vw - 50px);
+        transform: rotate(-90deg) scale(1.25) translate(100%, -35px);
       }
     }
   }
@@ -65,11 +62,10 @@
       &:focus, &:active {
         outline: none;
       }
-      @include bp('xs') {
-        font-size: 18px;
-        height: auto;
-        min-width: 100px;
-      }
+    }
+    @include mod('subfield') {
+      margin-left: 25%;
+      width: calc(100% - 25%);
     }
   }
 

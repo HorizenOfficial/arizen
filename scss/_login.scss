@@ -17,9 +17,6 @@
   text-align: center;
   white-space: nowrap;
   width: 100vw;
-  @include bp('sm') {
-    max-width: 90vw;
-  }
 
   @include el('error') {
     font-family: 'Montserrat', sans-serif, system-ui;
@@ -49,26 +46,23 @@
     transform: translateX(0);
     transition: all 0.5s $cubic-ease-in-out;
     width: 100vw;
-    @include bp('sm') {
-      height: 100vh;
-      overflow-y: visible !important;
-      overflow-x: hidden;
-      width: calc(90vw - 60px);
-    }
 
     @include mod('hide') {
       background-color: $biscay;
       color: $aqua !important;
       height: 100vh;
       margin: 0;
-      top: -188px;
+      top: -192px;
       transform: translateX(0) !important;
       width: 50px !important;
+      @include bp('sm') {
+        top: -114px;
+      }
 
       & .login__btn {
         color: $aqua;
         padding: 15px 0;
-        transform: rotate(-90deg) scale(1.25);
+        transform: rotate(-90deg) scale(1.25) translateX(-100%);
       }
 
       & div:not([class$="--rotator"]) {
@@ -90,7 +84,7 @@
       margin: 10px auto 80px;
     }
     @include bp('sm') {
-      margin: 20px 0;
+      max-width: 320px;
     }
   }
 
@@ -129,16 +123,11 @@
       font-family: $helvetica;
       font-weight: 100;
     }
-    @include bp('md') {
-      max-width: none;
-    }
     @include bp('sm') {
-      font-size: 32px;
-      padding: 8px 12px 8px 2px;
+      font-size: 30px;
     }
     @include bp('xs') {
       font-size: 26px;
-      padding: 8px 12px 8px 2px;
     }
   }
 
@@ -163,9 +152,6 @@
     &:disabled {
       background: $silver;
       color: $white;
-    }
-    @include bp('sm') {
-      margin: 18px auto 0;
     }
   }
 
