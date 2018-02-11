@@ -1,43 +1,102 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title data-tr=login.title>Arizen: Login</title>
-    <link rel="stylesheet" href="resources/login_styles.css">
-    <script src="login.js"></script>
-</head>
-
-<body>
-<div id="topHeader" class="topHeader" style="text-align:center; margin:auto; vertical-align: middle;">
-    <!-- same as in create_wallet.html -->
-    <img src="resources/zen_icon.png" width="40px">
-</div>
-<div id="container">
-    <!--<h1>Password Authentication</h1> -->
-    <form onsubmit="return false;">
-        <ul>
-            <li>
-                <span style="text-align:center;"><label for="username" data-tr=login.username>Username</label></span>
-                <span><input id="username" class="inputs" name="username" tabindex="1" required autofocus></span>
-            </li>
-            <li>
-                <span style="text-align:center;"><label for="pswd" data-tr=login.password>Password</label></span>
-                <span><input id="pswd" class="inputs" name="pswd" type="password" tabindex="2" required autofocus></span>
-            </li>
-            <li>
-                <!-- type has to be "submit" -- ENTER doesnt work with button -->
-                <input id="btSubmit" class="buttons" name="btSubmit" type="submit" data-tr=login.loginButton value="Login" onclick="doLogin();" tabindex="3">
-            </li>
-        </ul>
-        <div class="right">
-            <a href="create_wallet.html" class="create_wallet_link" data-tr=login.createWalletLink>Create Wallet</a>
+  <head>
+    <meta name="viewport" content="initial-scale=1">
+    <meta charset="utf-8">
+    <title>Arizen - Login</title>
+    <link rel="stylesheet" href="resources/style.css" type="text/css">
+  </head>
+  <body class="gradient">
+    <div class="login" id="wrapper">
+      <header class="header">
+        <img class="header__logo" alt="Zencash Arizen" src="resources/zencash-logo.svg" height="114" width="100">
+      </header>
+      <div class="form__wrapper">
+        <!-- Begin Login Form -->
+        <div class="login__form" id="loginForm">
+          <form onsubmit="return false;">
+            <div class="login__error" id="loginError" data-error="hidden">
+              <span data-tr="login.warningWrongUsernameOrPassword">Wrong <strong>username</strong> or <strong>password</strong>.</span>
+            </div>
+            <div class="login__row">
+              <img alt="User Icon" class="login__icon" src="resources/icon-user.svg" height="24" width="24">
+              <input id="username" autocomplete="username" class="login__field login__field--user" type="text" name="username" placeholder="username" data-tr=login.username required autofocus>
+            </div>
+            <div class="login__row">
+              <img alt="Password Icon" class="login__icon" src="resources/icon-key.svg" height="24" width="24">
+              <input id="pswd" autocomplete="current-password" class="login__field login__field--password" type="password" name="password" placeholder="password" data-tr=login.password required>
+            </div>
+            <div class="login__row login__row--rotator">
+              <button type="submit" id="btnLogin" class="login__btn" data-tr=login.loginButton data-state="active" onclick="loginToggle(event);">Login</button>
+            </div>
+          </form>
         </div>
-    </form>
-    <div id="login_pswd_info" style="display:none">
-        <ul>
-            <li class="invalid">Wrong <strong>username</strong> or <strong>password</strong></li>
-        </ul>
+        <!-- Begin Registration Form -->
+        <div class="registration__form registration__form--hide" id="registrationForm">
+          <form onsubmit="return false;">
+            <div class="registration__row registration__row--mb0">
+              <img alt="User Icon" class="registration__icon" src="resources/icon-user.svg" height="24" width="24">
+              <input autocomplete="username" id="regUsername" class="registration__field" type="text" name="username" placeholder="username" onkeyup="checkLogin();" required autofocus>
+            </div>
+            <div class="registration__row registration__row--checklist">
+              <div class="registration__error" id="regErrorUsername">
+                <ul class="registration__pwChecklist">
+                  <li class="registration__pwChecklistItem" data-tr="createWallet.requirements">Requirements: </li>
+                  <li id="usrnm_length_info" class="registration__pwChecklistItem invalid" data-tr="createWallet.warningUsernameLength">[&#8805; 4 characters]</li>
+                </ul>
+              </div>
+            </div>
+            <div class="registration__row registration__row--mb0">
+              <img id="togglePw" onclick="pwToggle();" alt="Show Password" class="registration__icon" src="resources/icon-showPw.svg" height="24" width="24" data-state="hide">
+              <input id="regPswd" autocomplete="new-password" class="registration__field" type="password" name="password" placeholder="password" onkeyup="checkPasswd();" required>
+            </div>
+            <div class="registration__row registration__row--checklist">
+              <div class="registration__error" id="regErrorPassword">
+                <ul class="registration__pwChecklist">
+                  <li class="registration__pwChecklistItem" data-tr="createWallet.requirements">Requirements: </li>
+                  <li id="letter_info" class="registration__pwChecklistItem invalid">[a-z]</li>
+                  <li id="capital_info" class="registration__pwChecklistItem invalid">[A-Z]</li>
+                  <li id="number_info" class="registration__pwChecklistItem invalid">[0-9]</li>
+                  <li id="special_info" class="registration__pwChecklistItem invalid">[!@#$%^&amp;*]</li>
+                  <li id="length_info" class="registration__pwChecklistItem invalid" data-tr=createWallet.warningPasswordLength>[&#8805; 8 characters]</li>
+                </ul>
+              </div>
+            </div>
+            <div class="registration__row registration__row--mb0">
+              <input accept=".awd,.uawd" id="registrationWallet" class="registration__field--hidden" type="file" name="registrationWallet" onchange="showFileInfo();" placeholder="select wallet">
+              <label class="registration__fileLabel" for="registrationWallet">
+                <input type="text" id="registrationWalletFileName" class="registration__field registration__field--wallet" readonly placeholder="select wallet">
+                <span class="registration__field--fileButton" data-tr="createWallet.selectWalletButton">
+                  browse
+                </span>
+              </label>
+              <div class="registration__error registration__error--hidden" id="errorWalletFile"></div>
+            </div>
+            <div class="registration__row registration__row--checklist">
+              <div class="registration__error" id="regErrorPassword">
+                <ul class="registration__pwChecklist">
+                  <li class="registration__pwChecklistItem" data-tr="createWallet.filetypes">Filetypes: </li>
+                  <li id="letter_info" class="registration__pwChecklistItem">*.awd, *.uawd</li>
+                </ul>
+              </div>
+            </div>
+            <div class="registration__row registration__row--mb0" id="old_username_area">
+              <img alt="User Icon" class="registration__icon" src="resources/icon-user.svg" height="24" width="24">
+              <input autocomplete="username" id="old_username" class="registration__field registration__field--subfield" type="text" name="oldusername" placeholder="old username">
+            </div>
+            <div class="registration__row registration__row--mb0">
+              <img alt="Password" class="registration__icon" src="resources/icon-showPw.svg" height="24" width="24">
+              <input id="old_pswd" autocomplete="new-password" class="registration__field registration__field--subfield" type="password" name="password" placeholder="password">
+            </div>
+            <div class="registration__row registration__row--rotator">
+              <button id="btnCreateWallet" class="registration__btn" data-tr=createWallet.createWalletButton data-state="hide" onclick="createWalletToggle(event);">create wallet</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
-</div>
-   
-</body>
+
+    <!-- Load JS before closing body tag for increased performance -->
+    <script src="login.js"></script>
+  </body>
 </html>

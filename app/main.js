@@ -507,7 +507,7 @@ function updateMenuAtLogout() {
 
 function createWindow() {
     updateMenuAtLogout();
-    mainWindow = new BrowserWindow({width: 1000, height: 730, resizable: true, icon: "resources/zen_icon.png"});
+    mainWindow = new BrowserWindow({width: 800, height: 620, resizable: true, icon: "resources/zen_icon.png"});
 
 
     if (fs.existsSync(getWalletPath())) {

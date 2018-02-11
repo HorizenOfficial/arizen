@@ -1,0 +1,20 @@
+.header {
+  display: block;
+  height: 114px;
+  margin: 25px auto;
+  max-height: 114px;
+  width: 100%;
+  @include bp('sm') {
+    height: 72px;
+    margin: 4px auto 14px;
+    width: 64px;
+  }
+
+  @include el('logo') {
+    @include bp('sm') {
+      height: 72px;
+      width: 64px;
+    }
+  }
+
+}
