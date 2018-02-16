@@ -1,0 +1,11 @@
+.form {
+  @include el('wrapper') {
+    height: 620px;
+    overflow: visible;
+    position: relative;
+    width: 100vw;
+    @include bp('sm') {
+      height: 100vh;
+    }
+  }
+}

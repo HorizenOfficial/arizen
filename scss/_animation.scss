@@ -1,0 +1,52 @@
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    right: 75%;
+  }
+  to {
+    opacity: 1;
+    right: 2%;
+  }
+}
+
+@keyframes slideOutLeft {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-100vw);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate {
+  @include mod('out') {
+    animation-name: slideOutLeft;
+    animation-delay: 0;
+    animation-fill-mode: forwards;
+    animation-duration: 0.45s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: 1;
+  }
+
+  @include mod('in') {
+    animation-name: slideInLeft;
+    animation-delay: 0.1;
+    animation-fill-mode: forwards;
+    animation-duration: 0.45s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: 1;
+  }
+}
