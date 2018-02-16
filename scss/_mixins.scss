@@ -1,0 +1,54 @@
+// BEM Standard CSS Mixins
+@mixin el($element) {
+  &__#{$element} {
+    @content;
+  }
+}
+
+@mixin mod($modifier) {
+  &--#{$modifier} {
+    @content;
+  }
+}
+
+// Media queries
+@mixin bp($point) {
+  $xs: "only screen and (max-width: 479px)";
+  $sm: "only screen and (max-width: 767px)";
+  $md: "only screen and (max-width: 991px)";
+  $lg: "only screen and (max-width: 1999px)";
+
+  $portrait: "only screen and (min-width: 320px) and (max-width: 479px)";
+  $landscape: "only screen and (min-width: 480px) and (max-width: 767px)";
+  $tablet: "only screen and (min-width: 768px) and (max-width: 991px)";
+  $laptop: "only screen and (min-width: 992px) and (max-width: 1999px)";
+  $retina: "screen and (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) ";
+
+  @if $point == xs {
+    @media #{$xs} { @content; }
+  }
+  @elseif $point == sm {
+    @media #{$sm} { @content; }
+  }
+  @elseif $point == md {
+    @media #{$md} { @content; }
+  }
+  @elseif $point == lg {
+    @media #{$lg} { @content; }
+  }
+  @elseif $point == portrait {
+    @media #{$portrait} { @content; }
+  }
+  @elseif $point == landscape {
+    @media #{$landscape} { @content; }
+  }
+  @elseif $point == tablet {
+    @media #{$tablet} { @content; }
+  }
+  @else if $point == laptop {
+    @media #{$laptop} { @content; }
+  }
+  @else if $point == retina {
+    @media #{$retina} { @content; }
+  }
+}

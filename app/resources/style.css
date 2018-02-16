@@ -1,0 +1,348 @@
+* {
+  box-sizing: border-box; }
+  *:focus, *:active {
+    outline: 0; }
+
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: normal;
+  src: url("Montserrat.ttf"); }
+
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 600;
+  src: url("MontserratSemiBold.ttf"); }
+
+body {
+  font-family: Helvetica, Arial, system-ui, sans-serif;
+  margin: 0;
+  overflow-x: hidden;
+  padding: 0; }
+
+.gradient {
+  background: linear-gradient(to bottom, #fff 0%, #fff 75%, #d9d9d9 100%);
+  background-attachment: fixed;
+  height: 100vh;
+  width: 100vw; }
+
+.header {
+  display: block;
+  height: 114px;
+  margin: 25px auto;
+  max-height: 114px;
+  width: 100%; }
+  @media only screen and (max-width: 767px) {
+    .header {
+      height: 72px;
+      margin: 4px auto 14px;
+      width: 64px; } }
+  @media only screen and (max-width: 767px) {
+    .header__logo {
+      height: 72px;
+      width: 64px; } }
+
+.form__wrapper {
+  height: 620px;
+  overflow: visible;
+  position: relative;
+  width: 100vw; }
+  @media only screen and (max-width: 767px) {
+    .form__wrapper {
+      height: 100vh; } }
+
+.login, .registration {
+  animation-name: slideInLeft;
+  animation-delay: 0.2s;
+  animation-duration: 0.45s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in-out;
+  display: flex;
+  flex-wrap: wrap;
+  height: 100vh;
+  justify-content: center;
+  margin: 0 auto;
+  opacity: 0;
+  overflow: hidden;
+  padding: 20px 0 0;
+  position: relative;
+  text-align: center;
+  white-space: nowrap;
+  width: 100vw; }
+  .login__error {
+    font-family: 'Montserrat', sans-serif, system-ui;
+    font-size: 20px; }
+    .login__error[data-error="hidden"] span {
+      transform: translateX(-108%); }
+    .login__error > span {
+      background-color: #ec3f41;
+      color: #fff;
+      display: block;
+      padding: 4px 8px;
+      transition: all 0.48s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+      transform: translateX(0%); }
+  .login__form, .registration__form {
+    display: inline-block;
+    height: 620px;
+    left: 0;
+    margin: 0;
+    opacity: 1;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    transform: translateX(0);
+    transition: all 0.5s cubic-bezier(0.65, 0.05, 0.36, 1);
+    width: 100vw; }
+    .login__form--hide, .registration__form--hide {
+      background-color: #1b2f5a;
+      color: #69ffbd !important;
+      height: 100vh;
+      margin: 0;
+      top: -192px;
+      transform: translateX(0) !important;
+      width: 50px !important; }
+      @media only screen and (max-width: 767px) {
+        .login__form--hide, .registration__form--hide {
+          top: -114px; } }
+      .login__form--hide .login__btn, .registration__form--hide .login__btn, .login__form--hide .registration__btn, .registration__form--hide .registration__btn {
+        color: #69ffbd;
+        padding: 15px 0;
+        transform: rotate(-90deg) scale(1.25) translateX(-100%); }
+      .login__form--hide div:not([class$="--rotator"]), .registration__form--hide div:not([class$="--rotator"]) {
+        opacity: 0; }
+  .login__row, .registration__row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 40px auto;
+    max-width: 500px;
+    position: relative;
+    transition: opacity 0.3s ease-in-out;
+    width: 100%; }
+    .login__row:first-child, .registration__row:first-child {
+      margin: 10px auto 80px; }
+    @media only screen and (max-width: 767px) {
+      .login__row, .registration__row {
+        max-width: 320px; } }
+  .login__icon, .registration__icon {
+    animation-name: slideInRight;
+    animation-duration: 0.5s;
+    animation-delay: 0s;
+    animation-iteration-count: 1;
+    animation-timing-function: cubic-bezier(0.65, 0.05, 0.36, 1);
+    box-sizing: content-box;
+    padding: 8px;
+    position: absolute;
+    right: 2%;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2; }
+  .login__field, .registration__field, .registration__walletFileName {
+    background: transparent;
+    border: none;
+    border-bottom: solid 2px #234871;
+    color: #234871;
+    font-size: 36px;
+    font-weight: 300;
+    max-width: 500px;
+    transition: border-bottom-color 0.3s ease-in-out;
+    width: 100%; }
+    .login__field:focus, .registration__field:focus, .registration__walletFileName:focus {
+      border-bottom-color: #69ffbd;
+      box-shadow: 0;
+      outline: 0; }
+    .login__field::placeholder, .registration__field::placeholder, .registration__walletFileName::placeholder {
+      color: rgba(27, 47, 90, 0.3);
+      font-family: Helvetica, Arial, system-ui, sans-serif;
+      font-weight: 100; }
+    @media only screen and (max-width: 767px) {
+      .login__field, .registration__field, .registration__walletFileName {
+        font-size: 30px; } }
+    @media only screen and (max-width: 479px) {
+      .login__field, .registration__field, .registration__walletFileName {
+        font-size: 26px; } }
+  .login__btn, .registration__btn {
+    background: #1b2f5a;
+    border: 0;
+    color: #69ffbd;
+    cursor: pointer;
+    display: block;
+    font-family: 'Montserrat', system-ui, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 auto;
+    padding: 15px;
+    text-align: right;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: all 0.45s cubic-bezier(0.65, 0.05, 0.36, 1); }
+    .login__btn:hover, .registration__btn:hover, .login__btn:focus, .registration__btn:focus, .login__btn:active, .registration__btn:active {
+      color: #69ffbd; }
+    .login__btn:disabled, .registration__btn:disabled {
+      background: #a1a1a1;
+      color: #fff; }
+  .login__button, .registration__button {
+    align-items: center;
+    background: #1b2f5a;
+    border: 0;
+    color: #69ffbd;
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 24px;
+    font-weight: 300;
+    height: 46px;
+    justify-content: center;
+    margin: 0 auto;
+    min-width: 146px;
+    padding: 4px 20px;
+    transition: all 0.3s ease-in-out; }
+    .login__button:hover, .registration__button:hover {
+      background: #234871; }
+    .login__button:focus, .registration__button:focus, .login__button:active, .registration__button:active {
+      background: #69ffbd;
+      color: #1b2f5a;
+      outline: none; }
+
+.registration__row--mb0 {
+  margin-bottom: 0 !important; }
+
+.registration__row--my0 {
+  margin-bottom: 0 !important;
+  margin-top: 0 !important; }
+
+.registration__row--checklist {
+  height: 30px;
+  padding: 0;
+  margin: 0 auto; }
+
+.registration__form {
+  left: 0; }
+  .registration__form--hide {
+    left: calc(100vw - 50px);
+    height: 100vh; }
+    .registration__form--hide .registration__btn {
+      color: #69ffbd;
+      transform: rotate(-90deg) scale(1.25) translate(100%, -35px); }
+
+.registration__field--hidden {
+  display: none;
+  opacity: 0;
+  visibility: hidden;
+  width: 0; }
+
+.registration__field--fileButton {
+  align-items: center;
+  background: transparent;
+  border: solid 2px #1b2f5a;
+  color: #1b2f5a;
+  cursor: pointer;
+  display: inline-flex;
+  font-family: Helvetica, Arial, system-ui, sans-serif;
+  font-size: 24px;
+  height: 46px;
+  justify-content: center;
+  min-width: 146px;
+  padding: 4px 20px;
+  transition: all 0.3s ease-in-out; }
+  .registration__field--fileButton:hover {
+    background: #1b2f5a;
+    color: #69ffbd; }
+  .registration__field--fileButton:focus, .registration__field--fileButton:active {
+    outline: none; }
+
+.registration__field--subfield {
+  margin-left: 25%;
+  width: calc(100% - 25%); }
+
+.registration__icon {
+  cursor: pointer; }
+
+.registration__fileLabel {
+  align-items: flex-end;
+  display: flex;
+  flex-wrap: nowrap;
+  width: 100%; }
+
+.registration__walletFileName {
+  font-family: Helvetica, Arial, system-ui, sans-serif;
+  font-weight: 300;
+  text-align: left;
+  width: 100%; }
+
+.registration__pwChecklist {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  white-space: nowrap; }
+  @media only screen and (max-width: 767px) {
+    .registration__pwChecklist {
+      white-space: normal; } }
+
+.registration__pwChecklistItem {
+  background: transparent;
+  color: #1b2f5a;
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 700;
+  margin: 2px 3px;
+  padding: 2px 4px;
+  transition: all 0.3s cubic-bezier(0.65, 0.05, 0.36, 1); }
+  @media only screen and (max-width: 767px) {
+    .registration__pwChecklistItem {
+      font-size: 10px;
+      margin: 2px;
+      padding: 0; } }
+  .registration__pwChecklistItem.valid {
+    background: #b7e8b3;
+    color: #3fb236; }
+  .registration__pwChecklistItem.invalid {
+    background: #fef9f9;
+    color: #ec3f41; }
+
+#registration__walletFileName {
+  width: calc(100% - 146px); }
+  @media only screen and (max-width: 479px) {
+    #registration__walletFileName {
+      width: calc(100% - 100px); } }
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    right: 75%; }
+  to {
+    opacity: 1;
+    right: 2%; } }
+
+@keyframes slideOutLeft {
+  from {
+    opacity: 1;
+    transform: translateX(0); }
+  to {
+    opacity: 0;
+    transform: translateX(-100vw); } }
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(0); }
+  to {
+    opacity: 1;
+    transform: translateX(0); } }
+
+.animate--out {
+  animation-name: slideOutLeft;
+  animation-delay: 0;
+  animation-fill-mode: forwards;
+  animation-duration: 0.45s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: 1; }
+
+.animate--in {
+  animation-name: slideInLeft;
+  animation-delay: 0.1;
+  animation-fill-mode: forwards;
+  animation-duration: 0.45s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: 1; }

@@ -1,0 +1,182 @@
+.login {
+  animation-name: slideInLeft;
+  animation-delay: 0.2s;
+  animation-duration: 0.45s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in-out;
+  display: flex;
+  flex-wrap: wrap;
+  height: 100vh;
+  justify-content: center;
+  margin: 0 auto;
+  opacity: 0;
+  overflow: hidden;
+  padding: 20px 0 0;
+  position: relative;
+  text-align: center;
+  white-space: nowrap;
+  width: 100vw;
+
+  @include el('error') {
+    font-family: 'Montserrat', sans-serif, system-ui;
+    font-size: 20px;
+    &[data-error="hidden"] span {
+      transform: translateX(-108%);
+    }
+    & > span {
+      background-color: $red;
+      color: $white;
+      display: block;
+      padding: 4px 8px;
+      transition: all 0.48s $elastic-ease;
+      transform: translateX(0%);
+    }
+  }
+
+  @include el('form') {
+    display: inline-block;
+    height: 620px;
+    left: 0;
+    margin: 0;
+    opacity: 1;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    transform: translateX(0);
+    transition: all 0.5s $cubic-ease-in-out;
+    width: 100vw;
+
+    @include mod('hide') {
+      background-color: $biscay;
+      color: $aqua !important;
+      height: 100vh;
+      margin: 0;
+      top: -192px;
+      transform: translateX(0) !important;
+      width: 50px !important;
+      @include bp('sm') {
+        top: -114px;
+      }
+
+      & .login__btn {
+        color: $aqua;
+        padding: 15px 0;
+        transform: rotate(-90deg) scale(1.25) translateX(-100%);
+      }
+
+      & div:not([class$="--rotator"]) {
+        opacity: 0;
+      }
+
+    }
+  }
+
+  @include el('row') {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 40px auto;
+    max-width: 500px;
+    position: relative;
+    transition: opacity 0.3s ease-in-out;
+    width: 100%;
+    &:first-child {
+      margin: 10px auto 80px;
+    }
+    @include bp('sm') {
+      max-width: 320px;
+    }
+  }
+
+  @include el('icon') {
+    animation-name: slideInRight;
+    animation-duration: 0.5s;
+    animation-delay: 0s;
+    animation-iteration-count: 1;
+    animation-timing-function: $cubic-ease-in-out;
+    box-sizing: content-box;
+    padding: 8px;
+    position: absolute;
+    right: 2%;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+  }
+
+  @include el('field') {
+    background: transparent;
+    border: none;
+    border-bottom: solid 2px $astronaut;
+    color: $astronaut;
+    font-size: 36px;
+    font-weight: 300;
+    max-width: 500px;
+    transition: border-bottom-color 0.3s ease-in-out;
+    width: 100%;
+    &:focus {
+      border-bottom-color: $aqua;
+      box-shadow: 0;
+      outline: 0;
+    }
+    &::placeholder {
+      color: transparentize($biscay, 0.7);
+      font-family: $helvetica;
+      font-weight: 100;
+    }
+    @include bp('sm') {
+      font-size: 30px;
+    }
+    @include bp('xs') {
+      font-size: 26px;
+    }
+  }
+
+  @include el('btn') {
+    background: $biscay;
+    border: 0;
+    color: $aqua;
+    cursor: pointer;
+    display: block;
+    font-family: 'Montserrat', system-ui, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 auto;
+    padding: 15px;
+    text-align: right;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: all 0.45s $cubic-ease-in-out;
+    &:hover, &:focus, &:active {
+      color: $aqua;
+    }
+    &:disabled {
+      background: $silver;
+      color: $white;
+    }
+  }
+
+  @include el('button') {
+    align-items: center;
+    background: $biscay;
+    border: 0;
+    color: $aqua;
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 24px;
+    font-weight: 300;
+    height: 46px;
+    justify-content: center;
+    margin: 0 auto;
+    min-width: 146px;
+    padding: 4px 20px;
+    transition: all 0.3s ease-in-out;
+    &:hover {
+      background: $astronaut;
+    }
+    &:focus, &:active {
+      background: $aqua;
+      color: $biscay;
+      outline: none;
+    }
+  }
+}
