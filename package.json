@@ -136,7 +136,7 @@
     "electron": "^1.8.2-beta.5",
     "electron-builder": "19.49.4",
     "electron-builder-squirrel-windows": "19.49.4",
-    "flow-bin": "^0.64.0"
+    "flow-bin": "^0.64.0",
     "gulp": "^3.9.1",
     "gulp-watch": "^5.0.0"
   },
