@@ -641,6 +641,7 @@ function fetchBlockchainChanges(addrObjs, knownTxIds) {
 }
 
 function updateBlockchainView(webContents) {
+    webContents.send("add-loading-image")
     const addrObjs = sqlSelectObjects("SELECT addr, name, lastbalance FROM wallet");
     const knownTxIds = sqlSelectColumns("SELECT DISTINCT txid FROM transactions").map(row => row[0]);
     let totalBalance = addrObjs.filter(obj => obj.lastbalance).reduce((sum, a) => sum + a.lastbalance, 0);
@@ -668,6 +669,7 @@ function updateBlockchainView(webContents) {
             }
             webContents.send("get-transaction-update", JSON.stringify(tx));
         }
+        webContents.send("remove-loading-image")
     })
         .catch(err => {
             console.log("Failed to fetch blockchain changes: ", err);
