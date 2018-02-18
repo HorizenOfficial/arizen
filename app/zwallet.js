@@ -105,7 +105,7 @@ ipcRenderer.on("get-transaction-update", (event, msgStr) => {
 
 ipcRenderer.on("add-loading-image", (event) => {
     refreshCounter = refreshCounter + 1;
-    loadingImageNode.innerHTML = "<img src='resources/loading.svg' height='15' width='15' />"
+    loadingImageNode.innerHTML = "<img src='resources/loading.gif' height='15' width='15' />"
 });
 
 ipcRenderer.on("remove-loading-image", (event) => {
