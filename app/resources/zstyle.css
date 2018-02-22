@@ -302,7 +302,7 @@ arizen-dialog > [slot="content"] {
 }
 
 .nametAddr {
-    style="color:green;
+    color:green;
     display:block;
 }
 
