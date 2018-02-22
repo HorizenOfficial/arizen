@@ -634,6 +634,8 @@ function showBatchWithdrawDialog() {
         const toAddrSelectButton = dialog.querySelector("#batchWithdrawToAddrSelect");
         const toAddrInput = dialog.querySelector("#batchWithdrawToAddr");
         const withdrawButton = dialog.querySelector("#batchWithdrawButton");
+        const selectAllButton = dialog.querySelector("#batchWithdrawSelectAll");
+        const clearAllButton = dialog.querySelector("#batchWithdrawClearAll");
 
         setInputNodeValue(toAddrInput, bwSettings.toAddr);
         setInputNodeValue(keepAmountInput, bwSettings.keepAmount);
@@ -665,6 +667,17 @@ function showBatchWithdrawDialog() {
                 ipcRenderer.send("send-many", bwSettings.fromAddrs, bwSettings.toAddr, bwSettings.txFee, bwSettings.keepAmount);
                 dialog.close();
                 statusDialog.showModal();
+            });
+        });
+
+        selectAllButton.addEventListener("click", () => {
+            [... listNode.children].forEach(row => {
+                row.querySelector(".addrSelectCheckbox").checked = true;
+            });
+        });
+        clearAllButton.addEventListener("click", () => {
+            [... listNode.children].forEach(row => {
+                row.querySelector(".addrSelectCheckbox").checked = false;
             });
         });
     });

@@ -144,6 +144,10 @@
     <arizen-dialog>
         <h2 slot=headerText data-tr=wallet.batchWithdraw.label>Batch Withdraw</h2>
         <div slot=content class=batchWithdrawContent>
+            <div class='hToolbar batchWithdrawToolbar'>
+                <button id=batchWithdrawSelectAll data-tr=common.selectAll>Select all</button>
+                <button id=batchWithdrawClearAll data-tr=common.clearAll>Clear all</button>
+            </div>
             <table class=addrSelectList></table>
             <div class=form>
                 <button id=batchWithdrawToAddrSelect data-tr=wallet.to>To</button>

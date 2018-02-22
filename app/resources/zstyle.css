@@ -314,3 +314,12 @@ arizen-dialog > [slot="content"] {
     font-size: 75%;
     color:green;
 }
+
+.hToolbar {
+    display: flex;
+    flex-direction: horizontal;
+}
+
+.hToolbar > *:not(:first-child) {
+    margin-left: 10px;
+}
