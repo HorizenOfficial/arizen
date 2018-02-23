@@ -1369,8 +1369,8 @@ ipcMain.on("send-many", function (event, fromAddressesAll, toAddress, fee, thres
             }
         }
 
+        let txFinished = 0;
         let chunkSize = 10;
-        let lastTX = false;
         let finalMessage = "";
         let chunks = [];
         for (let i = 0, j = fromAddressesTemp.length; i < j; i += chunkSize) {
@@ -1379,9 +1379,6 @@ ipcMain.on("send-many", function (event, fromAddressesAll, toAddress, fee, thres
 
         for (let c = 0; c < chunks.length; c++) {
             let fromAddresses = chunks[c];
-            if (c === (chunks.length - 1)) {
-                lastTX = true;
-            }
 
             // TODO: check if fromAddresses.length == 0
             const nFromAddresses = fromAddresses.length;
@@ -1545,11 +1542,11 @@ ipcMain.on("send-many", function (event, fromAddressesAll, toAddress, fee, thres
                                                 event.sender.send("send-finish", "error", "sendtxErr: " + String(sendtxErr));
                                             } else if (sendtxResp && sendtxResp.statusCode === 200) {
                                                 const txRespData = JSON.parse(sendtxBody);
-                                                // TODO: fix this - display multiple links to all TXs
-                                                finalMessage += `<a href="javascript:void(0)" onclick="openUrl('${settings.explorerUrl}/tx/${txRespData.txid}')" class="walletListItemDetails transactionExplorer" target="_blank">${txRespData.txid}</a>`;
+                                                finalMessage += `<a href="javascript:void(0)" onclick="openUrl('${settings.explorerUrl}/tx/${txRespData.txid}')" class="walletListItemDetails transactionExplorer monospace" target="_blank">${txRespData.txid}</a>`;
                                                 finalMessage += "<br/>\n\n";
 
-                                                if (lastTX) {
+                                                txFinished += 1;
+                                                if (txFinished === chunks.length) {
                                                     event.sender.send("send-finish", "ok", finalMessage);
                                                 }
                                             } else {
