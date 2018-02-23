@@ -110,7 +110,7 @@ ipcRenderer.on("add-loading-image", (event) => {
 
 ipcRenderer.on("remove-loading-image", (event) => {
     refreshCounter = refreshCounter - 1;
-    if (refreshCounter <= 0){
+    if (refreshCounter <= 0) {
         loadingImageNode.innerHTML = ""
     }
 });
