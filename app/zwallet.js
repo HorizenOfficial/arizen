@@ -612,6 +612,9 @@ function showBatchWithdrawDialog() {
         const listNode = dialog.querySelector(".addrSelectList");
 
         for (const addrObj of addrObjList) {
+            if (addrObj.lastbalance === 0)
+                continue;
+
             const row = cloneTemplate("addrMultiselectRowTemplate");
             row.dataset.addr = addrObj.addr;
 
