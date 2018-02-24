@@ -428,13 +428,11 @@ function upgradeDb() {
 function exportWalletArizen(ext, encrypt) {
     let showMessage = "";
     if(encrypt){
-        //mainWindow.webContents.send("main-sends-alert", tr("warmingMessages.userWarningExportWalletEncrypted", userWarningExportWalletEncrypted));
         showMessage = tr("warmingMessages.userWarningExportWalletEncrypted", userWarningExportWalletEncrypted);
     } else {
-        //mainWindow.webContents.send("main-sends-alert", tr("warmingMessages.userWarningExportWalletUnencrypted", userWarningExportWalletUnencrypted));
         showMessage = tr("warmingMessages.userWarningExportWalletUnencrypted", userWarningExportWalletUnencrypted);
     }
-    dialog.showMessageBox({ message: showMessage, buttons: ["I understand"],  cancelId: -1 }, function(response) {
+    dialog.showMessageBox({ message: showMessage, buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand")],  cancelId: -1 }, function(response) {
         if(response === 0){
             dialog.showSaveDialog({
                 title: "Save wallet." + ext,
@@ -498,7 +496,7 @@ function exportPKs() {
             }
         });
     }
-    dialog.showMessageBox({ message: tr("warmingMessages.userWarningExportWalletUnencrypted", userWarningExportWalletUnencrypted), buttons: ["I understand"],  cancelId: -1 }, function(response) {
+    dialog.showMessageBox({ message: tr("warmingMessages.userWarningExportWalletUnencrypted", userWarningExportWalletUnencrypted), buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand")],  cancelId: -1 }, function(response) {
         if(response===0){
             dialog.showSaveDialog({
                 title: "Choose file for private keys",
@@ -722,7 +720,7 @@ function importPKs() {
         });
     }
 
-    dialog.showMessageBox({ message: tr("warmingMessages.userWarningImportFileWithPKs", userWarningImportFileWithPKs), buttons: ["I understand"],  cancelId: -1 }, function(response) {
+    dialog.showMessageBox({ message: tr("warmingMessages.userWarningImportFileWithPKs", userWarningImportFileWithPKs), buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand")],  cancelId: -1 }, function(response) {
         if(response===0){
             dialog.showOpenDialog({
                 title: "Choose file with private keys"
