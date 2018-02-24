@@ -42,6 +42,7 @@ logIpc("zz-get-wallets");
 let addrListNode = document.getElementById("addrList");
 const txListNode = document.getElementById("txList");
 const totalBalanceNode = document.getElementById("totalBalance");
+const loadingImageNode = document.getElementById("loadingImage");
 const depositTabButton = document.getElementById("depositTabButton");
 const depositToButton = document.getElementById("depositToButton");
 const depositToAddrInput = document.getElementById("depositToAddr");
@@ -69,6 +70,7 @@ let showZeroBalances = false;
 let depositQrcodeTimer;
 let addrObjList;
 let addrIdxByAddr;
+let refreshCounter = 0;
 
 // ---------------------------------------------------------------------------------------------------------------------
 // IPC
@@ -99,6 +101,18 @@ ipcRenderer.on("get-transaction-update", (event, msgStr) => {
     txObj.amount = parseFloat(txObj.amount);
     addTransactions([txObj], true);
     showNotification(tr("notification.newTransactions", "New transaction"));
+});
+
+ipcRenderer.on("add-loading-image", (event) => {
+    refreshCounter = refreshCounter + 1;
+    loadingImageNode.innerHTML = "<img src='resources/loading.gif' height='14' width='14' />"
+});
+
+ipcRenderer.on("remove-loading-image", (event) => {
+    refreshCounter = refreshCounter - 1;
+    if (refreshCounter <= 0) {
+        loadingImageNode.innerHTML = ""
+    }
 });
 
 ipcRenderer.on("refresh-wallet-response", (event, msgStr) => {
