@@ -326,7 +326,7 @@ function showImportSinglePKDialog() {
                     alert(tr("wallet.importSinglePrivateKey.warningNotValidAddress", "Z address exist in your wallet"))
                 } else {
                     ipcRenderer.send("import-single-key", name, pk);
-                    alert(userWarningImportPK)
+                    alert(tr("warmingMessages.userWarningImportPK", userWarningImportPK))
                     dialog.close();
                 }
             } else {

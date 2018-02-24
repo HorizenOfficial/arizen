@@ -140,7 +140,7 @@ ipcRenderer.on("generate-wallet-response", (event, msgStr) => {
     const msg = JSON.parse(msgStr);
     checkResponse(msg);
     addNewAddress(msg.addr);
-    alert(userWarningCreateNewAddress)
+    alert(tr("warmingMessages.userWarningCreateNewAddress", userWarningCreateWallet))
 });
 
 ipcRenderer.on("main-sends-alert", (event, msgStr) => {
