@@ -23,6 +23,9 @@ const {List} = require("immutable");
 const {translate} = require("./util.js");
 const {DateTime} = require("luxon");
 
+const userWarningImportFileWithPKs = "New address(es) and a private key(s) is/are imported. Your previous back-ups do not include the newly imported addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing OK you declare that you understand this."
+const userWarningExportWalletUnencrypted = "The UNENCRYPTED wallet that was just exported contains your private keys in plain text. That means that anyone with this file can control your ZENs. By pressing OK you declare that you understand this."
+const userWarningExportWalletEncrypted = "The ENCRYPTED wallet that was just exported contains your private keys encrypted. That means that in order to access your private keys you need to know the corresponding username and password. In case you don't know them you cannot control the ZENs that are controled by these private keys. By pressing OK you declare that you understand this."
 
 // Press F12 to open the DevTools. See https://github.com/sindresorhus/electron-debug.
 require("electron-debug")();
@@ -442,6 +445,11 @@ function exportWalletArizen(ext, encrypt) {
             } else {
                 exportWallet(filename, encrypt);
             }
+            if(encrypt){
+                mainWindow.webContents.send("main-sends-alert", userWarningExportWalletEncrypted);
+            } else {
+                mainWindow.webContents.send("main-sends-alert", userWarningExportWalletUnencrypted);
+            }
         }
     });
 }
@@ -714,6 +722,7 @@ function importPKs() {
             // TODO: save only if at least one key was inserted
             saveWallet();
             sendWallet();
+            mainWindow.webContents.send("main-sends-alert", userWarningImportFileWithPKs);
         }
     });
 }
