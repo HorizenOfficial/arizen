@@ -61,7 +61,7 @@ const withdrawMsg = document.getElementById("withdrawMsg");
 const withdrawButton = document.getElementById("withdrawButton");
 const withdrawStatusTitleNode = document.getElementById("withdrawStatusTitle");
 const withdrawStatusBodyNode = document.getElementById("withdrawStatusBody");
-
+const userWarningCreateNewAddress = "A new address and a private key is created. Your previous back-ups do not include this newly generated address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing. By pressing OK you declare that you understand this."
 const refreshTimeout = 300;
 let refreshTimer;
 let showZeroBalances = false;
@@ -123,6 +123,11 @@ ipcRenderer.on("generate-wallet-response", (event, msgStr) => {
     const msg = JSON.parse(msgStr);
     checkResponse(msg);
     addNewAddress(msg.addr);
+    alert(userWarningCreateNewAddress)
+});
+
+ipcRenderer.on("main-sends-alert", (event, msgStr) => {
+    alert(msgStr)
 });
 
 window.addEventListener("load", initWallet);
