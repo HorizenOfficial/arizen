@@ -140,7 +140,7 @@ ipcRenderer.on("generate-wallet-response", (event, msgStr) => {
     const msg = JSON.parse(msgStr);
     checkResponse(msg);
     addNewAddress(msg.addr);
-    alert(tr("warmingMessages.userWarningCreateNewAddress", userWarningCreateWallet))
+    //alert(tr("warmingMessages.userWarningCreateNewAddress", userWarningCreateNewAddress))
 });
 
 ipcRenderer.on("main-sends-alert", (event, msgStr) => {
@@ -403,17 +403,22 @@ function setAddressName(addr, name) {
 }
 
 function showNewAddrDialog() {
-    showDialogFromTemplate("newAddrDialogTemplate", dialog => {
-        const createButton = dialog.querySelector(".newAddrDialogCreate");
-        createButton.addEventListener("click", () => {
-            ipcRenderer.send("generate-wallet", dialog.querySelector(".newAddrDialogName").value);
-            dialog.close();
+    let response = -1;
+    response = ipcRenderer.sendSync("renderer-show-message-box", tr("warmingMessages.userWarningCreateNewAddress", userWarningCreateNewAddress), [tr("warmingMessages.userWarningIUnderstand", "I understand")]);
+    console.log(response);
+    if (response===0){
+        showDialogFromTemplate("newAddrDialogTemplate", dialog => {
+            const createButton = dialog.querySelector(".newAddrDialogCreate");
+            createButton.addEventListener("click", () => {
+                ipcRenderer.send("generate-wallet", dialog.querySelector(".newAddrDialogName").value);
+                dialog.close();
+            });
+            dialog.addEventListener("keypress", ev => {
+                if (event.keyCode === 13)
+                    createButton.click();
+            });
         });
-        dialog.addEventListener("keypress", ev => {
-            if (event.keyCode === 13)
-                createButton.click();
-        });
-    });
+    }
 }
 
 function addTransactions(txs, newTx = false) {

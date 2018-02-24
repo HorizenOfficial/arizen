@@ -43,7 +43,7 @@ ipcRenderer.on("write-login-response", function (event, resp) {
     if (data.response === "OK") {
         location.href = "./login.html";
         console.log("Wallet creation was successful - redirecting to login.html");
-        alert(tr("warmingMessages.userWarningCreateWallet", userWarningCreateWallet))
+        alert(userWarningCreateWallet)
     } else {
         console.log("Wallet creation failed");
         document.getElementById("wallet_creation_info").innerHTML = data.msg;

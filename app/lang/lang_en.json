@@ -209,11 +209,11 @@
     }
   },
   "warmingMessages": {
-    "userWarningCreateWallet": "To make sure that you will never lose your wallet make sure to keep backup of your wallet(s) file. (.uawd or .awd + username + password). By clicking OK you declare that you fully understand this. If you are not sure please refer to the Arizen manual for further information.",
     "userWarningImportFileWithPKs": "New address(es) and a private key(s) will be imported. Your previous back-ups do not include the newly imported addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing OK you declare that you understand this.",
     "userWarningExportWalletUnencrypted": "The UNENCRYPTED wallet that was just exported contains your private keys in plain text. That means that anyone with this file can control your ZENs. By pressing OK you declare that you understand this.",
     "userWarningExportWalletEncrypted": "The ENCRYPTED wallet that was just exported contains your private keys encrypted. That means that in order to access your private keys you need to know the corresponding username and password. In case you don't know them you cannot control the ZENs that are controled by these private keys. By pressing OK you declare that you understand this.",
     "userWarningImportPK": "A new address and a private key is imported. Your previous back-ups do not include this newly imported address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing OK you declare that you understand this.",
-    "userWarningCreateNewAddress":"A new address and a private key is created. Your previous back-ups do not include this newly generated address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing. By pressing OK you declare that you understand this."
+    "userWarningCreateNewAddress":"A new address and a private key is created. Your previous back-ups do not include this newly generated address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing. By pressing OK you declare that you understand this.",
+    "userWarningIUnderstand": "I understand"
   }
 }

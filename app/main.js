@@ -426,30 +426,37 @@ function upgradeDb() {
 }
 
 function exportWalletArizen(ext, encrypt) {
-    dialog.showSaveDialog({
-        title: "Save wallet." + ext,
-        filters: [{name: "Wallet", extensions: [ext]}]
-    }, function(filename) {
-        if (typeof filename !== "undefined" && filename !== "") {
-            if (!fs.exists(filename)) {
-                dialog.showMessageBox({
-                    type: "warning",
-                    message: "Do you want to replace file?",
-                    buttons: ["Yes", "No"],
-                    title: "Replace wallet?"
-                }, function (response) {
-                    if (response === 0) {
+    let showMessage = "";
+    if(encrypt){
+        //mainWindow.webContents.send("main-sends-alert", tr("warmingMessages.userWarningExportWalletEncrypted", userWarningExportWalletEncrypted));
+        showMessage = tr("warmingMessages.userWarningExportWalletEncrypted", userWarningExportWalletEncrypted);
+    } else {
+        //mainWindow.webContents.send("main-sends-alert", tr("warmingMessages.userWarningExportWalletUnencrypted", userWarningExportWalletUnencrypted));
+        showMessage = tr("warmingMessages.userWarningExportWalletUnencrypted", userWarningExportWalletUnencrypted);
+    }
+    dialog.showMessageBox({ message: showMessage, buttons: ["I understand"],  cancelId: -1 }, function(response) {
+        if(response === 0){
+            dialog.showSaveDialog({
+                title: "Save wallet." + ext,
+                filters: [{name: "Wallet", extensions: [ext]}]
+            }, function(filename) {
+                if (typeof filename !== "undefined" && filename !== "") {
+                    if (!fs.exists(filename)) {
+                        dialog.showMessageBox({
+                            type: "warning",
+                            message: "Do you want to replace file?",
+                            buttons: ["Yes", "No"],
+                            title: "Replace wallet?"
+                        }, function (response) {
+                            if (response === 0) {
+                                exportWallet(filename, encrypt);
+                            }
+                        });
+                    } else {
                         exportWallet(filename, encrypt);
                     }
-                });
-            } else {
-                exportWallet(filename, encrypt);
-            }
-            if(encrypt){
-                mainWindow.webContents.send("main-sends-alert", tr("warmingMessages.userWarningExportWalletEncrypted", userWarningExportWalletEncrypted));
-            } else {
-                mainWindow.webContents.send("main-sends-alert", tr("warmingMessages.userWarningExportWalletUnencrypted", userWarningExportWalletUnencrypted));
-            }
+                }
+            });
         }
     });
 }
@@ -491,14 +498,17 @@ function exportPKs() {
             }
         });
     }
-
-    dialog.showSaveDialog({
-        title: "Choose file for private keys",
-        defaultPath: "arizen-private-keys.txt"
-    }, filename => {
-        if (filename) {
-            exportToFile(filename);
-        }
+    dialog.showMessageBox({ message: tr("warmingMessages.userWarningExportWalletUnencrypted", userWarningExportWalletUnencrypted), buttons: ["I understand"],  cancelId: -1 }, function(response) {
+        if(response===0){
+            dialog.showSaveDialog({
+                title: "Choose file for private keys",
+                defaultPath: "arizen-private-keys.txt"
+            }, filename => {
+                if (filename) {
+                    exportToFile(filename);
+                }
+            });
+        };
     });
 }
 
@@ -712,17 +722,20 @@ function importPKs() {
         });
     }
 
-    dialog.showOpenDialog({
-        title: "Choose file with private keys"
-    }, filenames => {
-        if (filenames) {
-            for (let f of filenames) {
-                importFromFile(f);
-            }
-            // TODO: save only if at least one key was inserted
-            saveWallet();
-            sendWallet();
-            mainWindow.webContents.send("main-sends-alert", tr("warmingMessages.userWarningImportFileWithPKs", userWarningImportFileWithPKs));
+    dialog.showMessageBox({ message: tr("warmingMessages.userWarningImportFileWithPKs", userWarningImportFileWithPKs), buttons: ["I understand"],  cancelId: -1 }, function(response) {
+        if(response===0){
+            dialog.showOpenDialog({
+                title: "Choose file with private keys"
+            }, filenames => {
+                if (filenames) {
+                    for (let f of filenames) {
+                        importFromFile(f);
+                    }
+                    // TODO: save only if at least one key was inserted
+                    saveWallet();
+                    sendWallet();
+                }
+            });
         }
     });
 }
@@ -1596,6 +1609,13 @@ ipcMain.on("create-paper-wallet", (event, name, addToWallet) => {
         wif = generateNewAddress(1, userInfo.pass)[0];
     }
     mainWindow.webContents.send("export-paper-wallet", wif, name);
+});
+
+ipcMain.on("renderer-show-message-box", (event, msgStr, buttons) => {
+    buttons = buttons.concat([tr("warmingMessages.cancel","Cancel")])
+    dialog.showMessageBox({ message: msgStr, buttons: buttons, cancelId: -1 }, function(response) {
+      event.returnValue = response;
+    });
 });
 
 // Unused
