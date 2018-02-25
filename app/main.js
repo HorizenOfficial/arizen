@@ -831,7 +831,6 @@ function createHelpSubmenu() {
         { type: "separator" },
         {
             label: tr("menu.helpSubmenu.zencash", "ZenCash"),
-            //accelerator: "Shift+CmdOrCtrl+Q",
             click: () => {
                 require('electron').shell.openExternal('https://zencash.com')
             }
