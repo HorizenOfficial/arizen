@@ -64,7 +64,7 @@ const withdrawButton = document.getElementById("withdrawButton");
 const withdrawStatusTitleNode = document.getElementById("withdrawStatusTitle");
 const withdrawStatusBodyNode = document.getElementById("withdrawStatusBody");
 
-const userWarningCreateNewAddress = "A new address and a private key is created. Your previous back-ups do not include this newly generated address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing. By pressing OK you declare that you understand this."
+const userWarningCreateNewAddress = "A new address and a private key will be created. Your previous back-ups do not include this newly generated address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen."
 
 const refreshTimeout = 300;
 let refreshTimer;

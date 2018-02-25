@@ -16,7 +16,7 @@ let num = false;
 let ide = false;
 let spec = false;
 
-const userWarningCreateWallet = "To make sure that you will never lose your wallet make sure to keep backup of your wallet(s) file. (.uawd or .awd + username + password). By clicking OK you declare that you fully understand this. If you are not sure please refer to the Arizen manual for further information."
+const userWarningCreateWallet = "To make sure that you will never lose your wallet make sure to keep backup of your wallet(s) file. (.uawd or .awd + username + password). If you are not sure please refer to the Arizen manual for further information. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen."
 
 
 function checkLoginInfo() {

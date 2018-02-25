@@ -23,9 +23,9 @@ const {List} = require("immutable");
 const {translate} = require("./util.js");
 const {DateTime} = require("luxon");
 
-const userWarningImportFileWithPKs = "New address(es) and a private key(s) will be imported. Your previous back-ups do not include the newly imported addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing OK you declare that you understand this."
-const userWarningExportWalletUnencrypted = "The UNENCRYPTED wallet that was just exported contains your private keys in plain text. That means that anyone with this file can control your ZENs. By pressing OK you declare that you understand this."
-const userWarningExportWalletEncrypted = "The ENCRYPTED wallet that was just exported contains your private keys encrypted. That means that in order to access your private keys you need to know the corresponding username and password. In case you don't know them you cannot control the ZENs that are controled by these private keys. By pressing OK you declare that you understand this."
+const userWarningImportFileWithPKs = "New address(es) and a private key(s) will be imported. Your previous back-ups do not include the newly imported addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen."
+const userWarningExportWalletUnencrypted = "You are going to export an UNENCRYPTED wallet ( ie your private keys) in plain text. That means that anyone with this file can control your ZENs. Store this file in a safe place. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen."
+const userWarningExportWalletEncrypted = "You are going to export an ENCRYPTED wallet and your private keys will be encrypted. That means that in order to access your private keys you need to know the corresponding username and password. In case you don't know them you cannot control the ZENs that are controled by these private keys. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen."
 
 // Press F12 to open the DevTools. See https://github.com/sindresorhus/electron-debug.
 require("electron-debug")();
@@ -432,7 +432,7 @@ function exportWalletArizen(ext, encrypt) {
     } else {
         showMessage = tr("warmingMessages.userWarningExportWalletUnencrypted", userWarningExportWalletUnencrypted);
     }
-    dialog.showMessageBox({ message: showMessage, buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand")],  cancelId: -1 }, function(response) {
+    dialog.showMessageBox({ message: showMessage, buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand"),tr("warmingMessages.cancel","Cancel")],  cancelId: -1 }, function(response) {
         if(response === 0){
             dialog.showSaveDialog({
                 title: "Save wallet." + ext,
@@ -496,7 +496,7 @@ function exportPKs() {
             }
         });
     }
-    dialog.showMessageBox({ message: tr("warmingMessages.userWarningExportWalletUnencrypted", userWarningExportWalletUnencrypted), buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand")],  cancelId: -1 }, function(response) {
+    dialog.showMessageBox({ message: tr("warmingMessages.userWarningExportWalletUnencrypted", userWarningExportWalletUnencrypted), buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand"),tr("warmingMessages.cancel","Cancel")],  cancelId: -1 }, function(response) {
         if(response===0){
             dialog.showSaveDialog({
                 title: "Choose file for private keys",
@@ -720,7 +720,7 @@ function importPKs() {
         });
     }
 
-    dialog.showMessageBox({ message: tr("warmingMessages.userWarningImportFileWithPKs", userWarningImportFileWithPKs), buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand")],  cancelId: -1 }, function(response) {
+    dialog.showMessageBox({ message: tr("warmingMessages.userWarningImportFileWithPKs", userWarningImportFileWithPKs), buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand"),tr("warmingMessages.cancel","Cancel")],  cancelId: -1 }, function(response) {
         if(response===0){
             dialog.showOpenDialog({
                 title: "Choose file with private keys"
