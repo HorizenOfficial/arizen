@@ -432,7 +432,7 @@ function exportWalletArizen(ext, encrypt) {
     } else {
         showMessage = tr("warmingMessages.userWarningExportWalletUnencrypted", userWarningExportWalletUnencrypted);
     }
-    dialog.showMessageBox({ message: showMessage, buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand"),tr("warmingMessages.cancel","Cancel")],  cancelId: -1 }, function(response) {
+    dialog.showMessageBox({type: "warning", title: "Important Information", message: showMessage, buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand"),tr("warmingMessages.cancel","Cancel")],  cancelId: -1 }, function(response) {
         if(response === 0){
             dialog.showSaveDialog({
                 title: "Save wallet." + ext,
@@ -496,9 +496,10 @@ function exportPKs() {
             }
         });
     }
-    dialog.showMessageBox({ message: tr("warmingMessages.userWarningExportWalletUnencrypted", userWarningExportWalletUnencrypted), buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand"),tr("warmingMessages.cancel","Cancel")],  cancelId: -1 }, function(response) {
+    dialog.showMessageBox({type: "warning", title: "Important Information", message: tr("warmingMessages.userWarningExportWalletUnencrypted", userWarningExportWalletUnencrypted), buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand"),tr("warmingMessages.cancel","Cancel")],  cancelId: -1 }, function(response) {
         if(response===0){
             dialog.showSaveDialog({
+                type: "warning",
                 title: "Choose file for private keys",
                 defaultPath: "arizen-private-keys.txt"
             }, filename => {
@@ -720,7 +721,7 @@ function importPKs() {
         });
     }
 
-    dialog.showMessageBox({ message: tr("warmingMessages.userWarningImportFileWithPKs", userWarningImportFileWithPKs), buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand"),tr("warmingMessages.cancel","Cancel")],  cancelId: -1 }, function(response) {
+    dialog.showMessageBox({ type: "warning", title: "Important Information", message: tr("warmingMessages.userWarningImportFileWithPKs", userWarningImportFileWithPKs), buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand"),tr("warmingMessages.cancel","Cancel")],  cancelId: -1 }, function(response) {
         if(response===0){
             dialog.showOpenDialog({
                 title: "Choose file with private keys"
@@ -1641,7 +1642,7 @@ ipcMain.on("create-paper-wallet", (event, name, addToWallet) => {
 
 ipcMain.on("renderer-show-message-box", (event, msgStr, buttons) => {
     buttons = buttons.concat([tr("warmingMessages.cancel","Cancel")])
-    dialog.showMessageBox({ message: msgStr, buttons: buttons, cancelId: -1 }, function(response) {
+    dialog.showMessageBox({type: "warning", title: "Important Information", message: msgStr, buttons: buttons, cancelId: -1 }, function(response) {
       event.returnValue = response;
     });
 });
