@@ -812,6 +812,33 @@ function createEditSubmenu() {
     ];
 }
 
+function createHelpSubmenu() {
+    return [
+        {
+            label: tr("menu.helpSubmenu.arizenManual", "Arizen Manual"),
+            accelerator: "CmdOrCtrl+H",
+            click: () => {
+                require('electron').shell.openExternal('https://github.com/ZencashOfficial/arizen#user-manuals')
+            }
+        },
+        {
+            label: tr("menu.helpSubmenu.support", "Support"),
+            accelerator: "Shift+CmdOrCtrl+S",
+            click: () => {
+                require('electron').shell.openExternal('https://support.zencash.com')
+            }
+        },
+        { type: "separator" },
+        {
+            label: tr("menu.helpSubmenu.zencash", "ZenCash"),
+            //accelerator: "Shift+CmdOrCtrl+Q",
+            click: () => {
+                require('electron').shell.openExternal('https://zencash.com')
+            }
+        }
+    ];
+}
+
 function updateMenuAtLogin() {
     const template = [
         {
@@ -890,6 +917,10 @@ function updateMenuAtLogout() {
         {
             label: tr("menu.edit", "Edit"),
             submenu: createEditSubmenu()
+        },
+        {
+            label: tr("menu.help", "Help"),
+            submenu: createHelpSubmenu()
         }
     ];
     updateMenuForDarwin(template);
