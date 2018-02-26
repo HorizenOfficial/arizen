@@ -109,7 +109,7 @@
         "sumLowerThanFee": "Součet zůstatku na zdrojových adresách je menší než poplatek!",
         "zenApi": "Zen API není nastaveno v předvolbách aplikace!",
         "unknownAddress": "Zdrojová adresa nepatří do této peněženky!",
-        "insufficientFundsSourceAddr": "Nedostatečný zůstatek na zdrojové adrese",
+        "insufficientFundsSourceAddr": "Nedostatečný zůstatek na zdrojové adrese nebo není volné žádné UTXO!",
         "emptyToAddr": "Cílová adresa není zadána",
         "zeroAmount": "Množství není větší než nula",
         "insufficientFunds": "Nedostatečný zůstatek na zdrojové adrese",

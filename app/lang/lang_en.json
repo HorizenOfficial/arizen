@@ -109,7 +109,7 @@
         "sumLowerThanFee": "Your summed balance over all source addresses is lower than the fee!",
         "zenApi": "Zen API is not set in settings!",
         "unknownAddress": "Source address is not in your wallet!",
-        "insufficientFundsSourceAddr": "Insufficient funds on the source address",
+        "insufficientFundsSourceAddr": "Insufficient funds on the source address or no available UTXO!",
         "emptyToAddr": "The to address is empty",
         "zeroAmount": "The amount is not positive",
         "insufficientFunds": "Insufficient funds on the from address",
