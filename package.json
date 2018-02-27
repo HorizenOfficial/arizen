@@ -125,11 +125,14 @@
   "devDependencies": {
     "ajv": "^5.5.1",
     "coveralls": "^3.0.0",
+    "deepmerge": "^2.0.1",
     "devtron": "^1.4.0",
     "electron": "^1.8.2-beta.5",
     "electron-builder": "19.49.4",
     "electron-builder-squirrel-windows": "19.49.4",
-    "flow-bin": "^0.64.0"
+    "flow-bin": "^0.64.0",
+    "json-file-plus": "^3.3.0",
+    "yargs": "^11.0.0"
   },
   "optionalDependencies": {
     "electron-installer-debian": "^0.7.0",
