@@ -894,6 +894,10 @@ function updateMenuAtLogin() {
         {
             label: tr("menu.edit", "Edit"),
             submenu: createEditSubmenu()
+        },
+        {
+            label: tr("menu.help", "Help"),
+            submenu: createHelpSubmenu()
         }
     ];
 
