@@ -64,6 +64,8 @@ const withdrawButton = document.getElementById("withdrawButton");
 const withdrawStatusTitleNode = document.getElementById("withdrawStatusTitle");
 const withdrawStatusBodyNode = document.getElementById("withdrawStatusBody");
 
+const userWarningCreateNewAddress = "A new address and a private key will be created. Your previous back-ups do not include this newly generated address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen."
+
 const refreshTimeout = 300;
 let refreshTimer;
 let showZeroBalances = false;
@@ -138,7 +140,12 @@ ipcRenderer.on("generate-wallet-response", (event, msgStr) => {
     const msg = JSON.parse(msgStr);
     checkResponse(msg);
     addNewAddress(msg.addr);
+    //alert(tr("warmingMessages.userWarningCreateNewAddress", userWarningCreateNewAddress))
 });
+
+ipcRenderer.on("main-sends-alert", (event, msgStr) => {
+    alert(msgStr)
+ });
 
 window.addEventListener("load", initWallet);
 
@@ -396,17 +403,22 @@ function setAddressName(addr, name) {
 }
 
 function showNewAddrDialog() {
-    showDialogFromTemplate("newAddrDialogTemplate", dialog => {
-        const createButton = dialog.querySelector(".newAddrDialogCreate");
-        createButton.addEventListener("click", () => {
-            ipcRenderer.send("generate-wallet", dialog.querySelector(".newAddrDialogName").value);
-            dialog.close();
+    let response = -1;
+    response = ipcRenderer.sendSync("renderer-show-message-box", tr("warmingMessages.userWarningCreateNewAddress", userWarningCreateNewAddress), [tr("warmingMessages.userWarningIUnderstand", "I understand")]);
+    console.log(response);
+    if (response===0){
+        showDialogFromTemplate("newAddrDialogTemplate", dialog => {
+            const createButton = dialog.querySelector(".newAddrDialogCreate");
+            createButton.addEventListener("click", () => {
+                ipcRenderer.send("generate-wallet", dialog.querySelector(".newAddrDialogName").value);
+                dialog.close();
+            });
+            dialog.addEventListener("keypress", ev => {
+                if (event.keyCode === 13)
+                    createButton.click();
+            });
         });
-        dialog.addEventListener("keypress", ev => {
-            if (event.keyCode === 13)
-                createButton.click();
-        });
-    });
+    }
 }
 
 function addTransactions(txs, newTx = false) {

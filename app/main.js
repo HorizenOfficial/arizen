@@ -23,6 +23,9 @@ const {List} = require("immutable");
 const {translate} = require("./util.js");
 const {DateTime} = require("luxon");
 
+const userWarningImportFileWithPKs = "New address(es) and a private key(s) will be imported. Your previous back-ups do not include the newly imported addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen."
+const userWarningExportWalletUnencrypted = "You are going to export an UNENCRYPTED wallet ( ie your private keys) in plain text. That means that anyone with this file can control your ZENs. Store this file in a safe place. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen."
+const userWarningExportWalletEncrypted = "You are going to export an ENCRYPTED wallet and your private keys will be encrypted. That means that in order to access your private keys you need to know the corresponding username and password. In case you don't know them you cannot control the ZENs that are controled by these private keys. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen."
 
 // Press F12 to open the DevTools. See https://github.com/sindresorhus/electron-debug.
 require("electron-debug")();
@@ -423,25 +426,35 @@ function upgradeDb() {
 }
 
 function exportWalletArizen(ext, encrypt) {
-    dialog.showSaveDialog({
-        title: "Save wallet." + ext,
-        filters: [{name: "Wallet", extensions: [ext]}]
-    }, function(filename) {
-        if (typeof filename !== "undefined" && filename !== "") {
-            if (!fs.exists(filename)) {
-                dialog.showMessageBox({
-                    type: "warning",
-                    message: "Do you want to replace file?",
-                    buttons: ["Yes", "No"],
-                    title: "Replace wallet?"
-                }, function (response) {
-                    if (response === 0) {
+    let showMessage = "";
+    if(encrypt){
+        showMessage = tr("warmingMessages.userWarningExportWalletEncrypted", userWarningExportWalletEncrypted);
+    } else {
+        showMessage = tr("warmingMessages.userWarningExportWalletUnencrypted", userWarningExportWalletUnencrypted);
+    }
+    dialog.showMessageBox({type: "warning", title: "Important Information", message: showMessage, buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand"),tr("warmingMessages.cancel","Cancel")],  cancelId: -1 }, function(response) {
+        if(response === 0){
+            dialog.showSaveDialog({
+                title: "Save wallet." + ext,
+                filters: [{name: "Wallet", extensions: [ext]}]
+            }, function(filename) {
+                if (typeof filename !== "undefined" && filename !== "") {
+                    if (!fs.exists(filename)) {
+                        dialog.showMessageBox({
+                            type: "warning",
+                            message: "Do you want to replace file?",
+                            buttons: ["Yes", "No"],
+                            title: "Replace wallet?"
+                        }, function (response) {
+                            if (response === 0) {
+                                exportWallet(filename, encrypt);
+                            }
+                        });
+                    } else {
                         exportWallet(filename, encrypt);
                     }
-                });
-            } else {
-                exportWallet(filename, encrypt);
-            }
+                }
+            });
         }
     });
 }
@@ -483,14 +496,18 @@ function exportPKs() {
             }
         });
     }
-
-    dialog.showSaveDialog({
-        title: "Choose file for private keys",
-        defaultPath: "arizen-private-keys.txt"
-    }, filename => {
-        if (filename) {
-            exportToFile(filename);
-        }
+    dialog.showMessageBox({type: "warning", title: "Important Information", message: tr("warmingMessages.userWarningExportWalletUnencrypted", userWarningExportWalletUnencrypted), buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand"),tr("warmingMessages.cancel","Cancel")],  cancelId: -1 }, function(response) {
+        if(response===0){
+            dialog.showSaveDialog({
+                type: "warning",
+                title: "Choose file for private keys",
+                defaultPath: "arizen-private-keys.txt"
+            }, filename => {
+                if (filename) {
+                    exportToFile(filename);
+                }
+            });
+        };
     });
 }
 
@@ -704,16 +721,20 @@ function importPKs() {
         });
     }
 
-    dialog.showOpenDialog({
-        title: "Choose file with private keys"
-    }, filenames => {
-        if (filenames) {
-            for (let f of filenames) {
-                importFromFile(f);
-            }
-            // TODO: save only if at least one key was inserted
-            saveWallet();
-            sendWallet();
+    dialog.showMessageBox({ type: "warning", title: "Important Information", message: tr("warmingMessages.userWarningImportFileWithPKs", userWarningImportFileWithPKs), buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand"),tr("warmingMessages.cancel","Cancel")],  cancelId: -1 }, function(response) {
+        if(response===0){
+            dialog.showOpenDialog({
+                title: "Choose file with private keys"
+            }, filenames => {
+                if (filenames) {
+                    for (let f of filenames) {
+                        importFromFile(f);
+                    }
+                    // TODO: save only if at least one key was inserted
+                    saveWallet();
+                    sendWallet();
+                }
+            });
         }
     });
 }
@@ -792,6 +813,32 @@ function createEditSubmenu() {
     ];
 }
 
+function createHelpSubmenu() {
+    return [
+        {
+            label: tr("menu.helpSubmenu.arizenManual", "Arizen Manual"),
+            accelerator: "CmdOrCtrl+H",
+            click: () => {
+                require('electron').shell.openExternal('https://github.com/ZencashOfficial/arizen#user-manuals')
+            }
+        },
+        {
+            label: tr("menu.helpSubmenu.support", "Support"),
+            accelerator: "Shift+CmdOrCtrl+S",
+            click: () => {
+                require('electron').shell.openExternal('https://support.zencash.com')
+            }
+        },
+        { type: "separator" },
+        {
+            label: tr("menu.helpSubmenu.zencash", "ZenCash"),
+            click: () => {
+                require('electron').shell.openExternal('https://zencash.com')
+            }
+        }
+    ];
+}
+
 function updateMenuAtLogin() {
     const template = [
         {
@@ -847,6 +894,10 @@ function updateMenuAtLogin() {
         {
             label: tr("menu.edit", "Edit"),
             submenu: createEditSubmenu()
+        },
+        {
+            label: tr("menu.help", "Help"),
+            submenu: createHelpSubmenu()
         }
     ];
 
@@ -870,6 +921,10 @@ function updateMenuAtLogout() {
         {
             label: tr("menu.edit", "Edit"),
             submenu: createEditSubmenu()
+        },
+        {
+            label: tr("menu.help", "Help"),
+            submenu: createHelpSubmenu()
         }
     ];
     updateMenuForDarwin(template);
@@ -1587,6 +1642,13 @@ ipcMain.on("create-paper-wallet", (event, name, addToWallet) => {
         wif = generateNewAddress(1, userInfo.pass)[0];
     }
     mainWindow.webContents.send("export-paper-wallet", wif, name);
+});
+
+ipcMain.on("renderer-show-message-box", (event, msgStr, buttons) => {
+    buttons = buttons.concat([tr("warmingMessages.cancel","Cancel")])
+    dialog.showMessageBox({type: "warning", title: "Important Information", message: msgStr, buttons: buttons, cancelId: -1 }, function(response) {
+      event.returnValue = response;
+    });
 });
 
 // Unused
