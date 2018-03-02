@@ -7,6 +7,7 @@
 Arizen is ZenCash light wallet.
 
 # User Manuals
+- v1.1.4: [Arizen v1.1.4 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.4/Arizen.v1.1.4.Wallet.User.Manual.pdf)
 - v1.1.3: [Arizen v1.1.3 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.3/Arizen.v1.1.3.Wallet.User.Manual.pdf)
 - v1.1.1: [Arizen v1.1.1 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.1/Arizen.v1.1.1.Wallet.User.Manual.pdf)
 - v1.0.0: [Arizen v1.0.0 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.0.0/Arizen.Wallet.User.Manual.pdf)
@@ -14,9 +15,18 @@ Arizen is ZenCash light wallet.
 # Version History
 
 ## v1.1.4
+- [x] Fix: link from About section is not opened in Arizen
 - [x] Automatic pruning of old backups (maximum of 25 last backups)
 - [x] Settings for disabling notifications
-- [x] Fix: link from About section is not opened in Arizen
+- [x] Import single PK via GUI
+- [x] animated image when data is loading
+- [x] reworked batch-withdraw logic
+- [x] Arabic and Portuguese translations
+- [x] Warning messages in critical steps 
+- [x] Introduce help menu
+- [x] Change text
+- [x] Tool for updating translations
+- [x] Fix: exported keys can be imported into Swing (finally)
 
 ## v1.1.3
 - [x] FIX: Import Private Key in WIF and HEX format (Compatible with Swing wallet).
