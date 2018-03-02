@@ -109,7 +109,7 @@
     "electron-download": "^4.1.0",
     "electron-packager": "^10.1.2",
     "electron-simple-updater": "^1.2.3",
-    "electron-tabs": "^0.9.0",
+    "electron-tabs": "^0.9.1",
     "errors": "^0.3.0",
     "fs-extra": "^5.0.0",
     "immutable": "^3.8.2",
