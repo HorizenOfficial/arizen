@@ -208,7 +208,7 @@
       "selectAll": "Select All"
     },
     "help": "Help",
-    "subMenu": {
+    "helpSubmenu": {
       "arizenManual": "Arizen Manual",
       "support": "Suport",
       "zencash": "ZenCash"
