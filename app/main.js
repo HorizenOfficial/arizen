@@ -490,7 +490,7 @@ function exportPKs() {
             } else {
                 const keys = sqlSelectObjects("select pk, addr from wallet");
                 for (let k of keys) {
-                    const wif = zencashjs.address.privKeyToWIF(k.pk);
+                    const wif = zencashjs.address.privKeyToWIF(k.pk,true);
                     fs.write(fd, wif + " " + k.addr + "\n");
                 }
             }
