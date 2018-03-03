@@ -7,11 +7,26 @@
 Arizen is ZenCash light wallet.
 
 # User Manuals
+- v1.1.4: [Arizen v1.1.4 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.4/Arizen.v1.1.4.Wallet.User.Manual.pdf)
 - v1.1.3: [Arizen v1.1.3 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.3/Arizen.v1.1.3.Wallet.User.Manual.pdf)
 - v1.1.1: [Arizen v1.1.1 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.1/Arizen.v1.1.1.Wallet.User.Manual.pdf)
 - v1.0.0: [Arizen v1.0.0 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.0.0/Arizen.Wallet.User.Manual.pdf)
 
 # Version History
+
+## v1.1.4
+- [x] Fix: link from About section is not opened in Arizen
+- [x] Automatic pruning of old backups (maximum of 25 last backups)
+- [x] Settings for disabling notifications
+- [x] Import single PK via GUI
+- [x] animated image when data is loading
+- [x] reworked batch-withdraw logic
+- [x] Arabic and Portuguese translations
+- [x] Warning messages in critical steps 
+- [x] Introduce help menu
+- [x] Change text
+- [x] Tool for updating translations
+- [x] Fix: exported keys can be imported into Swing (finally)
 
 ## v1.1.3
 - [x] FIX: Import Private Key in WIF and HEX format (Compatible with Swing wallet).
@@ -62,10 +77,15 @@ printed. This created address can by included to your Arizen or not.
 - [x] Needs connection to the insight and API (you can change servers in settings)
 - [x] Arizen is API wallet
 
+## Arizen file locations
+- **Linux:** `~/.arizen/wallets/wallet_username.awd`
+- **Windows:** `C:\Users\username\AppData\Roaming\Arizen\wallets\wallet_username.awd`
+- **MacOS:** `/Users/username/Library/Application Support/Arizen/wallet_username.awd`
+
 ## Development
 
 ### How to create distribution
-npm run dist
+      npm run dist
 
 ### Coding rules
 
@@ -93,7 +113,7 @@ npm run dist
 - Prefer cloning HTML `<template>`s to constructing DOM trees manually.
 
 #### HTML
-- Do not quote _simple_ HTML attribute values. For example write
+- Do not quote _simple_ HTML attribute values, for example
 
       <span id=foo class=bar>
 
@@ -101,7 +121,7 @@ npm run dist
 
       <span id="foo" class="bar">
 
-  unless you have to, for example in
+  unless you have to, for example
 
       <span id=foo class="bar baz">
 

@@ -8,6 +8,7 @@ const {ipcRenderer} = require("electron");
 const {List} = require("immutable");
 const Qrcode = require("qrcode");
 const jsPDF = require("jspdf");
+// FIXME: unused showPaperWalletDialog
 const {showPaperWalletDialog} = require("./paperwallet.js");
 
 function logIpc(msgType) {
@@ -41,6 +42,7 @@ logIpc("zz-get-wallets");
 let addrListNode = document.getElementById("addrList");
 const txListNode = document.getElementById("txList");
 const totalBalanceNode = document.getElementById("totalBalance");
+const loadingImageNode = document.getElementById("loadingImage");
 const depositTabButton = document.getElementById("depositTabButton");
 const depositToButton = document.getElementById("depositToButton");
 const depositToAddrInput = document.getElementById("depositToAddr");
@@ -50,7 +52,7 @@ const depositQrcodeImage = document.getElementById("depositQrcodeImg");
 const depositSaveQrcodeButton = document.getElementById("depositSaveQrcodeButton");
 const withdrawTabButton = document.getElementById("withdrawTabButton");
 // FIXME: withdrawAvailBalanceNode unused
-const withdrawAvailBalanceNode = document.getElementById("withdrawAvailBalance");
+// const withdrawAvailBalanceNode = document.getElementById("withdrawAvailBalance");
 const withdrawFromButton = document.getElementById("withdrawFromButton");
 const withdrawFromAddrInput = document.getElementById("withdrawFromAddr");
 const withdrawToButton = document.getElementById("withdrawToButton");
@@ -62,12 +64,15 @@ const withdrawButton = document.getElementById("withdrawButton");
 const withdrawStatusTitleNode = document.getElementById("withdrawStatusTitle");
 const withdrawStatusBodyNode = document.getElementById("withdrawStatusBody");
 
+const userWarningCreateNewAddress = "A new address and a private key will be created. Your previous back-ups do not include this newly generated address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen."
+
 const refreshTimeout = 300;
 let refreshTimer;
 let showZeroBalances = false;
 let depositQrcodeTimer;
 let addrObjList;
 let addrIdxByAddr;
+let refreshCounter = 0;
 
 // ---------------------------------------------------------------------------------------------------------------------
 // IPC
@@ -100,6 +105,18 @@ ipcRenderer.on("get-transaction-update", (event, msgStr) => {
     showNotification(tr("notification.newTransactions", "New transaction"));
 });
 
+ipcRenderer.on("add-loading-image", (event) => {
+    refreshCounter = refreshCounter + 1;
+    loadingImageNode.innerHTML = "<img src='resources/loading.gif' height='14' width='14' />"
+});
+
+ipcRenderer.on("remove-loading-image", (event) => {
+    refreshCounter = refreshCounter - 1;
+    if (refreshCounter <= 0) {
+        loadingImageNode.innerHTML = ""
+    }
+});
+
 ipcRenderer.on("refresh-wallet-response", (event, msgStr) => {
     const msg = JSON.parse(msgStr);
     checkResponse(msg);
@@ -123,7 +140,12 @@ ipcRenderer.on("generate-wallet-response", (event, msgStr) => {
     const msg = JSON.parse(msgStr);
     checkResponse(msg);
     addNewAddress(msg.addr);
+    //alert(tr("warmingMessages.userWarningCreateNewAddress", userWarningCreateNewAddress))
 });
+
+ipcRenderer.on("main-sends-alert", (event, msgStr) => {
+    alert(msgStr)
+ });
 
 window.addEventListener("load", initWallet);
 
@@ -137,8 +159,9 @@ function checkResponse(resp) {
 
 function warnTxSend(onOk) {
     const msg = tr("wallet.tabWithdraw.withdrawConfirmQuestion", "Do you really want to send this transaction?");
-    if (confirm(msg))
+    if (confirm(msg)) {
         onOk();
+    }
 }
 
 function getAddrData(addr) {
@@ -167,11 +190,11 @@ function setFiatBalanceText(balanceZen, fiatCurrencySymbol = "") {
     const lastUpdateTimeNode = document.getElementById("lastUpdateTime");
     if (fiatCurrencySymbol === "") {
         fiatCurrencySymbol = settings.fiatCurrency;
-        if (fiatCurrencySymbol === undefined || fiatCurrencySymbol === null ){
+        if (fiatCurrencySymbol === undefined || fiatCurrencySymbol === null) {
             fiatCurrencySymbol = "USD";
         }
     }
-    
+
     const axios = require("axios");
     const BASE_API_URL = "https://api.coinmarketcap.com/v1/ticker";
     let API_URL = BASE_API_URL + "/zencash/?convert=" + fiatCurrencySymbol;
@@ -183,9 +206,9 @@ function setFiatBalanceText(balanceZen, fiatCurrencySymbol = "") {
         let balance = parseFloat(balanceZen) * zenPrice;
         balanceFiatAmountNode.textContent = formatFiatBalance(balance) + " " + fiatCurrencySymbol;
         lastUpdateTimeNode.textContent = now;
-      }).catch(error => {
-            console.log(error);
-      });
+    }).catch(error => {
+        console.log(error);
+    });
 }
 
 function setAddressNodeName(addrObj, addrNode) {
@@ -380,17 +403,22 @@ function setAddressName(addr, name) {
 }
 
 function showNewAddrDialog() {
-    showDialogFromTemplate("newAddrDialogTemplate", dialog => {
-        const createButton = dialog.querySelector(".newAddrDialogCreate");
-        createButton.addEventListener("click", () => {
-            ipcRenderer.send("generate-wallet", dialog.querySelector(".newAddrDialogName").value);
-            dialog.close();
+    let response = -1;
+    response = ipcRenderer.sendSync("renderer-show-message-box", tr("warmingMessages.userWarningCreateNewAddress", userWarningCreateNewAddress), [tr("warmingMessages.userWarningIUnderstand", "I understand")]);
+    console.log(response);
+    if (response===0){
+        showDialogFromTemplate("newAddrDialogTemplate", dialog => {
+            const createButton = dialog.querySelector(".newAddrDialogCreate");
+            createButton.addEventListener("click", () => {
+                ipcRenderer.send("generate-wallet", dialog.querySelector(".newAddrDialogName").value);
+                dialog.close();
+            });
+            dialog.addEventListener("keypress", ev => {
+                if (event.keyCode === 13)
+                    createButton.click();
+            });
         });
-        dialog.addEventListener("keypress", ev => {
-            if (event.keyCode === 13)
-                createButton.click();
-        });
-    });
+    }
 }
 
 function addTransactions(txs, newTx = false) {
@@ -577,7 +605,7 @@ function validateWithdrawForm() {
         setNodeTrText(withdrawMsg, "wallet.tabWithdraw.messages.zeroAmount", "The amount is not positive");
         return;
     }
-    if (amount + fee > fromAddrObj.lastbalance) {
+    if ((amount + fee) > fromAddrObj.lastbalance) {
         setNodeTrText(withdrawMsg, "wallet.tabWithdraw.messages.insufficientFunds", "Insufficient funds on the from address");
         return;
     }
@@ -610,6 +638,9 @@ function showBatchWithdrawDialog() {
         const listNode = dialog.querySelector(".addrSelectList");
 
         for (const addrObj of addrObjList) {
+            if (addrObj.lastbalance === 0)
+                continue;
+
             const row = cloneTemplate("addrMultiselectRowTemplate");
             row.dataset.addr = addrObj.addr;
 
@@ -632,6 +663,8 @@ function showBatchWithdrawDialog() {
         const toAddrSelectButton = dialog.querySelector("#batchWithdrawToAddrSelect");
         const toAddrInput = dialog.querySelector("#batchWithdrawToAddr");
         const withdrawButton = dialog.querySelector("#batchWithdrawButton");
+        const selectAllButton = dialog.querySelector("#batchWithdrawSelectAll");
+        const clearAllButton = dialog.querySelector("#batchWithdrawClearAll");
 
         setInputNodeValue(toAddrInput, bwSettings.toAddr);
         setInputNodeValue(keepAmountInput, bwSettings.keepAmount);
@@ -663,6 +696,17 @@ function showBatchWithdrawDialog() {
                 ipcRenderer.send("send-many", bwSettings.fromAddrs, bwSettings.toAddr, bwSettings.txFee, bwSettings.keepAmount);
                 dialog.close();
                 statusDialog.showModal();
+            });
+        });
+
+        selectAllButton.addEventListener("click", () => {
+            [... listNode.children].forEach(row => {
+                row.querySelector(".addrSelectCheckbox").checked = true;
+            });
+        });
+        clearAllButton.addEventListener("click", () => {
+            [... listNode.children].forEach(row => {
+                row.querySelector(".addrSelectCheckbox").checked = false;
             });
         });
     });

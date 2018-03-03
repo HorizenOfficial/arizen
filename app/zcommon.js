@@ -5,10 +5,14 @@
 
 const {DateTime} = require("luxon");
 const {translate} = require("./util.js");
+const zencashjs = require("zencashjs");
+
+const userWarningImportPK = "A new address and a private key will be imported. Your previous back-ups do not include the newly imported address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen."
 
 function assert(condition, message) {
-    if (!condition)
+    if (!condition) {
         throw new Error(message || "Assertion failed");
+    }
 }
 
 /**
@@ -60,11 +64,13 @@ function warnUser(msg, onOk, onCancel) {
 }
 
 function showNotification(message) {
+    if (settings && !settings.notifications)
+        return;
     const notif = new Notification("Arizen", {
         body: message,
         icon: "resources/zen_icon.png"
     });
-    notif.onclick = () =>  notif.close();
+    notif.onclick = () => notif.close();
 }
 
 function logout() {
@@ -81,17 +87,22 @@ function openUrl(url) {
     shell.openExternal(url);
 }
 
+function linkHandler(event) {
+    event.preventDefault();
+    openUrl(event.target.href);
+}
+
 function fixLinks(parent = document) {
     querySelectorAllDeep("a[href^='http']", parent).forEach(link =>
-        link.addEventListener("click", event => {
-            event.preventDefault();
-            openUrl(link.href);
-        }));
+        link.addEventListener("click", linkHandler));
 }
 
 function fixAmountInputs(parent = document) {
     querySelectorAllDeep(".amountInput", parent).forEach(node => {
-        function updateBalanceText() { node.value = formatBalance(node.valueAsNumber, "en") }
+        function updateBalanceText() {
+            node.value = formatBalance(node.valueAsNumber, "en")
+        }
+
         updateBalanceText();
         node.addEventListener("change", () => updateBalanceText());
     });
@@ -170,8 +181,9 @@ function cloneTemplate(id) {
  */
 function createDialogFromTemplate(templateId) {
     const dialog = cloneTemplate(templateId);
-    if (dialog.tagName !== "ARIZEN-DIALOG")
+    if (dialog.tagName !== "ARIZEN-DIALOG") {
         throw new Error("No dialog in the template");
+    }
     document.body.appendChild(dialog);
     dialog.addEventListener("close", () => dialog.remove());
     return dialog;
@@ -180,8 +192,9 @@ function createDialogFromTemplate(templateId) {
 function showDialogFromTemplate(templateId, dialogInit, onClose = null) {
     const dialog = createDialogFromTemplate(templateId);
     dialogInit(dialog);
-    if (onClose)
+    if (onClose) {
         dialog.addEventListener("close", () => onClose());
+    }
     dialog.showModal();
 }
 
@@ -199,6 +212,7 @@ function createLink(url, text) {
     const link = document.createElement("a");
     link.href = url;
     link.textContent = text;
+    link.addEventListener("click", linkHandler);
     return link;
 }
 
@@ -230,7 +244,7 @@ let langDict;
     ipcRenderer.on("settings", (sender, settingsStr) => {
         // don't notify about new settings on startup
         if (Object.keys(settings).length)
-            showNotification(tr("notification.settingsUpdated","Settings updated"));
+            showNotification(tr("notification.settingsUpdated", "Settings updated"));
         const newSettings = JSON.parse(settingsStr);
         if (settings.lang !== newSettings.lang)
             changeLanguage(newSettings.lang);
@@ -249,12 +263,14 @@ function showSettingsDialog() {
         const inputApiUrls = dialog.querySelector(".settingsApiUrls");
         const inputFiatCurrency = dialog.querySelector(".settingsFiatCurrency");
         const inputLanguages = dialog.querySelector(".settingsLanguage");
+        const inputNotifications = dialog.querySelector(".enableNotifications");
 
         inputTxHistory.value = settings.txHistory;
         inputExplorerUrl.value = settings.explorerUrl;
         loadAvailableLangs(inputLanguages, settings.lang);
         inputApiUrls.value = settings.apiUrls.join("\n");
         inputFiatCurrency.value = settings.fiatCurrency;
+        inputNotifications.checked = settings.notifications;
 
         // An existing user has empty value settings.fiatCurrency
         if (settings.fiatCurrency === "" || settings.fiatCurrency === undefined || settings.fiatCurrency === null) {
@@ -268,7 +284,8 @@ function showSettingsDialog() {
                 explorerUrl: inputExplorerUrl.value.trim().replace(/\/?$/, ""),
                 apiUrls: inputApiUrls.value.split(/\s+/).filter(s => !/^\s*$/.test(s)).map(s => s.replace(/\/?$/, "")),
                 fiatCurrency: inputFiatCurrency.value,
-                lang: inputLanguages[inputLanguages.selectedIndex].value
+                lang: inputLanguages[inputLanguages.selectedIndex].value,
+                notifications: inputNotifications.checked ? 1 : 0,
             };
 
             if (settings.lang !== newSettings.lang)
@@ -283,6 +300,45 @@ function showSettingsDialog() {
             dialog.close();
         });
     });
+}
+
+function showImportSinglePKDialog() {
+    let response = -1;
+    response = ipcRenderer.sendSync("renderer-show-message-box", tr("warmingMessages.userWarningImportPK", userWarningImportPK), [tr("warmingMessages.userWarningIUnderstand", "I understand")]);
+    console.log(response);
+    if (response===0){
+        showDialogFromTemplate("importSinglePrivateKeyDialogTemplate", dialog => {
+            const importButton = dialog.querySelector(".newPrivateKeyImportButton");
+            const nameInput = dialog.querySelector(".newPrivateKeyDialogName");
+            const privateKeyInput = dialog.querySelector(".newPrivateKeyDialogKey");
+            importButton.addEventListener("click", () => {
+                const name = nameInput.value ? nameInput.value : "";
+                let pk = privateKeyInput.value;
+
+                if (isPKorWif(pk) === true) {
+                    console.log(name);
+                    console.log(pk);
+                    if (isWif(pk) === true) {
+                        pk = zencashjs.address.WIFToPrivKey(pk);
+                    }
+                    let pubKey = zencashjs.address.privKeyToPubKey(pk, true);
+                    let zAddress = zencashjs.address.pubKeyToAddr(pubKey);
+                    let resp = ipcRenderer.sendSync("check-if-z-address-in-wallet", zAddress);
+                    let zAddrExists = resp.exist;
+
+                    if (zAddrExists === true) {
+                        alert(tr("wallet.importSinglePrivateKey.warningNotValidAddress", "Z address exist in your wallet"))
+                    } else {
+                        ipcRenderer.send("import-single-key", name, pk);
+                        alert(tr("warmingMessages.userWarningImportPK", userWarningImportPK))
+                        dialog.close();
+                    }
+                } else {
+                    alert(tr("wallet.importSinglePrivateKey.warningNotValidPK", "This is not a valid Private Key."));
+                }
+            });
+        });
+    }
 }
 
 function openZenExplorer(path) {
@@ -352,4 +408,28 @@ function translateCurrentPage() {
         return;
     querySelectorAllDeep("[data-tr]").forEach(node =>
         node.textContent = tr(node.dataset.tr, node.textContent));
+}
+
+function isWif(pk) {
+    let isWif = true;
+    try {
+        let pktmp = zencashjs.address.WIFToPrivKey(pk);
+    } catch (err) {
+        isWif = false;
+    }
+    return isWif
+}
+
+function isPK(pk) {
+    let isPK = true;
+    try {
+        let pktmp = zencashjs.address.privKeyToPubKey(pk);
+    } catch (err) {
+        isPK = false;
+    }
+    return isPK
+}
+
+function isPKorWif(pk) {
+    return (isWif(pk) || isPK(pk))
 }

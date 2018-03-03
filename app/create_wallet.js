@@ -16,6 +16,9 @@ let num = false;
 let ide = false;
 let spec = false;
 
+const userWarningCreateWallet = "To make sure that you will never lose your wallet make sure to keep backup of your wallet(s) file. (.uawd or .awd + username + password). If you are not sure please refer to the Arizen manual for further information. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen."
+
+
 function checkLoginInfo() {
     document.getElementById("btSubmit").disabled = !(usr && len && lett && capl && num && ide && spec);
 }
@@ -40,6 +43,7 @@ ipcRenderer.on("write-login-response", function (event, resp) {
     if (data.response === "OK") {
         location.href = "./login.html";
         console.log("Wallet creation was successful - redirecting to login.html");
+        alert(userWarningCreateWallet)
     } else {
         console.log("Wallet creation failed");
         document.getElementById("wallet_creation_info").innerHTML = data.msg;
@@ -137,7 +141,7 @@ function selectColumn(username, pswd, pswd_again) {
 }
 
 function handleWalletFile() {
-    let re =  /(?:\.([^.]+))?$/;
+    let re = /(?:\.([^.]+))?$/;
     let targetStyle = "none";
 
     document.getElementById("btWalletFilename").textContent = document.getElementById("btWallet").value;

@@ -93,6 +93,23 @@
     </arizen-dialog>
 </template>
 
+<template id=importSinglePrivateKeyDialogTemplate>
+    <arizen-dialog>
+        <h2 slot=headerText data-tr=wallet.importSinglePrivateKey.titleLabel>Import Single Private Key</h2>
+        <div slot=content>
+            <div class=form>
+                <div data-tr=wallet.newAddress.name>Name (optional)</div>
+                <input type=text class=newPrivateKeyDialogName />
+                <div data-tr=wallet.importSinglePrivateKey.privateKeyLabel>Private Key</div>
+                <input type=text class=newPrivateKeyDialogKey />
+            </div>
+            <div class=formButtons>
+                <button class=newPrivateKeyImportButton data-tr=wallet.importSinglePrivateKey.importButtonLabel>Import</button>
+            </div>
+        </div>
+    </arizen-dialog>
+</template>
+
 <template id=addrSelectRowTemplate>
     <tr class=addrSelectRow>
         <td class=addrSelectRowName></td>
@@ -127,6 +144,10 @@
     <arizen-dialog>
         <h2 slot=headerText data-tr=wallet.batchWithdraw.label>Batch Withdraw</h2>
         <div slot=content class=batchWithdrawContent>
+            <div class='hToolbar batchWithdrawToolbar'>
+                <button id=batchWithdrawSelectAll data-tr=common.selectAll>Select all</button>
+                <button id=batchWithdrawClearAll data-tr=common.clearAll>Clear all</button>
+            </div>
             <table class=addrSelectList></table>
             <div class=form>
                 <button id=batchWithdrawToAddrSelect data-tr=wallet.to>To</button>
@@ -246,6 +267,11 @@
                     <option value="TWD">(TWD) Taiwan Dollar</option>
                     <option value="ZAR">(ZAR) South Africa Rand</option>
                 </select>
+                <label for=enableNotifications data-tr=wallet.settings.enableNotifications>Desktop notifications</label>
+                <label class=container>
+                    <input type=checkbox class=enableNotifications name=enableNotifications />
+                    <span class=checkmark></span>
+                </label>
             </div>
             <div class=formButtons>
                 <button class=settingsSave data-tr=wallet.settings.save>Save</button>
@@ -261,6 +287,7 @@
         <span><button onclick="showSettingsDialog()" data-tr=wallet.showSettingsDialogButton>Settings</button></span>
         <span><button onclick="showPaperWalletDialog()" data-tr=wallet.paperWallet.label>Paper Wallet</button></span>
         <span><button onclick="showBatchWithdrawDialog()" data-tr=wallet.showBatchWithdrawDialog>Batch Withdraw</button></span>
+        <span><button onclick="showImportSinglePKDialog()" data-tr=wallet.importSinglePrivateKey.openButtonLabel>Import Private Key</button></span>
     </div>
     <div class=headerCenter>
         <a class=arizenTitle href='https://github.com/ZencashOfficial/arizen'>Arizen</a>
@@ -316,9 +343,6 @@
             Deposit
         </div>
         <div class='tabContentBody depositBody'>
-            <div class=depositHelp data-tr=wallet.tabDeposit.help>
-                Click the green button next to the desired address for deposit.
-            </div>
             <div class=form id=depositForm>
                 <button id=depositToButton data-tr=wallet.to>To</button>
                 <input id=depositToAddr name=depositToAddr class=monospace type=text />
@@ -337,9 +361,6 @@
             Withdraw
         </div>
         <div class='tabContentBody withdrawBody'>
-            <div class=withdrawHelp data-tr=wallet.tabWithdraw.help>
-                Click the red button next to the desired address for withdrawal.
-            </div>
             <div class=form id=withdrawForm>
                 <div data-tr=wallet.tabWithdraw.availableBalance>Available balance</div>
                 <div id=withdrawAvailBalance><span></span> ZEN</div>
@@ -389,6 +410,7 @@
     <span> / </span>
     <span id=totalBalanceFiat><span id=totalFiatBalanceAmount>0.00</span></span>
     <span id=lastUpdateTimeText> / <span data-tr=wallet.lastUpdate>Last update</span>: <span id=lastUpdateTime></span></span>
+    <span><a id=loadingImage class=loading></a></span>
 </footer>
 
 </div>

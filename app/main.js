@@ -6,7 +6,6 @@
 const electron = require("electron");
 const BrowserWindow = electron.BrowserWindow;
 const {app, Menu, ipcMain, dialog} = require("electron");
-const shell = require("electron").shell;
 const path = require("path");
 const url = require("url");
 const os = require("os");
@@ -24,12 +23,31 @@ const {List} = require("immutable");
 const {translate} = require("./util.js");
 const {DateTime} = require("luxon");
 
+const userWarningImportFileWithPKs = "New address(es) and a private key(s) will be imported. Your previous back-ups do not include the newly imported addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen."
+const userWarningExportWalletUnencrypted = "You are going to export an UNENCRYPTED wallet ( ie your private keys) in plain text. That means that anyone with this file can control your ZENs. Store this file in a safe place. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen."
+const userWarningExportWalletEncrypted = "You are going to export an ENCRYPTED wallet and your private keys will be encrypted. That means that in order to access your private keys you need to know the corresponding username and password. In case you don't know them you cannot control the ZENs that are controled by these private keys. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen."
 
 // Press F12 to open the DevTools. See https://github.com/sindresorhus/electron-debug.
 require("electron-debug")();
 
 // Uncomment if you want to run in production
 // process.env.NODE_ENV !== "production"
+
+function attachUpdaterHandlers() {
+    function onUpdateDownloaded() {
+        let version = updater.meta.version;
+        dialog.showMessageBox({
+            type: "info",
+            title: "Update is here!",
+            message: `Arizen will be closed and the new ${version} version will be installed. After it will be done Arizen wallet will be reopened again.`
+        }, function () {
+            // application forces to update itself
+            updater.quitAndInstall();
+        });
+    }
+
+    updater.on("update-downloaded", onUpdateDownloaded);
+}
 
 updater.init({checkUpdateOnStart: true, autoDownload: true});
 attachUpdaterHandlers();
@@ -60,32 +78,11 @@ let settings = defaultSettings;
 let langDict;
 
 const dbStructWallet = "CREATE TABLE wallet (id INTEGER PRIMARY KEY AUTOINCREMENT, pk TEXT, addr TEXT UNIQUE, lastbalance REAL, name TEXT);";
-// FIXME: dbStructContacts is unused
-const dbStructContacts = "CREATE TABLE contacts (id INTEGER PRIMARY KEY AUTOINCREMENT, addr TEXT UNIQUE, name TEXT, nick TEXT);";
 const dbStructSettings = "CREATE TABLE settings (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE, value TEXT);";
 const dbStructTransactions = "CREATE TABLE transactions (id INTEGER PRIMARY KEY AUTOINCREMENT, txid TEXT, time INTEGER, address TEXT, vins TEXT, vouts TEXT, amount REAL, block INTEGER);";
 
 function tr(key, defaultVal) {
     return (settings && settings.lang) ? translate(langDict, key, defaultVal) : defaultVal;
-}
-
-function attachUpdaterHandlers() {
-    updater.on("update-downloaded", onUpdateDownloaded);
-
-    function onUpdateDownloaded() {
-        dialog.showMessageBox({
-            type: "info",
-            title: "Update is here!",
-            message: "Exiting and installing new update ..."
-        }, function () {
-            // application forces to update itself
-            updater.quitAndInstall();
-        });
-    }
-}
-
-function getWalletPath() {
-    return getRootConfigPath() + "wallets/";
 }
 
 function getRootConfigPath() {
@@ -102,6 +99,10 @@ function getRootConfigPath() {
         app.exit(0);
     }
     return rootPath;
+}
+
+function getWalletPath() {
+    return getRootConfigPath() + "wallets/";
 }
 
 function storeFile(filename, data) {
@@ -165,6 +166,12 @@ function decryptWallet(login, password, path) {
 }
 
 function importWallet(filename, encrypt) {
+    // check if file format is correct. Allow only awd and uawd file formats.
+    if (filename.indexOf("awd") === -1 && filename.indexOf("uawd") === -1) {
+        // TODO: add it to translation
+        dialog.showErrorBox(tr("login.walletImportFailedBadFileFormat", "Import failed"), tr("login.dataImportFailed", "Wallet data format is incorrect - only awd and uawd file formats are supported."));
+    }
+
     let data;
     if (encrypt === true) {
         data = decryptWallet(userInfo.login, userInfo.pass, filename);
@@ -180,9 +187,9 @@ function importWallet(filename, encrypt) {
         userInfo.dbChanged = true;
         userInfo.walletDb = new sql.Database(data);
         mainWindow.webContents.send("call-get-wallets");
-        mainWindow.webContents.send("show-notification-response", "Import", tr("login.walletImported","Wallet imported succesfully"), 3);
+        mainWindow.webContents.send("show-notification-response", "Import", tr("login.walletImported", "Wallet imported succesfully"), 3);
     } else {
-        dialog.showErrorBox(tr("login.walletImportFailed", "Import failed"), tr("login.dataImportFailed","Data import failed, possible reason is wrong credentials"));
+        dialog.showErrorBox(tr("login.walletImportFailed", "Import failed"), tr("login.dataImportFailed", "Data import failed, possible reason is wrong credentials"));
     }
 }
 
@@ -194,18 +201,90 @@ function exportWallet(filename, encrypt) {
     storeFile(filename, data);
 }
 
+function pruneBackups(backupDir, walletName) {
+    // shamelessly inspired by borg backup
+
+    const pruneConfig = {
+        last: 5,
+        hourly: 10,
+        daily: 10,
+    };
+
+    const PRUNING_PATTERNS = [
+        ["secondly", "yyyy-LL-dd HH:mm:ss"],
+        ["minutely", "yyyy-LL-dd HH:mm"],
+        ["hourly",   "yyyy-LL-dd HH"],
+        ["daily",    "yyyy-LL-dd"],
+        ["weekly",   "kkkk-WW"],
+        ["monthly",  "yyyy-LL"],
+        ["yearly",   "yyyy"]];
+
+    const PRUNING_PATTERNS_DICT = {};
+    PRUNING_PATTERNS.forEach(x => PRUNING_PATTERNS_DICT[x[0]] = x[1]);
+
+    function listBackupFiles() {
+        const filterRE = new RegExp("^" + walletName + "-\\d{14}\\.awd$");
+        let files = fs.readdirSync(backupDir);
+        files = files.filter(filename => filterRE.test(filename));
+        files.sort();
+        files.reverse();
+        return files;
+    }
+
+    function pruneLast(files, n) {
+        return files.slice(0, n || 0);
+    }
+
+    function pruneSplit(files, rule, n) {
+        let last = null;
+        let keep = [];
+        if (!n) {
+            return keep;
+        }
+        for (let f of files) {
+            let stats = fs.statSync(backupDir + "/" + f);
+            let period = DateTime
+                .fromJSDate(stats.mtime)
+                .toFormat(PRUNING_PATTERNS_DICT[rule]);
+            if (period !== last) {
+                last = period;
+                keep.push(f);
+                if (keep.length === n){
+                    break;
+                }
+            }
+        }
+        return keep;
+    }
+
+    let files = listBackupFiles();
+    let toDelete = new Set(files);
+
+    pruneLast(files, pruneConfig.last)
+        .forEach(f => toDelete.delete(f));
+    PRUNING_PATTERNS.forEach(rule =>
+        pruneSplit(files, rule[0], pruneConfig[rule[0]])
+            .forEach(f => toDelete.delete(f)));
+
+    for (let f of toDelete) {
+        fs.unlinkSync(backupDir + "/" + f);
+    }
+}
+
 function saveWallet() {
     const walletPath = getWalletPath() + userInfo.login + ".awd";
 
     if (fs.existsSync(walletPath)) {
         const backupDir = getWalletPath() + "backups";
-        if (!fs.existsSync(backupDir))
+        if (!fs.existsSync(backupDir)) {
             fs.mkdirSync(backupDir);
+        }
         const timestamp = DateTime.local().toFormat("yyyyLLddHHmmss");
         const backupPath = backupDir + "/" + userInfo.login + "-" + timestamp + ".awd";
         //fs.copyFileSync(walletPath, backupPath);
         // piece of shit node.js ecosystem, why the fuck do we have to deal with fs-extra crap here?
         fs.copySync(walletPath, backupPath);
+        pruneBackups(backupDir, userInfo.login);
     }
 
     exportWallet(walletPath, true);
@@ -269,6 +348,42 @@ function getNewAddress(name) {
     return { addr: addr, name: name, lastbalance: 0, pk: pk, wif: privateKeys[0]};
 }
 
+function sqlResultToObjectArray(res) {
+    return res[0].values.map(columns => {
+        const obj = {};
+        for (let i = 0; i < columns.length; i++) {
+            obj[res[0].columns[i]] = columns[i];
+        }
+        return obj;
+    });
+}
+
+function sqlSelect(sql) {
+    let result = userInfo.walletDb.exec(sql);
+    // XXX what exactly happens on error?
+    if (!result) {
+        throw new Error(`SQL query failed\n  Query: ${sql}`);
+    }
+    if (!result.length) {
+        result[0] = {values: []};
+    }
+    return result;
+}
+
+function sqlSelectColumns(sql) {
+    return sqlSelect(sql)[0].values;
+}
+
+function sqlSelectObjects(sql) {
+    return sqlResultToObjectArray(sqlSelect(sql));
+}
+
+function sqlRun(sql, args) {
+    const result = userInfo.walletDb.run(sql, args);
+    userInfo.dbChanged = true;
+    return result;
+}
+
 function tableExists(table) {
     return sqlSelectColumns(`select count(*) from sqlite_master where type = 'table' and name = '${table}'`)[0][0] === 1;
 }
@@ -278,17 +393,19 @@ function loadSettings() {
      * the table and inserts missing settings if the count isn't 6. By inserting
      * another setting we fucked up its fucked up upgrade logic. This only
      * happens in old versions after new version (f422bfff) run. */
-    if (tableExists("settings"))
+    if (tableExists("settings")) {
         sqlRun("delete from settings where name = 'settings'");
-
+    }
     /* In future we'll ditch SQLite and use encrypted JSONs for storage. For now
      * store settings in temporary table "new_settings". */
-    if (!tableExists("new_settings"))
+    if (!tableExists("new_settings")) {
         sqlRun("create table new_settings (name text unique, value text)");
+    }
 
     const b64settings = sqlSelectColumns("select value from new_settings where name = 'settings'");
-    if (b64settings.length === 0)
+    if (b64settings.length === 0) {
         return defaultSettings;
+    }
 
     /* Later we'll want to merge user settings with default settings. */
     return JSON.parse(Buffer.from(b64settings[0][0], "base64").toString("ascii"));
@@ -303,30 +420,41 @@ function saveSettings(settings) {
 function upgradeDb() {
     // expects DB to be prefilled with addresses
     let addr = sqlSelectObjects("select * from wallet limit 1")[0];
-    if (!("name" in addr))
+    if (!("name" in addr)) {
         sqlRun("ALTER TABLE wallet ADD COLUMN name TEXT DEFAULT ''");
+    }
 }
 
 function exportWalletArizen(ext, encrypt) {
-    dialog.showSaveDialog({
-        title: "Save wallet." + ext,
-        filters: [{name: "Wallet", extensions: [ext]}]
-    }, function(filename) {
-        if (typeof filename !== "undefined" && filename !== "") {
-            if (!fs.exists(filename)) {
-                dialog.showMessageBox({
-                    type: "warning",
-                    message: "Do you want to replace file?",
-                    buttons: ["Yes", "No"],
-                    title: "Replace wallet?"
-                }, function (response) {
-                    if (response === 0) {
+    let showMessage = "";
+    if(encrypt){
+        showMessage = tr("warmingMessages.userWarningExportWalletEncrypted", userWarningExportWalletEncrypted);
+    } else {
+        showMessage = tr("warmingMessages.userWarningExportWalletUnencrypted", userWarningExportWalletUnencrypted);
+    }
+    dialog.showMessageBox({type: "warning", title: "Important Information", message: showMessage, buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand"),tr("warmingMessages.cancel","Cancel")],  cancelId: -1 }, function(response) {
+        if(response === 0){
+            dialog.showSaveDialog({
+                title: "Save wallet." + ext,
+                filters: [{name: "Wallet", extensions: [ext]}]
+            }, function(filename) {
+                if (typeof filename !== "undefined" && filename !== "") {
+                    if (!fs.exists(filename)) {
+                        dialog.showMessageBox({
+                            type: "warning",
+                            message: "Do you want to replace file?",
+                            buttons: ["Yes", "No"],
+                            title: "Replace wallet?"
+                        }, function (response) {
+                            if (response === 0) {
+                                exportWallet(filename, encrypt);
+                            }
+                        });
+                    } else {
                         exportWallet(filename, encrypt);
                     }
-                });
-            } else {
-                exportWallet(filename, encrypt);
-            }
+                }
+            });
         }
     });
 }
@@ -337,18 +465,278 @@ function importWalletArizen(ext, encrypted) {
             title: "Import wallet." + ext,
             filters: [{name: "Wallet", extensions: [ext]}]
         }, function(filePaths) {
-            if (filePaths) dialog.showMessageBox({
-                type: "warning",
-                message: "This will replace your actual wallet. Are you sure?",
-                buttons: ["Yes", "No"],
-                title: "Replace wallet?"
-            }, function (response) {
-                if (response === 0) {
-                    importWallet(filePaths[0], encrypted);
-                }
-            });
+            if (filePaths) {
+                dialog.showMessageBox({
+                    type: "warning",
+                    message: "This will replace your actual wallet. Are you sure?",
+                    buttons: ["Yes", "No"],
+                    title: "Replace wallet?"
+                }, function (response) {
+                    if (response === 0) {
+                        importWallet(filePaths[0], encrypted);
+                    }
+                });
+            }
         });
     }
+}
+
+function exportPKs() {
+    // function exportToFile(filename, override = False) {
+    function exportToFile(filename) {
+        fs.open(filename, "w", 0o600, (err, fd) => {
+            if (err) {
+                console.error(`Couldn't open "${filename}" for writing: `, err);
+            } else {
+                const keys = sqlSelectObjects("select pk, addr from wallet");
+                for (let k of keys) {
+                    const wif = zencashjs.address.privKeyToWIF(k.pk,true);
+                    fs.write(fd, wif + " " + k.addr + "\n");
+                }
+            }
+        });
+    }
+    dialog.showMessageBox({type: "warning", title: "Important Information", message: tr("warmingMessages.userWarningExportWalletUnencrypted", userWarningExportWalletUnencrypted), buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand"),tr("warmingMessages.cancel","Cancel")],  cancelId: -1 }, function(response) {
+        if(response===0){
+            dialog.showSaveDialog({
+                type: "warning",
+                title: "Choose file for private keys",
+                defaultPath: "arizen-private-keys.txt"
+            }, filename => {
+                if (filename) {
+                    exportToFile(filename);
+                }
+            });
+        };
+    });
+}
+
+function importOnePK(pk, name = "") {
+    try {
+        if (pk.length !== 64) {
+            pk = zencashjs.address.WIFToPrivKey(pk);
+        }
+        const pub = zencashjs.address.privKeyToPubKey(pk, true);
+        const addr = zencashjs.address.pubKeyToAddr(pub);
+        sqlRun("insert or ignore into wallet (pk, addr, lastbalance, name) values (?, ?, 0, ?)", [pk, addr, name]);
+    } catch (err) {
+        console.log(`Invalid private key on line in private keys file : `, err);
+    }
+}
+
+function fetchJson(url) {
+    return fetch(url).then(resp => {
+        if (!resp.ok) {
+            throw new Error(`HTTP GET status: ${resp.status} ${resp.statusText}, URL: ${url}`);
+        }
+        return resp.json();
+    });
+}
+
+function fetchApi(path) {
+    const urls = settings.apiUrls;
+    let errors = [];
+    const fetchApiFrom = (i) => {
+        if (i < urls.length) {
+            return fetchJson(urls[i] + "/" + path).catch(err => {
+                console.log(`ERROR fetching from: ${urls[i]}: `, err);
+                errors.push(err);
+                return fetchApiFrom(i + 1);
+            });
+        } else {
+            return Promise.reject(errors);
+        }
+    };
+    return fetchApiFrom(0);
+}
+
+// TODO 1: better name
+// TODO 2: use async
+function mapSync(seq, asyncFunc) {
+    let results = [];
+    return seq.reduce(
+        (promise, item) => promise.then(() =>
+            asyncFunc(item)
+                .then(r => results.push(r))
+                .catch(() => promise) // skip this item
+        ),
+        Promise.resolve())
+        .then(() => results);
+}
+
+function fetchTransactions(txIds, myAddrs) {
+    return mapSync(txIds, txId => fetchApi("tx/" + txId)).then(txInfos => {
+        // TODO
+        //txInfos.sort(tx => tx.blockheight)
+        const myAddrSet = new Set(myAddrs);
+
+        return txInfos.map(info => {
+            let txBalance = 0;
+            const vins = [];
+            const vouts = [];
+
+            // Address field in transaction rows is meaningless. Pick something sane.
+            let firstMyAddr;
+
+            for (const vout of info.vout) {
+                // XXX can it be something else?
+                if (!vout.scriptPubKey) {
+                    continue;
+                }
+                let balanceAccounted = false;
+                for (const addr of vout.scriptPubKey.addresses) {
+                    if (!balanceAccounted && myAddrSet.has(addr)) {
+                        balanceAccounted = true;
+                        txBalance += parseFloat(vout.value);
+                        if (!firstMyAddr) {
+                            firstMyAddr = addr;
+                        }
+                    }
+                    if (!vouts.includes(addr)) {
+                        vouts.push(addr);
+                    }
+                }
+            }
+
+            for (const vin of info.vin) {
+                const addr = vin.addr;
+                if (myAddrSet.has(addr)) {
+                    txBalance -= parseFloat(vin.value);
+                    if (!firstMyAddr) {
+                        firstMyAddr = addr;
+                    }
+                }
+                if (!vins.includes(addr)) {
+                    vins.push(addr);
+                }
+            }
+
+            const tx = {
+                txid: info.txid,
+                time: info.blocktime,
+                address: firstMyAddr,
+                vins: vins.join(","),
+                vouts: vouts.join(","),
+                amount: txBalance,
+                block: info.blockheight
+            };
+            return tx;
+        });
+    });
+}
+
+function fetchBlockchainChanges(addrObjs, knownTxIds) {
+    return mapSync(addrObjs, obj => fetchApi("addr/" + obj.addr).then(info => [obj, info])).then(results => {
+        const result = {
+            changedAddrs: [],
+            newTxs: []
+        };
+        const txIdSet = new Set();
+
+        function addTxId(info) {
+            info.transactions.forEach(function (txId) {
+                return txIdSet.add(txId);
+            });
+        }
+
+        for (const [obj, info] of results) {
+            if (obj.lastbalance !== info.balance) {
+                obj.balanceDiff = info.balance - (obj.lastbalance || 0);
+                obj.lastbalance = info.balance;
+                result.changedAddrs.push(obj);
+            }
+            addTxId(info);
+        }
+
+        knownTxIds.forEach(txId => txIdSet.delete(txId));
+        return fetchTransactions([...txIdSet], addrObjs.map(obj => obj.addr))
+            .then(newTxs => {
+                result.newTxs = new List(newTxs).sortBy(tx => tx.block).toArray();
+                return result;
+            });
+    });
+}
+
+function updateBlockchainView(webContents) {
+    webContents.send("add-loading-image")
+    const addrObjs = sqlSelectObjects("SELECT addr, name, lastbalance FROM wallet");
+    const knownTxIds = sqlSelectColumns("SELECT DISTINCT txid FROM transactions").map(row => row[0]);
+    let totalBalance = addrObjs.filter(obj => obj.lastbalance).reduce((sum, a) => sum + a.lastbalance, 0);
+
+    // TODO send updates in batch
+    fetchBlockchainChanges(addrObjs, knownTxIds).then(result => {
+        for (const addrObj of result.changedAddrs) {
+            sqlRun("UPDATE wallet SET lastbalance = ? WHERE addr = ?", [addrObj.lastbalance, addrObj.addr]);
+            totalBalance += addrObj.balanceDiff;
+            webContents.send("update-wallet-balance", JSON.stringify({
+                response: "OK",
+                addrObj: addrObj,
+                diff: addrObj.balanceDiff,
+                total: totalBalance
+            }));
+        }
+
+        // Why here ? In case balance is unchanged the 'update-wallet-balance' is never sent, but the Zen/Fiat balance will change.
+        webContents.send("send-refreshed-wallet-balance", totalBalance);
+
+        for (const tx of result.newTxs) {
+            if (tx.block >= 0) {
+                sqlRun("INSERT INTO transactions VALUES (?,?,?,?,?,?,?,?)",
+                    [null, tx.txid, tx.time, tx.address, tx.vins, tx.vouts, tx.amount, tx.block]);
+            }
+            webContents.send("get-transaction-update", JSON.stringify(tx));
+        }
+        webContents.send("remove-loading-image")
+    })
+        .catch(err => {
+            console.log("Failed to fetch blockchain changes: ", err);
+        });
+}
+
+function sendWallet() {
+    if (!userInfo.loggedIn) {
+        return;
+    }
+    const resp = {};
+    resp.response = "OK";
+    resp.autorefresh = settings.autorefresh;
+    resp.wallets = sqlSelectObjects("SELECT * FROM wallet ORDER BY lastbalance DESC, id DESC");
+    resp.transactions = sqlSelectObjects("SELECT * FROM transactions ORDER BY time DESC LIMIT " + settings.txHistory);
+    resp.total = resp.wallets.reduce((sum, a) => sum + a.lastbalance, 0);
+
+    mainWindow.webContents.send("get-wallets-response", JSON.stringify(resp));
+    updateBlockchainView(mainWindow.webContents);
+}
+
+function importPKs() {
+    function importFromFile(filename) {
+        let i = 1;
+        fs.readFileSync(filename).toString().split("\n").filter(x => x).forEach(line => {
+            const matches = line.match(/^\w+/);
+            if (matches) {
+                let pk = matches[0];
+                importOnePK(pk, "");
+            }
+            i++;
+        });
+    }
+
+    dialog.showMessageBox({ type: "warning", title: "Important Information", message: tr("warmingMessages.userWarningImportFileWithPKs", userWarningImportFileWithPKs), buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand"),tr("warmingMessages.cancel","Cancel")],  cancelId: -1 }, function(response) {
+        if(response===0){
+            dialog.showOpenDialog({
+                title: "Choose file with private keys"
+            }, filenames => {
+                if (filenames) {
+                    for (let f of filenames) {
+                        importFromFile(f);
+                    }
+                    // TODO: save only if at least one key was inserted
+                    saveWallet();
+                    sendWallet();
+                }
+            });
+        }
+    });
 }
 
 function updateMenuForDarwin(template) {
@@ -425,7 +813,33 @@ function createEditSubmenu() {
     ];
 }
 
-function updateMenuAtLogin(langData) {
+function createHelpSubmenu() {
+    return [
+        {
+            label: tr("menu.helpSubmenu.arizenManual", "Arizen Manual"),
+            accelerator: "CmdOrCtrl+H",
+            click: () => {
+                require('electron').shell.openExternal('https://github.com/ZencashOfficial/arizen#user-manuals')
+            }
+        },
+        {
+            label: tr("menu.helpSubmenu.support", "Support"),
+            accelerator: "Shift+CmdOrCtrl+S",
+            click: () => {
+                require('electron').shell.openExternal('https://support.zencash.com')
+            }
+        },
+        { type: "separator" },
+        {
+            label: tr("menu.helpSubmenu.zencash", "ZenCash"),
+            click: () => {
+                require('electron').shell.openExternal('https://zencash.com')
+            }
+        }
+    ];
+}
+
+function updateMenuAtLogin() {
     const template = [
         {
             label: tr("menu.file", "File"),
@@ -458,11 +872,15 @@ function updateMenuAtLogin(langData) {
                 { type: "separator" },
                 {
                     label: tr("menu.exportPrivateKeys", "Export private keys"),
-                    click() { exportPKs() }
+                    click: function () {
+                        exportPKs();
+                    }
                 },
                 {
                     label: tr("menu.importPrivateKeys", "Import private keys"),
-                    click() { importPKs() }
+                    click: function () {
+                        importPKs();
+                    }
                 },
                 { type: "separator" },
                 {
@@ -476,6 +894,10 @@ function updateMenuAtLogin(langData) {
         {
             label: tr("menu.edit", "Edit"),
             submenu: createEditSubmenu()
+        },
+        {
+            label: tr("menu.help", "Help"),
+            submenu: createHelpSubmenu()
         }
     ];
 
@@ -499,6 +921,10 @@ function updateMenuAtLogout() {
         {
             label: tr("menu.edit", "Edit"),
             submenu: createEditSubmenu()
+        },
+        {
+            label: tr("menu.help", "Help"),
+            submenu: createHelpSubmenu()
         }
     ];
     updateMenuForDarwin(template);
@@ -533,6 +959,11 @@ function createWindow() {
     });
 }
 
+// https://github.com/electron/electron/issues/6139
+if (process.platform === 'linux') {
+    app.disableHardwareAcceleration();
+}
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -554,8 +985,9 @@ app.on("activate", function () {
 
 app.on("before-quit", function () {
     console.log("quitting");
-    if (true === userInfo.loggedIn && true === userInfo.dbChanged)
+    if (true === userInfo.loggedIn && true === userInfo.dbChanged) {
         saveWallet();
+    }
 });
 
 ipcMain.on("set-lang", function (event, lang) {
@@ -651,8 +1083,9 @@ ipcMain.on("check-login-info", function (event) {
 
 ipcMain.on("do-logout", function () {
     updateMenuAtLogout();
-    if (true === userInfo.dbChanged)
+    if (true === userInfo.dbChanged) {
         saveWallet();
+    }
     userInfo.login = "";
     userInfo.pass = "";
     userInfo.walletDb = [];
@@ -663,265 +1096,14 @@ ipcMain.on("exit-from-menu", function () {
     app.quit();
 });
 
-function sqlResultToObjectArray(res) {
-    return res[0].values.map(columns => {
-        const obj = {};
-        for (let i = 0; i < columns.length; i++)
-            obj[res[0].columns[i]] = columns[i];
-        return obj;
-    });
-}
+ipcMain.on("import-single-key", function(event, name, pk) {
+    console.log(name);
+    console.log(pk);
 
-function sqlSelect(sql) {
-    let result = userInfo.walletDb.exec(sql);
-    if (!result) // XXX what exactly happens on error?
-        throw new Error(`SQL query failed\n  Query: ${sql}`);
-    if (!result.length)
-        result[0] = { values: [] };
-    return result;
-}
-
-function sqlSelectColumns(sql) {
-    return sqlSelect(sql)[0].values;
-}
-
-function sqlSelectObjects(sql) {
-    return sqlResultToObjectArray(sqlSelect(sql));
-}
-
-function sqlRun(sql, args) {
-    const result = userInfo.walletDb.run(sql, args);
-    userInfo.dbChanged = true;
-    return result;
-}
-
-function fetchJson(url) {
-    // console.log("GET " + url);
-    return fetch(url).then(resp => {
-        // console.log(`GET ${url} done, status: ${resp.status} ${resp.statusText}`);
-        if (!resp.ok)
-            throw new Error(`HTTP GET status: ${resp.status} ${resp.statusText}, URL: ${url}`);
-        return resp.json()
-    });
-}
-
-function fetchApi(path) {
-    const urls = settings.apiUrls;
-    let errors = [];
-    const fetchApiFrom = (i) => {
-        if (i < urls.length)
-            return fetchJson(urls[i] + '/' + path).catch(err => {
-                console.log(`ERROR fetching from: ${urls[i]}: `, err);
-                errors.push(err);
-                return fetchApiFrom(i + 1);
-            });
-        else
-            return Promise.reject(errors);
-    };
-    return fetchApiFrom(0);
-}
-
-// TODO 1: better name
-// TODO 2: use async
-function mapSync(seq, asyncFunc) {
-    let results = [];
-    return seq.reduce(
-            (promise, item) => promise.then(() =>
-                asyncFunc(item)
-                    .then(r => results.push(r))
-                    .catch(() => promise) // skip this item
-            ),
-            Promise.resolve())
-        .then(() => results);
-}
-
-function fetchTransactions(txIds, myAddrs) {
-    return mapSync(txIds, txId => fetchApi("tx/" + txId)).then(txInfos => {
-        // TODO
-        //txInfos.sort(tx => tx.blockheight)
-        const myAddrSet = new Set(myAddrs);
-
-        return txInfos.map(info => {
-            let txBalance = 0;
-            const vins = [];
-            const vouts = [];
-
-            // Address field in transaction rows is meaningless. Pick something sane.
-            let firstMyAddr;
-
-            for (const vout of info.vout) {
-                if (!vout.scriptPubKey) // XXX can it be something else?
-                    continue;
-                let balanceAccounted = false;
-                for (const addr of vout.scriptPubKey.addresses) {
-                    if (!balanceAccounted && myAddrSet.has(addr)) {
-                        balanceAccounted = true;
-                        txBalance += parseFloat(vout.value);
-                        if (!firstMyAddr)
-                            firstMyAddr = addr;
-                    }
-                    if (!vouts.includes(addr))
-                        vouts.push(addr);
-                }
-            }
-
-            for (const vin of info.vin) {
-                const addr = vin.addr;
-                if (myAddrSet.has(addr)) {
-                    txBalance -= parseFloat(vin.value);
-                    if (!firstMyAddr)
-                        firstMyAddr = addr;
-                }
-                if (!vins.includes(addr))
-                    vins.push(addr);
-            }
-
-            const tx = {
-                txid: info.txid,
-                time: info.blocktime,
-                address: firstMyAddr,
-                vins: vins.join(','),
-                vouts: vouts.join(','),
-                amount: txBalance,
-                block: info.blockheight
-            };
-            return tx;
-        });
-    });
-}
-
-function fetchBlockchainChanges(addrObjs, knownTxIds) {
-    return mapSync(addrObjs, obj => fetchApi("addr/" + obj.addr).then(info => [obj, info])).then(results => {
-        const result = {
-            changedAddrs: [],
-            newTxs: []
-        };
-        const txIdSet = new Set();
-
-        for (const [obj, info] of results) {
-            if (obj.lastbalance !== info.balance) {
-                obj.balanceDiff = info.balance - (obj.lastbalance || 0);
-                obj.lastbalance = info.balance;
-                result.changedAddrs.push(obj);
-            }
-            info.transactions.forEach(txId => txIdSet.add(txId));
-        }
-
-        knownTxIds.forEach(txId => txIdSet.delete(txId));
-        return fetchTransactions([...txIdSet], addrObjs.map(obj => obj.addr))
-            .then(newTxs => {
-                result.newTxs = List(newTxs).sortBy(tx => tx.block).toArray();
-                return result;
-            });
-	});
-}
-
-function updateBlockchainView(webContents) {
-    const addrObjs = sqlSelectObjects('SELECT addr, name, lastbalance FROM wallet');
-    const knownTxIds = sqlSelectColumns('SELECT DISTINCT txid FROM transactions').map(row => row[0]);
-    let totalBalance = addrObjs.filter(obj => obj.lastbalance).reduce((sum, a) => sum + a.lastbalance, 0);
-
-    // TODO send updates in batch
-    fetchBlockchainChanges(addrObjs, knownTxIds).then(result => {
-        for (const addrObj of result.changedAddrs) {
-            sqlRun('UPDATE wallet SET lastbalance = ? WHERE addr = ?', [addrObj.lastbalance, addrObj.addr]);
-            totalBalance += addrObj.balanceDiff;
-            webContents.send('update-wallet-balance', JSON.stringify({
-                response: 'OK',
-                addrObj: addrObj,
-                diff: addrObj.balanceDiff,
-                total: totalBalance
-            }));
-        }
-
-        // Why here ? In case balance is unchanged the 'update-wallet-balance' is never sent, but the Zen/Fiat balance will change.
-        webContents.send('send-refreshed-wallet-balance', totalBalance);
-
-        for (const tx of result.newTxs) {
-            if (tx.block >= 0) {
-                sqlRun('INSERT INTO transactions VALUES (?,?,?,?,?,?,?,?)',
-                    [null, tx.txid, tx.time, tx.address, tx.vins, tx.vouts, tx.amount, tx.block]);
-            }
-            webContents.send('get-transaction-update', JSON.stringify(tx));
-        }
-    })
-	.catch(err => {
-        console.log('Failed to fetch blockchain changes: ', err);
-    });
-}
-
-
-function exportPKs() {
-    function exportToFile(filename, overwrite = false) {
-        fs.open(filename, 'w', 0o600, (err, fd) => {
-            if (err)
-                console.error(`Couldn't open "${filename}" for writing: `, err);
-            else {
-                const keys = sqlSelectObjects("select pk, addr from wallet");
-                for (let k of keys) {
-                    const wif = zencashjs.address.privKeyToWIF(k.pk);
-                    fs.write(fd, wif + " " + k.addr + "\n");
-                }
-            }
-        });
-    }
-
-    dialog.showSaveDialog({
-        title: "Choose file for private keys",
-        defaultPath: "arizen-private-keys.txt"
-    }, filename => {
-        if (filename)
-            exportToFile(filename);
-    });
-}
-
-function importPKs() {
-    function importFromFile(filename) {
-        let i = 1;
-        fs.readFileSync(filename).toString().split('\n').filter(x => x).forEach(line => {
-            const matches = line.match(/^\w+/);
-            if (matches) {
-                let pk = matches[0];
-                try {
-                    if (pk.length !== 64)
-                        pk = zencashjs.address.WIFToPrivKey(pk);
-                    const pub = zencashjs.address.privKeyToPubKey(pk, true);
-                    const addr = zencashjs.address.pubKeyToAddr(pub);
-                    sqlRun("insert or ignore into wallet (pk, addr, lastbalance) values (?, ?, 0)", [pk, addr]);
-                } catch(err) {
-                    console.log(`Invalid private key on line ${i} in private keys file "${filename}": `, err);
-                }
-            }
-            i++;
-        });
-    }
-
-    dialog.showOpenDialog({
-        title: "Choose file with private keys"
-    }, filenames => {
-        if (filenames) {
-            for (let f of filenames)
-                importFromFile(f);
-            // TODO: save only if at least one key was inserted
-            saveWallet();
-            sendWallet();
-        }
-    });
-}
-
-function sendWallet() {
-    if (!userInfo.loggedIn)
-        return;
-    const resp = {};
-    resp.response = 'OK';
-    resp.autorefresh = settings.autorefresh;
-    resp.wallets = sqlSelectObjects('SELECT * FROM wallet ORDER BY lastbalance DESC, id DESC');
-    resp.transactions = sqlSelectObjects('SELECT * FROM transactions ORDER BY time DESC LIMIT ' + settings.txHistory);
-    resp.total =  resp.wallets.reduce((sum, a) => sum + a.lastbalance, 0);
-
-    mainWindow.webContents.send("get-wallets-response", JSON.stringify(resp));
-    updateBlockchainView(mainWindow.webContents);
-}
+    importOnePK(pk, name);
+    saveWallet();
+    sendWallet();
+});
 
 ipcMain.on("get-wallets", () => {
     mainWindow.webContents.send("settings", JSON.stringify(settings));
@@ -929,7 +1111,7 @@ ipcMain.on("get-wallets", () => {
 });
 
 ipcMain.on("refresh-wallet", function (event) {
-    let resp = { response: 'ERR' };
+    let resp = {response: "ERR"};
 
     if (userInfo.loggedIn) {
         updateBlockchainView(event.sender);
@@ -1002,8 +1184,9 @@ ipcMain.on("generate-wallet", function (event, name) {
 });
 
 ipcMain.on("save-settings", function (event, newSettingsStr) {
-    if (!userInfo.loggedIn)
+    if (!userInfo.loggedIn) {
         return;
+    }
     const newSettings = JSON.parse(newSettingsStr);
     saveSettings(newSettings);
     settings = newSettings;
@@ -1017,6 +1200,15 @@ ipcMain.on("show-notification", function (event, title, message, duration) {
     } else {
         console.log(title + ": " + message);
     }
+});
+
+ipcMain.on("check-if-z-address-in-wallet", function(event,zAddress){
+    let exist = false;
+    let result = sqlSelectObjects("Select * from wallet"); // or ("Select * from wallet where addr = ?", [zAddress]);
+    for (let k of result){
+      if (k.addr === zAddress) {exist = true ; break;}
+    }
+    event.returnValue = {exist: exist, result: result};
 });
 
 function checkSendParameters(fromAddresses, toAddresses, fee) {
@@ -1118,43 +1310,43 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
         let satoshisSoFar = 0;
         let history = [];
         let recipients = [{address: toAddress, satoshis: amountInSatoshi}];
-        request.get(prevTxURL, function (tx_err, tx_resp, tx_body) {
-            if (tx_err) {
-                console.log(tx_err);
-                event.sender.send("send-finish", "error", "tx_err: " + String(tx_err));
-            } else if (tx_resp && tx_resp.statusCode === 200) {
-                let tx_data = JSON.parse(tx_body);
-                request.get(infoURL, function (info_err, info_resp, info_body) {
-                    if (info_err) {
-                        console.log(info_err);
-                        event.sender.send("send-finish", "error", "info_err: " + String(info_err));
-                    } else if (info_resp && info_resp.statusCode === 200) {
-                        let info_data = JSON.parse(info_body);
-                        const blockHeight = info_data.info.blocks - 300;
+        request.get(prevTxURL, function (txErr, txResp, txBody) {
+            if (txErr) {
+                console.log(txErr);
+                event.sender.send("send-finish", "error", "txErr: " + String(txErr));
+            } else if (txResp && txResp.statusCode === 200) {
+                let txData = JSON.parse(txBody);
+                request.get(infoURL, function (infoErr, infoResp, infoBody) {
+                    if (infoErr) {
+                        console.log(infoErr);
+                        event.sender.send("send-finish", "error", "infoErr: " + String(infoErr));
+                    } else if (infoResp && infoResp.statusCode === 200) {
+                        let infoData = JSON.parse(infoBody);
+                        const blockHeight = infoData.info.blocks - 300;
                         const blockHashURL = zenApi + "/block-index/" + blockHeight;
 
                         // Get block hash
-                        request.get(blockHashURL, function (bhash_err, bhash_resp, bhash_body) {
-                            if (bhash_err) {
-                                console.log(bhash_err);
-                                event.sender.send("send-finish", "error", "bhash_err: " + String(bhash_err));
-                            } else if (bhash_resp && bhash_resp.statusCode === 200) {
-                                const blockHash = JSON.parse(bhash_body).blockHash;
+                        request.get(blockHashURL, function (bhashErr, bhashResp, bhashBody) {
+                            if (bhashErr) {
+                                console.log(bhashErr);
+                                event.sender.send("send-finish", "error", "bhashErr: " + String(bhashErr));
+                            } else if (bhashResp && bhashResp.statusCode === 200) {
+                                const blockHash = JSON.parse(bhashBody).blockHash;
 
                                 // Iterate through each utxo and append it to history
-                                for (let i = 0; i < tx_data.length; i++) {
-                                    if (tx_data[i].confirmations === 0) {
+                                for (let i = 0; i < txData.length; i++) {
+                                    if (txData[i].confirmations === 0) {
                                         continue;
                                     }
 
                                     history = history.concat( {
-                                        txid: tx_data[i].txid,
-                                        vout: tx_data[i].vout,
-                                        scriptPubKey: tx_data[i].scriptPubKey
+                                        txid: txData[i].txid,
+                                        vout: txData[i].vout,
+                                        scriptPubKey: txData[i].scriptPubKey
                                     });
 
                                     // How many satoshis we have so far
-                                    satoshisSoFar = satoshisSoFar + tx_data[i].satoshis;
+                                    satoshisSoFar = satoshisSoFar + txData[i].satoshis;
                                     if (satoshisSoFar >= amountInSatoshi + feeInSatoshi) {
                                         break;
                                     }
@@ -1163,16 +1355,13 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
                                 // If we don't have enough address - fail and tell it to the user
                                 if (satoshisSoFar < amountInSatoshi + feeInSatoshi) {
                                     let errStr = tr("wallet.tabWithdraw.messages.insufficientFundsSourceAddr", "Insufficient funds on source address!");
-                                    /*let errStr = "You don't have so many funds! You wanted to send: " +
-                                        Number((amountInSatoshi + feeInSatoshi) / 100000000).toFixed(8) + " ZEN, but your balance is only: " +
-                                        Number(satoshisSoFar / 100000000).toFixed(8) + " ZEN.";*/
                                     console.log(errStr);
                                     event.sender.send("send-finish", "error", errStr);
                                 } else {
                                     // If we don't have exact amount - refund remaining to current address
                                     if (satoshisSoFar !== (amountInSatoshi + feeInSatoshi)) {
                                         let refundSatoshis = satoshisSoFar - amountInSatoshi - feeInSatoshi;
-                                        recipients = recipients.concat({address: fromAddress, satoshis: refundSatoshis})
+                                        recipients = recipients.concat({address: fromAddress, satoshis: refundSatoshis});
                                     }
 
                                     // Create transaction
@@ -1180,39 +1369,39 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
 
                                     // Sign each history transcation
                                     for (let i = 0; i < history.length; i ++) {
-                                        txObj = zencashjs.transaction.signTx(txObj, i, privateKey, true)
+                                        txObj = zencashjs.transaction.signTx(txObj, i, privateKey, true);
                                     }
 
                                     // Convert it to hex string
                                     const txHexString = zencashjs.transaction.serializeTx(txObj);
-                                    request.post({url: sendRawTxURL, form: {rawtx: txHexString}}, function(sendtx_err, sendtx_resp, sendtx_body) {
-                                        if (sendtx_err) {
-                                            console.log(sendtx_err);
-                                            event.sender.send("send-finish", "error", "sendtx_err: " + String(sendtx_err));
-                                        } else if(sendtx_resp && sendtx_resp.statusCode === 200) {
-                                            const tx_resp_data = JSON.parse(sendtx_body);
-                                            let message = "TXid:\n\n<small><small>" + tx_resp_data.txid +
-                                                "</small></small><br /><a href=\"javascript:void(0)\" onclick=\"openUrl('" + settings.explorerUrl + "/tx/" + tx_resp_data.txid +"')\" class=\"walletListItemDetails transactionExplorer\" target=\"_blank\">Show Transaction in Explorer</a>";
+                                    request.post({url: sendRawTxURL, form: {rawtx: txHexString}}, function(sendtxErr, sendtxResp, sendtxBody) {
+                                        if (sendtxErr) {
+                                            console.log(sendtxErr);
+                                            event.sender.send("send-finish", "error", "sendtxErr: " + String(sendtxErr));
+                                        } else if(sendtxResp && sendtxResp.statusCode === 200) {
+                                            const txRespData = JSON.parse(sendtxBody);
+                                            let message = "TXid:\n\n<small><small>" + txRespData.txid +
+                                                "</small></small><br /><a href=\"javascript:void(0)\" onclick=\"openUrl('" + settings.explorerUrl + "/tx/" + txRespData.txid +"')\" class=\"walletListItemDetails transactionExplorer\" target=\"_blank\">Show Transaction in Explorer</a>";
                                             event.sender.send("send-finish", "ok", message);
                                         } else {
-                                            console.log(sendtx_resp);
-                                            event.sender.send("send-finish", "error", "sendtx_resp: " + String(sendtx_resp));
+                                            console.log(sendtxResp);
+                                            event.sender.send("send-finish", "error", "sendtxResp: " + String(sendtxResp));
                                         }
                                     });
                                 }
                             } else {
-                                console.log(bhash_resp);
-                                event.sender.send("send-finish", "error", "bhash_resp: " + String(bhash_resp));
+                                console.log(bhashResp);
+                                event.sender.send("send-finish", "error", "bhashResp: " + String(bhashResp));
                             }
                         });
                     } else {
-                        console.log(info_resp);
-                        event.sender.send("send-finish", "error", "info_resp: " + String(info_resp));
+                        console.log(infoResp);
+                        event.sender.send("send-finish", "error", "infoResp: " + String(infoResp));
                     }
                 });
             } else {
-                console.log(tx_resp);
-                event.sender.send("send-finish", "error", "tx_resp: " + String(tx_resp));
+                console.log(txResp);
+                event.sender.send("send-finish", "error", "txResp: " + String(txResp));
             }
         });
     }
@@ -1234,199 +1423,216 @@ ipcMain.on("send-many", function (event, fromAddressesAll, toAddress, fee, thres
     } else {
         // VARIABLES ---------------------------------------------------------------------------------------------------
         // filter out all zero balanced wallets
-        let fromAddresses = [];
+        let fromAddressesTemp = [];
         for (let i = 0; i < fromAddressesAll.length; i++) {
             let sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet WHERE addr = '" + fromAddressesAll[i] + "'");
-            if (sqlRes[0].values[0][3] !== 0) {
-                fromAddresses.push(fromAddressesAll[i]);
+            if (sqlRes[0].values[0][3] !== 0 && sqlRes[0].values[0][3] !== thresholdLimit) {
+                fromAddressesTemp.push(fromAddressesAll[i]);
             }
         }
 
-        // TODO: check if fromAddresses.length == 0
-        const nFromAddresses = fromAddresses.length;
-        let privateKeys = new Array(nFromAddresses);
-        let amountsInSatoshi = new Array(nFromAddresses);
-        let err = "";
-        const satoshi = 100000000;
-
-        // CHECK ZEN API -----------------------------------------------------------------------------------------------
-        let zenApi = settings.apiUrls[0];
-        if (!zenApi) {
-            err = tr("wallet.tabWithdraw.messages.zenApi", "Zen API is not set in settings!");
-            console.log(err);
-            event.sender.send("send-finish", "error", err);
-            return;
-        }
-        if ((zenApi.substr(zenApi.length - 1)) === "/") {
-            zenApi = zenApi.substr(0, zenApi.length - 1);
+        let txFinished = 0;
+        let chunkSize = 10;
+        let finalMessage = "";
+        let chunks = [];
+        for (let i = 0, j = fromAddressesTemp.length; i < j; i += chunkSize) {
+            chunks.push(fromAddressesTemp.slice(i, i + chunkSize));
         }
 
-        // CONVERT TO SATOSHI ------------------------------------------------------------------------------------------
-        let feeInSatoshi = Math.round(fee * satoshi);
-        let thresholdLimitInSatoshi = Math.round(thresholdLimit * satoshi);
-        let balanceInSatoshi = 0;
-        for (let i = 0; i < nFromAddresses; i++) {
-            let sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet WHERE addr = '" + fromAddresses[i] + "'");
+        for (let c = 0; c < chunks.length; c++) {
+            let fromAddresses = chunks[c];
 
-            if (!sqlRes.length) {
-                err = tr("wallet.tabWithdraw.messages.unknownAddress", "Source address is not in your wallet!");
+            // TODO: check if fromAddresses.length == 0
+            const nFromAddresses = fromAddresses.length;
+            let privateKeys = new Array(nFromAddresses);
+            let amountsInSatoshi = new Array(nFromAddresses);
+            let err = "";
+            const satoshi = 100000000;
+
+            // CHECK ZEN API -----------------------------------------------------------------------------------------------
+            let zenApi = settings.apiUrls[0];
+            if (!zenApi) {
+                err = tr("wallet.tabWithdraw.messages.zenApi", "Zen API is not set in settings!");
+                console.log(err);
+                event.sender.send("send-finish", "error", err);
+                return;
+            }
+            if ((zenApi.substr(zenApi.length - 1)) === "/") {
+                zenApi = zenApi.substr(0, zenApi.length - 1);
+            }
+
+            // CONVERT TO SATOSHI ------------------------------------------------------------------------------------------
+            let feeInSatoshi = Math.round(fee * satoshi);
+            let thresholdLimitInSatoshi = Math.round(thresholdLimit * satoshi);
+            let balanceInSatoshi = 0;
+            for (let i = 0; i < nFromAddresses; i++) {
+                let sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet WHERE addr = '" + fromAddresses[i] + "'");
+
+                if (!sqlRes.length) {
+                    err = tr("wallet.tabWithdraw.messages.unknownAddress", "Source address is not in your wallet!");
+                    console.log(err);
+                    event.sender.send("send-finish", "error", err);
+                    return;
+                }
+
+                balanceInSatoshi = sqlRes[0].values[0][3];
+                if (i === 0) {
+                    if (balanceInSatoshi < (parseFloat(thresholdLimit) + parseFloat(fee))) {
+                        err = tr("wallet.tabWithdraw.messages.insufficientFirstSource", "Insufficient funds on 1st source (Minimum: threshold limit + fee)!");
+                        console.log(err);
+                        event.sender.send("send-finish", "error", err);
+                        return;
+                    }
+                    amountsInSatoshi[i] = Math.round((balanceInSatoshi - parseFloat(fee)) * satoshi);
+                } else {
+                    if (balanceInSatoshi < (parseFloat(thresholdLimit))) {
+                        err = tr("wallet.tabWithdraw.messages.insufficientNextSource", "Insufficient funds on 2nd or next source (Minimum: threshold limit)!");
+                        console.log(err);
+                        event.sender.send("send-finish", "error", err);
+                        return;
+                    }
+                    amountsInSatoshi[i] = Math.round(balanceInSatoshi * satoshi);
+                }
+                privateKeys[i] = sqlRes[0].values[0][1];
+            }
+
+            if (privateKeys.length !== nFromAddresses) {
+                err = tr("wallet.tabWithdraw.messages.numberOfKeys", "# private keys and # addresses are not equal!");
                 console.log(err);
                 event.sender.send("send-finish", "error", err);
                 return;
             }
 
-            balanceInSatoshi = sqlRes[0].values[0][3];
-            if (i === 0) {
-                if (balanceInSatoshi < (parseFloat(thresholdLimit) + parseFloat(fee))) {
-                    err = tr("wallet.tabWithdraw.messages.insufficientFirstSource", "Insufficient funds on 1st source (Minimum: threshold limit + fee)!");
-                    console.log(err);
-                    event.sender.send("send-finish", "error", err);
-                    return;
-                }
-                amountsInSatoshi[i] = Math.round((balanceInSatoshi - parseFloat(fee)) * satoshi);
-            } else {
-                if (balanceInSatoshi < (parseFloat(thresholdLimit))) {
-                    err = tr("wallet.tabWithdraw.messages.insufficientNextSource", "Insufficient funds on 2nd or next source (Minimum: threshold limit)!");
-                    console.log(err);
-                    event.sender.send("send-finish", "error", err);
-                    return;
-                }
-                amountsInSatoshi[i] = Math.round(balanceInSatoshi * satoshi);
+            // GET PREVIOUS TRANSACTIONS -----------------------------------------------------------------------------------
+            let prevTxURL = zenApi + "/addrs/";
+            for (let i = 0; i < nFromAddresses; i++) {
+                prevTxURL += fromAddresses[i] + ",";
             }
-            privateKeys[i] = sqlRes[0].values[0][1];
-        }
+            prevTxURL = prevTxURL.substring(0, prevTxURL.length - 1);
+            prevTxURL += "/utxo";
+            const infoURL = zenApi + "/status?q=getInfo";
+            const sendRawTxURL = zenApi + "/tx/send";
 
-        if (privateKeys.length !== nFromAddresses) {
-            err = tr("wallet.tabWithdraw.messages.numberOfKeys", "# private keys and # addresses are not equal!");
-            console.log(err);
-            event.sender.send("send-finish", "error", err);
-            return;
-        }
+            // BUILDING OUR TRANSACTION TXOBJ ------------------------------------------------------------------------------
+            // Calculate maximum ZEN satoshis that we have
+            let satoshisSoFar = 0;
+            let history = [];
+            let belongToAddress;
 
-        // GET PREVIOUS TRANSACTIONS -----------------------------------------------------------------------------------
-        let prevTxURL = zenApi + "/addrs/";
-        for (let i = 0; i < nFromAddresses; i++) {
-            prevTxURL += fromAddresses[i] + ",";
-        }
-        prevTxURL = prevTxURL.substring(0, prevTxURL.length - 1);
-        prevTxURL += "/utxo";
-        const infoURL = zenApi + "/status?q=getInfo";
-        const sendRawTxURL = zenApi + "/tx/send";
+            request.get(prevTxURL, function (txErr, txResp, txBody) {
+                if (txErr) {
+                    console.log(txErr);
+                    event.sender.send("send-finish", "error", "txErr: " + String(txErr));
+                } else if (txResp && txResp.statusCode === 200) {
+                    let txData = JSON.parse(txBody);
 
-        // BUILDING OUR TRANSACTION TXOBJ ------------------------------------------------------------------------------
-        // Calculate maximum ZEN satoshis that we have
-        let satoshisSoFar = 0;
-        let history = [];
-        let belongToAddress;
+                    request.get(infoURL, function (infoErr, infoResp, infoBody) {
+                        if (infoErr) {
+                            console.log(infoErr);
+                            event.sender.send("send-finish", "error", "infoErr: " + String(infoErr));
+                        } else if (infoResp && infoResp.statusCode === 200) {
+                            let infoData = JSON.parse(infoBody);
+                            const blockHeight = infoData.info.blocks - 300;
+                            const blockHashURL = zenApi + "/block-index/" + blockHeight;
 
-        request.get(prevTxURL, function (tx_err, tx_resp, tx_body) {
-            if (tx_err) {
-                console.log(tx_err);
-                event.sender.send("send-finish", "error", "tx_err: " + String(tx_err));
-            } else if (tx_resp && tx_resp.statusCode === 200) {
-                let tx_data = JSON.parse(tx_body);
+                            // Get block hash
+                            request.get(blockHashURL, function (bhashErr, bhashResp, bhashBody) {
+                                if (bhashErr) {
+                                    console.log(bhashErr);
+                                    event.sender.send("send-finish", "error", "bhashErr: " + String(bhashErr));
+                                } else if (bhashResp && bhashResp.statusCode === 200) {
+                                    const blockHash = JSON.parse(bhashBody).blockHash;
 
-                request.get(infoURL, function (info_err, info_resp, info_body) {
-                    if (info_err) {
-                        console.log(info_err);
-                        event.sender.send("send-finish", "error", "info_err: " + String(info_err));
-                    } else if (info_resp && info_resp.statusCode === 200) {
-                        let info_data = JSON.parse(info_body);
-                        const blockHeight = info_data.info.blocks - 300;
-                        const blockHashURL = zenApi + "/block-index/" + blockHeight;
+                                    belongToAddress = new Array(txData.length);
+                                    // Iterate through each utxo and append it to history
+                                    for (let i = 0; i < txData.length; i++) {
+                                        if (txData[i].confirmations === 0) {
+                                            continue;
+                                        }
 
-                        // Get block hash
-                        request.get(blockHashURL, function (bhash_err, bhash_resp, bhash_body) {
-                            if (bhash_err) {
-                                console.log(bhash_err);
-                                event.sender.send("send-finish", "error", "bhash_err: " + String(bhash_err));
-                            } else if (bhash_resp && bhash_resp.statusCode === 200) {
-                                const blockHash = JSON.parse(bhash_body).blockHash;
+                                        history = history.concat({
+                                            txid: txData[i].txid,
+                                            vout: txData[i].vout,
+                                            scriptPubKey: txData[i].scriptPubKey
+                                        });
 
-                                belongToAddress = new Array(tx_data.length);
-                                // Iterate through each utxo and append it to history
-                                for (let i = 0; i < tx_data.length; i++) {
-                                    if (tx_data[i].confirmations === 0) {
-                                        continue;
+                                        // to which address bellog this data
+                                        belongToAddress[i] = txData[i].address;
+
+                                        // How many satoshis we have so far
+                                        satoshisSoFar += txData[i].satoshis;
                                     }
 
-                                    history = history.concat({
-                                        txid: tx_data[i].txid,
-                                        vout: tx_data[i].vout,
-                                        scriptPubKey: tx_data[i].scriptPubKey
-                                    });
+                                    if ((satoshisSoFar - (nFromAddresses * thresholdLimitInSatoshi)) < feeInSatoshi) {
 
-                                    // to which address bellog this data
-                                    belongToAddress[i] = tx_data[i].address;
+                                        err = tr("wallet.tabWithdraw.messages.sumLowerThanFee", "Your summed balance over all source addresses is lower than the fee!");
+                                        console.log(err);
+                                        event.sender.send("send-finish", "error", err);
+                                    } else {
+                                        let amountInSatoshiToSend = satoshisSoFar - (nFromAddresses * thresholdLimitInSatoshi) - feeInSatoshi;
+                                        let recipients = [{address: toAddress, satoshis: amountInSatoshiToSend}];
 
-                                    // How many satoshis we have so far
-                                    satoshisSoFar += tx_data[i].satoshis;
-                                }
+                                        // Refund thresholdLimitInSatoshi amount to current address
+                                        if (thresholdLimitInSatoshi > 0) {
+                                            for (let i = 0; i < nFromAddresses; i++) {
+                                                recipients = recipients.concat({
+                                                    address: fromAddresses[i],
+                                                    satoshis: thresholdLimitInSatoshi
+                                                });
+                                            }
+                                        }
 
-                                if ((satoshisSoFar - (nFromAddresses * thresholdLimitInSatoshi)) < feeInSatoshi) {
-                                    err = tr("wallet.tabWithdraw.messages.sumLowerThanFee", "Your summed balance over all source addresses is lower than the fee!");
-                                    console.log(err);
-                                    event.sender.send("send-finish", "error", err);
+                                        // Create transaction
+                                        let txObj = zencashjs.transaction.createRawTx(history, recipients, blockHeight, blockHash);
+
+                                        // Sign each history transcation
+                                        let index;
+                                        for (let i = 0; i < history.length; i++) {
+                                            index = fromAddresses.indexOf(belongToAddress[i]);
+                                            txObj = zencashjs.transaction.signTx(txObj, i, privateKeys[index], true);
+                                        }
+
+                                        // Convert it to hex string
+                                        const txHexString = zencashjs.transaction.serializeTx(txObj);
+
+                                        request.post({
+                                            url: sendRawTxURL,
+                                            form: {rawtx: txHexString}
+                                        }, function (sendtxErr, sendtxResp, sendtxBody) {
+                                            if (sendtxErr) {
+                                                console.log(sendtxErr);
+                                                event.sender.send("send-finish", "error", "sendtxErr: " + String(sendtxErr));
+                                            } else if (sendtxResp && sendtxResp.statusCode === 200) {
+                                                const txRespData = JSON.parse(sendtxBody);
+                                                finalMessage += `<a href="javascript:void(0)" onclick="openUrl('${settings.explorerUrl}/tx/${txRespData.txid}')" class="walletListItemDetails transactionExplorer monospace" target="_blank">${txRespData.txid}</a>`;
+                                                finalMessage += "<br/>\n\n";
+
+                                                txFinished += 1;
+                                                if (txFinished === chunks.length) {
+                                                    event.sender.send("send-finish", "ok", finalMessage);
+                                                }
+                                            } else {
+                                                console.log(sendtxResp);
+                                                event.sender.send("send-finish", "error", "sendtxResp: " + String(sendtxResp));
+                                            }
+                                        });
+                                    }
                                 } else {
-                                    let amountInSatoshiToSend = satoshisSoFar - (nFromAddresses * thresholdLimitInSatoshi) - feeInSatoshi;
-                                    let recipients = [{address: toAddress, satoshis: amountInSatoshiToSend}];
-
-                                    // Refund thresholdLimitInSatoshi amount to current address
-                                    if (thresholdLimitInSatoshi > 0) {
-                                        for (let i = 0; i < nFromAddresses; i++) {
-                                            recipients = recipients.concat({
-                                                address: fromAddresses[i],
-                                                satoshis: thresholdLimitInSatoshi
-                                            })
-                                        }
-                                    }
-
-                                    // Create transaction
-                                    let txObj = zencashjs.transaction.createRawTx(history, recipients, blockHeight, blockHash);
-
-                                    // Sign each history transcation
-                                    let index;
-                                    for (let i = 0; i < history.length; i++) {
-                                        index = fromAddresses.indexOf(belongToAddress[i]);
-                                        txObj = zencashjs.transaction.signTx(txObj, i, privateKeys[index], true)
-                                    }
-
-                                    // Convert it to hex string
-                                    const txHexString = zencashjs.transaction.serializeTx(txObj);
-
-                                    request.post({
-                                        url: sendRawTxURL,
-                                        form: {rawtx: txHexString}
-                                    }, function (sendtx_err, sendtx_resp, sendtx_body) {
-                                        if (sendtx_err) {
-                                            console.log(sendtx_err);
-                                            event.sender.send("send-finish", "error", "sendtx_err: " + String(sendtx_err));
-                                        } else if (sendtx_resp && sendtx_resp.statusCode === 200) {
-                                            const tx_resp_data = JSON.parse(sendtx_body);
-                                            let message = "TXid:\n\n<small><small>" + tx_resp_data.txid +
-                                                "</small></small><br /><a href=\"javascript:void(0)\" onclick=\"openUrl('" + settings.explorerUrl + "/tx/" + tx_resp_data.txid + "')\" class=\"walletListItemDetails transactionExplorer\" target=\"_blank\">Show Transaction in Explorer</a>";
-                                            event.sender.send("send-finish", "ok", message);
-                                        } else {
-                                            console.log(sendtx_resp);
-                                            event.sender.send("send-finish", "error", "sendtx_resp: " + String(sendtx_resp));
-                                        }
-                                    });
+                                    console.log(bhashResp);
+                                    event.sender.send("send-finish", "error", "bhashResp: " + String(bhashResp));
                                 }
-                            } else {
-                                console.log(bhash_resp);
-                                event.sender.send("send-finish", "error", "bhash_resp: " + String(bhash_resp));
-                            }
-                        });
-                    } else {
-                        console.log(info_resp);
-                        event.sender.send("send-finish", "error", "info_resp: " + String(info_resp));
-                    }
-                });
-            } else {
-                console.log(tx_resp);
-                event.sender.send("send-finish", "error", "tx_resp: " + String(tx_resp));
-            }
-        });
+                            });
+                        } else {
+                            console.log(infoResp);
+                            event.sender.send("send-finish", "error", "infoResp: " + String(infoResp));
+                        }
+                    });
+                } else {
+                    console.log(txResp);
+                    event.sender.send("send-finish", "error", "txResp: " + String(txResp));
+                }
+            });
+        }
     }
 });
 
@@ -1435,12 +1641,19 @@ ipcMain.on("create-paper-wallet", (event, name, addToWallet) => {
     if (addToWallet) {
         const addr = getNewAddress(name);
         mainWindow.webContents.send("generate-wallet-response",
-            JSON.stringify({ response: "OK", addr: addr }));
+            JSON.stringify({response: "OK", addr: addr}));
         wif = addr.wif;
-    }
-    else
+    } else {
         wif = generateNewAddress(1, userInfo.pass)[0];
+    }
     mainWindow.webContents.send("export-paper-wallet", wif, name);
+});
+
+ipcMain.on("renderer-show-message-box", (event, msgStr, buttons) => {
+    buttons = buttons.concat([tr("warmingMessages.cancel","Cancel")])
+    dialog.showMessageBox({type: "warning", title: "Important Information", message: msgStr, buttons: buttons, cancelId: -1 }, function(response) {
+      event.returnValue = response;
+    });
 });
 
 // Unused
