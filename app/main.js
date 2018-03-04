@@ -72,10 +72,14 @@ const defaultSettings = {
     ],
     txHistory: 50,
     fiatCurrency: "USD",
-    lang: "en"
+    lang: "en",
+    domainFronting: false
 };
 let settings = defaultSettings;
 let langDict;
+
+const DOMAIN_FRONTING_PUBLIC_URL = "http://www.google.com";
+const DOMAIN_FRONTING_PRIVATE_HOST = "zendhide.appspot.com";
 
 const dbStructWallet = "CREATE TABLE wallet (id INTEGER PRIMARY KEY AUTOINCREMENT, pk TEXT, addr TEXT UNIQUE, lastbalance REAL, name TEXT);";
 const dbStructSettings = "CREATE TABLE settings (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE, value TEXT);";
@@ -524,8 +528,52 @@ function importOnePK(pk, name = "") {
     }
 }
 
-function fetchJson(url) {
-    return fetch(url).then(resp => {
+function appendUrlPath(base, path) {
+    let url = base;
+    if (base.endsWith("/")) {
+        if (path.startsWith("/"))
+            return base + path.substring(1);
+        else
+            return base + path;
+    }
+    else {
+        if (path.startsWith("/"))
+            return base + path;
+        else
+            return base + "/" + path;
+    }
+    return url + path;
+}
+
+function requestSetApiUrl(path, options) {
+    let apiUrl;
+    if (settings.domainFronting)
+        apiUrl = DOMAIN_FRONTING_PUBLIC_URL;
+    else
+        apiUrl = settings.apiUrls[0];
+    if (!apiUrl)
+        return null;
+    options.url = appendUrlPath(apiUrl, path);
+    return options;
+}
+
+function requestApi(path, callback) {
+    const options = requestSetApiUrl(path, {});
+    if (!options)
+        return;
+    request.get(options, callback);
+}
+
+function requestApiPost(path, form, callback) {
+    let options = requestSetApiUrl(path, {});
+    if (!options)
+        return;
+    options.form = form;
+    request.post(options, callback);
+}
+
+function fetchJson(url, options = undefined) {
+    return fetch(url, options).then(resp => {
         if (!resp.ok) {
             throw new Error(`HTTP GET status: ${resp.status} ${resp.statusText}, URL: ${url}`);
         }
@@ -534,11 +582,17 @@ function fetchJson(url) {
 }
 
 function fetchApi(path) {
+    if (settings.domainFronting) {
+        const url = appendUrlPath(DOMAIN_FRONTING_PUBLIC_URL, path);
+        const options = { headers: { "Host": DOMAIN_FRONTING_PRIVATE_HOST } };
+        return fetchJson(url, options);
+    }
+
     const urls = settings.apiUrls;
     let errors = [];
     const fetchApiFrom = (i) => {
         if (i < urls.length) {
-            return fetchJson(urls[i] + "/" + path).catch(err => {
+            return fetchJson(appendUrlPath(urls[i], path)).catch(err => {
                 console.log(`ERROR fetching from: ${urls[i]}: `, err);
                 errors.push(err);
                 return fetchApiFrom(i + 1);
@@ -1291,42 +1345,32 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
         }
         let privateKey = sqlRes[0].values[0][1];
 
-        // Get previous transactions
-        let zenApi = settings.apiUrls[0];
-        if (!zenApi) {
-            console.log( tr("wallet.tabWithdraw.messages.zenApi","No Zen api in settings"));
-            return;
-        }
-        if ((zenApi.substr(zenApi.length - 1)) === "/"){
-            zenApi = zenApi.substr(0, zenApi.length - 1);
-        }
-
-        const prevTxURL = zenApi + "/addr/" + fromAddress + "/utxo";
-        const infoURL = zenApi + "/status?q=getInfo";
-        const sendRawTxURL = zenApi + "/tx/send";
+        const prevTxURL = "/addr/" + fromAddress + "/utxo";
+        const infoURL = "/status?q=getInfo";
+        const sendRawTxURL = "/tx/send";
 
         // Building our transaction TXOBJ
         // Calculate maximum ZEN satoshis that we have
         let satoshisSoFar = 0;
         let history = [];
         let recipients = [{address: toAddress, satoshis: amountInSatoshi}];
-        request.get(prevTxURL, function (txErr, txResp, txBody) {
+        requestApi(prevTxURL, function (txErr, txResp, txBody) {
             if (txErr) {
                 console.log(txErr);
                 event.sender.send("send-finish", "error", "txErr: " + String(txErr));
             } else if (txResp && txResp.statusCode === 200) {
                 let txData = JSON.parse(txBody);
-                request.get(infoURL, function (infoErr, infoResp, infoBody) {
+                requestApi(infoURL, function (infoErr, infoResp, infoBody) {
                     if (infoErr) {
                         console.log(infoErr);
                         event.sender.send("send-finish", "error", "infoErr: " + String(infoErr));
                     } else if (infoResp && infoResp.statusCode === 200) {
                         let infoData = JSON.parse(infoBody);
                         const blockHeight = infoData.info.blocks - 300;
-                        const blockHashURL = zenApi + "/block-index/" + blockHeight;
+                        const blockHashURL = "/block-index/" + blockHeight;
 
                         // Get block hash
-                        request.get(blockHashURL, function (bhashErr, bhashResp, bhashBody) {
+                        requestApi(blockHashURL, function (bhashErr, bhashResp, bhashBody) {
                             if (bhashErr) {
                                 console.log(bhashErr);
                                 event.sender.send("send-finish", "error", "bhashErr: " + String(bhashErr));
@@ -1374,7 +1418,7 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
 
                                     // Convert it to hex string
                                     const txHexString = zencashjs.transaction.serializeTx(txObj);
-                                    request.post({url: sendRawTxURL, form: {rawtx: txHexString}}, function(sendtxErr, sendtxResp, sendtxBody) {
+                                    requestApiPost(sendRawTxURL, {rawtx: txHexString}, function(sendtxErr, sendtxResp, sendtxBody) {
                                         if (sendtxErr) {
                                             console.log(sendtxErr);
                                             event.sender.send("send-finish", "error", "sendtxErr: " + String(sendtxErr));
@@ -1449,18 +1493,6 @@ ipcMain.on("send-many", function (event, fromAddressesAll, toAddress, fee, thres
             let err = "";
             const satoshi = 100000000;
 
-            // CHECK ZEN API -----------------------------------------------------------------------------------------------
-            let zenApi = settings.apiUrls[0];
-            if (!zenApi) {
-                err = tr("wallet.tabWithdraw.messages.zenApi", "Zen API is not set in settings!");
-                console.log(err);
-                event.sender.send("send-finish", "error", err);
-                return;
-            }
-            if ((zenApi.substr(zenApi.length - 1)) === "/") {
-                zenApi = zenApi.substr(0, zenApi.length - 1);
-            }
-
             // CONVERT TO SATOSHI ------------------------------------------------------------------------------------------
             let feeInSatoshi = Math.round(fee * satoshi);
             let thresholdLimitInSatoshi = Math.round(thresholdLimit * satoshi);
@@ -1504,14 +1536,14 @@ ipcMain.on("send-many", function (event, fromAddressesAll, toAddress, fee, thres
             }
 
             // GET PREVIOUS TRANSACTIONS -----------------------------------------------------------------------------------
-            let prevTxURL = zenApi + "/addrs/";
+            let prevTxURL = "/addrs/";
             for (let i = 0; i < nFromAddresses; i++) {
                 prevTxURL += fromAddresses[i] + ",";
             }
             prevTxURL = prevTxURL.substring(0, prevTxURL.length - 1);
             prevTxURL += "/utxo";
-            const infoURL = zenApi + "/status?q=getInfo";
-            const sendRawTxURL = zenApi + "/tx/send";
+            const infoURL = "/status?q=getInfo";
+            const sendRawTxURL = "/tx/send";
 
             // BUILDING OUR TRANSACTION TXOBJ ------------------------------------------------------------------------------
             // Calculate maximum ZEN satoshis that we have
@@ -1519,24 +1551,24 @@ ipcMain.on("send-many", function (event, fromAddressesAll, toAddress, fee, thres
             let history = [];
             let belongToAddress;
 
-            request.get(prevTxURL, function (txErr, txResp, txBody) {
+            requestApi(prevTxURL, function (txErr, txResp, txBody) {
                 if (txErr) {
                     console.log(txErr);
                     event.sender.send("send-finish", "error", "txErr: " + String(txErr));
                 } else if (txResp && txResp.statusCode === 200) {
                     let txData = JSON.parse(txBody);
 
-                    request.get(infoURL, function (infoErr, infoResp, infoBody) {
+                    requestApi(infoURL, function (infoErr, infoResp, infoBody) {
                         if (infoErr) {
                             console.log(infoErr);
                             event.sender.send("send-finish", "error", "infoErr: " + String(infoErr));
                         } else if (infoResp && infoResp.statusCode === 200) {
                             let infoData = JSON.parse(infoBody);
                             const blockHeight = infoData.info.blocks - 300;
-                            const blockHashURL = zenApi + "/block-index/" + blockHeight;
+                            const blockHashURL = "/block-index/" + blockHeight;
 
                             // Get block hash
-                            request.get(blockHashURL, function (bhashErr, bhashResp, bhashBody) {
+                            requestApi(blockHashURL, function (bhashErr, bhashResp, bhashBody) {
                                 if (bhashErr) {
                                     console.log(bhashErr);
                                     event.sender.send("send-finish", "error", "bhashErr: " + String(bhashErr));
@@ -1595,10 +1627,7 @@ ipcMain.on("send-many", function (event, fromAddressesAll, toAddress, fee, thres
                                         // Convert it to hex string
                                         const txHexString = zencashjs.transaction.serializeTx(txObj);
 
-                                        request.post({
-                                            url: sendRawTxURL,
-                                            form: {rawtx: txHexString}
-                                        }, function (sendtxErr, sendtxResp, sendtxBody) {
+                                        requestApiPost(sendRawTxURL, {rawtx: txHexString}, function (sendtxErr, sendtxResp, sendtxBody) {
                                             if (sendtxErr) {
                                                 console.log(sendtxErr);
                                                 event.sender.send("send-finish", "error", "sendtxErr: " + String(sendtxErr));

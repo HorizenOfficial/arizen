@@ -264,6 +264,7 @@ function showSettingsDialog() {
         const inputFiatCurrency = dialog.querySelector(".settingsFiatCurrency");
         const inputLanguages = dialog.querySelector(".settingsLanguage");
         const inputNotifications = dialog.querySelector(".enableNotifications");
+        const inputDomainFronting = dialog.querySelector(".enableDomainFronting");
 
         inputTxHistory.value = settings.txHistory;
         inputExplorerUrl.value = settings.explorerUrl;
@@ -271,6 +272,7 @@ function showSettingsDialog() {
         inputApiUrls.value = settings.apiUrls.join("\n");
         inputFiatCurrency.value = settings.fiatCurrency;
         inputNotifications.checked = settings.notifications;
+        inputDomainFronting.checked = settings.domainFronting || false;
 
         // An existing user has empty value settings.fiatCurrency
         if (settings.fiatCurrency === "" || settings.fiatCurrency === undefined || settings.fiatCurrency === null) {
@@ -286,6 +288,7 @@ function showSettingsDialog() {
                 fiatCurrency: inputFiatCurrency.value,
                 lang: inputLanguages[inputLanguages.selectedIndex].value,
                 notifications: inputNotifications.checked ? 1 : 0,
+                domainFronting: inputDomainFronting.checked
             };
 
             if (settings.lang !== newSettings.lang)

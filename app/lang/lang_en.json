@@ -162,7 +162,8 @@
       "explorerUrl": "ZEN Explorer URL",
       "apiUrl": "API URLs",
       "fiat": "Fiat Equivalent",
-      "save": "Save"
+      "save": "Save",
+      "enableDomainFronting": "Domain fronting"
     },
     "paperWallet": {
       "label": "Paper Wallet",
