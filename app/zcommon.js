@@ -100,7 +100,7 @@ function fixLinks(parent = document) {
 function fixAmountInputs(parent = document) {
     querySelectorAllDeep(".amountInput", parent).forEach(node => {
         function updateBalanceText() {
-            node.value = formatBalance(node.valueAsNumber, "en")
+            node.value = node.valueAsNumber.toFixed(8);
         }
 
         updateBalanceText();
