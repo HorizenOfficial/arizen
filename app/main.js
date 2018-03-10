@@ -572,13 +572,13 @@ function requestApiPost(path, form, callback) {
     request.post(options, callback);
 }
 
-function fetchJson(url, options = undefined) {
-    return fetch(url, options).then(resp => {
-        if (!resp.ok) {
-            throw new Error(`HTTP GET status: ${resp.status} ${resp.statusText}, URL: ${url}`);
-        }
-        return resp.json();
-    });
+async function fetchJson(url, options = undefined) {
+    console.log("Fetch API", url);
+    const resp = await fetch(url, options);
+    if (!resp.ok) {
+        throw new Error(`HTTP GET status: ${resp.status} ${resp.statusText}, URL: ${url}`);
+    }
+    return resp.json();
 }
 
 function fetchApi(path) {
@@ -604,147 +604,130 @@ function fetchApi(path) {
     return fetchApiFrom(0);
 }
 
-// TODO 1: better name
-// TODO 2: use async
-function mapSync(seq, asyncFunc) {
-    let results = [];
-    return seq.reduce(
-        (promise, item) => promise.then(() =>
-            asyncFunc(item)
-                .then(r => results.push(r))
-                .catch(() => promise) // skip this item
-        ),
-        Promise.resolve())
-        .then(() => results);
-}
+async function fetchTransactions(txIds, myAddrs) {
+    const txs = [];
+    const myAddrSet = new Set(myAddrs);
 
-function fetchTransactions(txIds, myAddrs) {
-    return mapSync(txIds, txId => fetchApi("tx/" + txId)).then(txInfos => {
-        // TODO
-        //txInfos.sort(tx => tx.blockheight)
-        const myAddrSet = new Set(myAddrs);
+    for (const txId of txIds) {
+        const info = await fetchApi("tx/" + txId);
 
-        return txInfos.map(info => {
-            let txBalance = 0;
-            const vins = [];
-            const vouts = [];
+        let txBalance = 0;
+        const vins = [];
+        const vouts = [];
 
-            // Address field in transaction rows is meaningless. Pick something sane.
-            let firstMyAddr;
+        // Address field in transaction rows is meaningless. Pick something sane.
+        let firstMyAddr;
 
-            for (const vout of info.vout) {
-                // XXX can it be something else?
-                if (!vout.scriptPubKey) {
-                    continue;
-                }
-                let balanceAccounted = false;
-                for (const addr of vout.scriptPubKey.addresses) {
-                    if (!balanceAccounted && myAddrSet.has(addr)) {
-                        balanceAccounted = true;
-                        txBalance += parseFloat(vout.value);
-                        if (!firstMyAddr) {
-                            firstMyAddr = addr;
-                        }
-                    }
-                    if (!vouts.includes(addr)) {
-                        vouts.push(addr);
-                    }
-                }
+        for (const vout of info.vout) {
+            // XXX can it be something else?
+            if (!vout.scriptPubKey) {
+                continue;
             }
-
-            for (const vin of info.vin) {
-                const addr = vin.addr;
-                if (myAddrSet.has(addr)) {
-                    txBalance -= parseFloat(vin.value);
+            let balanceAccounted = false;
+            for (const addr of vout.scriptPubKey.addresses) {
+                if (!balanceAccounted && myAddrSet.has(addr)) {
+                    balanceAccounted = true;
+                    txBalance += parseFloat(vout.value);
                     if (!firstMyAddr) {
                         firstMyAddr = addr;
                     }
                 }
-                if (!vins.includes(addr)) {
-                    vins.push(addr);
+                if (!vouts.includes(addr)) {
+                    vouts.push(addr);
                 }
             }
-
-            const tx = {
-                txid: info.txid,
-                time: info.blocktime,
-                address: firstMyAddr,
-                vins: vins.join(","),
-                vouts: vouts.join(","),
-                amount: txBalance,
-                block: info.blockheight
-            };
-            return tx;
-        });
-    });
-}
-
-function fetchBlockchainChanges(addrObjs, knownTxIds) {
-    return mapSync(addrObjs, obj => fetchApi("addr/" + obj.addr).then(info => [obj, info])).then(results => {
-        const result = {
-            changedAddrs: [],
-            newTxs: []
-        };
-        const txIdSet = new Set();
-
-        function addTxId(info) {
-            info.transactions.forEach(function (txId) {
-                return txIdSet.add(txId);
-            });
         }
 
-        for (const [obj, info] of results) {
-            if (obj.lastbalance !== info.balance) {
-                obj.balanceDiff = info.balance - (obj.lastbalance || 0);
-                obj.lastbalance = info.balance;
-                result.changedAddrs.push(obj);
+        for (const vin of info.vin) {
+            const addr = vin.addr;
+            if (myAddrSet.has(addr)) {
+                txBalance -= parseFloat(vin.value);
+                if (!firstMyAddr) {
+                    firstMyAddr = addr;
+                }
             }
-            addTxId(info);
+            if (!vins.includes(addr)) {
+                vins.push(addr);
+            }
         }
 
-        knownTxIds.forEach(txId => txIdSet.delete(txId));
-        return fetchTransactions([...txIdSet], addrObjs.map(obj => obj.addr))
-            .then(newTxs => {
-                result.newTxs = new List(newTxs).sortBy(tx => tx.block).toArray();
-                return result;
-            });
-    });
+        const tx = {
+            txid: info.txid,
+            time: info.blocktime,
+            address: firstMyAddr,
+            vins: vins.join(","),
+            vouts: vouts.join(","),
+            amount: txBalance,
+            block: info.blockheight
+        };
+
+        txs.push(tx);
+    }
+
+    return txs;
 }
 
-function updateBlockchainView(webContents) {
+async function fetchBlockchainChanges(addrObjs, knownTxIds) {
+    const result = {
+        changedAddrs: [],
+        newTxs: []
+    };
+    const txIdSet = new Set();
+
+    for (const obj of addrObjs) {
+        const info = await fetchApi("/addr/" + obj.addr);
+        if (obj.lastbalance !== info.balance) {
+            obj.balanceDiff = info.balance - (obj.lastbalance || 0);
+            obj.lastbalance = info.balance;
+            result.changedAddrs.push(obj);
+        }
+        info.transactions.forEach(txId => txIdSet.add(txId));
+    }
+
+    knownTxIds.forEach(txId => txIdSet.delete(txId));
+
+    const newTxs = await fetchTransactions([...txIdSet], addrObjs.map(obj => obj.addr));
+    result.newTxs = new List(newTxs).sortBy(tx => tx.block).toArray();
+
+    return result;
+}
+
+async function updateBlockchainView(webContents) {
     webContents.send("add-loading-image")
     const addrObjs = sqlSelectObjects("SELECT addr, name, lastbalance FROM wallet");
     const knownTxIds = sqlSelectColumns("SELECT DISTINCT txid FROM transactions").map(row => row[0]);
     let totalBalance = addrObjs.filter(obj => obj.lastbalance).reduce((sum, a) => sum + a.lastbalance, 0);
 
-    // TODO send updates in batch
-    fetchBlockchainChanges(addrObjs, knownTxIds).then(result => {
-        for (const addrObj of result.changedAddrs) {
-            sqlRun("UPDATE wallet SET lastbalance = ? WHERE addr = ?", [addrObj.lastbalance, addrObj.addr]);
-            totalBalance += addrObj.balanceDiff;
-            webContents.send("update-wallet-balance", JSON.stringify({
-                response: "OK",
-                addrObj: addrObj,
-                diff: addrObj.balanceDiff,
-                total: totalBalance
-            }));
-        }
+    let result;
+    try {
+        result = await fetchBlockchainChanges(addrObjs, knownTxIds);
+    } catch (e) {
+        console.log("Update from API failed", e);
+        return;
+    }
 
-        // Why here ? In case balance is unchanged the 'update-wallet-balance' is never sent, but the Zen/Fiat balance will change.
-        webContents.send("send-refreshed-wallet-balance", totalBalance);
+    for (const addrObj of result.changedAddrs) {
+        sqlRun("UPDATE wallet SET lastbalance = ? WHERE addr = ?", [addrObj.lastbalance, addrObj.addr]);
+        totalBalance += addrObj.balanceDiff;
+        webContents.send("update-wallet-balance", JSON.stringify({
+            response: "OK",
+            addrObj: addrObj,
+            diff: addrObj.balanceDiff,
+            total: totalBalance
+        }));
+    }
 
-        for (const tx of result.newTxs) {
-            if (tx.block >= 0) {
-                sqlRun("INSERT INTO transactions VALUES (?,?,?,?,?,?,?,?)",
-                    [null, tx.txid, tx.time, tx.address, tx.vins, tx.vouts, tx.amount, tx.block]);
-            }
-            webContents.send("get-transaction-update", JSON.stringify(tx));
+    // Why here ? In case balance is unchanged the 'update-wallet-balance' is never sent, but the Zen/Fiat balance will change.
+    webContents.send("send-refreshed-wallet-balance", totalBalance);
+
+    for (const tx of result.newTxs) {
+        if (tx.block >= 0) {
+            sqlRun("INSERT INTO transactions VALUES (?,?,?,?,?,?,?,?)",
+                [null, tx.txid, tx.time, tx.address, tx.vins, tx.vouts, tx.amount, tx.block]);
         }
-        webContents.send("remove-loading-image")
-    })
-        .catch(err => {
-            console.log("Failed to fetch blockchain changes: ", err);
-        });
+        webContents.send("get-transaction-update", JSON.stringify(tx));
+    }
+    webContents.send("remove-loading-image");
 }
 
 function sendWallet() {
