@@ -273,12 +273,7 @@ function showSettingsDialog() {
         inputFiatCurrency.value = settings.fiatCurrency;
         inputNotifications.checked = settings.notifications;
         inputDomainFronting.checked = settings.domainFronting || false;
-
-        // An existing user has empty value settings.fiatCurrency
-        if (settings.fiatCurrency === "" || settings.fiatCurrency === undefined || settings.fiatCurrency === null) {
-            inputFiatCurrency.value = "USD";
-        }
-        console.log(settings);
+        inputFiatCurrency.value = settings.fiatCurrency || "USD";
 
         dialog.querySelector(".settingsSave").addEventListener("click", () => {
             const newSettings = {
