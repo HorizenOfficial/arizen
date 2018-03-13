@@ -78,7 +78,7 @@ const defaultSettings = {
 let settings = defaultSettings;
 let langDict;
 
-const DOMAIN_FRONTING_PUBLIC_URL = "http://www.google.com";
+const DOMAIN_FRONTING_PUBLIC_URL = "https://www.google.com";
 const DOMAIN_FRONTING_PRIVATE_HOST = "zendhide.appspot.com";
 
 const dbStructWallet = "CREATE TABLE wallet (id INTEGER PRIMARY KEY AUTOINCREMENT, pk TEXT, addr TEXT UNIQUE, lastbalance REAL, name TEXT);";
