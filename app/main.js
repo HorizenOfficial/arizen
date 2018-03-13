@@ -547,12 +547,17 @@ function appendUrlPath(base, path) {
 
 function requestSetApiUrl(path, options) {
     let apiUrl;
-    if (settings.domainFronting)
+    if (settings.domainFronting) {
         apiUrl = DOMAIN_FRONTING_PUBLIC_URL;
-    else
+        if (!options.headers)
+            options.headers = {};
+        options.headers.Host = DOMAIN_FRONTING_PRIVATE_HOST;
+    }
+    else {
         apiUrl = settings.apiUrls[0];
-    if (!apiUrl)
-        return null;
+        if (!apiUrl)
+            return null;
+    }
     options.url = appendUrlPath(apiUrl, path);
     return options;
 }
@@ -561,6 +566,7 @@ function requestApi(path, callback) {
     const options = requestSetApiUrl(path, {});
     if (!options)
         return;
+    console.log("Request API", options.url);
     request.get(options, callback);
 }
 
