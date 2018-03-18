@@ -73,7 +73,10 @@ const defaultSettings = {
     txHistory: 50,
     fiatCurrency: "USD",
     lang: "en",
-    domainFronting: false
+    domainFronting: false,
+    secureNodeFQDN: "node.example.com",
+    secureNodeUsername: "user",
+    secureNodePassword: "userpass"
 };
 let settings = defaultSettings;
 let langDict;

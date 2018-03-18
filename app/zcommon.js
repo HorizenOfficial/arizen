@@ -265,6 +265,9 @@ function showSettingsDialog() {
         const inputLanguages = dialog.querySelector(".settingsLanguage");
         const inputNotifications = dialog.querySelector(".enableNotifications");
         const inputDomainFronting = dialog.querySelector(".enableDomainFronting");
+        const inputSecureNodeFQDN = dialog.querySelector(".settingsSecureNodeFQDN");
+        const inputSecureNodeUsername = dialog.querySelector(".settingsSecureNodeUsername");
+        const inputSecureNodePassword = dialog.querySelector(".settingsSecureNodePassword");        
 
         inputTxHistory.value = settings.txHistory;
         inputExplorerUrl.value = settings.explorerUrl;
@@ -274,6 +277,9 @@ function showSettingsDialog() {
         inputNotifications.checked = settings.notifications;
         inputDomainFronting.checked = settings.domainFronting || false;
         inputFiatCurrency.value = settings.fiatCurrency || "USD";
+        inputSecureNodeFQDN.value = settings.secureNodeFQDN;
+        inputSecureNodeUsername.value = settings.secureNodeUsername;
+        inputSecureNodePassword.value = settings.secureNodePassword;
 
         dialog.querySelector(".settingsSave").addEventListener("click", () => {
             const newSettings = {
@@ -283,7 +289,10 @@ function showSettingsDialog() {
                 fiatCurrency: inputFiatCurrency.value,
                 lang: inputLanguages[inputLanguages.selectedIndex].value,
                 notifications: inputNotifications.checked ? 1 : 0,
-                domainFronting: inputDomainFronting.checked
+                domainFronting: inputDomainFronting.checked,
+                secureNodeFQDN: inputSecureNodeFQDN.value,
+                secureNodeUsername: inputSecureNodeUsername.value,
+                secureNodePassword: inputSecureNodePassword.value
             };
 
             if (settings.lang !== newSettings.lang)
