@@ -110,6 +110,27 @@
     </arizen-dialog>
 </template>
 
+
+<!-- Delet me  -->
+<template id=tempRpcTemplate>
+    <arizen-dialog>
+        <h2 slot=headerText data-tr=wallet.importSinglePrivateKey.tmp>RPC</h2>
+        <div slot=content>
+            <div class=form>
+                <div data-tr=wallet.newAddress.tmp>Test me</div>
+                <!-- <input type=text class=newPrivateKeyDialogName />
+                <div data-tr=wallet.importSinglePrivateKey.privateKeyLabel>Private Key</div>
+                <input type=text class=newPrivateKeyDialogKey /> -->
+            </div>
+            <div class=formButtons>
+                <button class=testRPCButton data-tr=wallet.importSinglePrivateKey.testMe>Test Me</button>
+            </div>
+        </div>
+        <h2 id=resultRPC class=resultRPC slot=headerText data-tr=wallet.importSinglePrivateKey.tmp>RPC Result....</h2>
+    </arizen-dialog>
+</template>
+<!-- Delet me  -->
+
 <template id=addrSelectRowTemplate>
     <tr class=addrSelectRow>
         <td class=addrSelectRowName></td>
@@ -279,10 +300,12 @@
                 </label>
                 <label for=secureNodeFQDN data-tr=wallet.settings.secureNodeFQDN>Secure Node FQDN</label>
                 <input type=text name=settingsSecureNodeFQDN class=settingsSecureNodeFQDN />
+                <label for=secureNodePort data-tr=wallet.settings.secureNodePort>Secure Node Port</label>
+                <input type=text name=settingsSecureNodePort class=settingsSecureNodePort />
                 <label for=secureNodeUsername data-tr=wallet.settings.secureNodeUsername>Secure Node Username</label>
                 <input type=text name=settingsSecureNodeUsername class=settingsSecureNodeUsername />
                 <label for=secureNodePassword data-tr=wallet.settings.secureNodePassword>Secure Node Password</label>
-                <input type=text name=settingsSecureNodePassword class=settingsSecureNodePassword />                                
+                <input type=text name=settingsSecureNodePassword class=settingsSecureNodePassword />
             </div>
             <div class=formButtons>
                 <button class=settingsSave data-tr=wallet.settings.save>Save</button>
@@ -299,6 +322,7 @@
         <span><button onclick="showPaperWalletDialog()" data-tr=wallet.paperWallet.label>Paper Wallet</button></span>
         <span><button onclick="showBatchWithdrawDialog()" data-tr=wallet.showBatchWithdrawDialog>Batch Withdraw</button></span>
         <span><button onclick="showImportSinglePKDialog()" data-tr=wallet.importSinglePrivateKey.openButtonLabel>Import Private Key</button></span>
+        <span><button onclick="showRpcDialog()" data-tr=wallet.importSinglePrivateKey.tmp>RPC Test</button></span>
     </div>
     <div class=headerCenter>
         <a class=arizenTitle href='https://github.com/ZencashOfficial/arizen'>Arizen</a>

@@ -75,6 +75,7 @@ const defaultSettings = {
     lang: "en",
     domainFronting: false,
     secureNodeFQDN: "node.example.com",
+    secureNodePort: 8231,
     secureNodeUsername: "user",
     secureNodePassword: "userpass"
 };

@@ -7,6 +7,7 @@ const {DateTime} = require("luxon");
 const {translate} = require("./util.js");
 const zencashjs = require("zencashjs");
 
+
 const userWarningImportPK = "A new address and a private key will be imported. Your previous back-ups do not include the newly imported address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen."
 
 function assert(condition, message) {
@@ -266,8 +267,9 @@ function showSettingsDialog() {
         const inputNotifications = dialog.querySelector(".enableNotifications");
         const inputDomainFronting = dialog.querySelector(".enableDomainFronting");
         const inputSecureNodeFQDN = dialog.querySelector(".settingsSecureNodeFQDN");
+        const inputSecureNodePort = dialog.querySelector(".settingsSecureNodePort");
         const inputSecureNodeUsername = dialog.querySelector(".settingsSecureNodeUsername");
-        const inputSecureNodePassword = dialog.querySelector(".settingsSecureNodePassword");        
+        const inputSecureNodePassword = dialog.querySelector(".settingsSecureNodePassword");
 
         inputTxHistory.value = settings.txHistory;
         inputExplorerUrl.value = settings.explorerUrl;
@@ -278,6 +280,7 @@ function showSettingsDialog() {
         inputDomainFronting.checked = settings.domainFronting || false;
         inputFiatCurrency.value = settings.fiatCurrency || "USD";
         inputSecureNodeFQDN.value = settings.secureNodeFQDN;
+        inputSecureNodePort.value = settings.secureNodePort || 8231;
         inputSecureNodeUsername.value = settings.secureNodeUsername;
         inputSecureNodePassword.value = settings.secureNodePassword;
 
@@ -291,6 +294,7 @@ function showSettingsDialog() {
                 notifications: inputNotifications.checked ? 1 : 0,
                 domainFronting: inputDomainFronting.checked,
                 secureNodeFQDN: inputSecureNodeFQDN.value,
+                secureNodePort: inputSecureNodePort.value,
                 secureNodeUsername: inputSecureNodeUsername.value,
                 secureNodePassword: inputSecureNodePassword.value
             };
@@ -343,6 +347,41 @@ function showImportSinglePKDialog() {
                 } else {
                     alert(tr("wallet.importSinglePrivateKey.warningNotValidPK", "This is not a valid Private Key."));
                 }
+            });
+        });
+    }
+}
+
+function showRpcDialog() {
+    let response = 1;
+    console.log('Ha');
+
+    if (response===1){
+        showDialogFromTemplate("tempRpcTemplate", dialog => {
+            const testRpcButton = dialog.querySelector(".testRPCButton");
+            const resultRPC = dialog.querySelector(".resultRPC");
+            testRpcButton.addEventListener("click", () => {
+
+                resultRPC.innerHTML = "AAAAAAAAAA";
+                console.log('HaHa');
+
+                //client = getRpcClientSecureNode();
+
+                let cmd = "help";
+
+                rpcCall(cmd, function(err, res){
+                    if(err){
+                        //Do something
+                    }
+                console.log('Data:',res); //Json parsed.
+                console.log(res.result); //Json parsed.
+                console.log(res.result.balance); //Json parsed.
+                resultRPC.innerHTML = res.result.balance;
+
+            });
+
+
+
             });
         });
     }
@@ -439,4 +478,34 @@ function isPK(pk) {
 
 function isPKorWif(pk) {
     return (isWif(pk) || isPK(pk))
+}
+
+
+function getRpcClientSecureNode(){
+    const rpc = require('node-json-rpc2');
+
+    var options = {
+      port: settings.secureNodePort,
+      host: settings.secureNodeFQDN,
+      user: settings.secureNodeUsername,
+      password: settings.secureNodePassword,
+      //method:'POST',
+      path: '/',
+      strict: true
+    };
+
+    var client = new rpc.Client(options);
+    return client;
+}
+
+function rpcCall(methodUsed,callbackFunction){
+
+    var client = getRpcClientSecureNode();
+
+    client.call({
+        method:methodUsed,//Mandatory
+        params:[],//Will be [] by default
+        id:'rpcTest',//Optional. By default it's a random id
+        jsonrpc:'1.0' //Optional. By default it's 2.0
+    },callbackFunction);
 }
