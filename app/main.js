@@ -362,27 +362,26 @@ function sqlResultToObjectArray(res) {
     });
 }
 
-function sqlSelect(sql) {
-    let result = userInfo.walletDb.exec(sql);
-    // XXX what exactly happens on error?
-    if (!result) {
-        throw new Error(`SQL query failed\n  Query: ${sql}`);
+function sqlSelect(asObjects, sql, ...args) {
+    const stmt = userInfo.walletDb.prepare(sql);
+    stmt.bind(args);
+    const results = [];
+    while (stmt.step()) {
+        let row = asObjects ? stmt.getAsObject() : stmt.get();
+        results.push(row);
     }
-    if (!result.length) {
-        result[0] = {values: []};
-    }
-    return result;
+    return results;
 }
 
-function sqlSelectColumns(sql) {
-    return sqlSelect(sql)[0].values;
+function sqlSelectColumns(sql, ...args) {
+    return sqlSelect(false, sql, ...args);
 }
 
-function sqlSelectObjects(sql) {
-    return sqlResultToObjectArray(sqlSelect(sql));
+function sqlSelectObjects(sql, ...args) {
+    return sqlSelect(true, sql, ...args);
 }
 
-function sqlRun(sql, args) {
+function sqlRun(sql, ...args) {
     const result = userInfo.walletDb.run(sql, args);
     userInfo.dbChanged = true;
     return result;
@@ -417,7 +416,7 @@ function loadSettings() {
 
 function saveSettings(settings) {
     const b64settings = Buffer.from(JSON.stringify(settings)).toString("base64");
-    sqlRun("insert or replace into new_settings (name, value) values ('settings', ?)", [b64settings]);
+    sqlRun("insert or replace into new_settings (name, value) values ('settings', ?)", b64settings);
     saveWallet();
 }
 
@@ -522,7 +521,7 @@ function importOnePK(pk, name = "") {
         }
         const pub = zencashjs.address.privKeyToPubKey(pk, true);
         const addr = zencashjs.address.pubKeyToAddr(pub);
-        sqlRun("insert or ignore into wallet (pk, addr, lastbalance, name) values (?, ?, 0, ?)", [pk, addr, name]);
+        sqlRun("insert or ignore into wallet (pk, addr, lastbalance, name) values (?, ?, 0, ?)", pk, addr, name);
     } catch (err) {
         console.log(`Invalid private key on line in private keys file : `, err);
     }
@@ -713,7 +712,7 @@ async function updateBlockchainView(webContents) {
     }
 
     for (const addrObj of result.changedAddrs) {
-        sqlRun("UPDATE wallet SET lastbalance = ? WHERE addr = ?", [addrObj.lastbalance, addrObj.addr]);
+        sqlRun("UPDATE wallet SET lastbalance = ? WHERE addr = ?", addrObj.lastbalance, addrObj.addr);
         totalBalance += addrObj.balanceDiff;
         webContents.send("update-wallet-balance", JSON.stringify({
             response: "OK",
@@ -729,7 +728,7 @@ async function updateBlockchainView(webContents) {
     for (const tx of result.newTxs) {
         if (tx.block >= 0) {
             sqlRun("INSERT INTO transactions VALUES (?,?,?,?,?,?,?,?)",
-                [null, tx.txid, tx.time, tx.address, tx.vins, tx.vouts, tx.amount, tx.block]);
+                null, tx.txid, tx.time, tx.address, tx.vins, tx.vouts, tx.amount, tx.block);
         }
         webContents.send("get-transaction-update", JSON.stringify(tx));
     }
