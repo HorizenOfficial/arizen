@@ -1165,16 +1165,15 @@ ipcMain.on("refresh-wallet", function (event) {
 });
 
 ipcMain.on("rename-wallet", function (event, address, name) {
-    let sqlRes;
     let resp = {
         response: "ERR",
         msg: "not logged in"
     };
 
     if (userInfo.loggedIn) {
-        sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet WHERE addr = '" + address + "'");
-        if (sqlRes.length > 0) {
-            userInfo.walletDb.exec("UPDATE wallet SET name = '" + name + "' WHERE addr = '" + address + "'");
+        const count = sqlSelectColumns("SELECT count(*) FROM wallet WHERE addr = ?", address)[0][0];
+        if (count) {
+            sqlRun("UPDATE wallet SET name = ? WHERE addr = ?", name, address);
             saveWallet();
             resp = {
                 response: "OK",
@@ -1190,19 +1189,17 @@ ipcMain.on("rename-wallet", function (event, address, name) {
 });
 
 ipcMain.on("get-wallet-by-name", function (event, name) {
-    let sqlRes;
     let resp = {
         response: "ERR",
         msg: "not logged in"
     };
 
     if (userInfo.loggedIn) {
-        sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet WHERE name = '" + name + "'");
-        if (sqlRes.length > 0) {
+        const walletAddr = sqlSelectObjects("SELECT * FROM wallet WHERE name = ?", name)[0];
+        if (walletAddr) {
             resp = {
                 response: "OK",
-                wallets: sqlRes[0].values,
-                msg: "found: " + sqlRes.length
+                wallets: walletAddr
             };
         } else {
             resp.msg = "name not found";
@@ -1322,16 +1319,16 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
         // Convert to satoshi
         let amountInSatoshi = Math.round(amount * 100000000);
         let feeInSatoshi = Math.round(fee * 100000000);
-        let sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet WHERE addr = '" + fromAddress + "'");
-		if (!sqlRes.length) {
+        let walletAddr = sqlSelectObjects("SELECT * FROM wallet WHERE addr = ?", fromAddress)[0];
+		if (!walletAddr) {
 			event.sender.send("send-finish", "error",  tr("wallet.tabWithdraw.messages.unknownAddress","Source address is not in your wallet!"));
 			return;
         }
-        if (sqlRes[0].values[0][3] < (parseFloat(amount) + parseFloat(fee))) {
+        if (walletAddr.lastbalance < (parseFloat(amount) + parseFloat(fee))) {
 			event.sender.send("send-finish", "error", tr("wallet.tabWithdraw.messages.insufficientFundsSourceAddr", "Insufficient funds on source address!"));
 			return;
         }
-        let privateKey = sqlRes[0].values[0][1];
+        let privateKey = walletAddr.pk;
 
         const prevTxURL = "/addr/" + fromAddress + "/utxo";
         const infoURL = "/status?q=getInfo";
@@ -1457,8 +1454,9 @@ ipcMain.on("send-many", function (event, fromAddressesAll, toAddress, fee, thres
         // filter out all zero balanced wallets
         let fromAddressesTemp = [];
         for (let i = 0; i < fromAddressesAll.length; i++) {
-            let sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet WHERE addr = '" + fromAddressesAll[i] + "'");
-            if (sqlRes[0].values[0][3] !== 0 && sqlRes[0].values[0][3] !== thresholdLimit) {
+            let walletAddr = sqlSelectObjects("SELECT * FROM wallet WHERE addr = ?", fromAddressesAll[i])[0];
+            // TODO check walletAddrs is defined
+            if (walletAddr.lastbalance !== 0 && walletAddr.lastbalance !== thresholdLimit) {
                 fromAddressesTemp.push(fromAddressesAll[i]);
             }
         }
@@ -1486,16 +1484,16 @@ ipcMain.on("send-many", function (event, fromAddressesAll, toAddress, fee, thres
             let thresholdLimitInSatoshi = Math.round(thresholdLimit * satoshi);
             let balanceInSatoshi = 0;
             for (let i = 0; i < nFromAddresses; i++) {
-                let sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet WHERE addr = '" + fromAddresses[i] + "'");
+                let walletAddr = sqlSelectColumns("SELECT * FROM wallet WHERE addr = ?", fromAddresses[i])[0];
 
-                if (!sqlRes.length) {
+                if (!walletAddr) {
                     err = tr("wallet.tabWithdraw.messages.unknownAddress", "Source address is not in your wallet!");
                     console.log(err);
                     event.sender.send("send-finish", "error", err);
                     return;
                 }
 
-                balanceInSatoshi = sqlRes[0].values[0][3];
+                balanceInSatoshi = walletAddr.lastbalance;
                 if (i === 0) {
                     if (balanceInSatoshi < (parseFloat(thresholdLimit) + parseFloat(fee))) {
                         err = tr("wallet.tabWithdraw.messages.insufficientFirstSource", "Insufficient funds on 1st source (Minimum: threshold limit + fee)!");
@@ -1513,7 +1511,7 @@ ipcMain.on("send-many", function (event, fromAddressesAll, toAddress, fee, thres
                     }
                     amountsInSatoshi[i] = Math.round(balanceInSatoshi * satoshi);
                 }
-                privateKeys[i] = sqlRes[0].values[0][1];
+                privateKeys[i] = walletAddr.pk;
             }
 
             if (privateKeys.length !== nFromAddresses) {
