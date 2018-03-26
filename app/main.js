@@ -1622,8 +1622,8 @@ ipcMain.on("send-many", function (event, fromAddressesAll, toAddress, fee, thres
                                                 event.sender.send("send-finish", "error", "sendtxErr: " + String(sendtxErr));
                                             } else if (sendtxResp && sendtxResp.statusCode === 200) {
                                                 const txRespData = JSON.parse(sendtxBody);
-                                                finalMessage += `<a href="javascript:void(0)" onclick="openUrl('${settings.explorerUrl}/tx/${txRespData.txid}')" class="walletListItemDetails transactionExplorer monospace" target="_blank">${txRespData.txid}</a>`;
-                                                finalMessage += "<br/>\n\n";
+                                                finalMessage += `<small><a href="javascript:void(0)" onclick="openUrl('${settings.explorerUrl}/tx/${txRespData.txid}')" class="walletListItemDetails transactionExplorer monospace" target="_blank">${txRespData.txid}</a>`;
+                                                finalMessage += "</small><br/>\n\n";
 
                                                 txFinished += 1;
                                                 if (txFinished === chunks.length) {
