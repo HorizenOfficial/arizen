@@ -68,7 +68,7 @@ const userWarningCreateNewAddress = "A new address and a private key will be cre
 
 const refreshTimeout = 300;
 let refreshTimer;
-let showZeroBalances = false;
+let showZeroBalances = true;
 let depositQrcodeTimer;
 let addrObjList;
 let addrIdxByAddr;
