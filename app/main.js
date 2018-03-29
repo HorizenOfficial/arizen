@@ -18,7 +18,7 @@ const zencashjs = require("zencashjs");
 const sql = require("sql.js");
 const request = require("request");
 const updater = require("electron-simple-updater");
-const fetch = require("node-fetch");
+const axios = require("axios");
 const {List} = require("immutable");
 const {translate} = require("./util.js");
 const {DateTime} = require("luxon");
@@ -77,6 +77,10 @@ const defaultSettings = {
 };
 let settings = defaultSettings;
 let langDict;
+
+let axiosApi = axios.create({
+    baseURL: "https://explorer.zensystem.io/insight-api-zen"
+});
 
 const DOMAIN_FRONTING_PUBLIC_URL = "https://www.google.com";
 const DOMAIN_FRONTING_PRIVATE_HOST = "zendhide.appspot.com";
@@ -577,36 +581,9 @@ function requestApiPost(path, form, callback) {
     request.post(options, callback);
 }
 
-async function fetchJson(url, options = undefined) {
-    console.log("Fetch API", url);
-    const resp = await fetch(url, options);
-    if (!resp.ok) {
-        throw new Error(`HTTP GET status: ${resp.status} ${resp.statusText}, URL: ${url}`);
-    }
-    return resp.json();
-}
-
-function fetchApi(path) {
-    if (settings.domainFronting) {
-        const url = appendUrlPath(DOMAIN_FRONTING_PUBLIC_URL, path);
-        const options = { headers: { "Host": DOMAIN_FRONTING_PRIVATE_HOST } };
-        return fetchJson(url, options);
-    }
-
-    const urls = settings.apiUrls;
-    let errors = [];
-    const fetchApiFrom = (i) => {
-        if (i < urls.length) {
-            return fetchJson(appendUrlPath(urls[i], path)).catch(err => {
-                console.log(`ERROR fetching from: ${urls[i]}: `, err);
-                errors.push(err);
-                return fetchApiFrom(i + 1);
-            });
-        } else {
-            return Promise.reject(errors);
-        }
-    };
-    return fetchApiFrom(0);
+async function apiGet(url) {
+    const resp = await axiosApi(url);
+    return resp.data;
 }
 
 async function fetchTransactions(txIds, myAddrs) {
@@ -614,7 +591,7 @@ async function fetchTransactions(txIds, myAddrs) {
     const myAddrSet = new Set(myAddrs);
 
     for (const txId of txIds) {
-        const info = await fetchApi("tx/" + txId);
+        const info = await apiGet("tx/" + txId);
 
         let txBalance = 0;
         const vins = [];
@@ -680,7 +657,7 @@ async function fetchBlockchainChanges(addrObjs, knownTxIds) {
     const txIdSet = new Set();
 
     for (const obj of addrObjs) {
-        const info = await fetchApi("/addr/" + obj.addr);
+        const info = await apiGet("/addr/" + obj.addr);
         if (obj.lastbalance !== info.balance) {
             obj.balanceDiff = info.balance - (obj.lastbalance || 0);
             obj.lastbalance = info.balance;
