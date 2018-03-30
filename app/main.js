@@ -1556,8 +1556,9 @@ ipcMain.on("send-many", async function (event, fromAddressesAll, toAddress, fee,
 
             const txRespData = await apiPost(sendRawTxURL, {rawtx: txHexString});
 
-            finalMessage += `<a href="javascript:void(0)" onclick="openUrl('${settings.explorerUrl}/tx/${txRespData.txid}')" class="walletListItemDetails transactionExplorer monospace" target="_blank">${txRespData.txid}</a>`;
-            finalMessage += "<br/>\n\n";
+
+            finalMessage += `<small><a href="javascript:void(0)" onclick="openUrl('${settings.explorerUrl}/tx/${txRespData.txid}')" class="walletListItemDetails transactionExplorer monospace" target="_blank">${txRespData.txid}</a>`;
+            finalMessage += "</small><br/>\n\n";
 
             txFinished += 1;
             if (txFinished === chunks.length) {
