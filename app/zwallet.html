@@ -84,7 +84,15 @@
         <div slot=content>
             <div class=form>
                 <div data-tr=wallet.newAddress.name>Name (optional)</div>
+                 <div>
                 <input type=text class=newAddrDialogName />
+
+                <input type="radio" id="choiceT" name="TorZ" value="transparent">
+                <label for="choiceT">T (Transparent)</label>
+
+                <input type="radio" id="choiceZ" name="TorZ" value="zeroKnowledge">
+                <label for="choiceZ">Z (Private Zero Knowledge)</label>
+              </div>
             </div>
             <div class=formButtons>
                 <button class=newAddrDialogCreate data-tr=wallet.newAddress.createButton>Create</button>

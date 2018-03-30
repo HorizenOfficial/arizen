@@ -6,6 +6,8 @@
 const {DateTime} = require("luxon");
 const {translate} = require("./util.js");
 const zencashjs = require("zencashjs");
+const {rpcCall} = require("./rpc.js");
+const {cleanCommandString} = require("./rpc.js");
 
 
 const userWarningImportPK = "A new address and a private key will be imported. Your previous back-ups do not include the newly imported address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen."
@@ -353,40 +355,36 @@ function showImportSinglePKDialog() {
 }
 
 function showRpcDialog() {
-    let response = 1;
+    showDialogFromTemplate("tempRpcTemplate", dialog => {
+        const testRpcButton = dialog.querySelector(".testRPCButton");
+        const resultRPC = dialog.querySelector(".resultRPC");
+        const inputCommandRPC = dialog.querySelector(".giveCommandRPC");
+        const statusRPC = dialog.querySelector(".statusRPC");
 
-    if (response===1){
-        showDialogFromTemplate("tempRpcTemplate", dialog => {
-            const testRpcButton = dialog.querySelector(".testRPCButton");
-            const resultRPC = dialog.querySelector(".resultRPC");
-            const inputCommandRPC = dialog.querySelector(".giveCommandRPC");
-            const statusRPC = dialog.querySelector(".statusRPC");
+        testRpcButton.addEventListener("click", () => {
 
-            testRpcButton.addEventListener("click", () => {
-
-                resultRPC.innerHTML = "Fetching...";
-                statusRPC.innerHTML = "Fetching...";
+        resultRPC.innerHTML = "Fetching...";
+        statusRPC.innerHTML = "Fetching...";
 
 
-                let cmd = cleanCommandString(inputCommandRPC.value);
-                inputCommandRPC.value = cmd;
-                let status = "OK";
-                let output
+        let cmd = cleanCommandString(inputCommandRPC.value);
+        inputCommandRPC.value = cmd;
+        let status = "OK";
+        let output
 
-                rpcCall(cmd, function(err, res){
-                    if(err){
-                        console.log(err);
-                        output = err;
-                        status = "error";
-                    } else {
-                        output = JSON.stringify(res.result);
-                    }
-                resultRPC.innerHTML = output;
-                statusRPC.innerHTML = status;
-              });
+        rpcCall(cmd, function(err, res){
+            if(err){
+                console.log(err);
+                output = err;
+                status = "error";
+            } else {
+                output = JSON.stringify(res.result);
+            }
+            resultRPC.innerHTML = output;
+            statusRPC.innerHTML = status;
             });
         });
-    }
+    });
 }
 
 function openZenExplorer(path) {
@@ -480,39 +478,4 @@ function isPK(pk) {
 
 function isPKorWif(pk) {
     return (isWif(pk) || isPK(pk))
-}
-
-
-function getRpcClientSecureNode(){
-    const rpc = require('node-json-rpc2');
-
-    var options = {
-      port: settings.secureNodePort,
-      host: settings.secureNodeFQDN,
-      user: settings.secureNodeUsername,
-      password: settings.secureNodePassword,
-      //method:'POST',
-      path: '/',
-      strict: true
-    };
-
-    var client = new rpc.Client(options);
-    return client;
-}
-
-function rpcCall(methodUsed,callbackFunction){
-
-    var client = getRpcClientSecureNode();
-
-    client.call({
-        method:methodUsed,//Mandatory
-        params:[],//Will be [] by default
-        id:'rpcTest',//Optional. By default it's a random id
-        jsonrpc:'1.0', //Optional. By default it's 2.0
-        protocol:'https',//Optional. Will be http by default
-    },callbackFunction);
-}
-
-function cleanCommandString(string){
-    return string.replace(/\s+$/, '').replace(/ +(?= )/g,''); // removes 1st and last whute space -- removes double spacing
 }
