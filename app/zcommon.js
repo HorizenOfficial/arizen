@@ -6,8 +6,8 @@
 const {DateTime} = require("luxon");
 const {translate} = require("./util.js");
 const zencashjs = require("zencashjs");
-const {rpcCall} = require("./rpc.js");
-const {cleanCommandString} = require("./rpc.js");
+const {rpcCall,cleanCommandString,rpcCallResult,splitCommandString} = require("./rpc.js");
+const {zenextra} = require("./zenextra.js");
 
 
 const userWarningImportPK = "A new address and a private key will be imported. Your previous back-ups do not include the newly imported address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen."
@@ -328,10 +328,10 @@ function showImportSinglePKDialog() {
                 const name = nameInput.value ? nameInput.value : "";
                 let pk = privateKeyInput.value;
 
-                if (isPKorWif(pk) === true) {
+                if (zenextra.isPKorWif(pk) === true) {
                     console.log(name);
                     console.log(pk);
-                    if (isWif(pk) === true) {
+                    if (zenextra.isWif(pk) === true) {
                         pk = zencashjs.address.WIFToPrivKey(pk);
                     }
                     let pubKey = zencashjs.address.privKeyToPubKey(pk, true);
@@ -369,20 +369,16 @@ function showRpcDialog() {
 
         let cmd = cleanCommandString(inputCommandRPC.value);
         inputCommandRPC.value = cmd;
-        let status = "OK";
-        let output
 
-        rpcCall(cmd, function(err, res){
-            if(err){
-                console.log(err);
-                output = err;
-                status = "error";
-            } else {
-                output = JSON.stringify(res.result);
-            }
-            resultRPC.innerHTML = output;
-            statusRPC.innerHTML = status;
-            });
+        let resp = splitCommandString(cmd);
+        let method = resp.method;
+        let params = resp.params;
+
+
+        rpcCallResult(method, params, function(output,status){
+          resultRPC.innerHTML = JSON.stringify(output);
+          statusRPC.innerHTML = status;
+        });
         });
     });
 }
@@ -454,28 +450,4 @@ function translateCurrentPage() {
         return;
     querySelectorAllDeep("[data-tr]").forEach(node =>
         node.textContent = tr(node.dataset.tr, node.textContent));
-}
-
-function isWif(pk) {
-    let isWif = true;
-    try {
-        let pktmp = zencashjs.address.WIFToPrivKey(pk);
-    } catch (err) {
-        isWif = false;
-    }
-    return isWif
-}
-
-function isPK(pk) {
-    let isPK = true;
-    try {
-        let pktmp = zencashjs.address.privKeyToPubKey(pk);
-    } catch (err) {
-        isPK = false;
-    }
-    return isPK
-}
-
-function isPKorWif(pk) {
-    return (isWif(pk) || isPK(pk))
 }

@@ -87,11 +87,11 @@
                  <div>
                 <input type=text class=newAddrDialogName />
 
-                <input type="radio" id="choiceT" name="TorZ" value="transparent">
-                <label for="choiceT">T (Transparent)</label>
+                <input type=radio id=choiceT name=TorZ class=TorZgetT value=0 checked>
+                <label for=choiceT>T (Transparent)</label>
 
-                <input type="radio" id="choiceZ" name="TorZ" value="zeroKnowledge">
-                <label for="choiceZ">Z (Private Zero Knowledge)</label>
+                <input type=radio id=choiceZ name=TorZ class=TorZgetZ value=1>
+                <label for=choiceZ>Z (Private Zero Knowledge)</label>
               </div>
             </div>
             <div class=formButtons>
@@ -126,7 +126,7 @@
         <div slot=content>
             <div class=form>
                 <div data-tr=wallet.newAddress.tmp>Command</div>
-                <input type=text class=giveCommandRPC />
+                <input type=text class=giveCommandRPC value=help />
                 <!-- <div data-tr=wallet.importSinglePrivateKey.privateKeyLabel>Private Key</div>
                 <input type=text class=newPrivateKeyDialogKey /> -->
             </div>

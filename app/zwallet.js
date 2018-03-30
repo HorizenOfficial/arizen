@@ -10,6 +10,7 @@ const Qrcode = require("qrcode");
 const jsPDF = require("jspdf");
 // FIXME: unused showPaperWalletDialog
 const {showPaperWalletDialog} = require("./paperwallet.js");
+const {getNewZaddressPK} = require("./rpc.js");
 
 function logIpc(msgType) {
     ipcRenderer.on(msgType, (...args) => {
@@ -410,7 +411,17 @@ function showNewAddrDialog() {
         showDialogFromTemplate("newAddrDialogTemplate", dialog => {
             const createButton = dialog.querySelector(".newAddrDialogCreate");
             createButton.addEventListener("click", () => {
-                ipcRenderer.send("generate-wallet", dialog.querySelector(".newAddrDialogName").value);
+                var getT = dialog.querySelector(".TorZgetT").checked;
+                var getZ = dialog.querySelector(".TorZgetZ").checked;
+                var nameAddress = dialog.querySelector(".newAddrDialogName").value;
+                // console.log(getT);
+                // console.log(getZ);
+                if (getT){
+                    ipcRenderer.send("generate-wallet", nameAddress);
+                }
+                if (getZ){
+                    getNewZaddressPK(nameAddress)
+                }
                 dialog.close();
             });
             dialog.addEventListener("keypress", ev => {

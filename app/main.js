@@ -24,6 +24,7 @@ const querystring = require("querystring");
 const {List} = require("immutable");
 const {translate} = require("./util.js");
 const {DateTime} = require("luxon");
+const {zenextra} = require("./zenextra.js");
 
 const userWarningImportFileWithPKs = "New address(es) and a private key(s) will be imported. Your previous back-ups do not include the newly imported addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen."
 const userWarningExportWalletUnencrypted = "You are going to export an UNENCRYPTED wallet ( ie your private keys) in plain text. That means that anyone with this file can control your ZENs. Store this file in a safe place. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen."
@@ -1193,6 +1194,22 @@ ipcMain.on("generate-wallet", function (event, name) {
     }
 
     event.sender.send("generate-wallet-response", JSON.stringify(resp));
+});
+
+ipcMain.on("generate-Z-address", function (event, nameAddress,pkZaddress,zAddress) {
+    let resp = {
+        response: "ERR",
+        msg: "not logged in"
+    };
+
+    if (userInfo.loggedIn) {
+        resp.response = "OK";
+        resp.addr =  { addr: zAddress, name: nameAddress, lastbalance: 0, pk: pkZaddress };
+        //userInfo.walletDb.run("INSERT INTO wallet VALUES (?,?,?,?,?,?)", [null, pkZaddress, zAddress, 0, nameAddress,1]); // Argument 6 -- 0: T, 1:Z
+        saveWallet();
+    }
+
+    event.sender.send("generate-Z-response", JSON.stringify(resp));
 });
 
 ipcMain.on("save-settings", function (event, newSettingsStr) {
