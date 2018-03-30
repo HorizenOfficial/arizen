@@ -18,7 +18,9 @@ const zencashjs = require("zencashjs");
 const sql = require("sql.js");
 const request = require("request");
 const updater = require("electron-simple-updater");
-const fetch = require("node-fetch");
+const axios = require("axios");
+require("axios-debug-log");
+const querystring = require("querystring");
 const {List} = require("immutable");
 const {translate} = require("./util.js");
 const {DateTime} = require("luxon");
@@ -81,6 +83,8 @@ const defaultSettings = {
 };
 let settings = defaultSettings;
 let langDict;
+
+let axiosApi;
 
 const DOMAIN_FRONTING_PUBLIC_URL = "https://www.google.com";
 const DOMAIN_FRONTING_PRIVATE_HOST = "zendhide.appspot.com";
@@ -366,27 +370,26 @@ function sqlResultToObjectArray(res) {
     });
 }
 
-function sqlSelect(sql) {
-    let result = userInfo.walletDb.exec(sql);
-    // XXX what exactly happens on error?
-    if (!result) {
-        throw new Error(`SQL query failed\n  Query: ${sql}`);
+function sqlSelect(asObjects, sql, ...args) {
+    const stmt = userInfo.walletDb.prepare(sql);
+    stmt.bind(args);
+    const results = [];
+    while (stmt.step()) {
+        let row = asObjects ? stmt.getAsObject() : stmt.get();
+        results.push(row);
     }
-    if (!result.length) {
-        result[0] = {values: []};
-    }
-    return result;
+    return results;
 }
 
-function sqlSelectColumns(sql) {
-    return sqlSelect(sql)[0].values;
+function sqlSelectColumns(sql, ...args) {
+    return sqlSelect(false, sql, ...args);
 }
 
-function sqlSelectObjects(sql) {
-    return sqlResultToObjectArray(sqlSelect(sql));
+function sqlSelectObjects(sql, ...args) {
+    return sqlSelect(true, sql, ...args);
 }
 
-function sqlRun(sql, args) {
+function sqlRun(sql, ...args) {
     const result = userInfo.walletDb.run(sql, args);
     userInfo.dbChanged = true;
     return result;
@@ -421,8 +424,28 @@ function loadSettings() {
 
 function saveSettings(settings) {
     const b64settings = Buffer.from(JSON.stringify(settings)).toString("base64");
-    sqlRun("insert or replace into new_settings (name, value) values ('settings', ?)", [b64settings]);
+    sqlRun("insert or replace into new_settings (name, value) values ('settings', ?)", b64settings);
     saveWallet();
+}
+
+function setSettings(newSettings) {
+    settings = newSettings;
+
+    if (settings.domainFronting) {
+        axiosApi = axios.create({
+            baseURL: DOMAIN_FRONTING_PUBLIC_URL,
+            headers: {
+                'Host': DOMAIN_FRONTING_PRIVATE_HOST
+            },
+            timeout: 10000,
+        });
+    }
+    else {
+        axiosApi = axios.create({
+            baseURL: "https://explorer.zensystem.io/insight-api-zen",
+            timeout: 10000,
+        });
+    }
 }
 
 function upgradeDb() {
@@ -526,7 +549,7 @@ function importOnePK(pk, name = "") {
         }
         const pub = zencashjs.address.privKeyToPubKey(pk, true);
         const addr = zencashjs.address.pubKeyToAddr(pub);
-        sqlRun("insert or ignore into wallet (pk, addr, lastbalance, name) values (?, ?, 0, ?)", [pk, addr, name]);
+        sqlRun("insert or ignore into wallet (pk, addr, lastbalance, name) values (?, ?, 0, ?)", pk, addr, name);
     } catch (err) {
         console.log(`Invalid private key on line in private keys file : `, err);
     }
@@ -549,69 +572,14 @@ function appendUrlPath(base, path) {
     return url + path;
 }
 
-function requestSetApiUrl(path, options) {
-    let apiUrl;
-    if (settings.domainFronting) {
-        apiUrl = DOMAIN_FRONTING_PUBLIC_URL;
-        if (!options.headers)
-            options.headers = {};
-        options.headers.Host = DOMAIN_FRONTING_PRIVATE_HOST;
-    }
-    else {
-        apiUrl = settings.apiUrls[0];
-        if (!apiUrl)
-            return null;
-    }
-    options.url = appendUrlPath(apiUrl, path);
-    return options;
+async function apiGet(url) {
+    const resp = await axiosApi(url);
+    return resp.data;
 }
 
-function requestApi(path, callback) {
-    const options = requestSetApiUrl(path, {});
-    if (!options)
-        return;
-    console.log("Request API", options.url);
-    request.get(options, callback);
-}
-
-function requestApiPost(path, form, callback) {
-    let options = requestSetApiUrl(path, {});
-    if (!options)
-        return;
-    options.form = form;
-    request.post(options, callback);
-}
-
-async function fetchJson(url, options = undefined) {
-    console.log("Fetch API", url);
-    const resp = await fetch(url, options);
-    if (!resp.ok) {
-        throw new Error(`HTTP GET status: ${resp.status} ${resp.statusText}, URL: ${url}`);
-    }
-    return resp.json();
-}
-
-function fetchApi(path) {
-    if (settings.domainFronting) {
-        const url = appendUrlPath(DOMAIN_FRONTING_PUBLIC_URL, path);
-        const options = { headers: { "Host": DOMAIN_FRONTING_PRIVATE_HOST } };
-        return fetchJson(url, options);
-    }
-
-    const urls = settings.apiUrls;
-    let errors = [];
-    const fetchApiFrom = (i) => {
-        if (i < urls.length) {
-            return fetchJson(appendUrlPath(urls[i], path)).catch(err => {
-                console.log(`ERROR fetching from: ${urls[i]}: `, err);
-                errors.push(err);
-                return fetchApiFrom(i + 1);
-            });
-        } else {
-            return Promise.reject(errors);
-        }
-    };
-    return fetchApiFrom(0);
+async function apiPost(url, form) {
+    const resp = await axiosApi.post(url, querystring.stringify(form));
+    return resp.data;
 }
 
 async function fetchTransactions(txIds, myAddrs) {
@@ -619,7 +587,7 @@ async function fetchTransactions(txIds, myAddrs) {
     const myAddrSet = new Set(myAddrs);
 
     for (const txId of txIds) {
-        const info = await fetchApi("tx/" + txId);
+        const info = await apiGet("tx/" + txId);
 
         let txBalance = 0;
         const vins = [];
@@ -685,7 +653,7 @@ async function fetchBlockchainChanges(addrObjs, knownTxIds) {
     const txIdSet = new Set();
 
     for (const obj of addrObjs) {
-        const info = await fetchApi("/addr/" + obj.addr);
+        const info = await apiGet("/addr/" + obj.addr);
         if (obj.lastbalance !== info.balance) {
             obj.balanceDiff = info.balance - (obj.lastbalance || 0);
             obj.lastbalance = info.balance;
@@ -717,7 +685,7 @@ async function updateBlockchainView(webContents) {
     }
 
     for (const addrObj of result.changedAddrs) {
-        sqlRun("UPDATE wallet SET lastbalance = ? WHERE addr = ?", [addrObj.lastbalance, addrObj.addr]);
+        sqlRun("UPDATE wallet SET lastbalance = ? WHERE addr = ?", addrObj.lastbalance, addrObj.addr);
         totalBalance += addrObj.balanceDiff;
         webContents.send("update-wallet-balance", JSON.stringify({
             response: "OK",
@@ -733,7 +701,7 @@ async function updateBlockchainView(webContents) {
     for (const tx of result.newTxs) {
         if (tx.block >= 0) {
             sqlRun("INSERT INTO transactions VALUES (?,?,?,?,?,?,?,?)",
-                [null, tx.txid, tx.time, tx.address, tx.vins, tx.vouts, tx.amount, tx.block]);
+                null, tx.txid, tx.time, tx.address, tx.vins, tx.vouts, tx.amount, tx.block);
         }
         webContents.send("get-transaction-update", JSON.stringify(tx));
     }
@@ -1103,7 +1071,7 @@ ipcMain.on("verify-login-info", function (event, login, pass) {
             userInfo.pass = pass;
             userInfo.walletDb = new sql.Database(walletBytes);
             upgradeDb();
-            settings = loadSettings();
+            setSettings(loadSettings());
             updateMenuAtLogin();
             resp = {
                 response: "OK",
@@ -1170,16 +1138,15 @@ ipcMain.on("refresh-wallet", function (event) {
 });
 
 ipcMain.on("rename-wallet", function (event, address, name) {
-    let sqlRes;
     let resp = {
         response: "ERR",
         msg: "not logged in"
     };
 
     if (userInfo.loggedIn) {
-        sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet WHERE addr = '" + address + "'");
-        if (sqlRes.length > 0) {
-            userInfo.walletDb.exec("UPDATE wallet SET name = '" + name + "' WHERE addr = '" + address + "'");
+        const count = sqlSelectColumns("SELECT count(*) FROM wallet WHERE addr = ?", address)[0][0];
+        if (count) {
+            sqlRun("UPDATE wallet SET name = ? WHERE addr = ?", name, address);
             saveWallet();
             resp = {
                 response: "OK",
@@ -1195,19 +1162,17 @@ ipcMain.on("rename-wallet", function (event, address, name) {
 });
 
 ipcMain.on("get-wallet-by-name", function (event, name) {
-    let sqlRes;
     let resp = {
         response: "ERR",
         msg: "not logged in"
     };
 
     if (userInfo.loggedIn) {
-        sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet WHERE name = '" + name + "'");
-        if (sqlRes.length > 0) {
+        const walletAddr = sqlSelectObjects("SELECT * FROM wallet WHERE name = ?", name)[0];
+        if (walletAddr) {
             resp = {
                 response: "OK",
-                wallets: sqlRes[0].values,
-                msg: "found: " + sqlRes.length
+                wallets: walletAddr
             };
         } else {
             resp.msg = "name not found";
@@ -1236,7 +1201,7 @@ ipcMain.on("save-settings", function (event, newSettingsStr) {
     }
     const newSettings = JSON.parse(newSettingsStr);
     saveSettings(newSettings);
-    settings = newSettings;
+    setSettings(newSettings);
     event.sender.send("save-settings-response", JSON.stringify({response: "OK"}));
     event.sender.send("settings", newSettingsStr);
 });
@@ -1317,26 +1282,35 @@ function checkSweepSendParameters(fromAddresses, toAddress, fee, thresholdLimit)
     return errors;
 }
 
-ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
+ipcMain.on("send", async function (event, fromAddress, toAddress, fee, amount){
     let paramErrors = checkStandardSendParameters(fromAddress, toAddress, fee, amount);
     if (paramErrors.length) {
         // TODO: Come up with better message. For now, just make a HTML out of it.
         const errString = paramErrors.join("<br/>\n\n");
         event.sender.send("send-finish", "error", errString);
-    } else {
+
+        return;
+    }
+
+    try {
         // Convert to satoshi
         let amountInSatoshi = Math.round(amount * 100000000);
         let feeInSatoshi = Math.round(fee * 100000000);
-        let sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet WHERE addr = '" + fromAddress + "'");
-		if (!sqlRes.length) {
-			event.sender.send("send-finish", "error",  tr("wallet.tabWithdraw.messages.unknownAddress","Source address is not in your wallet!"));
-			return;
+        let walletAddr = sqlSelectObjects("SELECT * FROM wallet WHERE addr = ?", fromAddress)[0];
+
+        if (!walletAddr) {
+            event.sender.send("send-finish", "error",  tr("wallet.tabWithdraw.messages.unknownAddress","Source address is not in your wallet!"));
+
+            return;
         }
-        if (sqlRes[0].values[0][3] < (parseFloat(amount) + parseFloat(fee))) {
-			event.sender.send("send-finish", "error", tr("wallet.tabWithdraw.messages.insufficientFundsSourceAddr", "Insufficient funds on source address!"));
-			return;
+
+        if (walletAddr.lastbalance < (parseFloat(amount) + parseFloat(fee))) {
+            event.sender.send("send-finish", "error", tr("wallet.tabWithdraw.messages.insufficientFundsSourceAddr", "Insufficient funds on source address!"));
+
+            return;
         }
-        let privateKey = sqlRes[0].values[0][1];
+
+        let privateKey = walletAddr.pk;
 
         const prevTxURL = "/addr/" + fromAddress + "/utxo";
         const infoURL = "/status?q=getInfo";
@@ -1347,100 +1321,69 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
         let satoshisSoFar = 0;
         let history = [];
         let recipients = [{address: toAddress, satoshis: amountInSatoshi}];
-        requestApi(prevTxURL, function (txErr, txResp, txBody) {
-            if (txErr) {
-                console.log(txErr);
-                event.sender.send("send-finish", "error", "txErr: " + String(txErr));
-            } else if (txResp && txResp.statusCode === 200) {
-                let txData = JSON.parse(txBody);
-                requestApi(infoURL, function (infoErr, infoResp, infoBody) {
-                    if (infoErr) {
-                        console.log(infoErr);
-                        event.sender.send("send-finish", "error", "infoErr: " + String(infoErr));
-                    } else if (infoResp && infoResp.statusCode === 200) {
-                        let infoData = JSON.parse(infoBody);
-                        const blockHeight = infoData.info.blocks - 300;
-                        const blockHashURL = "/block-index/" + blockHeight;
 
-                        // Get block hash
-                        requestApi(blockHashURL, function (bhashErr, bhashResp, bhashBody) {
-                            if (bhashErr) {
-                                console.log(bhashErr);
-                                event.sender.send("send-finish", "error", "bhashErr: " + String(bhashErr));
-                            } else if (bhashResp && bhashResp.statusCode === 200) {
-                                const blockHash = JSON.parse(bhashBody).blockHash;
+        const txData = await apiGet(prevTxURL);
+        const infoData = await apiGet(infoURL);
 
-                                // Iterate through each utxo and append it to history
-                                for (let i = 0; i < txData.length; i++) {
-                                    if (txData[i].confirmations === 0) {
-                                        continue;
-                                    }
+        const blockHeight = infoData.info.blocks - 300;
+        const blockHashURL = "/block-index/" + blockHeight;
 
-                                    history = history.concat( {
-                                        txid: txData[i].txid,
-                                        vout: txData[i].vout,
-                                        scriptPubKey: txData[i].scriptPubKey
-                                    });
+        const blockHash = (await apiGet(blockHashURL)).blockHash;
 
-                                    // How many satoshis we have so far
-                                    satoshisSoFar = satoshisSoFar + txData[i].satoshis;
-                                    if (satoshisSoFar >= amountInSatoshi + feeInSatoshi) {
-                                        break;
-                                    }
-                                }
-
-                                // If we don't have enough address - fail and tell it to the user
-                                if (satoshisSoFar < amountInSatoshi + feeInSatoshi) {
-                                    let errStr = tr("wallet.tabWithdraw.messages.insufficientFundsSourceAddr", "Insufficient funds on source address!");
-                                    console.log(errStr);
-                                    event.sender.send("send-finish", "error", errStr);
-                                } else {
-                                    // If we don't have exact amount - refund remaining to current address
-                                    if (satoshisSoFar !== (amountInSatoshi + feeInSatoshi)) {
-                                        let refundSatoshis = satoshisSoFar - amountInSatoshi - feeInSatoshi;
-                                        recipients = recipients.concat({address: fromAddress, satoshis: refundSatoshis});
-                                    }
-
-                                    // Create transaction
-                                    let txObj = zencashjs.transaction.createRawTx(history, recipients, blockHeight, blockHash);
-
-                                    // Sign each history transcation
-                                    for (let i = 0; i < history.length; i ++) {
-                                        txObj = zencashjs.transaction.signTx(txObj, i, privateKey, true);
-                                    }
-
-                                    // Convert it to hex string
-                                    const txHexString = zencashjs.transaction.serializeTx(txObj);
-                                    requestApiPost(sendRawTxURL, {rawtx: txHexString}, function(sendtxErr, sendtxResp, sendtxBody) {
-                                        if (sendtxErr) {
-                                            console.log(sendtxErr);
-                                            event.sender.send("send-finish", "error", "sendtxErr: " + String(sendtxErr));
-                                        } else if(sendtxResp && sendtxResp.statusCode === 200) {
-                                            const txRespData = JSON.parse(sendtxBody);
-                                            let message = "TXid:\n\n<small><small>" + txRespData.txid +
-                                                "</small></small><br /><a href=\"javascript:void(0)\" onclick=\"openUrl('" + settings.explorerUrl + "/tx/" + txRespData.txid +"')\" class=\"walletListItemDetails transactionExplorer\" target=\"_blank\">Show Transaction in Explorer</a>";
-                                            event.sender.send("send-finish", "ok", message);
-                                        } else {
-                                            console.log(sendtxResp);
-                                            event.sender.send("send-finish", "error", "sendtxResp: " + String(sendtxResp));
-                                        }
-                                    });
-                                }
-                            } else {
-                                console.log(bhashResp);
-                                event.sender.send("send-finish", "error", "bhashResp: " + String(bhashResp));
-                            }
-                        });
-                    } else {
-                        console.log(infoResp);
-                        event.sender.send("send-finish", "error", "infoResp: " + String(infoResp));
-                    }
-                });
-            } else {
-                console.log(txResp);
-                event.sender.send("send-finish", "error", "txResp: " + String(txResp));
+        // Iterate through each utxo and append it to history
+        for (let i = 0; i < txData.length; i++) {
+            if (txData[i].confirmations === 0) {
+                continue;
             }
-        });
+
+            history = history.concat( {
+                txid: txData[i].txid,
+                vout: txData[i].vout,
+                scriptPubKey: txData[i].scriptPubKey
+            });
+
+            // How many satoshis we have so far
+            satoshisSoFar = satoshisSoFar + txData[i].satoshis;
+            if (satoshisSoFar >= amountInSatoshi + feeInSatoshi) {
+                break;
+            }
+        }
+
+        // If we don't have enough address - fail and tell it to the user
+        if (satoshisSoFar < amountInSatoshi + feeInSatoshi) {
+            let errStr = tr("wallet.tabWithdraw.messages.insufficientFundsSourceAddr", "Insufficient funds on source address!");
+            event.sender.send("send-finish", "error", errStr);
+
+            return;
+        }
+
+        // If we don't have exact amount - refund remaining to current address
+        if (satoshisSoFar !== (amountInSatoshi + feeInSatoshi)) {
+            let refundSatoshis = satoshisSoFar - amountInSatoshi - feeInSatoshi;
+            recipients = recipients.concat({address: fromAddress, satoshis: refundSatoshis});
+        }
+
+        // Create transaction
+        let txObj = zencashjs.transaction.createRawTx(history, recipients, blockHeight, blockHash);
+
+        // Sign each history transcation
+        for (let i = 0; i < history.length; i ++) {
+            txObj = zencashjs.transaction.signTx(txObj, i, privateKey, true);
+        }
+
+        // Convert it to hex string
+        const txHexString = zencashjs.transaction.serializeTx(txObj);
+
+        const txRespData = await apiPost(sendRawTxURL, {rawtx: txHexString});
+
+        // TODO redo this into garbage
+        let message = "TXid:\n\n<small><small>" + txRespData.txid +
+            "</small></small><br /><a href=\"javascript:void(0)\" onclick=\"openUrl('" + settings.explorerUrl + "/tx/" + txRespData.txid +"')\" class=\"walletListItemDetails transactionExplorer\" target=\"_blank\">Show Transaction in Explorer</a>";
+        event.sender.send("send-finish", "ok", message);
+    }
+    catch (e) {
+        event.sender.send("send-finish", "error", e.message);
+        console.log(e);
     }
 });
 
@@ -1451,19 +1394,24 @@ ipcMain.on("send", function (event, fromAddress, toAddress, fee, amount){
  * @param fee - fee for the whole transaction
  * @param thresholdLimit - How many ZENs will remain in every fromAddresses
  */
-ipcMain.on("send-many", function (event, fromAddressesAll, toAddress, fee, thresholdLimit = 42.0) {
+ipcMain.on("send-many", async function (event, fromAddressesAll, toAddress, fee, thresholdLimit = 42.0) {
     let paramErrors = checkSweepSendParameters(fromAddressesAll, toAddress, fee, thresholdLimit);
     if (paramErrors.length) {
         // TODO: Come up with better message. For now, just make a HTML out of it.
         const errString = paramErrors.join("<br/>\n\n");
         event.sender.send("send-finish", "error", errString);
-    } else {
+
+        return;
+    }
+
+    try {
         // VARIABLES ---------------------------------------------------------------------------------------------------
         // filter out all zero balanced wallets
         let fromAddressesTemp = [];
         for (let i = 0; i < fromAddressesAll.length; i++) {
-            let sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet WHERE addr = '" + fromAddressesAll[i] + "'");
-            if (sqlRes[0].values[0][3] !== 0 && sqlRes[0].values[0][3] !== thresholdLimit) {
+            let walletAddr = sqlSelectObjects("SELECT * FROM wallet WHERE addr = ?", fromAddressesAll[i])[0];
+            // TODO check walletAddrs is defined
+            if (walletAddr.lastbalance !== 0 && walletAddr.lastbalance !== thresholdLimit) {
                 fromAddressesTemp.push(fromAddressesAll[i]);
             }
         }
@@ -1490,41 +1438,46 @@ ipcMain.on("send-many", function (event, fromAddressesAll, toAddress, fee, thres
             let feeInSatoshi = Math.round(fee * satoshi);
             let thresholdLimitInSatoshi = Math.round(thresholdLimit * satoshi);
             let balanceInSatoshi = 0;
-            for (let i = 0; i < nFromAddresses; i++) {
-                let sqlRes = userInfo.walletDb.exec("SELECT * FROM wallet WHERE addr = '" + fromAddresses[i] + "'");
 
-                if (!sqlRes.length) {
+            for (let i = 0; i < nFromAddresses; i++) {
+                let walletAddr = sqlSelectColumns("SELECT * FROM wallet WHERE addr = ?", fromAddresses[i])[0];
+
+                if (!walletAddr) {
                     err = tr("wallet.tabWithdraw.messages.unknownAddress", "Source address is not in your wallet!");
-                    console.log(err);
                     event.sender.send("send-finish", "error", err);
+
                     return;
                 }
 
-                balanceInSatoshi = sqlRes[0].values[0][3];
+                balanceInSatoshi = walletAddr.lastbalance;
+
                 if (i === 0) {
                     if (balanceInSatoshi < (parseFloat(thresholdLimit) + parseFloat(fee))) {
                         err = tr("wallet.tabWithdraw.messages.insufficientFirstSource", "Insufficient funds on 1st source (Minimum: threshold limit + fee)!");
-                        console.log(err);
                         event.sender.send("send-finish", "error", err);
+
                         return;
                     }
+
                     amountsInSatoshi[i] = Math.round((balanceInSatoshi - parseFloat(fee)) * satoshi);
                 } else {
                     if (balanceInSatoshi < (parseFloat(thresholdLimit))) {
                         err = tr("wallet.tabWithdraw.messages.insufficientNextSource", "Insufficient funds on 2nd or next source (Minimum: threshold limit)!");
-                        console.log(err);
                         event.sender.send("send-finish", "error", err);
+
                         return;
                     }
+
                     amountsInSatoshi[i] = Math.round(balanceInSatoshi * satoshi);
                 }
-                privateKeys[i] = sqlRes[0].values[0][1];
+
+                privateKeys[i] = walletAddr.pk;
             }
 
             if (privateKeys.length !== nFromAddresses) {
                 err = tr("wallet.tabWithdraw.messages.numberOfKeys", "# private keys and # addresses are not equal!");
-                console.log(err);
                 event.sender.send("send-finish", "error", err);
+
                 return;
             }
 
@@ -1544,117 +1497,83 @@ ipcMain.on("send-many", function (event, fromAddressesAll, toAddress, fee, thres
             let history = [];
             let belongToAddress;
 
-            requestApi(prevTxURL, function (txErr, txResp, txBody) {
-                if (txErr) {
-                    console.log(txErr);
-                    event.sender.send("send-finish", "error", "txErr: " + String(txErr));
-                } else if (txResp && txResp.statusCode === 200) {
-                    let txData = JSON.parse(txBody);
+            const txData = await apiGet(prevTxURL);
+            const infoData = await apiGet(infoURL);
 
-                    requestApi(infoURL, function (infoErr, infoResp, infoBody) {
-                        if (infoErr) {
-                            console.log(infoErr);
-                            event.sender.send("send-finish", "error", "infoErr: " + String(infoErr));
-                        } else if (infoResp && infoResp.statusCode === 200) {
-                            let infoData = JSON.parse(infoBody);
-                            const blockHeight = infoData.info.blocks - 300;
-                            const blockHashURL = "/block-index/" + blockHeight;
+            const blockHeight = infoData.info.blocks - 300;
+            const blockHashURL = "/block-index/" + blockHeight;
 
-                            // Get block hash
-                            requestApi(blockHashURL, function (bhashErr, bhashResp, bhashBody) {
-                                if (bhashErr) {
-                                    console.log(bhashErr);
-                                    event.sender.send("send-finish", "error", "bhashErr: " + String(bhashErr));
-                                } else if (bhashResp && bhashResp.statusCode === 200) {
-                                    const blockHash = JSON.parse(bhashBody).blockHash;
+            const blockHash = (await apiGet(blockHashURL)).blockHash;
 
-                                    belongToAddress = new Array(txData.length);
-                                    // Iterate through each utxo and append it to history
-                                    for (let i = 0; i < txData.length; i++) {
-                                        if (txData[i].confirmations === 0) {
-                                            continue;
-                                        }
-
-                                        history = history.concat({
-                                            txid: txData[i].txid,
-                                            vout: txData[i].vout,
-                                            scriptPubKey: txData[i].scriptPubKey
-                                        });
-
-                                        // to which address bellog this data
-                                        belongToAddress[i] = txData[i].address;
-
-                                        // How many satoshis we have so far
-                                        satoshisSoFar += txData[i].satoshis;
-                                    }
-
-                                    if ((satoshisSoFar - (nFromAddresses * thresholdLimitInSatoshi)) < feeInSatoshi) {
-
-                                        err = tr("wallet.tabWithdraw.messages.sumLowerThanFee", "Your summed balance over all source addresses is lower than the fee!");
-                                        console.log(err);
-                                        event.sender.send("send-finish", "error", err);
-                                    } else {
-                                        let amountInSatoshiToSend = satoshisSoFar - (nFromAddresses * thresholdLimitInSatoshi) - feeInSatoshi;
-                                        let recipients = [{address: toAddress, satoshis: amountInSatoshiToSend}];
-
-                                        // Refund thresholdLimitInSatoshi amount to current address
-                                        if (thresholdLimitInSatoshi > 0) {
-                                            for (let i = 0; i < nFromAddresses; i++) {
-                                                recipients = recipients.concat({
-                                                    address: fromAddresses[i],
-                                                    satoshis: thresholdLimitInSatoshi
-                                                });
-                                            }
-                                        }
-
-                                        // Create transaction
-                                        let txObj = zencashjs.transaction.createRawTx(history, recipients, blockHeight, blockHash);
-
-                                        // Sign each history transcation
-                                        let index;
-                                        for (let i = 0; i < history.length; i++) {
-                                            index = fromAddresses.indexOf(belongToAddress[i]);
-                                            txObj = zencashjs.transaction.signTx(txObj, i, privateKeys[index], true);
-                                        }
-
-                                        // Convert it to hex string
-                                        const txHexString = zencashjs.transaction.serializeTx(txObj);
-
-                                        requestApiPost(sendRawTxURL, {rawtx: txHexString}, function (sendtxErr, sendtxResp, sendtxBody) {
-                                            if (sendtxErr) {
-                                                console.log(sendtxErr);
-                                                event.sender.send("send-finish", "error", "sendtxErr: " + String(sendtxErr));
-                                            } else if (sendtxResp && sendtxResp.statusCode === 200) {
-                                                const txRespData = JSON.parse(sendtxBody);
-                                                finalMessage += `<small><a href="javascript:void(0)" onclick="openUrl('${settings.explorerUrl}/tx/${txRespData.txid}')" class="walletListItemDetails transactionExplorer monospace" target="_blank">${txRespData.txid}</a>`;
-                                                finalMessage += "</small><br/>\n\n";
-
-                                                txFinished += 1;
-                                                if (txFinished === chunks.length) {
-                                                    event.sender.send("send-finish", "ok", finalMessage);
-                                                }
-                                            } else {
-                                                console.log(sendtxResp);
-                                                event.sender.send("send-finish", "error", "sendtxResp: " + String(sendtxResp));
-                                            }
-                                        });
-                                    }
-                                } else {
-                                    console.log(bhashResp);
-                                    event.sender.send("send-finish", "error", "bhashResp: " + String(bhashResp));
-                                }
-                            });
-                        } else {
-                            console.log(infoResp);
-                            event.sender.send("send-finish", "error", "infoResp: " + String(infoResp));
-                        }
-                    });
-                } else {
-                    console.log(txResp);
-                    event.sender.send("send-finish", "error", "txResp: " + String(txResp));
+            belongToAddress = new Array(txData.length);
+            // Iterate through each utxo and append it to history
+            for (let i = 0; i < txData.length; i++) {
+                if (txData[i].confirmations === 0) {
+                    continue;
                 }
-            });
+
+                history = history.concat({
+                    txid: txData[i].txid,
+                    vout: txData[i].vout,
+                    scriptPubKey: txData[i].scriptPubKey
+                });
+
+                // to which address bellog this data
+                belongToAddress[i] = txData[i].address;
+
+                // How many satoshis we have so far
+                satoshisSoFar += txData[i].satoshis;
+            }
+
+            if ((satoshisSoFar - (nFromAddresses * thresholdLimitInSatoshi)) < feeInSatoshi) {
+                err = tr("wallet.tabWithdraw.messages.sumLowerThanFee", "Your summed balance over all source addresses is lower than the fee!");
+                event.sender.send("send-finish", "error", err);
+
+                return;
+            }
+
+            let amountInSatoshiToSend = satoshisSoFar - (nFromAddresses * thresholdLimitInSatoshi) - feeInSatoshi;
+            let recipients = [{address: toAddress, satoshis: amountInSatoshiToSend}];
+
+            // Refund thresholdLimitInSatoshi amount to current address
+            if (thresholdLimitInSatoshi > 0) {
+                for (let i = 0; i < nFromAddresses; i++) {
+                    recipients = recipients.concat({
+                        address: fromAddresses[i],
+                        satoshis: thresholdLimitInSatoshi
+                    });
+                }
+            }
+
+            // Create transaction
+            let txObj = zencashjs.transaction.createRawTx(history, recipients, blockHeight, blockHash);
+
+            // Sign each history transcation
+            let index;
+            for (let i = 0; i < history.length; i++) {
+                index = fromAddresses.indexOf(belongToAddress[i]);
+                txObj = zencashjs.transaction.signTx(txObj, i, privateKeys[index], true);
+            }
+
+            // Convert it to hex string
+            const txHexString = zencashjs.transaction.serializeTx(txObj);
+
+            const txRespData = await apiPost(sendRawTxURL, {rawtx: txHexString});
+
+
+            finalMessage += `<small><a href="javascript:void(0)" onclick="openUrl('${settings.explorerUrl}/tx/${txRespData.txid}')" class="walletListItemDetails transactionExplorer monospace" target="_blank">${txRespData.txid}</a>`;
+            finalMessage += "</small><br/>\n\n";
+
+            txFinished += 1;
+            if (txFinished === chunks.length) {
+                event.sender.send("send-finish", "ok", finalMessage);
+            }
+            // TODO else?
         }
+    }
+    catch(e) {
+        event.sender.send("send-finish", "error", e.message);
+        console.log(e);
     }
 });
 
