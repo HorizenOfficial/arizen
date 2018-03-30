@@ -354,34 +354,36 @@ function showImportSinglePKDialog() {
 
 function showRpcDialog() {
     let response = 1;
-    console.log('Ha');
 
     if (response===1){
         showDialogFromTemplate("tempRpcTemplate", dialog => {
             const testRpcButton = dialog.querySelector(".testRPCButton");
             const resultRPC = dialog.querySelector(".resultRPC");
+            const inputCommandRPC = dialog.querySelector(".giveCommandRPC");
+            const statusRPC = dialog.querySelector(".statusRPC");
+
             testRpcButton.addEventListener("click", () => {
 
-                resultRPC.innerHTML = "AAAAAAAAAA";
-                console.log('HaHa');
+                resultRPC.innerHTML = "Fetching...";
+                statusRPC.innerHTML = "Fetching...";
 
-                //client = getRpcClientSecureNode();
 
-                let cmd = "help";
+                let cmd = cleanCommandString(inputCommandRPC.value);
+                inputCommandRPC.value = cmd;
+                let status = "OK";
+                let output
 
                 rpcCall(cmd, function(err, res){
                     if(err){
-                        //Do something
+                        console.log(err);
+                        output = err;
+                        status = "error";
+                    } else {
+                        output = JSON.stringify(res.result);
                     }
-                console.log('Data:',res); //Json parsed.
-                console.log(res.result); //Json parsed.
-                console.log(res.result.balance); //Json parsed.
-                resultRPC.innerHTML = res.result.balance;
-
-            });
-
-
-
+                resultRPC.innerHTML = output;
+                statusRPC.innerHTML = status;
+              });
             });
         });
     }
@@ -506,6 +508,11 @@ function rpcCall(methodUsed,callbackFunction){
         method:methodUsed,//Mandatory
         params:[],//Will be [] by default
         id:'rpcTest',//Optional. By default it's a random id
-        jsonrpc:'1.0' //Optional. By default it's 2.0
+        jsonrpc:'1.0', //Optional. By default it's 2.0
+        protocol:'https',//Optional. Will be http by default
     },callbackFunction);
+}
+
+function cleanCommandString(string){
+    return string.replace(/\s+$/, '').replace(/ +(?= )/g,''); // removes 1st and last whute space -- removes double spacing
 }

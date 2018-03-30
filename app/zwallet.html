@@ -117,16 +117,18 @@
         <h2 slot=headerText data-tr=wallet.importSinglePrivateKey.tmp>RPC</h2>
         <div slot=content>
             <div class=form>
-                <div data-tr=wallet.newAddress.tmp>Test me</div>
-                <!-- <input type=text class=newPrivateKeyDialogName />
-                <div data-tr=wallet.importSinglePrivateKey.privateKeyLabel>Private Key</div>
+                <div data-tr=wallet.newAddress.tmp>Command</div>
+                <input type=text class=giveCommandRPC />
+                <!-- <div data-tr=wallet.importSinglePrivateKey.privateKeyLabel>Private Key</div>
                 <input type=text class=newPrivateKeyDialogKey /> -->
             </div>
             <div class=formButtons>
                 <button class=testRPCButton data-tr=wallet.importSinglePrivateKey.testMe>Test Me</button>
             </div>
+            <textarea id=resultRPC class=resultRPC slot=headerText rows=20 data-tr=wallet.importSinglePrivateKey.tmp>RPC Results....</textarea>
+            <div data-tr=wallet.newAddress.tmp>Status: </div> <div data-tr=wallet.newAddress.tmp class=statusRPC></div>
         </div>
-        <h2 id=resultRPC class=resultRPC slot=headerText data-tr=wallet.importSinglePrivateKey.tmp>RPC Result....</h2>
+
     </arizen-dialog>
 </template>
 <!-- Delet me  -->
