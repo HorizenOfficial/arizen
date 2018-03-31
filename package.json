@@ -120,12 +120,12 @@
     "zencashjs": "^1.1.9-a"
   },
   "devDependencies": {
-    "ajv": "^6.4.0",
     "ajv-keywords": "^2.1.1",
+    "ajv": "^5.5.1",
     "coveralls": "^3.0.0",
     "deepmerge": "^2.0.1",
     "devtron": "^1.4.0",
-    "electron": "^1.8.4",
+    "electron": "^2.0.0-beta.6",
     "electron-debug": "^1.5.0",
     "electron-packager": "^11.2.0",
     "electron-builder": "20.8.2",
