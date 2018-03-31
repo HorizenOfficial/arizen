@@ -1,3 +1,7 @@
+notifications:
+  email: false
+git:
+  depth: 10
 osx_image: xcode9.2
 sudo: required
 dist: trusty
@@ -5,8 +9,11 @@ language: c
 matrix:
   include:
   - os: osx
+    env: TARGET_ARCH=x64
+  - os: windows
+    env: TARGET_ARCH=x64
   - os: linux
-    env: CC=clang CXX=clang++ npm_config_clang=1
+    env: CC=clang CXX=clang++ npm_config_clang=1 TARGET_ARCH=x64
     compiler: clang
 cache:
   directories:
@@ -32,5 +39,6 @@ install:
 script:
 - npm run dist
 branches:
-  except:
-  - "/^v\\d+\\.\\d+\\.\\d+$/"
+  only:
+    - development
+    - master
