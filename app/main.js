@@ -16,7 +16,6 @@ const bitcoin = require("bitcoinjs-lib");
 const bip32utils = require("bip32-utils");
 const zencashjs = require("zencashjs");
 const sql = require("sql.js");
-const request = require("request");
 const updater = require("electron-simple-updater");
 const axios = require("axios");
 require("axios-debug-log");
