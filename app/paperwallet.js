@@ -3,9 +3,9 @@
 /*jslint node: true */
 "use strict";
 
-const {ipcRenderer, webFrame} = require("electron");
+const {ipcRenderer} = require("electron");
 const Qrcode = require("qrcode");
-const jsPDF = require("jspdf");
+const PDFjs = require("jspdf");
 const zencashjs = require("zencashjs");
 
 ipcRenderer.on("export-paper-wallet", (sender, wif, name) => {
@@ -21,7 +21,7 @@ ipcRenderer.on("export-paper-wallet", (sender, wif, name) => {
     }
 
     function renderWallet(pkHexQrCode, tAddrQrCode) {
-        const pdf = new jsPDF(); // a4
+        const pdf = new PDFjs(); // a4
         const pdfW = pdf.internal.pageSize.width;
         // TODO: unused pdfH
         // const pdfH = pdf.internal.pageSize.height;
@@ -60,13 +60,15 @@ ipcRenderer.on("export-paper-wallet", (sender, wif, name) => {
         y += 0;
         y += centeredText(tAddr, y);
         y += 0;
-        y += centerSquareImage(tAddrQrCode, "JPEG", y);
+        centerSquareImage(tAddrQrCode, "JPEG", y);
 
         let filename;
-        if (name)
+        if (name) {
             filename = `arizen-wallet-${name}.pdf`;
-        else
+        }
+        else {
             filename = `arizen-wallet-${tAddr}.pdf`;
+        }
 
         pdf.save(filename);
     }
