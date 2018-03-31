@@ -534,7 +534,7 @@ function exportPKs() {
                     exportToFile(filename);
                 }
             });
-        };
+        }
     });
 }
 
@@ -558,8 +558,7 @@ function appendUrlPath(base, path) {
             return base + path.substring(1);
         else
             return base + path;
-    }
-    else {
+    } else {
         if (path.startsWith("/"))
             return base + path;
         else
@@ -667,7 +666,7 @@ async function fetchBlockchainChanges(addrObjs, knownTxIds) {
 }
 
 async function updateBlockchainView(webContents) {
-    webContents.send("add-loading-image")
+    webContents.send("add-loading-image");
     const addrObjs = sqlSelectObjects("SELECT addr, name, lastbalance FROM wallet");
     const knownTxIds = sqlSelectColumns("SELECT DISTINCT txid FROM transactions").map(row => row[0]);
     let totalBalance = addrObjs.filter(obj => obj.lastbalance).reduce((sum, a) => sum + a.lastbalance, 0);
@@ -1477,7 +1476,7 @@ ipcMain.on("send-many", async function (event, fromAddressesAll, toAddress, fee,
                 return;
             }
 
-            // GET PREVIOUS TRANSACTIONS -----------------------------------------------------------------------------------
+            // GET PREVIOUS TRANSACTIONS -------------------------------------------------------------------------------
             let prevTxURL = "/addrs/";
             for (let i = 0; i < nFromAddresses; i++) {
                 prevTxURL += fromAddresses[i] + ",";
@@ -1487,7 +1486,7 @@ ipcMain.on("send-many", async function (event, fromAddressesAll, toAddress, fee,
             const infoURL = "/status?q=getInfo";
             const sendRawTxURL = "/tx/send";
 
-            // BUILDING OUR TRANSACTION TXOBJ ------------------------------------------------------------------------------
+            // BUILDING OUR TRANSACTION TXOBJ --------------------------------------------------------------------------
             // Calculate maximum ZEN satoshis that we have
             let satoshisSoFar = 0;
             let history = [];
@@ -1553,9 +1552,7 @@ ipcMain.on("send-many", async function (event, fromAddressesAll, toAddress, fee,
 
             // Convert it to hex string
             const txHexString = zencashjs.transaction.serializeTx(txObj);
-
             const txRespData = await apiPost(sendRawTxURL, {rawtx: txHexString});
-
 
             finalMessage += `<small><a href="javascript:void(0)" onclick="openUrl('${settings.explorerUrl}/tx/${txRespData.txid}')" class="walletListItemDetails transactionExplorer monospace" target="_blank">${txRespData.txid}</a>`;
             finalMessage += "</small><br/>\n\n";
@@ -1586,7 +1583,7 @@ ipcMain.on("create-paper-wallet", (event, name, addToWallet) => {
 });
 
 ipcMain.on("renderer-show-message-box", (event, msgStr, buttons) => {
-    buttons = buttons.concat([tr("warmingMessages.cancel","Cancel")])
+    buttons = buttons.concat([tr("warmingMessages.cancel","Cancel")]);
     dialog.showMessageBox({type: "warning", title: "Important Information", message: msgStr, buttons: buttons, cancelId: -1 }, function(response) {
       event.returnValue = response;
     });
