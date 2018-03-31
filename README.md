@@ -15,8 +15,11 @@ Arizen is ZenCash light wallet.
 # Version History
 
 ## v1.1.5
-- [x] Domain fronting support
-- [x] Fix bug when you want to send 1000ZENs and more
+- [x] Domain fronting support.
+- [x] Fix bug when you want to send 1000ZENs and more.
+- [x] Small visual fixes.
+- [x] "Show zero balance" checkbox is checked by default for better UX.
+- [x] Async calls for API requests.
 
 ## v1.1.4
 - [x] Fix: link from About section is not opened in Arizen
