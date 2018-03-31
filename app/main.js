@@ -41,7 +41,7 @@ function attachUpdaterHandlers() {
         dialog.showMessageBox({
             type: "info",
             title: "Update is here!",
-            message: `Arizen will be closed and the new ${version} version will be installed. After it will be done Arizen wallet will be reopened again.`
+            message: `Arizen will be closed and the new ${version} version will be installed. When the update is complete, the Arizen wallet will be reopened itself.`
         }, function () {
             // application forces to update itself
             updater.quitAndInstall();
