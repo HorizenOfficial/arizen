@@ -85,6 +85,25 @@ function getNewZaddressPK(nameAddress){
   });
 }
 
+function getZaddressBalance(zAddress){
+  const cmd = "z_getbalance"
+  let paramsUsed = [zAddress];
+  rpcCallResult(cmd,paramsUsed,function(output,status){
+    balance = parseFloat(output).toFixed(8);
+    console.log(balance);   
+
+    // rpcCallResult(newCmd,paramsUsed,function(output,status){
+    //     pkZaddress = output;
+    //     console.log(zAddress,pkZaddress);
+    //     //return {pkZaddress:pkZaddress, zAddress:zAddress}
+    //     ipcRenderer.send("generate-Z-address", nameAddress,pkZaddress,zAddress);
+    //
+    // });
+
+  });
+}
+
+
 module.exports = {
   rpcCall: rpcCall,
   cleanCommandString: cleanCommandString,

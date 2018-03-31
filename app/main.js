@@ -1205,11 +1205,11 @@ ipcMain.on("generate-Z-address", function (event, nameAddress,pkZaddress,zAddres
     if (userInfo.loggedIn) {
         resp.response = "OK";
         resp.addr =  { addr: zAddress, name: nameAddress, lastbalance: 0, pk: pkZaddress };
-        //userInfo.walletDb.run("INSERT INTO wallet VALUES (?,?,?,?,?,?)", [null, pkZaddress, zAddress, 0, nameAddress,1]); // Argument 6 -- 0: T, 1:Z
+        userInfo.walletDb.run("INSERT INTO wallet VALUES (?,?,?,?,?)", [null, pkZaddress, zAddress, 0, nameAddress]);
         saveWallet();
     }
 
-    event.sender.send("generate-Z-response", JSON.stringify(resp));
+    event.sender.send("generate-wallet-response", JSON.stringify(resp));
 });
 
 ipcMain.on("save-settings", function (event, newSettingsStr) {
