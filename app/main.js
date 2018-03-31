@@ -355,16 +355,6 @@ function getNewAddress(name) {
     return { addr: addr, name: name, lastbalance: 0, pk: pk, wif: privateKeys[0]};
 }
 
-function sqlResultToObjectArray(res) {
-    return res[0].values.map(columns => {
-        const obj = {};
-        for (let i = 0; i < columns.length; i++) {
-            obj[res[0].columns[i]] = columns[i];
-        }
-        return obj;
-    });
-}
-
 function sqlSelect(asObjects, sql, ...args) {
     const stmt = userInfo.walletDb.prepare(sql);
     stmt.bind(args);
