@@ -564,7 +564,6 @@ function appendUrlPath(base, path) {
         else
             return base + "/" + path;
     }
-    return url + path;
 }
 
 async function apiGet(url) {
