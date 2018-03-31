@@ -30,7 +30,8 @@ ipcRenderer.on("export-paper-wallet", (sender, wif, name) => {
             const textWidth = pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
             const x = (pdfW - textWidth) / 2;
             pdf.text(x, y, text);
-            return 10; // FIXME find out height from font metrics
+            // FIXME: find out height from font metrics
+            return 10;
         }
 
         function centerSquareImage(img, format, y) {
@@ -42,10 +43,11 @@ ipcRenderer.on("export-paper-wallet", (sender, wif, name) => {
 
         let y = 10;
 
-        if (name)
+        if (name) {
             y += centeredText("ZENCASH WALLET " + name, y);
-        else
+        } else {
             y += centeredText("ZENCASH WALLET", y);
+        }
         y += 10;
 
         y += centeredText("PRIVATE KEY", y);
