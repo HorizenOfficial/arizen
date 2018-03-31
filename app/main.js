@@ -1436,7 +1436,7 @@ ipcMain.on("send-many", async function (event, fromAddressesAll, toAddress, fee,
             let balanceInSatoshi = 0;
 
             for (let i = 0; i < nFromAddresses; i++) {
-                let walletAddr = sqlSelectColumns("SELECT * FROM wallet WHERE addr = ?", fromAddresses[i])[0];
+                let walletAddr = sqlSelectObjects("SELECT * FROM wallet WHERE addr = ?", fromAddresses[i])[0];
 
                 if (!walletAddr) {
                     err = tr("wallet.tabWithdraw.messages.unknownAddress", "Source address is not in your wallet!");
