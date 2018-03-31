@@ -802,21 +802,21 @@ function createHelpSubmenu() {
             label: tr("menu.helpSubmenu.arizenManual", "Arizen Manual"),
             accelerator: "CmdOrCtrl+H",
             click: () => {
-                require('electron').shell.openExternal('https://github.com/ZencashOfficial/arizen#user-manuals')
+                require("electron").shell.openExternal("https://github.com/ZencashOfficial/arizen#user-manuals");
             }
         },
         {
             label: tr("menu.helpSubmenu.support", "Support"),
             accelerator: "Shift+CmdOrCtrl+S",
             click: () => {
-                require('electron').shell.openExternal('https://support.zencash.com')
+                require("electron").shell.openExternal("https://support.zencash.com");
             }
         },
         { type: "separator" },
         {
             label: tr("menu.helpSubmenu.zencash", "ZenCash"),
             click: () => {
-                require('electron').shell.openExternal('https://zencash.com')
+                require("electron").shell.openExternal("https://zencash.com");
             }
         }
     ];
@@ -943,7 +943,7 @@ function createWindow() {
 }
 
 // https://github.com/electron/electron/issues/6139
-if (process.platform === 'linux') {
+if (process.platform === "linux") {
     app.disableHardwareAcceleration();
 }
 
