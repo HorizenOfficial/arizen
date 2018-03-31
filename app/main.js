@@ -24,9 +24,9 @@ const {List} = require("immutable");
 const {translate} = require("./util.js");
 const {DateTime} = require("luxon");
 
-const userWarningImportFileWithPKs = "New address(es) and a private key(s) will be imported. Your previous back-ups do not include the newly imported addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen."
-const userWarningExportWalletUnencrypted = "You are going to export an UNENCRYPTED wallet ( ie your private keys) in plain text. That means that anyone with this file can control your ZENs. Store this file in a safe place. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen."
-const userWarningExportWalletEncrypted = "You are going to export an ENCRYPTED wallet and your private keys will be encrypted. That means that in order to access your private keys you need to know the corresponding username and password. In case you don't know them you cannot control the ZENs that are controled by these private keys. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen."
+const userWarningImportFileWithPKs = "New address(es) and a private key(s) will be imported. Your previous back-ups do not include the newly imported addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
+const userWarningExportWalletUnencrypted = "You are going to export an UNENCRYPTED wallet ( ie your private keys) in plain text. That means that anyone with this file can control your ZENs. Store this file in a safe place. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
+const userWarningExportWalletEncrypted = "You are going to export an ENCRYPTED wallet and your private keys will be encrypted. That means that in order to access your private keys you need to know the corresponding username and password. In case you don't know them you cannot control the ZENs that are controled by these private keys. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
 
 // Press F12 to open the DevTools. See https://github.com/sindresorhus/electron-debug.
 require("electron-debug")();
@@ -430,7 +430,7 @@ function setSettings(newSettings) {
         axiosApi = axios.create({
             baseURL: DOMAIN_FRONTING_PUBLIC_URL,
             headers: {
-                'Host': DOMAIN_FRONTING_PRIVATE_HOST
+                "Host": DOMAIN_FRONTING_PRIVATE_HOST
             },
             timeout: 10000,
         });
@@ -554,15 +554,17 @@ function importOnePK(pk, name = "") {
 function appendUrlPath(base, path) {
     let url = base;
     if (base.endsWith("/")) {
-        if (path.startsWith("/"))
+        if (path.startsWith("/")) {
             return base + path.substring(1);
-        else
+        } else {
             return base + path;
+        }
     } else {
-        if (path.startsWith("/"))
+        if (path.startsWith("/")) {
             return base + path;
-        else
+        } else {
             return base + "/" + path;
+        }
     }
 }
 
