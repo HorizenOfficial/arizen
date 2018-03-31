@@ -550,24 +550,6 @@ function importOnePK(pk, name = "") {
     }
 }
 
-// TODO: unused function - remove?
-function appendUrlPath(base, path) {
-    let url = base;
-    if (base.endsWith("/")) {
-        if (path.startsWith("/")) {
-            return base + path.substring(1);
-        } else {
-            return base + path;
-        }
-    } else {
-        if (path.startsWith("/")) {
-            return base + path;
-        } else {
-            return base + "/" + path;
-        }
-    }
-}
-
 async function apiGet(url) {
     const resp = await axiosApi(url);
     return resp.data;
