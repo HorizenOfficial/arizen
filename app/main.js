@@ -1351,12 +1351,10 @@ ipcMain.on("send", async function (event, fromAddress, toAddress, fee, amount){
 
         // Convert it to hex string
         const txHexString = zencashjs.transaction.serializeTx(txObj);
-
         const txRespData = await apiPost(sendRawTxURL, {rawtx: txHexString});
 
         // TODO redo this into garbage
-        let message = "TXid:\n\n<small><small>" + txRespData.txid +
-            "</small></small><br /><a href=\"javascript:void(0)\" onclick=\"openUrl('" + settings.explorerUrl + "/tx/" + txRespData.txid +"')\" class=\"walletListItemDetails transactionExplorer\" target=\"_blank\">Show Transaction in Explorer</a>";
+        let message = "TXid:\n\n<small>" + txRespData.txid + "</small><br /><a href=\"javascript:void(0)\" onclick=\"openUrl('" + settings.explorerUrl + "/tx/" + txRespData.txid +"')\" class=\"walletListItemDetails transactionExplorer\" target=\"_blank\">Show Transaction in Explorer</a>";
         event.sender.send("send-finish", "ok", message);
     }
     catch (e) {
