@@ -1564,7 +1564,6 @@ ipcMain.on("send-many", async function (event, fromAddressesAll, toAddress, fee,
             if (txFinished === chunks.length) {
                 event.sender.send("send-finish", "ok", finalMessage);
             }
-            // TODO else?
         }
     }
     catch(e) {
