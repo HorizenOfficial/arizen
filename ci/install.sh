@@ -1,7 +1,7 @@
-#!/usr/bin/env bash
-set -ex
+#!/bin/bash
 
-nvm install 6
+set -e
+
 npm install electron-builder@next
 npm install
 npm prune

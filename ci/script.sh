@@ -1,6 +1,7 @@
-#!/usr/bin/env bash
+#!/bin/bash
+
 # This script takes care of testing your crate
 
-set -ex
+set -e
 
 npm run dist

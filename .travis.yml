@@ -42,17 +42,19 @@ cache:
 addons:
   apt:
     packages:
+    - graphviz
     - libgnome-keyring-dev
     - icnsutils
 
 before_install:
-  - sh ci/before_install.sh
+  - ./ci/before_install.sh
 
 install:
-  - sh ci/install.sh
+  - nvm install 6
+  - ./ci/install.sh
 
 script:
-  - sh ci/script.sh
+  - ./ci/script.sh
 
 after_script:
   # - set +e
