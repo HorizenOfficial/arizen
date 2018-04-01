@@ -3,11 +3,6 @@
 notifications:
   email: false
 
-dist: trusty
-osx_image: xcode9.2
-language: c
-sudo: required
-
 git:
   depth: 10
 
@@ -26,11 +21,18 @@ matrix:
   include:
   - os: osx
     env: TARGET_ARCH=x64
+    osx_image: xcode9.2
+    sudo: required
+    language: c
   - os: windows
     env: TARGET_ARCH=x64
+    language: c
   - os: linux
     env: CC=clang CXX=clang++ npm_config_clang=1 TARGET_ARCH=x64
     compiler: clang
+    sudo: required
+    dist: trusty
+    language: c
 
 cache:
   directories:
