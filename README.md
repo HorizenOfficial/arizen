@@ -7,6 +7,7 @@
 Arizen is ZenCash light wallet.
 
 # User Manuals
+- v1.1.6: [Arizen v1.1.6 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.6/Arizen.v1.1.6.Wallet.User.Manual.pdf)
 - v1.1.5: [Arizen v1.1.5 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.5/Arizen.v1.1.5.Wallet.User.Manual.pdf)
 - v1.1.4: [Arizen v1.1.4 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.4/Arizen.v1.1.4.Wallet.User.Manual.pdf)
 - v1.1.3: [Arizen v1.1.3 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.3/Arizen.v1.1.3.Wallet.User.Manual.pdf)
@@ -14,6 +15,12 @@ Arizen is ZenCash light wallet.
 - v1.0.0: [Arizen v1.0.0 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.0.0/Arizen.Wallet.User.Manual.pdf)
 
 # Version History
+
+## v1.1.6
+- [ ] RPC connection to your own Security Node.
+- [ ] Support Z transactions.
+- [ ] When you have connected your Security Node, then all transactions go through your Security Node (no more 3rd servers)
+- [ ] Travis CI support enabled for faster development cycle.
 
 ## v1.1.5
 - [x] Domain fronting support.
