@@ -55,7 +55,7 @@ header > *:nth-child(3) {
 }
 
 header button {
-	padding: 2px 6px;
+    padding: 2px 6px;
 }
 
 /* Wallet operations */
@@ -175,6 +175,7 @@ header button {
     align-items: center;
     cursor: pointer;
 }
+
 .addrNameLine > :not(:first-child) {
     margin-left: 5px;
 }
@@ -183,6 +184,7 @@ header button {
     height: 14px;
     opacity: 0.5;
 }
+
 .addrNameLine:hover > .addrDetailButton {
     opacity: 1;
 }
@@ -295,9 +297,11 @@ header button {
     padding: 5px 0 5px 0;
     cursor: pointer;
 }
+
 .txItem > :not(:first-child) {
     margin-left: 5px;
 }
+
 .txItem > :last-child {
     margin-right: 5px;
 }
@@ -322,8 +326,8 @@ header button {
 }
 
 .txDetailFrom, .txDetailTo {
-	max-height: 200px;
-	overflow: auto;
+    max-height: 200px;
+    overflow: auto;
 }
 
 /* Status line */
@@ -347,9 +351,11 @@ header button {
     border: none;
     border-collapse: collapse;
 }
+
 .addrSelectList > :nth-child(odd) {
     background: var(--odd-bg);
 }
+
 .addrSelectList > tr > td:not(:first-child) {
     padding-left: 10px;
 }
@@ -357,12 +363,15 @@ header button {
 .addrSelectRow {
     cursor: pointer;
 }
+
 .addrSelectRow:hover {
     background: var(--hover-bg);
 }
+
 .addrSelectRow > * {
     margin-right: 15px;
 }
+
 .addrSelectRowBalance {
     justify-self: flex-end;
     flex-grow: 2;

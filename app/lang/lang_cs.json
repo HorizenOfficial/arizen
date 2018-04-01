@@ -162,7 +162,9 @@
       "explorerUrl": "Adresa ZEN exploreru",
       "apiUrl": "Adresa API",
       "fiat": "Zůstatek ve FIAT měně",
-      "save": "Uložit"
+      "save": "Uložit",
+      "enableNotifications": "Notifikace",
+      "enableDomainFronting": "Domain fronting"
     },
     "paperWallet": {
       "label": "Papírová peněženka",
@@ -219,7 +221,7 @@
     "userWarningExportWalletEncrypted": "You are going to export an ENCRYPTED wallet and your private keys will be encrypted. That means that in order to access your private keys you need to know the corresponding username and password. In case you don't know them you cannot control the ZENs that are controled by these private keys. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
     "userWarningImportPK": "A new address and a private key will be imported. Your previous back-ups do not include the newly imported address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
     "userWarningCreateNewAddress": "A new address and a private key will be created. Your previous back-ups do not include this newly generated address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
-    "userWarningIUnderstand": "I understand",
-    "cancel": "Cancel"
+    "userWarningIUnderstand": "Souhlasím",
+    "cancel": "Zrušit"
   }
 }

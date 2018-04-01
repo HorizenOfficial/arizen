@@ -163,6 +163,7 @@
       "apiUrl": "API URLs",
       "fiat": "Fiat Equivalent",
       "save": "Save",
+      "enableNotifications": "Desktop notifications",
       "enableDomainFronting": "Domain fronting"
     },
     "paperWallet": {
