@@ -90,7 +90,7 @@ function getZaddressBalance(zAddress){
   let paramsUsed = [zAddress];
   rpcCallResult(cmd,paramsUsed,function(output,status){
     balance = parseFloat(output).toFixed(8);
-    console.log(balance);   
+    console.log(balance);
 
     // rpcCallResult(newCmd,paramsUsed,function(output,status){
     //     pkZaddress = output;
@@ -109,5 +109,6 @@ module.exports = {
   cleanCommandString: cleanCommandString,
   rpcCallResult: rpcCallResult,
   splitCommandString: splitCommandString,
-  getNewZaddressPK: getNewZaddressPK
+  getNewZaddressPK: getNewZaddressPK,
+  getZaddressBalance: getZaddressBalance
 }
