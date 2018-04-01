@@ -6,6 +6,7 @@
 const {ipcRenderer} = require("electron");
 const Qrcode = require("qrcode");
 const jsPDF = require("jspdf");
+const {showPaperWalletDialog} = require("./paperWallet.js");
 
 function logIpc(msgType) {
     ipcRenderer.on(msgType, (...args) => {
