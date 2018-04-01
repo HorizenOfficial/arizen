@@ -1,4 +1,7 @@
-# ----------------------------------------------------------------------------------------------------------------------
+# Arizen's Travis CI build script for building Linux, MacOS, and Windows release.
+
+notifications:
+  email: false
 
 dist: trusty
 osx_image: xcode9.2
@@ -8,10 +11,16 @@ sudo: required
 git:
   depth: 10
 
+branches:
+  only:
+    # release tags
+    - /^v\d+\.\d+\.\d+.*$/
+    - development
+    - master
 env:
   global:
     # TODO Update this to match the name of your project.
-    - CRATE_NAME=arizen
+    - PROJECT_NAME=arizen
 
 matrix:
   include:
@@ -37,7 +46,7 @@ addons:
     - icnsutils
 
 before_install:
-  - set -e
+  # - set -e
   - mkdir -p /tmp/git-lfs && curl -L https://github.com/github/git-lfs/releases/download/v1.2.1/git-lfs-$([
     "$TRAVIS_OS_NAME" == "linux" ] && echo "linux" || echo "darwin")-amd64-1.2.1.tar.gz
     | tar -xz -C /tmp/git-lfs --strip-components 1 && /tmp/git-lfs/git-lfs pull
@@ -56,7 +65,7 @@ script:
   # - bash ci/script.sh
 
 after_script:
-  - set +e
+  # - set +e
 
 before_deploy:
   # - sh ci/before_deploy.sh
@@ -84,14 +93,3 @@ before_deploy:
 # before_cache:
   # Travis can't cache files that are not readable by "others"
   # - chmod -R a+r $HOME/.cargo
-
-branches:
-  only:
-    # release tags
-    - /^v\d+\.\d+\.\d+.*$/
-    - development
-    - master
-
-notifications:
-  email:
-    on_success: never
