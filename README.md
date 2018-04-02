@@ -16,7 +16,7 @@
 ## v1.1.6
 - [ ] RPC connection to your own Security Node.
 - [ ] Support Z transactions.
-- [ ] When you have connected your Security Node, then all transactions go through your Security Node (no more 3rd servers)
+- [ ] When you are connected to your Security Node, then all your transactions go through your own Security Node (no more 3rd party servers).
 - [ ] Travis CI support enabled for faster development cycle.
 
 ## v1.1.5
