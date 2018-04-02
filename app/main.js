@@ -29,7 +29,7 @@ const userWarningExportWalletUnencrypted = "You are going to export an UNENCRYPT
 const userWarningExportWalletEncrypted = "You are going to export an ENCRYPTED wallet and your private keys will be encrypted. That means that in order to access your private keys you need to know the corresponding username and password. In case you don't know them you cannot control the ZENs that are controled by these private keys. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
 
 // Press F12 to open the DevTools. See https://github.com/sindresorhus/electron-debug.
-require("electron-debug")();
+// require("electron-debug")();
 
 // Uncomment if you want to run in production
 // process.env.NODE_ENV !== "production"
