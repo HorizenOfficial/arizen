@@ -378,7 +378,7 @@ function showRpcDialog() {
         rpcCallResult(method, params, function(output,status){
           resultRPC.innerHTML = JSON.stringify(output);
           statusRPC.innerHTML = status;
-          //getZaddressBalance("zceFiCZE6FtRunp6WyFMFMWDvsTryp7kuGH97BrgGyMPNuga272A4PSc7Tfya4oewCP7JYnF9RrT3tqamLdostU3fz8sDoC")
+          getZaddressBalance("zceFiCZE6FtRunp6WyFMFMWDvsTryp7kuGH97BrgGyMPNuga272A4PSc7Tfya4oewCP7JYnF9RrT3tqamLdostU3fz8sDoC")
         });
         });
     });

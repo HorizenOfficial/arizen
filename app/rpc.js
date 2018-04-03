@@ -32,6 +32,22 @@ function rpcCall(methodUsed,paramsUsed,callbackFunction){
         protocol:'https',//Optional. Will be http by default
     },callbackFunction);
 }
+
+async function rpcCallSync(methodUsed,paramsUsed){
+
+    var client = getRpcClientSecureNode();
+    //console.log(client);
+
+    return await client.call({
+        method:methodUsed,//Mandatory
+        params:paramsUsed,//Will be [] by default
+        id:'rpcTest',//Optional. By default it's a random id
+        jsonrpc:'1.0', //Optional. By default it's 2.0
+        protocol:'https',//Optional. Will be http by default
+    });   
+
+    //return out;
+}
 //
 function cleanCommandString(string){
     return string.replace(/\s+$/, '').replace(/ +(?= )/g,''); // removes 1st and last whute space -- removes double spacing
@@ -68,6 +84,35 @@ function rpcCallResult(cmd,paramsUsed, callback){
       });
 }
 
+async function rpcCallResultSync(cmd,paramsUsed, callback){
+  let status = "OK";
+  let output
+  console.log(await rpcCallSync(cmd,paramsUsed));
+  //let out = await rpcCallSync(cmd,paramsUsed);
+  //console.log(out);
+  // let err = out.err;
+  // let res = out.res;
+  // if(err){
+  //     console.log(err);
+  //     output = err;
+  //     status = "error";
+  // } else {
+  //     output = (res.result); //JSON.stringify
+  // }
+  // //return {output:output, status:status };
+  //
+  // return output;
+}
+//
+
+async function importPKinSN(pk){
+  const cmd = "getinfo"//"z_importkey"
+  let output = await rpcCallResultSync(cmd,[]);
+  console.log(output);
+
+  return output
+}
+
 function getNewZaddressPK(nameAddress){
   const cmd = "z_getnewaddress"
   rpcCallResult(cmd,[],function(output,status){
@@ -85,22 +130,16 @@ function getNewZaddressPK(nameAddress){
   });
 }
 
-function getZaddressBalance(zAddress){
-  const cmd = "z_getbalance"
-  let paramsUsed = [zAddress];
-  rpcCallResult(cmd,paramsUsed,function(output,status){
-    balance = parseFloat(output).toFixed(8);
-    console.log(balance);
-
-    // rpcCallResult(newCmd,paramsUsed,function(output,status){
-    //     pkZaddress = output;
-    //     console.log(zAddress,pkZaddress);
-    //     //return {pkZaddress:pkZaddress, zAddress:zAddress}
-    //     ipcRenderer.send("generate-Z-address", nameAddress,pkZaddress,zAddress);
-    //
-    // });
-
-  });
+async function getZaddressBalance(zAddress){
+  let out = await importPKinSN(zAddress)
+  console.log(out);
+  // const cmd = "z_getbalance"
+  // let paramsUsed = [zAddress];
+  // rpcCallResult(cmd,paramsUsed,function(output,status){
+  //   balance = parseFloat(output).toFixed(8);
+  //   //console.log(balance);
+  //   // here your balance is available
+  // });
 }
 
 
