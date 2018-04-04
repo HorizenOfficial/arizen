@@ -33,21 +33,6 @@ function rpcCall(methodUsed,paramsUsed,callbackFunction){
     },callbackFunction);
 }
 
-async function rpcCallSync(methodUsed,paramsUsed){
-
-    var client = getRpcClientSecureNode();
-    //console.log(client);
-
-    return await client.call({
-        method:methodUsed,//Mandatory
-        params:paramsUsed,//Will be [] by default
-        id:'rpcTest',//Optional. By default it's a random id
-        jsonrpc:'1.0', //Optional. By default it's 2.0
-        protocol:'https',//Optional. Will be http by default
-    });   
-
-    //return out;
-}
 //
 function cleanCommandString(string){
     return string.replace(/\s+$/, '').replace(/ +(?= )/g,''); // removes 1st and last whute space -- removes double spacing
@@ -74,43 +59,20 @@ function rpcCallResult(cmd,paramsUsed, callback){
   rpcCall(cmd,paramsUsed, function(err, res){
       if(err){
           console.log(err);
+          console.log(JSON.stringify(err));
           output = err;
           status = "error";
       } else {
           output = (res.result); //JSON.stringify
       }
-      //return {output:output, status:status };
       callback(output,status)
       });
 }
 
-async function rpcCallResultSync(cmd,paramsUsed, callback){
-  let status = "OK";
-  let output
-  console.log(await rpcCallSync(cmd,paramsUsed));
-  //let out = await rpcCallSync(cmd,paramsUsed);
-  //console.log(out);
-  // let err = out.err;
-  // let res = out.res;
-  // if(err){
-  //     console.log(err);
-  //     output = err;
-  //     status = "error";
-  // } else {
-  //     output = (res.result); //JSON.stringify
-  // }
-  // //return {output:output, status:status };
-  //
-  // return output;
-}
-//
-
-async function importPKinSN(pk){
-  const cmd = "getinfo"//"z_importkey"
-  let output = await rpcCallResultSync(cmd,[]);
-  console.log(output);
-
-  return output
+function importPKinSN(pk,callback){
+  // const cmd = "z_importkey";
+  // rpcCallResult(cmd,[pk],callback);
+  callback
 }
 
 function getNewZaddressPK(nameAddress){
@@ -130,16 +92,59 @@ function getNewZaddressPK(nameAddress){
   });
 }
 
-async function getZaddressBalance(zAddress){
-  let out = await importPKinSN(zAddress)
-  console.log(out);
-  // const cmd = "z_getbalance"
-  // let paramsUsed = [zAddress];
-  // rpcCallResult(cmd,paramsUsed,function(output,status){
-  //   balance = parseFloat(output).toFixed(8);
-  //   //console.log(balance);
-  //   // here your balance is available
-  // });
+function getOperationStatus(opid){
+    const cmd = "z_getoperationstatus";
+    let paramsUsed = [ [opid]];
+    //console.log(paramsUsed);
+    rpcCallResult(cmd,paramsUsed,function(output,status){
+      let statusTx = output;
+      console.log(JSON.stringify(statusTx[0]));
+      console.log(status);
+    });
+}
+
+
+function getZaddressBalance(pk,zAddress){
+  importPKinSN(pk,function(){
+      const cmd = "z_getbalance"
+      let paramsUsed = [zAddress];
+      rpcCallResult(cmd,paramsUsed,function(output,status){
+          balance = parseFloat(output).toFixed(8);
+          console.log(balance);
+          // here your balance is available
+  });
+});
+}
+
+// function sendFromOrToZaddress(fromAddress,toAddress,fee,amount){
+//   // fromAddressPK = fun fromAddress
+//   let fromAddressPK = "SKxqUn1d6mjoF4PKBizLRnU6RStXgkejZkwYzCcqrvz3WDpwPrgw";
+//   importPKinSN(fromAddressPK,function(){
+//       let amounts = [{"address":toAddress,"amount":amount,"memo":"memo"}];
+//       const cmd = "z_sendmany";
+//       let paramsUsed = [fromAddress,amounts,fee];
+//       rpcCallResult(cmd,paramsUsed,function(output,status){
+//           console.log(output);
+//           console.log(status);
+//   });
+// });
+// }
+
+function sendFromOrToZaddress(fromAddress,toAddress,amount,fee){
+    // fromAddressPK = fun fromAddress
+    let fromAddressPK = "SKxqUn1d6mjoF4PKBizLRnU6RStXgkejZkwYzCcqrvz3WDpwPrgw";
+    let minconf = 1;
+    let amounts = [{"address":toAddress,"amount":amount}]; //,"memo":"memo"
+    console.log(JSON.stringify(amounts));
+    console.log(amounts);
+    const cmd = "z_sendmany";
+    let paramsUsed = [fromAddress,amounts,minconf,fee];
+    console.log(paramsUsed);
+    rpcCallResult(cmd,paramsUsed,function(output,status){
+      let opid = output;
+      console.log(opid);
+      console.log(status);
+    });
 }
 
 
@@ -149,5 +154,7 @@ module.exports = {
   rpcCallResult: rpcCallResult,
   splitCommandString: splitCommandString,
   getNewZaddressPK: getNewZaddressPK,
-  getZaddressBalance: getZaddressBalance
+  getZaddressBalance: getZaddressBalance,
+  sendFromOrToZaddress: sendFromOrToZaddress,
+  getOperationStatus: getOperationStatus
 }
