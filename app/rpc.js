@@ -70,9 +70,9 @@ function rpcCallResult(cmd,paramsUsed, callback){
 }
 
 function importPKinSN(pk,callback){
-  // const cmd = "z_importkey";
-  // rpcCallResult(cmd,[pk],callback);
-  callback
+    const cmd = "z_importkey";
+    rpcCallResult(cmd,[pk],callback);
+  //callback
 }
 
 function getNewZaddressPK(nameAddress){
@@ -95,7 +95,6 @@ function getNewZaddressPK(nameAddress){
 function getOperationStatus(opid){
     const cmd = "z_getoperationstatus";
     let paramsUsed = [ [opid]];
-    //console.log(paramsUsed);
     rpcCallResult(cmd,paramsUsed,function(output,status){
       let statusTx = output;
       console.log(JSON.stringify(statusTx[0]));
@@ -103,6 +102,16 @@ function getOperationStatus(opid){
     });
 }
 
+// Not working - May be deleted
+// function getOperationResult(opid){
+//     const cmd = "z_getoperationresult";
+//     let paramsUsed = [ [opid]];
+//     rpcCallResult(cmd,paramsUsed,function(output,status){
+//       let statusTx = output;
+//       console.log(JSON.stringify(statusTx[0]));
+//       console.log(status);
+//     });
+// }
 
 function getZaddressBalance(pk,zAddress){
   importPKinSN(pk,function(){
@@ -116,34 +125,23 @@ function getZaddressBalance(pk,zAddress){
 });
 }
 
-// function sendFromOrToZaddress(fromAddress,toAddress,fee,amount){
-//   // fromAddressPK = fun fromAddress
-//   let fromAddressPK = "SKxqUn1d6mjoF4PKBizLRnU6RStXgkejZkwYzCcqrvz3WDpwPrgw";
-//   importPKinSN(fromAddressPK,function(){
-//       let amounts = [{"address":toAddress,"amount":amount,"memo":"memo"}];
-//       const cmd = "z_sendmany";
-//       let paramsUsed = [fromAddress,amounts,fee];
-//       rpcCallResult(cmd,paramsUsed,function(output,status){
-//           console.log(output);
-//           console.log(status);
-//   });
-// });
-// }
-
 function sendFromOrToZaddress(fromAddress,toAddress,amount,fee){
     // fromAddressPK = fun fromAddress
     let fromAddressPK = "SKxqUn1d6mjoF4PKBizLRnU6RStXgkejZkwYzCcqrvz3WDpwPrgw";
-    let minconf = 1;
-    let amounts = [{"address":toAddress,"amount":amount}]; //,"memo":"memo"
-    console.log(JSON.stringify(amounts));
-    console.log(amounts);
-    const cmd = "z_sendmany";
-    let paramsUsed = [fromAddress,amounts,minconf,fee];
-    console.log(paramsUsed);
-    rpcCallResult(cmd,paramsUsed,function(output,status){
-      let opid = output;
-      console.log(opid);
-      console.log(status);
+    importPKinSN(fromAddressPK,function(){
+        let minconf = 1;
+        let amounts = [{"address":toAddress,"amount":amount}]; //,"memo":"memo"
+        console.log(JSON.stringify(amounts));
+        console.log(amounts);
+        const cmd = "z_sendmany";
+        let paramsUsed = [fromAddress,amounts,minconf,fee];
+        console.log(paramsUsed);
+        rpcCallResult(cmd,paramsUsed,function(output,status){
+          let opid = output;
+          getOperationStatus(opid)
+          console.log(opid);
+          console.log(status);
+        });
     });
 }
 
@@ -156,5 +154,6 @@ module.exports = {
   getNewZaddressPK: getNewZaddressPK,
   getZaddressBalance: getZaddressBalance,
   sendFromOrToZaddress: sendFromOrToZaddress,
-  getOperationStatus: getOperationStatus
+  getOperationStatus: getOperationStatus,
+  getOperationResult: getOperationResult
 }
