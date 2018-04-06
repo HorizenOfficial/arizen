@@ -663,6 +663,24 @@ async function updateBlockchainView(webContents) {
         }));
     }
 
+    const zAddrObjs = sqlSelectObjects("SELECT addr, name, lastbalance,pk FROM wallet where length(addr)=95");
+    console.log(zAddrObjs);
+
+    for (const addrObj of zAddrObjs) {
+        let previousBalance = addrObj.lastbalance;
+        let balance = webContents.send("update-wallet-balance",addrObj);
+        console.log(balance);
+        let balanceDiff = balance - previousBalance;
+        sqlRun("UPDATE wallet SET lastbalance = ? WHERE addr = ?", balance, addrObj.addr);
+        totalBalance += balance; //not balanceDiff here
+        webContents.send("update-wallet-balance", JSON.stringify({
+            response: "OK",
+            addrObj: addrObj,
+            diff: balanceDiff,
+            total: totalBalance
+        }));
+    }
+
     // Why here ? In case balance is unchanged the 'update-wallet-balance' is never sent, but the Zen/Fiat balance will change.
     webContents.send("send-refreshed-wallet-balance", totalBalance);
 

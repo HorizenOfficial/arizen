@@ -113,17 +113,29 @@ function getOperationStatus(opid){
 //     });
 // }
 
-function getZaddressBalance(pk,zAddress){
+function getZaddressBalance(pk,zAddress,callback){
   importPKinSN(pk,function(){
       const cmd = "z_getbalance"
       let paramsUsed = [zAddress];
       rpcCallResult(cmd,paramsUsed,function(output,status){
           balance = parseFloat(output).toFixed(8);
           console.log(balance);
+          callback(balance);
           // here your balance is available
   });
 });
 }
+
+
+ipcRenderer.on("get-Z-address-balance", (event, addrObj) => {
+    pk = addrObj.pk;
+    zAddress = addrObj.addr;
+    getZaddressBalance(pk,zAddress,function(balance){
+      console.log(balance);
+      event.returnValue = balance;
+    });
+});
+
 
 function sendFromOrToZaddress(fromAddress,toAddress,amount,fee){
     // fromAddressPK = fun fromAddress
@@ -154,6 +166,6 @@ module.exports = {
   getNewZaddressPK: getNewZaddressPK,
   getZaddressBalance: getZaddressBalance,
   sendFromOrToZaddress: sendFromOrToZaddress,
-  getOperationStatus: getOperationStatus,
-  getOperationResult: getOperationResult
+  getOperationStatus: getOperationStatus
+  //getOperationResult: getOperationResult
 }
