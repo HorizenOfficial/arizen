@@ -137,21 +137,21 @@ function getZaddressBalance(pk,zAddress,callback){
 // });
 function updateAllZBalances(){
   console.log("here");
-    const zAddrObjs = ipcRenderer.sendSync("get-all-Z-addreeses");
+    const zAddrObjs = ipcRenderer.sendSync("get-all-Z-addresses");
     for (const addrObj of zAddrObjs) {
       console.log(addrObj.addr);
         getZaddressBalance(addrObj.pk,addrObj.addr,function(newBalance){
             addrObj.lastbalance = newBalance;
-            let resp = ipcRenderer.sendSync("update-Z-addrees-in-db",addrObj);
+            let resp = ipcRenderer.sendSync("update-addr-in-db",addrObj);
         })
     }
 }
 
 
 
-function sendFromOrToZaddress(fromAddress,toAddress,amount,fee){
+function sendFromOrToZaddress(fromAddressPK,fromAddress,toAddress,amount,fee){
     // fromAddressPK = fun fromAddress
-    let fromAddressPK = "SKxqUn1d6mjoF4PKBizLRnU6RStXgkejZkwYzCcqrvz3WDpwPrgw";
+    //let fromAddressPK = "SKxqUn1d6mjoF4PKBizLRnU6RStXgkejZkwYzCcqrvz3WDpwPrgw";
     importPKinSN(fromAddressPK,function(){
         let minconf = 1;
         let amounts = [{"address":toAddress,"amount":amount}]; //,"memo":"memo"

@@ -11,6 +11,7 @@ const jsPDF = require("jspdf");
 // FIXME: unused showPaperWalletDialog
 const {showPaperWalletDialog} = require("./paperwallet.js");
 const {getNewZaddressPK,updateAllZBalances} = require("./rpc.js");
+//const {zenextra} = require("./zenextra.js");
 
 function logIpc(msgType) {
     ipcRenderer.on(msgType, (...args) => {
@@ -571,11 +572,28 @@ function initWithdrawView() {
     withdrawButton.addEventListener("click", () => {
         const msg = tr("wallet.tabWithdraw.withdrawConfirmQuestion", "Do you really want to send this transaction?");
         if (confirm(msg)) {
-            ipcRenderer.send("send",
-                withdrawFromAddrInput.value,
-                withdrawToAddrInput.value,
-                withdrawFeeInput.value,
-                withdrawAmountInput.value);
+            let fromAddr = withdrawFromAddrInput.value;
+            let toAddr = withdrawToAddrInput.value;
+            if (zenextra.isTransaparentAddr(fromAddr) && zenextra.isTransaparentAddr(toAddr) ){
+                ipcRenderer.send("send",
+                    withdrawFromAddrInput.value,
+                    withdrawToAddrInput.value,
+                    withdrawFeeInput.value,
+                    withdrawAmountInput.value);
+            } else {
+                let fromAddrObj = ipcRenderer.sendSync("get-address-object",fromAddr);
+                console.log(fromAddrObj);
+                console.log(fromAddrObj.pk);
+                let fromAddressPK = fromAddrObj.pk;
+                console.log(fromAddressPK);
+                console.log(toAddr);
+                let myAmount = parseFloat(withdrawAmountInput.value).toFixed(8);
+                console.log(myAmount);
+                console.log(withdrawFeeInput.value);
+                let myFees = parseFloat(withdrawFeeInput.value);
+                console.log(myFees);
+                sendFromOrToZaddress(fromAddressPK,fromAddr,toAddr,myAmount,myFees);
+            }
         }
     });
     withdrawFromButton.addEventListener("click", () => showAddrSelectDialog(false, addr => {

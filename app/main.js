@@ -663,7 +663,7 @@ async function updateBlockchainView(webContents) {
         }));
     }
 
-    const zAddrObjs = sqlSelectObjects("SELECT addr, name, lastbalance,pk FROM wallet where length(addr)=95");    
+    const zAddrObjs = sqlSelectObjects("SELECT addr, name, lastbalance,pk FROM wallet where length(addr)=95");
 
     for (const addrObj of zAddrObjs) {
         let previousBalance = 0.0;
@@ -1581,16 +1581,20 @@ ipcMain.on("renderer-show-message-box", (event, msgStr, buttons) => {
 });
 
 
-ipcMain.on("get-all-Z-addreeses", (event) => {
+ipcMain.on("get-all-Z-addresses", (event) => {
     const zAddrObjs = sqlSelectObjects("SELECT addr, name, lastbalance,pk FROM wallet where length(addr)=95");
     event.returnValue = zAddrObjs;
 });
 
-
-
-ipcMain.on("update-Z-addrees-in-db", (event,addrObj) => {
+ipcMain.on("update-addr-in-db", (event,addrObj) => {
     sqlRun("UPDATE wallet SET lastbalance = ? WHERE addr = ?", addrObj.lastbalance, addrObj.addr);
     event.returnValue = true;
+});
+
+
+ipcMain.on("get-address-object", (event,fromAddress) => {
+    let addrObjs = sqlSelectObjects("SELECT * FROM wallet WHERE addr = ?", fromAddress)[0];
+    event.returnValue = addrObjs;
 });
 
 // Unused
