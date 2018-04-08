@@ -582,16 +582,9 @@ function initWithdrawView() {
                     withdrawAmountInput.value);
             } else {
                 let fromAddrObj = ipcRenderer.sendSync("get-address-object",fromAddr);
-                console.log(fromAddrObj);
-                console.log(fromAddrObj.pk);
                 let fromAddressPK = fromAddrObj.pk;
-                console.log(fromAddressPK);
-                console.log(toAddr);
                 let myAmount = parseFloat(withdrawAmountInput.value).toFixed(8);
-                console.log(myAmount);
-                console.log(withdrawFeeInput.value);
                 let myFees = parseFloat(withdrawFeeInput.value);
-                console.log(myFees);
                 sendFromOrToZaddress(fromAddressPK,fromAddr,toAddr,myAmount,myFees);
             }
         }

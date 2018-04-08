@@ -58,8 +58,8 @@ function rpcCallResult(cmd,paramsUsed, callback){
   let output
   rpcCall(cmd,paramsUsed, function(err, res){
       if(err){
-          console.log(err);
-          console.log(JSON.stringify(err));
+          // console.log(err);
+          // console.log(JSON.stringify(err));
           output = err;
           status = "error";
       } else {
@@ -79,13 +79,12 @@ function getNewZaddressPK(nameAddress){
   const cmd = "z_getnewaddress"
   rpcCallResult(cmd,[],function(output,status){
     zAddress = output;
-    console.log(zAddress);
+    // console.log(zAddress);
     const newCmd = "z_exportkey";
     let paramsUsed = [zAddress];
     rpcCallResult(newCmd,paramsUsed,function(output,status){
         pkZaddress = output;
-        console.log(zAddress,pkZaddress);
-        //return {pkZaddress:pkZaddress, zAddress:zAddress}
+        // console.log(zAddress,pkZaddress);
         ipcRenderer.send("generate-Z-address", nameAddress,pkZaddress,zAddress);
 
     });
@@ -119,7 +118,6 @@ function getZaddressBalance(pk,zAddress,callback){
       let paramsUsed = [zAddress];
       rpcCallResult(cmd,paramsUsed,function(output,status){
           balance = parseFloat(output).toFixed(8);
-          console.log(balance);
           callback(balance);
           // here your balance is available
   });
@@ -127,19 +125,9 @@ function getZaddressBalance(pk,zAddress,callback){
 }
 
 
-// ipcRenderer.on("get-Z-address-balance", (event, addrObj) => {
-//     pk = addrObj.pk;
-//     zAddress = addrObj.addr;
-//     getZaddressBalance(pk,zAddress,function(balance){
-//       console.log(balance);
-//       event.returnValue = balance;
-//     });
-// });
 function updateAllZBalances(){
-  console.log("here");
     const zAddrObjs = ipcRenderer.sendSync("get-all-Z-addresses");
     for (const addrObj of zAddrObjs) {
-      console.log(addrObj.addr);
         getZaddressBalance(addrObj.pk,addrObj.addr,function(newBalance){
             addrObj.lastbalance = newBalance;
             let resp = ipcRenderer.sendSync("update-addr-in-db",addrObj);
@@ -150,13 +138,11 @@ function updateAllZBalances(){
 
 
 function sendFromOrToZaddress(fromAddressPK,fromAddress,toAddress,amount,fee){
-    // fromAddressPK = fun fromAddress
-    //let fromAddressPK = "SKxqUn1d6mjoF4PKBizLRnU6RStXgkejZkwYzCcqrvz3WDpwPrgw";
     importPKinSN(fromAddressPK,function(){
         let minconf = 1;
         let amounts = [{"address":toAddress,"amount":amount}]; //,"memo":"memo"
-        console.log(JSON.stringify(amounts));
-        console.log(amounts);
+        //console.log(JSON.stringify(amounts));
+        //console.log(amounts);
         const cmd = "z_sendmany";
         let paramsUsed = [fromAddress,amounts,minconf,fee];
         console.log(paramsUsed);

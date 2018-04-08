@@ -666,9 +666,8 @@ async function updateBlockchainView(webContents) {
     const zAddrObjs = sqlSelectObjects("SELECT addr, name, lastbalance,pk FROM wallet where length(addr)=95");
 
     for (const addrObj of zAddrObjs) {
-        let previousBalance = 0.0;
+        let previousBalance = 0.0; // TODO: Should do something with this
         let balance = addrObj.lastbalance;
-        console.log(balance);
         let balanceDiff = balance - previousBalance;
         addrObj.lastbalance = balance;
         sqlRun("UPDATE wallet SET lastbalance = ? WHERE addr = ?", balance, addrObj.addr);
