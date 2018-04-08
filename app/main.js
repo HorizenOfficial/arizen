@@ -663,14 +663,14 @@ async function updateBlockchainView(webContents) {
         }));
     }
 
-    const zAddrObjs = sqlSelectObjects("SELECT addr, name, lastbalance,pk FROM wallet where length(addr)=95");
-    console.log(zAddrObjs);
+    const zAddrObjs = sqlSelectObjects("SELECT addr, name, lastbalance,pk FROM wallet where length(addr)=95");    
 
     for (const addrObj of zAddrObjs) {
-        let previousBalance = addrObj.lastbalance;
-        let balance = webContents.send("update-wallet-balance",addrObj);
+        let previousBalance = 0.0;
+        let balance = addrObj.lastbalance;
         console.log(balance);
         let balanceDiff = balance - previousBalance;
+        addrObj.lastbalance = balance;
         sqlRun("UPDATE wallet SET lastbalance = ? WHERE addr = ?", balance, addrObj.addr);
         totalBalance += balance; //not balanceDiff here
         webContents.send("update-wallet-balance", JSON.stringify({
@@ -1578,6 +1578,19 @@ ipcMain.on("renderer-show-message-box", (event, msgStr, buttons) => {
     dialog.showMessageBox({type: "warning", title: "Important Information", message: msgStr, buttons: buttons, cancelId: -1 }, function(response) {
       event.returnValue = response;
     });
+});
+
+
+ipcMain.on("get-all-Z-addreeses", (event) => {
+    const zAddrObjs = sqlSelectObjects("SELECT addr, name, lastbalance,pk FROM wallet where length(addr)=95");
+    event.returnValue = zAddrObjs;
+});
+
+
+
+ipcMain.on("update-Z-addrees-in-db", (event,addrObj) => {
+    sqlRun("UPDATE wallet SET lastbalance = ? WHERE addr = ?", addrObj.lastbalance, addrObj.addr);
+    event.returnValue = true;
 });
 
 // Unused

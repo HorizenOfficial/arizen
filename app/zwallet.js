@@ -10,7 +10,7 @@ const Qrcode = require("qrcode");
 const jsPDF = require("jspdf");
 // FIXME: unused showPaperWalletDialog
 const {showPaperWalletDialog} = require("./paperwallet.js");
-const {getNewZaddressPK} = require("./rpc.js");
+const {getNewZaddressPK,updateAllZBalances} = require("./rpc.js");
 
 function logIpc(msgType) {
     ipcRenderer.on(msgType, (...args) => {
@@ -478,6 +478,7 @@ function scheduleRefresh() {
 }
 
 function refresh() {
+    updateAllZBalances();
     ipcRenderer.send("refresh-wallet");
     scheduleRefresh();
 }

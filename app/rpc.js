@@ -127,14 +127,26 @@ function getZaddressBalance(pk,zAddress,callback){
 }
 
 
-ipcRenderer.on("get-Z-address-balance", (event, addrObj) => {
-    pk = addrObj.pk;
-    zAddress = addrObj.addr;
-    getZaddressBalance(pk,zAddress,function(balance){
-      console.log(balance);
-      event.returnValue = balance;
-    });
-});
+// ipcRenderer.on("get-Z-address-balance", (event, addrObj) => {
+//     pk = addrObj.pk;
+//     zAddress = addrObj.addr;
+//     getZaddressBalance(pk,zAddress,function(balance){
+//       console.log(balance);
+//       event.returnValue = balance;
+//     });
+// });
+function updateAllZBalances(){
+  console.log("here");
+    const zAddrObjs = ipcRenderer.sendSync("get-all-Z-addreeses");
+    for (const addrObj of zAddrObjs) {
+      console.log(addrObj.addr);
+        getZaddressBalance(addrObj.pk,addrObj.addr,function(newBalance){
+            addrObj.lastbalance = newBalance;
+            let resp = ipcRenderer.sendSync("update-Z-addrees-in-db",addrObj);
+        })
+    }
+}
+
 
 
 function sendFromOrToZaddress(fromAddress,toAddress,amount,fee){
@@ -166,6 +178,7 @@ module.exports = {
   getNewZaddressPK: getNewZaddressPK,
   getZaddressBalance: getZaddressBalance,
   sendFromOrToZaddress: sendFromOrToZaddress,
-  getOperationStatus: getOperationStatus
+  getOperationStatus: getOperationStatus,
+  updateAllZBalances: updateAllZBalances
   //getOperationResult: getOperationResult
 }
