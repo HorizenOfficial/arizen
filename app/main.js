@@ -799,7 +799,7 @@ function createEditSubmenu() {
 function createHelpSubmenu() {
     return [
         {
-            label: tr("menu.helpSubmenu.arizenManual", "Arizen Manual"),
+            label: tr("menu.helpSubmenu.arizenManual", "User Manual"),
             accelerator: "CmdOrCtrl+H",
             click: () => {
                 require("electron").shell.openExternal("https://github.com/ZencashOfficial/arizen#user-manuals");

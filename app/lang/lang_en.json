@@ -211,8 +211,8 @@
     },
     "help": "Help",
     "helpSubmenu": {
-      "arizenManual": "Arizen Manual",
-      "support": "Suport",
+      "arizenManual": "User Manual",
+      "support": "Support",
       "zencash": "ZenCash"
     }
   },
