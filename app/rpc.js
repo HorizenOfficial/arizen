@@ -6,7 +6,7 @@ function getRpcClientSecureNode(){
 
     var options = {
       port: settings.secureNodePort,
-      host: settings.secureNodeFQDN,
+      host: "127.0.0.1", //settings.secureNodeFQDN,
       user: settings.secureNodeUsername,
       password: settings.secureNodePassword,
       protocol:'http', // should change to https
@@ -19,20 +19,73 @@ function getRpcClientSecureNode(){
     return client;
 }
 
+
 function rpcCall(methodUsed,paramsUsed,callbackFunction){
 
     var client = getRpcClientSecureNode();
     //console.log(client);
+
+    var config = {
+      username:"gsfakianakis",
+      //Password:"ABC@1234",
+      //keepAlive:true,
+      host:"192.168.99.27", //"192.168.99.27",
+      port:22, //22
+      privateKey:require("fs").readFileSync("./../id_rsa.npm"),
+      passphrase:"",
+      dstHost:"127.0.0.1",
+      dstPort:8231,
+      localHost:"127.0.0.1",
+      localPort: 8231
+
+};
+
+
+    var tunnel = require('tunnel-ssh');
+    var server = tunnel(config, function (error, server) {
+      if (error){
+        console.log("SSH connection Error: " + error);
+        console.log(error);
+      } else {
+        console.log("SSH server details: " + String(server));
+        console.log(server);
+      }
 
     client.call({
         method:methodUsed,//Mandatory
         params:paramsUsed,//Will be [] by default
         id:'rpcTest',//Optional. By default it's a random id
         jsonrpc:'1.0', //Optional. By default it's 2.0
-        protocol:'https',//Optional. Will be http by default
+        protocol:'http',//Optional. Will be http by default
     },callbackFunction);
+
+
+    // setTimeout(function(){
+    //   // you only need to close the tunnel by yourself if you set the
+    //   // keepAlive:true option in the configuration !
+    //   console.log("Closing...");
+    //   server.close();
+    // },20000);
+
+
+    });
 }
 
+//
+// function rpcCall(methodUsed,paramsUsed,callbackFunction){
+//
+//     var client = getRpcClientSecureNode();
+//     //console.log(client);
+//
+//     client.call({
+//         method:methodUsed,//Mandatory
+//         params:paramsUsed,//Will be [] by default
+//         id:'rpcTest',//Optional. By default it's a random id
+//         jsonrpc:'1.0', //Optional. By default it's 2.0
+//         protocol:'https',//Optional. Will be http by default
+//     },callbackFunction);
+// }
+//
 //
 function cleanCommandString(string){
     return string.replace(/\s+$/, '').replace(/ +(?= )/g,''); // removes 1st and last whute space -- removes double spacing
@@ -62,6 +115,7 @@ function rpcCallResult(cmd,paramsUsed, callback){
           // console.log(JSON.stringify(err));
           output = err;
           status = "error";
+          console.log(output);
       } else {
           output = (res.result); //JSON.stringify
       }
@@ -117,7 +171,8 @@ function getZaddressBalance(pk,zAddress,callback){
       const cmd = "z_getbalance"
       let paramsUsed = [zAddress];
       rpcCallResult(cmd,paramsUsed,function(output,status){
-          balance = parseFloat(output).toFixed(8);
+          balance = parseFloat(output);
+          console.log(balance)
           callback(balance);
           // here your balance is available
   });
@@ -128,8 +183,10 @@ function getZaddressBalance(pk,zAddress,callback){
 function updateAllZBalances(){
     const zAddrObjs = ipcRenderer.sendSync("get-all-Z-addresses");
     for (const addrObj of zAddrObjs) {
+      console.log(addrObj.lastbalance);
         getZaddressBalance(addrObj.pk,addrObj.addr,function(newBalance){
-            addrObj.lastbalance = newBalance;
+            addrObj.lastbalance = 0.1 ;//newBalance;
+            console.log(0.1111);
             let resp = ipcRenderer.sendSync("update-addr-in-db",addrObj);
         })
     }
