@@ -121,6 +121,7 @@
     "password-hash": "^1.2.2",
     "qrcode": "^1.2.0",
     "sql.js": "^0.5.0",
+    "tunnel-ssh": "^4.1.4",
     "zencashjs": "^1.1.9-a"
   },
   "devDependencies": {
