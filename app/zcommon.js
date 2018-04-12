@@ -381,7 +381,7 @@ function showRpcDialog() {
 
           let zAddrTest = "zceFiCZE6FtRunp6WyFMFMWDvsTryp7kuGH97BrgGyMPNuga272A4PSc7Tfya4oewCP7JYnF9RrT3tqamLdostU3fz8sDoC";
           let pkZ = "SKxqUn1d6mjoF4PKBizLRnU6RStXgkejZkwYzCcqrvz3WDpwPrgw";
-          //getZaddressBalance(pkZ,zAddrTest,function(balance){});
+          getZaddressBalance(pkZ,zAddrTest,function(balance){});
           //sendFromOrToZaddress(pkZ,zAddrTest,"zngGeznkvBo58fkK5iVtNxhpFRKk6GZBaVc",0.001,0.0)
           //getOperationResult("opid-2ef3b787-1066-4050-8a1d-f768557a247a");
           //getOperationStatus("opid-2ef3b787-1066-4050-8a1d-f768557a247a");
