@@ -6,11 +6,11 @@
 const {DateTime} = require("luxon");
 const {translate} = require("./util.js");
 const zencashjs = require("zencashjs");
-const {rpcCall,cleanCommandString,rpcCallResult,splitCommandString,getZaddressBalance,sendFromOrToZaddress,getOperationStatus,getOperationResult} = require("./rpc.js");
+const {cleanCommandString,rpcCallResult,splitCommandString,getZaddressBalance,sendFromOrToZaddress,getOperationStatus} = require("./rpc.js");
 const {zenextra} = require("./zenextra.js");
 
 const userWarningImportPK = "A new address and a private key will be imported. Your previous back-ups do not include the newly imported address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen."
-var sshServer;
+// var sshServer;
 
 
 function assert(condition, message) {
@@ -274,6 +274,12 @@ function showSettingsDialog() {
         const inputSecureNodeUsername = dialog.querySelector(".settingsSecureNodeUsername");
         const inputSecureNodePassword = dialog.querySelector(".settingsSecureNodePassword");
 
+        const inputSshUsername = dialog.querySelector(".settingsSshUsername");
+        const inputSshPassword = dialog.querySelector(".settingsSshPassword");
+        const inputSshPort = dialog.querySelector(".settingsSshPort");
+        const inputReadyTimeout = dialog.querySelector(".settingsReadyTimeout");
+        const inputForwardTimeout = dialog.querySelector(".settingsForwardTimeout");
+
         inputTxHistory.value = settings.txHistory;
         inputExplorerUrl.value = settings.explorerUrl;
         loadAvailableLangs(inputLanguages, settings.lang);
@@ -284,8 +290,13 @@ function showSettingsDialog() {
         inputFiatCurrency.value = settings.fiatCurrency || "USD";
         inputSecureNodeFQDN.value = settings.secureNodeFQDN;
         inputSecureNodePort.value = settings.secureNodePort || 8231;
-        inputSecureNodeUsername.value = settings.secureNodeUsername;
-        inputSecureNodePassword.value = settings.secureNodePassword;
+        inputSecureNodeUsername.value = settings.secureNodeUsername || "";
+        inputSecureNodePassword.value = settings.secureNodePassword || "";
+        inputSshUsername.value = settings.sshUsername || "";
+        inputSshPassword.value = settings.sshPassword || "";
+        inputSshPort.value = settings.sshPort|| 22;
+        inputReadyTimeout.value = settings.readyTimeout|| 10000;
+        inputForwardTimeout.value = settings.forwardTimeout|| 10000;
 
         dialog.querySelector(".settingsSave").addEventListener("click", () => {
             const newSettings = {
@@ -299,7 +310,12 @@ function showSettingsDialog() {
                 secureNodeFQDN: inputSecureNodeFQDN.value,
                 secureNodePort: inputSecureNodePort.value,
                 secureNodeUsername: inputSecureNodeUsername.value,
-                secureNodePassword: inputSecureNodePassword.value
+                secureNodePassword: inputSecureNodePassword.value,
+                sshUsername: inputSshUsername.value,
+                sshPassword: inputSshPassword.value,
+                sshPort: inputSshPort.value,
+                readyTimeout: inputReadyTimeout.value,
+                forwardTimeout: inputForwardTimeout.value,
             };
 
             if (settings.lang !== newSettings.lang)
@@ -363,21 +379,21 @@ function showRpcDialog() {
         const statusRPC = dialog.querySelector(".statusRPC");
 
         const connectSshTunButton = dialog.querySelector(".connectSSHtun");
-        const closeSshTunButton = dialog.querySelector(".closeSSHtun");
+        //const closeSshTunButton = dialog.querySelector(".closeSSHtun");
 
 
         connectSshTunButton.addEventListener("click", async function() {
-          const {openATunnel} = require("./ssh_tunneling.js");
+          const {openTunnel} = require("./ssh_tunneling.js");
           //const sshServer = openATunnel().then(function(sshServer){srv = sshServer;});
-          var sshServer = await openATunnel();
+          var sshServer = await openTunnel();
           console.log(sshServer);
         });
-
-
-        closeSshTunButton.addEventListener("click", () => {
-          console.log(sshServer);
-            sshServer.close();
-          });
+        //
+        //
+        // closeSshTunButton.addEventListener("click", () => {
+        //   console.log(sshServer);
+        //     sshServer.close();
+        //   });
 
         testRpcButton.addEventListener("click", () => {
 

@@ -1,5 +1,5 @@
 const {ipcRenderer} = require("electron");
-const {openATunnel} = require("./ssh_tunneling.js");
+const {openTunnel} = require("./ssh_tunneling.js");
 
 function getRpcClientSecureNode(){
     const rpc = require('node-json-rpc2');
@@ -9,9 +9,9 @@ function getRpcClientSecureNode(){
       host: "127.0.0.1",//settings.secureNodeFQDN,
       user: settings.secureNodeUsername,
       password: settings.secureNodePassword,
-      protocol:'http', // should change to https
+      protocol:"http", // should change to https
       //method:'POST',
-      path: '/',
+      path: "/",
       strict: true
     };
 
@@ -19,28 +19,9 @@ function getRpcClientSecureNode(){
     return client;
 }
 
-// function rpcCall(methodUsed,paramsUsed,callbackFunction){
-//
-//     var client = getRpcClientSecureNode();
-//     //console.log(client);
-//
-//     client.call({
-//         method:methodUsed,//Mandatory
-//         params:paramsUsed,//Will be [] by default
-//         id:'rpcTest',//Optional. By default it's a random id
-//         jsonrpc:'1.0', //Optional. By default it's 2.0
-//         protocol:'https',//Optional. Will be http by default
-//     },callbackFunction);
-// }
-
-async function rpcCall(methodUsed,paramsUsed,callbackFunction){
-
+async function rpcCallCore(methodUsed,paramsUsed,callbackFunction){
     var client = getRpcClientSecureNode();
-    //console.log(client);
-
-    //const sshServer = openATunnel();
-    const sshServer = await openATunnel();
-    // console.log(sshServer);
+    const sshServer = await openTunnel();
 
     client.call({
         method:methodUsed,//Mandatory
@@ -49,7 +30,7 @@ async function rpcCall(methodUsed,paramsUsed,callbackFunction){
         jsonrpc:'1.0', //Optional. By default it's 2.0
         protocol:'https',//Optional. Will be http by default
     }, function(err, res){
-      console.log(sshServer);
+      //console.log(sshServer);
       sshServer.close()
       callbackFunction(err, res)
   });
@@ -78,7 +59,7 @@ function splitCommandString(stringCommand){
 function rpcCallResult(cmd,paramsUsed, callback){
   let status = "OK";
   let output
-  rpcCall(cmd,paramsUsed, function(err, res){
+  rpcCallCore(cmd,paramsUsed, function(err, res){
       if(err){
           console.log(err);
           console.log(JSON.stringify(err));
@@ -141,7 +122,6 @@ function getZaddressBalance(pk,zAddress,callback){
       rpcCallResult(cmd,paramsUsed,function(output,status){
           balance = parseFloat(output).toFixed(8);
           callback(balance);
-          // here your balance is available
   });
 });
 }
@@ -179,7 +159,7 @@ function sendFromOrToZaddress(fromAddressPK,fromAddress,toAddress,amount,fee){
 
 
 module.exports = {
-  rpcCall: rpcCall,
+  //rpcCall: rpcCall,
   cleanCommandString: cleanCommandString,
   rpcCallResult: rpcCallResult,
   splitCommandString: splitCommandString,
