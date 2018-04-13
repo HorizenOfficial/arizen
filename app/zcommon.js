@@ -9,8 +9,9 @@ const zencashjs = require("zencashjs");
 const {rpcCall,cleanCommandString,rpcCallResult,splitCommandString,getZaddressBalance,sendFromOrToZaddress,getOperationStatus,getOperationResult} = require("./rpc.js");
 const {zenextra} = require("./zenextra.js");
 
-
 const userWarningImportPK = "A new address and a private key will be imported. Your previous back-ups do not include the newly imported address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen."
+var sshServer;
+
 
 function assert(condition, message) {
     if (!condition) {
@@ -360,6 +361,23 @@ function showRpcDialog() {
         const resultRPC = dialog.querySelector(".resultRPC");
         const inputCommandRPC = dialog.querySelector(".giveCommandRPC");
         const statusRPC = dialog.querySelector(".statusRPC");
+
+        const connectSshTunButton = dialog.querySelector(".connectSSHtun");
+        const closeSshTunButton = dialog.querySelector(".closeSSHtun");
+
+
+        connectSshTunButton.addEventListener("click", async function() {
+          const {openATunnel} = require("./ssh_tunneling.js");
+          //const sshServer = openATunnel().then(function(sshServer){srv = sshServer;});
+          var sshServer = await openATunnel();
+          console.log(sshServer);
+        });
+
+
+        closeSshTunButton.addEventListener("click", () => {
+          console.log(sshServer);
+            sshServer.close();
+          });
 
         testRpcButton.addEventListener("click", () => {
 

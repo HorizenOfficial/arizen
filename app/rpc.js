@@ -1,12 +1,12 @@
 const {ipcRenderer} = require("electron");
-
+const {openATunnel} = require("./ssh_tunneling.js");
 
 function getRpcClientSecureNode(){
     const rpc = require('node-json-rpc2');
 
     var options = {
       port: settings.secureNodePort,
-      host: settings.secureNodeFQDN,
+      host: "127.0.0.1",//settings.secureNodeFQDN,
       user: settings.secureNodeUsername,
       password: settings.secureNodePassword,
       protocol:'http', // should change to https
@@ -19,10 +19,28 @@ function getRpcClientSecureNode(){
     return client;
 }
 
-function rpcCall(methodUsed,paramsUsed,callbackFunction){
+// function rpcCall(methodUsed,paramsUsed,callbackFunction){
+//
+//     var client = getRpcClientSecureNode();
+//     //console.log(client);
+//
+//     client.call({
+//         method:methodUsed,//Mandatory
+//         params:paramsUsed,//Will be [] by default
+//         id:'rpcTest',//Optional. By default it's a random id
+//         jsonrpc:'1.0', //Optional. By default it's 2.0
+//         protocol:'https',//Optional. Will be http by default
+//     },callbackFunction);
+// }
+
+async function rpcCall(methodUsed,paramsUsed,callbackFunction){
 
     var client = getRpcClientSecureNode();
     //console.log(client);
+
+    //const sshServer = openATunnel();
+    const sshServer = await openATunnel();
+    // console.log(sshServer);
 
     client.call({
         method:methodUsed,//Mandatory
@@ -30,7 +48,11 @@ function rpcCall(methodUsed,paramsUsed,callbackFunction){
         id:'rpcTest',//Optional. By default it's a random id
         jsonrpc:'1.0', //Optional. By default it's 2.0
         protocol:'https',//Optional. Will be http by default
-    },callbackFunction);
+    }, function(err, res){
+      console.log(sshServer);
+      sshServer.close()
+      callbackFunction(err, res)
+  });
 }
 
 //
@@ -58,8 +80,8 @@ function rpcCallResult(cmd,paramsUsed, callback){
   let output
   rpcCall(cmd,paramsUsed, function(err, res){
       if(err){
-          // console.log(err);
-          // console.log(JSON.stringify(err));
+          console.log(err);
+          console.log(JSON.stringify(err));
           output = err;
           status = "error";
       } else {
