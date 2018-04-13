@@ -41,24 +41,24 @@
       "email": "lukas@zensystem.io"
     },
     {
+      "name": "@woky",
+      "email": "woky@zensystem.io"
+    },
+    {
+      "name": "@gsfakianakis",
+      "email": "georgios@zensystem.io"
+    },
+    {
+      "name": "@Tigger",
+      "email": "kamila@zensystem.io"
+    },
+    {
       "name": "@nonghost",
       "email": "neduchal@gmail.com"
     },
     {
       "name": "@k4chn1k",
       "email": "k4chn1k@gmail.com"
-    },
-    {
-      "name": "@woky",
-      "email": "nechtom@gmail.com"
-    },
-    {
-      "name": "@gsfakianakis",
-      "email": "g.e.sfakianakis@gmail.com"
-    },
-    {
-      "name": "@Tigger",
-      "email": "-"
     }
   ],
   "license": "MIT",
