@@ -14,10 +14,11 @@
 # Version History
 
 ## v1.1.6
-- [ ] RPC connection to your own Security Node.
-- [ ] Support Z transactions.
-- [ ] When you are connected to your Security Node, then all your transactions go through your own Security Node (no more 3rd party servers).
-- [ ] Travis CI support enabled for faster development cycle.
+- [x] RPC connection to your own Security Node / Full Node (see Settings).
+- [x] Support for Z transactions (Private Keys are automatically synchronised between Arizen and Security Node / Full Node).
+- [x] When you are connected to your Security Node / Full Node, then all of your T and Z transactions go through your own node (no more 3rd party servers).
+- [x] Travis CI support enabled for faster development cycle.
+- [x] Note: Transaction history for Z addresses is not available.
 
 ## v1.1.5
 - [x] Domain fronting support.
