@@ -839,6 +839,40 @@ function createHelpSubmenu() {
     ];
 }
 
+function includeDeveloperMenu(template){
+  if (process.env.NODE_ENV !== 'production'){
+    template.push({
+      label: 'Developer Tools',
+      submenu:[
+        {
+          label: 'Toggle DevTools',
+          accelerator: process.platform == 'darwin' ? 'Command+I':
+          'Ctrl+I',
+          click(item, focusedWindow){
+            focusedWindow.toggleDevTools();
+          }
+        },
+        {role: 'reload'},
+        { type: "separator" },
+        {
+            label: tr("menu.backupUnencrypted", "Backup UNENCRYPTED wallet"),
+            click() {
+                exportWalletArizen("uawd", false);
+            }
+        },
+        { type: "separator" },
+        {
+            label: "RPC console",
+            click() {
+                mainWindow.webContents.send("open-rpc-console");
+            }
+        }
+      ]
+    })
+
+    }
+}
+
 function updateMenuAtLogin() {
     const template = [
         {
@@ -902,6 +936,8 @@ function updateMenuAtLogin() {
     ];
 
     updateMenuForDarwin(template);
+    includeDeveloperMenu(template);
+
     Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 
