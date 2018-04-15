@@ -214,10 +214,11 @@ function setAddressNodeName(addrObj, addrNode) {
 }
 
 function formatAddressInList(addr) {
-    if (addr.length == 35) // t-addr
+    // T - address
+    if (addr.length === 35) {
         return addr;
-    else {
-        addr.substring(0, 17) + "..." + addr.substring(80);
+    } else {
+        return addr.substring(0, 17) + "..." + addr.substring(80);
     }
 }
 
