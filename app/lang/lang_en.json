@@ -163,6 +163,7 @@
       "apiUrl": "API URLs",
       "fiat": "Fiat Equivalent",
       "save": "Save",
+      "enableNotifications": "Desktop notifications",
       "enableDomainFronting": "Domain fronting"
     },
     "paperWallet": {
@@ -210,8 +211,8 @@
     },
     "help": "Help",
     "helpSubmenu": {
-      "arizenManual": "Arizen Manual",
-      "support": "Suport",
+      "arizenManual": "User Manual",
+      "support": "Support",
       "zencash": "ZenCash"
     }
   },

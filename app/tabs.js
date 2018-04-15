@@ -34,6 +34,7 @@ class XTabsElement extends HTMLElement {
         super();
     }
 
+    // TODO: changes is defined but never used
     connectedCallback() {
         this.init();
         this.observer = new MutationObserver(changes => this.init());
@@ -50,7 +51,7 @@ class XTabsElement extends HTMLElement {
                 node.classList.add('hidden');
                 node.setAttribute('hidden', '');
             } else {
-                node.classList.remove('hidden')
+                node.classList.remove('hidden');
                 node.removeAttribute('hidden');
             }
         }

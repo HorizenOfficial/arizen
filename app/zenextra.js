@@ -1,3 +1,7 @@
+// @flow
+/*jshint esversion: 6 */
+/*jslint node: true */
+"use strict";
 
 // These function could be integrated in zencash.js lib
 const zencashjs = require("zencashjs");
@@ -28,20 +32,20 @@ function isPKorWif(pk) {
 
 
 function isTransaparentAddr(str) {
-  return (str.length === 35)
+    return (str.length === 35)
 
 }
+
 function isZeroAddr(str) {
-  return (str.length === 95)
+    return (str.length === 95)
 }
 
-
-
-
-module.exports = {zenextra:{
-  isTransaparentAddr: isTransaparentAddr,
-  isZeroAddr: isZeroAddr,
-  isWif: isWif,
-  isPK: isPK,
-  isPKorWif: isPKorWif
-}}
+module.exports = {
+    zenextra: {
+        isTransaparentAddr: isTransaparentAddr,
+        isZeroAddr: isZeroAddr,
+        isWif: isWif,
+        isPK: isPK,
+        isPKorWif: isPKorWif
+    }
+};

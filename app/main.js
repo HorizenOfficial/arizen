@@ -40,7 +40,7 @@ function attachUpdaterHandlers() {
         dialog.showMessageBox({
             type: "info",
             title: "Update is here!",
-            message: `Arizen will be closed and the new ${version} version will be installed. When the update is complete, the Arizen wallet will be reopened itself.`
+            message: `Arizen will close and the new ${version} version will be installed. When the update is complete, the Arizen wallet will reopen.`
         }, function () {
             // application forces to update itself
             updater.quitAndInstall();
@@ -816,7 +816,7 @@ function createEditSubmenu() {
 function createHelpSubmenu() {
     return [
         {
-            label: tr("menu.helpSubmenu.arizenManual", "Arizen Manual"),
+            label: tr("menu.helpSubmenu.arizenManual", "User Manual"),
             accelerator: "CmdOrCtrl+H",
             click: () => {
                 require("electron").shell.openExternal("https://github.com/ZencashOfficial/arizen#user-manuals");
@@ -1609,7 +1609,7 @@ ipcMain.on("create-paper-wallet", (event, name, addToWallet) => {
 });
 
 ipcMain.on("renderer-show-message-box", (event, msgStr, buttons) => {
-    buttons = buttons.concat([tr("warmingMessages.cancel","Cancel")]);
+    buttons = buttons.concat([tr("warmingMessages.cancel", "Cancel")]);
     dialog.showMessageBox({type: "warning", title: "Important Information", message: msgStr, buttons: buttons, cancelId: -1 }, function(response) {
       event.returnValue = response;
     });
