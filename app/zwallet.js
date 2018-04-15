@@ -213,12 +213,20 @@ function setAddressNodeName(addrObj, addrNode) {
         setNodeTrText(addrNode, "wallet.tabOverview.unnamedAddress", "Unnamed address");
 }
 
+function formatAddressInList(addr) {
+    if (addr.length == 35) // t-addr
+        return addr;
+    else {
+        addr.substring(0, 17) + "..." + addr.substring(80);
+    }
+}
+
 function createAddrItem(addrObj) {
     const addrItem = cloneTemplate("addrItemTemplate");
     addrItem.dataset.addr = addrObj.addr;
 
     setAddressNodeName(addrObj, addrItem.getElementsByClassName("addrName")[0]);
-    addrItem.getElementsByClassName("addrText")[0].textContent = addrObj.addr;
+    addrItem.getElementsByClassName("addrText")[0].textContent = formatAddressInList(addrObj.addr);
     addrItem.getElementsByClassName("addrNameLine")[0]
         .addEventListener("click", () => showAddrDetail(addrObj.addr));
     addrItem.getElementsByClassName("addrDepositButton")[0]
