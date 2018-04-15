@@ -343,6 +343,11 @@ function showImportSinglePKDialog() {
             importButton.addEventListener("click", () => {
                 const name = nameInput.value ? nameInput.value : "";
                 let pk = privateKeyInput.value;
+                var importT = dialog.querySelector(".importTorZgetT").checked;
+                var importZ = dialog.querySelector(".importTorZgetZ").checked;
+                let checkAddr
+                console.log(importT);
+                console.log(importZ);
 
                 if (zenextra.isPKorWif(pk) === true) {
                     console.log(name);
@@ -350,15 +355,28 @@ function showImportSinglePKDialog() {
                     if (zenextra.isWif(pk) === true) {
                         pk = zencashjs.address.WIFToPrivKey(pk);
                     }
-                    let pubKey = zencashjs.address.privKeyToPubKey(pk, true);
-                    let zAddress = zencashjs.address.pubKeyToAddr(pubKey);
-                    let resp = ipcRenderer.sendSync("check-if-z-address-in-wallet", zAddress);
-                    let zAddrExists = resp.exist;
+                    if(importT){
+                        let pubKey = zencashjs.address.privKeyToPubKey(pk, true);
+                        let tAddress = zencashjs.address.pubKeyToAddr(pubKey);
+                        checkAddr = tAddress;
+                   }
+                   if(importZ){
+                       let spendingKey = zencashjs.zaddress.zSecretKeyToSpendingKey(pk);
+                       let a_pk = zencashjs.zaddress.zSecretKeyToPayingKey(pk);
+                       let pk_enc = zencashjs.zaddress.zSecretKeyToTransmissionKey(pk);
+                       let zAddress = zencashjs.zaddress.mkZAddress(a_pk, pk_enc);
+                       checkAddr = zAddress;
+                   }
 
-                    if (zAddrExists === true) {
-                        alert(tr("wallet.importSinglePrivateKey.warningNotValidAddress", "Z address exist in your wallet"))
+                   console.log(checkAddr);
+
+                   let resp = ipcRenderer.sendSync("check-if-address-in-wallet", checkAddr);
+                   let addrExists = resp.exist;
+
+                    if (addrExists === true) {
+                        alert(tr("wallet.importSinglePrivateKey.warningNotValidAddress", "Address exist in your wallet"))
                     } else {
-                        ipcRenderer.send("import-single-key", name, pk);
+                        ipcRenderer.send("import-single-key", name, pk, importT);
                         alert(tr("warmingMessages.userWarningImportPK", userWarningImportPK))
                         dialog.close();
                     }

@@ -527,13 +527,21 @@ function exportPKs() {
     });
 }
 
-function importOnePK(pk, name = "") {
+function importOnePK(pk, name = "", isT = true) {
     try {
+        let addr
         if (pk.length !== 64) {
             pk = zencashjs.address.WIFToPrivKey(pk);
         }
-        const pub = zencashjs.address.privKeyToPubKey(pk, true);
-        const addr = zencashjs.address.pubKeyToAddr(pub);
+        if(isT){
+            const pub = zencashjs.address.privKeyToPubKey(pk, true);
+            addr = zencashjs.address.pubKeyToAddr(pub);
+        } else {
+          let spendingKey = zencashjs.zaddress.zSecretKeyToSpendingKey(pk);
+          let a_pk = zencashjs.zaddress.zSecretKeyToPayingKey(pk);
+          let pk_enc = zencashjs.zaddress.zSecretKeyToTransmissionKey(pk);
+          addr = zencashjs.zaddress.mkZAddress(a_pk, pk_enc);
+        }
         sqlRun("insert or ignore into wallet (pk, addr, lastbalance, name) values (?, ?, 0, ?)", pk, addr, name);
     } catch (err) {
         console.log(`Invalid private key on line in private keys file : `, err);
@@ -1134,11 +1142,14 @@ ipcMain.on("exit-from-menu", function () {
     app.quit();
 });
 
-ipcMain.on("import-single-key", function(event, name, pk) {
+ipcMain.on("import-single-key", function(event, name, pk, isT) {
     console.log(name);
     console.log(pk);
-
-    importOnePK(pk, name);
+    if(true){ //isT
+        importOnePK(pk, name, isT);
+    } else {
+        //event.sender.send("", );
+    }
     saveWallet();
     sendWallet();
 });
@@ -1237,11 +1248,11 @@ ipcMain.on("show-notification", function (event, title, message, duration) {
     }
 });
 
-ipcMain.on("check-if-z-address-in-wallet", function(event,zAddress){
+ipcMain.on("check-if-address-in-wallet", function(event,address){
     let exist = false;
     let result = sqlSelectObjects("Select * from wallet"); // where length(addr)=35 //take only T addresses // or ("Select * from wallet where addr = ?", [zAddress]);
     for (let k of result){
-      if (k.addr === zAddress) {exist = true ; break;}
+      if (k.addr === address) {exist = true ; break;}
     }
     event.returnValue = {exist: exist, result: result};
 });

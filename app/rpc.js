@@ -185,6 +185,14 @@ function sendFromOrToZaddress(fromAddressPK,fromAddress,toAddress,amount,fee){
     });
 }
 
+//
+
+ipcRenderer.on("import-Z-Address", (event) => {
+
+});
+
+
+//
 
 module.exports = {
   //rpcCall: rpcCall,

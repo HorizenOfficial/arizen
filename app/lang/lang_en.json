@@ -187,7 +187,7 @@
       "titleLabel": "Import Single Private Key",
       "privateKeyLabel": "Private Key",
       "importButtonLabel": "Import",
-      "warningNotValidAddress": "Z address exist in your wallet",
+      "warningNotValidAddress": "Address exist in your wallet",
       "warningNotValidPK": "This is not a valid Private Key."
     }
   },
