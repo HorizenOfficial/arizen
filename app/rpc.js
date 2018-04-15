@@ -1,5 +1,7 @@
 const {ipcRenderer} = require("electron");
 const {openTunnel} = require("./ssh_tunneling.js");
+const {zenextra} = require("./zenextra.js");
+const zencashjs = require("zencashjs");
 
 function getRpcClientSecureNode(){
     const rpc = require('node-json-rpc2');
@@ -57,7 +59,7 @@ function splitCommandString(stringCommand){
 //
 
 function rpcCallResult(cmd,paramsUsed, callback){
-  let status = "OK";
+  let status = "ok";
   let output
   rpcCallCore(cmd,paramsUsed, function(err, res){
       if(err){
@@ -72,8 +74,21 @@ function rpcCallResult(cmd,paramsUsed, callback){
       });
 }
 
-function importPKinSN(pk,callback){
-    const cmd = "z_importkey";
+function importPKinSN(pk,address,callback){
+  console.log(pk);
+  console.log(zenextra.isWif(pk));
+
+    let cmd;
+    if(zenextra.isZeroAddr(address)){
+        cmd = "z_importkey";
+    };
+    if(zenextra.isTransaparentAddr(address)){
+        cmd = "importprivkey";
+        if (!zenextra.isWif(pk)){
+          pk = zencashjs.address.privKeyToWIF(pk);
+          console.log(pk);
+        }
+    };
     rpcCallResult(cmd,[pk],callback);
   //callback
 }
@@ -116,7 +131,7 @@ function getOperationStatus(opid){
 // }
 
 function getZaddressBalance(pk,zAddress,callback){
-  importPKinSN(pk,function(){
+  importPKinSN(pk,zAddress,function(){
       const cmd = "z_getbalance"
       let paramsUsed = [zAddress];
       rpcCallResult(cmd,paramsUsed,function(output,status){
@@ -140,12 +155,15 @@ function updateAllZBalances(){
 
 
 function sendFromOrToZaddress(fromAddressPK,fromAddress,toAddress,amount,fee){
-    importPKinSN(fromAddressPK,function(){
+    importPKinSN(fromAddressPK,fromAddress,function(){
         let minconf = 1;
         let amounts = [{"address":toAddress,"amount":amount}]; //,"memo":"memo"
         //console.log(JSON.stringify(amounts));
         //console.log(amounts);
-        const cmd = "z_sendmany";
+        let cmd = "z_sendmany";
+        if(zenextra.isTransaparentAddr(fromAddress)){
+            cmd = "sendmany";
+        };
         let paramsUsed = [fromAddress,amounts,minconf,fee];
         console.log(paramsUsed);
         rpcCallResult(cmd,paramsUsed,function(output,status){
@@ -153,6 +171,16 @@ function sendFromOrToZaddress(fromAddressPK,fromAddress,toAddress,amount,fee){
           getOperationStatus(opid)
           console.log(opid);
           console.log(status);
+          if (status === "error"){
+              msg = output;
+              result = status;
+          }
+          if (status === "ok"){
+              msg = output;
+          }
+
+          updateWithdrawalStatus(result, msg)
+
         });
     });
 }
