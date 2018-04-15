@@ -273,6 +273,12 @@ function showSettingsDialog() {
         const inputSecureNodeUsername = dialog.querySelector(".settingsSecureNodeUsername");
         const inputSecureNodePassword = dialog.querySelector(".settingsSecureNodePassword");
 
+        const inputSshUsername = dialog.querySelector(".settingsSshUsername");
+        const inputSshPassword = dialog.querySelector(".settingsSshPassword");
+        const inputSshPort = dialog.querySelector(".settingsSshPort");
+        const inputReadyTimeout = dialog.querySelector(".settingsReadyTimeout");
+        const inputForwardTimeout = dialog.querySelector(".settingsForwardTimeout");
+
         inputTxHistory.value = settings.txHistory;
         inputExplorerUrl.value = settings.explorerUrl;
         loadAvailableLangs(inputLanguages, settings.lang);
@@ -283,8 +289,13 @@ function showSettingsDialog() {
         inputFiatCurrency.value = settings.fiatCurrency || "USD";
         inputSecureNodeFQDN.value = settings.secureNodeFQDN;
         inputSecureNodePort.value = settings.secureNodePort || 8231;
-        inputSecureNodeUsername.value = settings.secureNodeUsername;
-        inputSecureNodePassword.value = settings.secureNodePassword;
+        inputSecureNodeUsername.value = settings.secureNodeUsername || "";
+        inputSecureNodePassword.value = settings.secureNodePassword || "";
+        inputSshUsername.value = settings.sshUsername || "";
+        inputSshPassword.value = settings.sshPassword || "";
+        inputSshPort.value = settings.sshPort|| 22;
+        inputReadyTimeout.value = settings.readyTimeout|| 10000;
+        inputForwardTimeout.value = settings.forwardTimeout|| 10000;
 
         dialog.querySelector(".settingsSave").addEventListener("click", () => {
             const newSettings = {
@@ -298,7 +309,12 @@ function showSettingsDialog() {
                 secureNodeFQDN: inputSecureNodeFQDN.value,
                 secureNodePort: inputSecureNodePort.value,
                 secureNodeUsername: inputSecureNodeUsername.value,
-                secureNodePassword: inputSecureNodePassword.value
+                secureNodePassword: inputSecureNodePassword.value,
+                sshUsername: inputSshUsername.value,
+                sshPassword: inputSshPassword.value,
+                sshPort: inputSshPort.value,
+                readyTimeout: inputReadyTimeout.value,
+                forwardTimeout: inputForwardTimeout.value
             };
 
             if (settings.lang !== newSettings.lang)
@@ -361,6 +377,16 @@ function showRpcDialog() {
         const inputCommandRPC = dialog.querySelector(".giveCommandRPC");
         const statusRPC = dialog.querySelector(".statusRPC");
 
+        const connectSshTunButton = dialog.querySelector(".connectSSHtun");
+
+
+        connectSshTunButton.addEventListener("click", async function() {
+            const {openATunnel} = require("./ssh_tunneling.js");
+            //const sshServer = openATunnel().then(function(sshServer){srv = sshServer;});
+            var sshServer = await openATunnel();
+            console.log(sshServer);
+            });
+
         testRpcButton.addEventListener("click", () => {
 
         resultRPC.innerHTML = "Fetching...";
@@ -384,11 +410,18 @@ function showRpcDialog() {
           //getZaddressBalance(pkZ,zAddrTest,function(balance){});
           //sendFromOrToZaddress(pkZ,zAddrTest,"zngGeznkvBo58fkK5iVtNxhpFRKk6GZBaVc",0.001,0.0)
           //getOperationResult("opid-2ef3b787-1066-4050-8a1d-f768557a247a");
-          //getOperationStatus("opid-2ef3b787-1066-4050-8a1d-f768557a247a");
         });
         });
     });
 }
+
+(() => {
+const {ipcRenderer} = require("electron");
+ipcRenderer.on("open-rpc-console", (event) => {
+    showRpcDialog();
+});
+})();
+
 
 function openZenExplorer(path) {
     openUrl(settings.explorerUrl + "/" + path);

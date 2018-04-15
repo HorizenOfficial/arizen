@@ -1632,6 +1632,23 @@ ipcMain.on("get-address-object", (event,fromAddress) => {
     event.returnValue = addrObjs;
 });
 
+ipcMain.on("generate-Z-address", function (event, nameAddress,pkZaddress,zAddress) {
+    let resp = {
+        response: "ERR",
+        msg: "not logged in"
+    };
+
+    if (userInfo.loggedIn) {
+        resp.response = "OK";
+        resp.addr =  { addr: zAddress, name: nameAddress, lastbalance: 0, pk: pkZaddress };
+        userInfo.walletDb.run("INSERT INTO wallet VALUES (?,?,?,?,?)", [null, pkZaddress, zAddress, 0, nameAddress]);
+        saveWallet();
+    }
+
+    event.sender.send("generate-wallet-response", JSON.stringify(resp));
+});
+
+
 // Unused
 
 // function importWalletDat(login, pass, wallet) {
