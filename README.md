@@ -3,10 +3,9 @@
 [![Build status][travis-img]][travis-url]
 [![Code Climate][codeclimate-img]][codeclimate-url]
 
-# Arizen
-Arizen is ZenCash light wallet.
-
 # User Manuals
+- v1.1.6: [Arizen v1.1.6 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.6/Arizen.v1.1.6.Wallet.User.Manual.pdf)
+- v1.1.5: [Arizen v1.1.5 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.5/Arizen.v1.1.5.Wallet.User.Manual.pdf)
 - v1.1.4: [Arizen v1.1.4 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.4/Arizen.v1.1.4.Wallet.User.Manual.pdf)
 - v1.1.3: [Arizen v1.1.3 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.3/Arizen.v1.1.3.Wallet.User.Manual.pdf)
 - v1.1.1: [Arizen v1.1.1 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.1/Arizen.v1.1.1.Wallet.User.Manual.pdf)
@@ -14,9 +13,19 @@ Arizen is ZenCash light wallet.
 
 # Version History
 
+## v1.1.6
+- [x] RPC connection to your own Security Node / Full Node (see Settings).
+- [x] Support for Z transactions (Private Keys are automatically synchronised between Arizen and Security Node / Full Node).
+- [x] When you are connected to your Security Node / Full Node, then all of your T and Z transactions go through your own node (no more 3rd party servers).
+- [x] Travis CI support enabled for faster development cycle.
+- [x] Note: Transaction history for Z addresses is not available.
+
 ## v1.1.5
-- [x] Domain fronting support
-- [x] Fix bug when you want to send 1000ZENs and more
+- [x] Domain fronting support.
+- [x] Fix bug when you want to send 1000ZENs and more.
+- [x] Small visual fixes.
+- [x] "Show zero balance" checkbox is checked by default for better UX.
+- [x] Async calls for API requests.
 
 ## v1.1.4
 - [x] Fix: link from About section is not opened in Arizen

@@ -4,14 +4,11 @@
 "use strict";
 
 const {ipcRenderer} = require("electron");
-// FIXME: unused List
-const {List} = require("immutable");
 const Qrcode = require("qrcode");
 const jsPDF = require("jspdf");
-// FIXME: unused showPaperWalletDialog
 const {showPaperWalletDialog} = require("./paperwallet.js");
 const {getNewZaddressPK,updateAllZBalances} = require("./rpc.js");
-//const {zenextra} = require("./zenextra.js");
+// const {zenextra} = require("./zenextra.js");
 
 function logIpc(msgType) {
     ipcRenderer.on(msgType, (...args) => {
@@ -29,9 +26,7 @@ logIpc("generate-wallet-response");
 logIpc("get-settings-response");
 logIpc("get-transaction-update");
 logIpc("get-wallet-by-name-response");
-//logIpc("get-wallets-response");
 logIpc("refresh-wallet-response");
-//logIpc("rename-wallet-response");
 logIpc("render-qr-code");
 logIpc("save-settings-response");
 logIpc("send-finish");
@@ -53,8 +48,6 @@ const depositMsg = document.getElementById("depositMsg");
 const depositQrcodeImage = document.getElementById("depositQrcodeImg");
 const depositSaveQrcodeButton = document.getElementById("depositSaveQrcodeButton");
 const withdrawTabButton = document.getElementById("withdrawTabButton");
-// FIXME: withdrawAvailBalanceNode unused
-// const withdrawAvailBalanceNode = document.getElementById("withdrawAvailBalance");
 const withdrawFromButton = document.getElementById("withdrawFromButton");
 const withdrawFromAddrInput = document.getElementById("withdrawFromAddr");
 const withdrawToButton = document.getElementById("withdrawToButton");
@@ -66,7 +59,7 @@ const withdrawButton = document.getElementById("withdrawButton");
 const withdrawStatusTitleNode = document.getElementById("withdrawStatusTitle");
 const withdrawStatusBodyNode = document.getElementById("withdrawStatusBody");
 
-const userWarningCreateNewAddress = "A new address and a private key will be created. Your previous back-ups do not include this newly generated address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen."
+const userWarningCreateNewAddress = "A new address and a private key will be created. Your previous back-ups do not include this newly generated address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
 
 const refreshTimeout = 300;
 let refreshTimer;
@@ -220,12 +213,21 @@ function setAddressNodeName(addrObj, addrNode) {
         setNodeTrText(addrNode, "wallet.tabOverview.unnamedAddress", "Unnamed address");
 }
 
+function formatAddressInList(addr) {
+    // T - address
+    if (addr.length === 35) {
+        return addr;
+    } else {
+        return addr.substring(0, 17) + "..." + addr.substring(80);
+    }
+}
+
 function createAddrItem(addrObj) {
     const addrItem = cloneTemplate("addrItemTemplate");
     addrItem.dataset.addr = addrObj.addr;
 
     setAddressNodeName(addrObj, addrItem.getElementsByClassName("addrName")[0]);
-    addrItem.getElementsByClassName("addrText")[0].textContent = addrObj.addr;
+    addrItem.getElementsByClassName("addrText")[0].textContent = formatAddressInList(addrObj.addr);
     addrItem.getElementsByClassName("addrNameLine")[0]
         .addEventListener("click", () => showAddrDetail(addrObj.addr));
     addrItem.getElementsByClassName("addrDepositButton")[0]
