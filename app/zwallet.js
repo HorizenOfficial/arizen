@@ -7,6 +7,8 @@ const {ipcRenderer} = require("electron");
 const Qrcode = require("qrcode");
 const jsPDF = require("jspdf");
 const {showPaperWalletDialog} = require("./paperwallet.js");
+const {getNewZaddressPK,updateAllZBalances} = require("./rpc.js");
+// const {zenextra} = require("./zenextra.js");
 
 function logIpc(msgType) {
     ipcRenderer.on(msgType, (...args) => {
@@ -403,7 +405,17 @@ function showNewAddrDialog() {
         showDialogFromTemplate("newAddrDialogTemplate", dialog => {
             const createButton = dialog.querySelector(".newAddrDialogCreate");
             createButton.addEventListener("click", () => {
-                ipcRenderer.send("generate-wallet", dialog.querySelector(".newAddrDialogName").value);
+                var getT = dialog.querySelector(".TorZgetT").checked;
+                var getZ = dialog.querySelector(".TorZgetZ").checked;
+                var nameAddress = dialog.querySelector(".newAddrDialogName").value;
+                // console.log(getT);
+                // console.log(getZ);
+                if (getT){
+                    ipcRenderer.send("generate-wallet", nameAddress);
+                }
+                if (getZ){
+                    getNewZaddressPK(nameAddress)
+                }
                 dialog.close();
             });
             dialog.addEventListener("keypress", ev => {
@@ -460,6 +472,7 @@ function scheduleRefresh() {
 }
 
 function refresh() {
+    updateAllZBalances();
     ipcRenderer.send("refresh-wallet");
     scheduleRefresh();
 }
@@ -552,11 +565,21 @@ function initWithdrawView() {
     withdrawButton.addEventListener("click", () => {
         const msg = tr("wallet.tabWithdraw.withdrawConfirmQuestion", "Do you really want to send this transaction?");
         if (confirm(msg)) {
-            ipcRenderer.send("send",
-                withdrawFromAddrInput.value,
-                withdrawToAddrInput.value,
-                withdrawFeeInput.value,
-                withdrawAmountInput.value);
+            let fromAddr = withdrawFromAddrInput.value;
+            let toAddr = withdrawToAddrInput.value;
+            if (zenextra.isTransaparentAddr(fromAddr) && zenextra.isTransaparentAddr(toAddr) ){
+                ipcRenderer.send("send",
+                    withdrawFromAddrInput.value,
+                    withdrawToAddrInput.value,
+                    withdrawFeeInput.value,
+                    withdrawAmountInput.value);
+            } else {
+                let fromAddrObj = ipcRenderer.sendSync("get-address-object",fromAddr);
+                let fromAddressPK = fromAddrObj.pk;
+                let myAmount = parseFloat(withdrawAmountInput.value).toFixed(8);
+                let myFees = parseFloat(withdrawFeeInput.value);
+                sendFromOrToZaddress(fromAddressPK,fromAddr,toAddr,myAmount,myFees);
+            }
         }
     });
     withdrawFromButton.addEventListener("click", () => showAddrSelectDialog(false, addr => {

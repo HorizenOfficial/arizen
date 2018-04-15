@@ -29,7 +29,7 @@ const userWarningExportWalletUnencrypted = "You are going to export an UNENCRYPT
 const userWarningExportWalletEncrypted = "You are going to export an ENCRYPTED wallet and your private keys will be encrypted. That means that in order to access your private keys you need to know the corresponding username and password. In case you don't know them you cannot control the ZENs that are controled by these private keys. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
 
 // Press F12 to open the DevTools. See https://github.com/sindresorhus/electron-debug.
-// require("electron-debug")();
+require("electron-debug")();
 
 // Uncomment if you want to run in production
 // process.env.NODE_ENV !== "production"
@@ -640,7 +640,7 @@ async function fetchBlockchainChanges(addrObjs, knownTxIds) {
 
 async function updateBlockchainView(webContents) {
     webContents.send("add-loading-image");
-    const addrObjs = sqlSelectObjects("SELECT addr, name, lastbalance FROM wallet");
+    const addrObjs = sqlSelectObjects("SELECT addr, name, lastbalance FROM wallet where length(addr)=35");
     const knownTxIds = sqlSelectColumns("SELECT DISTINCT txid FROM transactions").map(row => row[0]);
     let totalBalance = addrObjs.filter(obj => obj.lastbalance).reduce((sum, a) => sum + a.lastbalance, 0);
 
@@ -659,6 +659,23 @@ async function updateBlockchainView(webContents) {
             response: "OK",
             addrObj: addrObj,
             diff: addrObj.balanceDiff,
+            total: totalBalance
+        }));
+    }
+
+    const zAddrObjs = sqlSelectObjects("SELECT addr, name, lastbalance,pk FROM wallet where length(addr)=95");
+
+    for (const addrObj of zAddrObjs) {
+        let previousBalance = 0.0; // TODO: Should do something with this
+        let balance = addrObj.lastbalance;
+        let balanceDiff = balance - previousBalance;
+        addrObj.lastbalance = balance;
+        sqlRun("UPDATE wallet SET lastbalance = ? WHERE addr = ?", balance, addrObj.addr);
+        totalBalance += balance; //not balanceDiff here
+        webContents.send("update-wallet-balance", JSON.stringify({
+            response: "OK",
+            addrObj: addrObj,
+            diff: balanceDiff,
             total: totalBalance
         }));
     }
@@ -822,6 +839,40 @@ function createHelpSubmenu() {
     ];
 }
 
+function includeDeveloperMenu(template){
+  if (process.env.NODE_ENV !== 'production'){
+    template.push({
+      label: 'Developer Tools',
+      submenu:[
+        {
+          label: 'Toggle DevTools',
+          accelerator: process.platform == 'darwin' ? 'Command+I':
+          'Ctrl+I',
+          click(item, focusedWindow){
+            focusedWindow.toggleDevTools();
+          }
+        },
+        {role: 'reload'},
+        { type: "separator" },
+        {
+            label: tr("menu.backupUnencrypted", "Backup UNENCRYPTED wallet"),
+            click() {
+                exportWalletArizen("uawd", false);
+            }
+        },
+        { type: "separator" },
+        {
+            label: "RPC console",
+            click() {
+                mainWindow.webContents.send("open-rpc-console");
+            }
+        }
+      ]
+    })
+
+    }
+}
+
 function updateMenuAtLogin() {
     const template = [
         {
@@ -885,6 +936,8 @@ function updateMenuAtLogin() {
     ];
 
     updateMenuForDarwin(template);
+    includeDeveloperMenu(template);
+
     Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 
@@ -917,6 +970,8 @@ function updateMenuAtLogout() {
 function createWindow() {
     updateMenuAtLogout();
     mainWindow = new BrowserWindow({width: 1000, height: 730, resizable: true, icon: "resources/zen_icon.png"});
+
+    mainWindow.webContents.openDevTools();
 
 
     if (fs.existsSync(getWalletPath())) {
@@ -1184,7 +1239,7 @@ ipcMain.on("show-notification", function (event, title, message, duration) {
 
 ipcMain.on("check-if-z-address-in-wallet", function(event,zAddress){
     let exist = false;
-    let result = sqlSelectObjects("Select * from wallet"); // or ("Select * from wallet where addr = ?", [zAddress]);
+    let result = sqlSelectObjects("Select * from wallet"); // where length(addr)=35 //take only T addresses // or ("Select * from wallet where addr = ?", [zAddress]);
     for (let k of result){
       if (k.addr === zAddress) {exist = true ; break;}
     }
@@ -1554,10 +1609,27 @@ ipcMain.on("create-paper-wallet", (event, name, addToWallet) => {
 });
 
 ipcMain.on("renderer-show-message-box", (event, msgStr, buttons) => {
-    buttons = buttons.concat([tr("warmingMessages.cancel","Cancel")]);
+    buttons = buttons.concat([tr("warmingMessages.cancel", "Cancel")]);
     dialog.showMessageBox({type: "warning", title: "Important Information", message: msgStr, buttons: buttons, cancelId: -1 }, function(response) {
       event.returnValue = response;
     });
+});
+
+
+ipcMain.on("get-all-Z-addresses", (event) => {
+    const zAddrObjs = sqlSelectObjects("SELECT addr, name, lastbalance,pk FROM wallet where length(addr)=95");
+    event.returnValue = zAddrObjs;
+});
+
+ipcMain.on("update-addr-in-db", (event,addrObj) => {
+    sqlRun("UPDATE wallet SET lastbalance = ? WHERE addr = ?", addrObj.lastbalance, addrObj.addr);
+    event.returnValue = true;
+});
+
+
+ipcMain.on("get-address-object", (event,fromAddress) => {
+    let addrObjs = sqlSelectObjects("SELECT * FROM wallet WHERE addr = ?", fromAddress)[0];
+    event.returnValue = addrObjs;
 });
 
 // Unused

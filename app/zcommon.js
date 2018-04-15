@@ -6,8 +6,12 @@
 const {DateTime} = require("luxon");
 const {translate} = require("./util.js");
 const zencashjs = require("zencashjs");
+const {cleanCommandString,rpcCallResult,splitCommandString,getZaddressBalance,sendFromOrToZaddress,getOperationStatus} = require("./rpc.js");
+const {zenextra} = require("./zenextra.js");
 
 const userWarningImportPK = "A new address and a private key will be imported. Your previous back-ups do not include the newly imported address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
+// var sshServer;
+
 
 function assert(condition, message) {
     if (!condition) {
@@ -265,6 +269,16 @@ function showSettingsDialog() {
         const inputLanguages = dialog.querySelector(".settingsLanguage");
         const inputNotifications = dialog.querySelector(".enableNotifications");
         const inputDomainFronting = dialog.querySelector(".enableDomainFronting");
+        const inputSecureNodeFQDN = dialog.querySelector(".settingsSecureNodeFQDN");
+        const inputSecureNodePort = dialog.querySelector(".settingsSecureNodePort");
+        const inputSecureNodeUsername = dialog.querySelector(".settingsSecureNodeUsername");
+        const inputSecureNodePassword = dialog.querySelector(".settingsSecureNodePassword");
+
+        const inputSshUsername = dialog.querySelector(".settingsSshUsername");
+        const inputSshPassword = dialog.querySelector(".settingsSshPassword");
+        const inputSshPort = dialog.querySelector(".settingsSshPort");
+        const inputReadyTimeout = dialog.querySelector(".settingsReadyTimeout");
+        const inputForwardTimeout = dialog.querySelector(".settingsForwardTimeout");
 
         inputTxHistory.value = settings.txHistory;
         inputExplorerUrl.value = settings.explorerUrl;
@@ -274,6 +288,15 @@ function showSettingsDialog() {
         inputNotifications.checked = settings.notifications;
         inputDomainFronting.checked = settings.domainFronting || false;
         inputFiatCurrency.value = settings.fiatCurrency || "USD";
+        inputSecureNodeFQDN.value = settings.secureNodeFQDN;
+        inputSecureNodePort.value = settings.secureNodePort || 8231;
+        inputSecureNodeUsername.value = settings.secureNodeUsername || "";
+        inputSecureNodePassword.value = settings.secureNodePassword || "";
+        inputSshUsername.value = settings.sshUsername || "";
+        inputSshPassword.value = settings.sshPassword || "";
+        inputSshPort.value = settings.sshPort|| 22;
+        inputReadyTimeout.value = settings.readyTimeout|| 10000;
+        inputForwardTimeout.value = settings.forwardTimeout|| 10000;
 
         dialog.querySelector(".settingsSave").addEventListener("click", () => {
             const newSettings = {
@@ -283,7 +306,16 @@ function showSettingsDialog() {
                 fiatCurrency: inputFiatCurrency.value,
                 lang: inputLanguages[inputLanguages.selectedIndex].value,
                 notifications: inputNotifications.checked ? 1 : 0,
-                domainFronting: inputDomainFronting.checked
+                domainFronting: inputDomainFronting.checked,
+                secureNodeFQDN: inputSecureNodeFQDN.value,
+                secureNodePort: inputSecureNodePort.value,
+                secureNodeUsername: inputSecureNodeUsername.value,
+                secureNodePassword: inputSecureNodePassword.value,
+                sshUsername: inputSshUsername.value,
+                sshPassword: inputSshPassword.value,
+                sshPort: inputSshPort.value,
+                readyTimeout: inputReadyTimeout.value,
+                forwardTimeout: inputForwardTimeout.value,
             };
 
             if (settings.lang !== newSettings.lang)
@@ -313,10 +345,10 @@ function showImportSinglePKDialog() {
                 const name = nameInput.value ? nameInput.value : "";
                 let pk = privateKeyInput.value;
 
-                if (isPKorWif(pk) === true) {
+                if (zenextra.isPKorWif(pk) === true) {
                     console.log(name);
                     console.log(pk);
-                    if (isWif(pk) === true) {
+                    if (zenextra.isWif(pk) === true) {
                         pk = zencashjs.address.WIFToPrivKey(pk);
                     }
                     let pubKey = zencashjs.address.privKeyToPubKey(pk, true);
@@ -338,6 +370,65 @@ function showImportSinglePKDialog() {
         });
     }
 }
+
+function showRpcDialog() {
+    showDialogFromTemplate("tempRpcTemplate", dialog => {
+        const testRpcButton = dialog.querySelector(".testRPCButton");
+        const resultRPC = dialog.querySelector(".resultRPC");
+        const inputCommandRPC = dialog.querySelector(".giveCommandRPC");
+        const statusRPC = dialog.querySelector(".statusRPC");
+
+        const connectSshTunButton = dialog.querySelector(".connectSSHtun");
+        //const closeSshTunButton = dialog.querySelector(".closeSSHtun");
+
+
+        connectSshTunButton.addEventListener("click", async function() {
+          const {openTunnel} = require("./ssh_tunneling.js");
+          //const sshServer = openATunnel().then(function(sshServer){srv = sshServer;});
+          var sshServer = await openTunnel();
+          console.log(sshServer);
+        });
+        //
+        //
+        // closeSshTunButton.addEventListener("click", () => {
+        //   console.log(sshServer);
+        //     sshServer.close();
+        //   });
+
+        testRpcButton.addEventListener("click", () => {
+
+        resultRPC.innerHTML = "Fetching...";
+        statusRPC.innerHTML = "Fetching...";
+
+
+        let cmd = cleanCommandString(inputCommandRPC.value);
+        inputCommandRPC.value = cmd;
+
+        let resp = splitCommandString(cmd);
+        let method = resp.method;
+        let params = resp.params;
+
+
+        rpcCallResult(method, params, function(output,status){
+          resultRPC.innerHTML = JSON.stringify(output);
+          statusRPC.innerHTML = status;
+
+          let zAddrTest = "zceFiCZE6FtRunp6WyFMFMWDvsTryp7kuGH97BrgGyMPNuga272A4PSc7Tfya4oewCP7JYnF9RrT3tqamLdostU3fz8sDoC";
+          let pkZ = "SKxqUn1d6mjoF4PKBizLRnU6RStXgkejZkwYzCcqrvz3WDpwPrgw";
+          //getZaddressBalance(pkZ,zAddrTest,function(balance){});
+          //sendFromOrToZaddress(pkZ,zAddrTest,"zngGeznkvBo58fkK5iVtNxhpFRKk6GZBaVc",0.001,0.0)
+          //getOperationResult("opid-2ef3b787-1066-4050-8a1d-f768557a247a");
+        });
+        });
+    });
+}
+
+(() => {
+const {ipcRenderer} = require("electron");
+ipcRenderer.on("open-rpc-console", (event) => {
+    showRpcDialog();
+});
+})();
 
 function openZenExplorer(path) {
     openUrl(settings.explorerUrl + "/" + path);

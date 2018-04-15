@@ -84,7 +84,15 @@
         <div slot=content>
             <div class=form>
                 <div data-tr=wallet.newAddress.name>Name (optional)</div>
+                 <div>
                 <input type=text class=newAddrDialogName />
+
+                <input type=radio id=choiceT name=TorZ class=TorZgetT value=0 checked>
+                <label for=choiceT>T (Transparent)</label>
+
+                <input type=radio id=choiceZ name=TorZ class=TorZgetZ value=1>
+                <label for=choiceZ>Z (Private Zero Knowledge)</label>
+              </div>
             </div>
             <div class=formButtons>
                 <button class=newAddrDialogCreate data-tr=wallet.newAddress.createButton>Create</button>
@@ -109,6 +117,31 @@
         </div>
     </arizen-dialog>
 </template>
+
+
+<!-- Delet me  -->
+<template id=tempRpcTemplate>
+    <arizen-dialog>
+        <h2 slot=headerText data-tr=wallet.importSinglePrivateKey.tmp>RPC</h2>
+        <div slot=content>
+            <div class=form>
+                <div data-tr=wallet.newAddress.tmp>Command</div>
+                <input type=text class=giveCommandRPC value=help />
+                <!-- <div data-tr=wallet.importSinglePrivateKey.privateKeyLabel>Private Key</div>
+                <input type=text class=newPrivateKeyDialogKey /> -->
+            </div>
+            <div class=formButtons>
+                <button class=testRPCButton data-tr=wallet.importSinglePrivateKey.testMe>Test Me</button>
+            </div>
+            <textarea id=resultRPC class=resultRPC slot=headerText rows=20 data-tr=wallet.importSinglePrivateKey.tmp>RPC Results....</textarea>
+            <div data-tr=wallet.newAddress.tmp>Status: </div> <div data-tr=wallet.newAddress.tmp class=statusRPC></div>
+            <button class=connectSSHtun data-tr=wallet.importSinglePrivateKey.testMe>Connect SSH Tunnel</button>
+            <!-- <button class=closeSSHtun data-tr=wallet.importSinglePrivateKey.testMe>Close SSH Tunnel</button> -->
+        </div>
+
+    </arizen-dialog>
+</template>
+<!-- Delet me  -->
 
 <template id=addrSelectRowTemplate>
     <tr class=addrSelectRow>
@@ -277,6 +310,25 @@
                     <input type=checkbox class=enableDomainFronting name=enableDomainFronting />
                     <span class=checkmark></span>
                 </label>
+                <label for=secureNodeFQDN data-tr=wallet.settings.secureNodeFQDN>Secure Node FQDN</label>
+                <input type=text name=settingsSecureNodeFQDN class=settingsSecureNodeFQDN />
+                <label for=sshUsername data-tr=wallet.settings.sshUsername>SSH username</label>
+                <input type=text name=settingsSshUsername class=settingsSshUsername />
+                <label for=sshPassword data-tr=wallet.settings.sshPassword>SSH password</label>
+                <input type=text name=settingsSshPassword class=settingsSshPassword />
+                <label for=sshPort data-tr=wallet.settings.sshPort>SSH port</label>
+                <input type=text name=settingsSshPort class=settingsSshPort />
+                <label for=secureNodePort data-tr=wallet.settings.secureNodePort>Secure Node Port (see zen.conf)</label>
+                <input type=text name=settingsSecureNodePort class=settingsSecureNodePort />
+                <label for=secureNodeUsername data-tr=wallet.settings.secureNodeUsername>Secure Node Username (see zen.conf)</label>
+                <input type=text name=settingsSecureNodeUsername class=settingsSecureNodeUsername />
+                <label for=secureNodePassword data-tr=wallet.settings.secureNodePassword>Secure Node Password (see zen.conf)</label>
+                <input type=text name=settingsSecureNodePassword class=settingsSecureNodePassword />
+                <label for=readyTimeout data-tr=wallet.settings.readyTimeout>Ready Timeout (default: 10000)</label>
+                <input type=text name=settingsReadyTimeout class=settingsReadyTimeout />
+                <label for=forwardTimeout data-tr=wallet.settings.forwardTimeout>Forward Timeout (default: 10000)</label>
+                <input type=text name=settingsForwardTimeout class=settingsForwardTimeout />
+
             </div>
             <div class=formButtons>
                 <button class=settingsSave data-tr=wallet.settings.save>Save</button>
@@ -293,6 +345,7 @@
         <span><button onclick="showPaperWalletDialog()" data-tr=wallet.paperWallet.label>Paper Wallet</button></span>
         <span><button onclick="showBatchWithdrawDialog()" data-tr=wallet.showBatchWithdrawDialog>Batch Withdraw</button></span>
         <span><button onclick="showImportSinglePKDialog()" data-tr=wallet.importSinglePrivateKey.openButtonLabel>Import Private Key</button></span>
+        <span><button onclick="showRpcDialog()" data-tr=wallet.importSinglePrivateKey.tmp>RPC Test</button></span>
     </div>
     <div class=headerCenter>
         <a class=arizenTitle href='https://github.com/ZencashOfficial/arizen'>Arizen</a>
