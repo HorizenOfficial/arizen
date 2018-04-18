@@ -188,7 +188,7 @@
       "privateKeyLabel": "Private Key",
       "importButtonLabel": "Import",
       "warningNotValidAddress": "Address exist in your wallet",
-      "warningNotValidPK": "This is not a valid Private Key."
+      "warningNotValidPK": "This is not a valid Private Key or you try to import a Spending Key (only for Z addresses) as T address Private key."
     }
   },
   "menu": {

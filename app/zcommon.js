@@ -10,6 +10,7 @@ const {rpcCall,cleanCommandString,rpcCallResult,splitCommandString,getZaddressBa
 const {zenextra} = require("./zenextra.js");
 
 
+
 const userWarningImportPK = "A new address and a private key will be imported. Your previous back-ups do not include the newly imported address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen."
 
 function assert(condition, message) {
@@ -346,29 +347,33 @@ function showImportSinglePKDialog() {
                 var importT = dialog.querySelector(".importTorZgetT").checked;
                 var importZ = dialog.querySelector(".importTorZgetZ").checked;
                 let checkAddr
-                console.log(importT);
-                console.log(importZ);
+                // console.log(importT);
+                // console.log(importZ);
 
-                if (zenextra.isPKorWif(pk) === true) {
+                if ( (zenextra.isPKorWif(pk) === true && importT) || (zenextra.isPKorSpendingKey(pk)===true && importZ)) {
                     console.log(name);
                     console.log(pk);
-                    if (zenextra.isWif(pk) === true) {
-                        pk = zencashjs.address.WIFToPrivKey(pk);
-                    }
                     if(importT){
+                        if (zenextra.isWif(pk) === true) {
+                            pk = zencashjs.address.WIFToPrivKey(pk);
+                        }
                         let pubKey = zencashjs.address.privKeyToPubKey(pk, true);
                         let tAddress = zencashjs.address.pubKeyToAddr(pubKey);
                         checkAddr = tAddress;
                    }
                    if(importZ){
-                       let spendingKey = zencashjs.zaddress.zSecretKeyToSpendingKey(pk);
-                       let a_pk = zencashjs.zaddress.zSecretKeyToPayingKey(pk);
-                       let pk_enc = zencashjs.zaddress.zSecretKeyToTransmissionKey(pk);
+                     let secretKey = pk;
+                       if (zenextra.isSpendingKey(pk) === true){
+                         secretKey  = zenextra.spendingKeyToSecretKey(pk); // pk = spendingKey
+                         pk = secretKey;
+                       }
+                       let a_pk = zencashjs.zaddress.zSecretKeyToPayingKey(secretKey);
+                       let pk_enc = zencashjs.zaddress.zSecretKeyToTransmissionKey(secretKey);
                        let zAddress = zencashjs.zaddress.mkZAddress(a_pk, pk_enc);
                        checkAddr = zAddress;
                    }
 
-                   console.log(checkAddr);
+                   // console.log(checkAddr);
 
                    let resp = ipcRenderer.sendSync("check-if-address-in-wallet", checkAddr);
                    let addrExists = resp.exist;
@@ -381,7 +386,7 @@ function showImportSinglePKDialog() {
                         dialog.close();
                     }
                 } else {
-                    alert(tr("wallet.importSinglePrivateKey.warningNotValidPK", "This is not a valid Private Key."));
+                    alert(tr("wallet.importSinglePrivateKey.warningNotValidPK", "This is not a valid Private Key or you try to import a Spending Key (only for Z addresses) as T address Private key."));
                 }
             });
         });
@@ -424,7 +429,32 @@ function showRpcDialog() {
           statusRPC.innerHTML = status;
 
           let zAddrTest = "zceFiCZE6FtRunp6WyFMFMWDvsTryp7kuGH97BrgGyMPNuga272A4PSc7Tfya4oewCP7JYnF9RrT3tqamLdostU3fz8sDoC";
-          let pkZ = "SKxqUn1d6mjoF4PKBizLRnU6RStXgkejZkwYzCcqrvz3WDpwPrgw";
+          let spendingKey = "SKxqUn1d6mjoF4PKBizLRnU6RStXgkejZkwYzCcqrvz3WDpwPrgw";
+          let secretKey = "05b3be07727ed354c23720e917c56663741bde4c8e654c538de0f19ccc3b8276";
+
+          let pk = "c9663b4dae59cf8ddf85027bd77681e0611c9b92aeec633b041d4826e5dc65ad";
+          let wif = "5KLz4HMvifUhNT4XExopNAn5PpZ8ZrkQmqUcM7VAjCgTpPEtWCg"
+          // t address Arizen zngGeznkvBo58fkK5iVtNxhpFRKk6GZBaVc
+          // t address zen cli znnhQdt6i43GciJCgpPYRfyxwoV8EoMZPJc
+
+          // let pubKey = zencashjs.address.privKeyToPubKey(pk, true);
+          // let tAddress = zencashjs.address.pubKeyToAddr(pubKey);
+          // console.log("Compressed: " + tAddress);
+          //
+          // let pubKey2 = zencashjs.address.privKeyToPubKey(pk, false);
+          // let tAddress2 = zencashjs.address.pubKeyToAddr(pubKey2);
+          // console.log("NON compressed: " + tAddress2);
+
+          //console.log(zencashjs.zaddress.zSecretKeyToSpendingKey(zencashjs.zaddress.mkZSecretKey('makakas papakas pistoli kanoni f16 2000')));
+
+          //let SKey  = zenextra.spendingKeyToSecretKey(spendingKey); // pk = spendingKey
+
+          console.log(zenextra.isSpendingKey(wif) === true);
+
+          //console.log(zenextra.isWif(spendingKey));
+
+
+
           //getZaddressBalance(pkZ,zAddrTest,function(balance){});
           //sendFromOrToZaddress(pkZ,zAddrTest,"zngGeznkvBo58fkK5iVtNxhpFRKk6GZBaVc",0.001,0.0)
           //getOperationResult("opid-2ef3b787-1066-4050-8a1d-f768557a247a");

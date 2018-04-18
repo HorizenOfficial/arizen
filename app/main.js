@@ -527,20 +527,23 @@ function exportPKs() {
     });
 }
 
-function importOnePK(pk, name = "", isT = true) {
+function importOnePK(pk, name = "", isT = true) { // input is PK not wif, not spending key
     try {
         let addr
-        if (pk.length !== 64) {
-            pk = zencashjs.address.WIFToPrivKey(pk);
-        }
         if(isT){
+            if (pk.length !== 64) {
+                pk = zencashjs.address.WIFToPrivKey(pk);
+            }
             const pub = zencashjs.address.privKeyToPubKey(pk, true);
             addr = zencashjs.address.pubKeyToAddr(pub);
         } else {
-          let spendingKey = zencashjs.zaddress.zSecretKeyToSpendingKey(pk);
-          let a_pk = zencashjs.zaddress.zSecretKeyToPayingKey(pk);
-          let pk_enc = zencashjs.zaddress.zSecretKeyToTransmissionKey(pk);
-          addr = zencashjs.zaddress.mkZAddress(a_pk, pk_enc);
+            if (pk.length !== 64) {
+                pk = zenextra.spendingKeyToSecretKey(pk); // pk = spendingKey
+            }
+            let secretKey  = pk;
+            let a_pk = zencashjs.zaddress.zSecretKeyToPayingKey(secretKey);
+            let pk_enc = zencashjs.zaddress.zSecretKeyToTransmissionKey(secretKey);
+            addr = zencashjs.zaddress.mkZAddress(a_pk, pk_enc);
         }
         sqlRun("insert or ignore into wallet (pk, addr, lastbalance, name) values (?, ?, 0, ?)", pk, addr, name);
     } catch (err) {

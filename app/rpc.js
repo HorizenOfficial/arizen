@@ -76,11 +76,16 @@ function rpcCallResult(cmd,paramsUsed, callback){
 
 function importPKinSN(pk,address,callback){
   console.log(pk);
-  console.log(zenextra.isWif(pk));
+  //console.log(zenextra.isWif(pk));
+  console.log(zencashjs.zaddress.zSecretKeyToSpendingKey(pk));
 
     let cmd;
     if(zenextra.isZeroAddr(address)){
         cmd = "z_importkey";
+        if(true){
+          pk = zencashjs.zaddress.zSecretKeyToSpendingKey(pk);
+        }
+        console.log(pk);
     };
     if(zenextra.isTransaparentAddr(address)){
         cmd = "importprivkey";
