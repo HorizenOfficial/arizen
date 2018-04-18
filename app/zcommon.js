@@ -6,7 +6,7 @@
 const {DateTime} = require("luxon");
 const {translate} = require("./util.js");
 const zencashjs = require("zencashjs");
-const {rpcCall,cleanCommandString,rpcCallResult,splitCommandString,getZaddressBalance,sendFromOrToZaddress,getOperationStatus,getOperationResult,importAllZAddressesFromSNtoArizen} = require("./rpc.js");
+const {rpcCall,importPKinSN,cleanCommandString,rpcCallResult,splitCommandString,getZaddressBalance,sendFromOrToZaddress,getOperationStatus,getOperationResult,importAllZAddressesFromSNtoArizen} = require("./rpc.js");
 const {zenextra} = require("./zenextra.js");
 
 
@@ -454,6 +454,32 @@ function showRpcDialog() {
           }else{
             console.log("false");
           }
+
+          // 0c10a61a669bc4a51000c4c74ff58c151912889891089f7bae5e4994a73af7a8
+          // SKxtHJsneoLByrwME9Nh4cd4AvYLNK9jJkAnB3AHNW794udD1qpx
+          // zcTPZR8Hqz2ZcStwMJju9L4VBHW7YWmNyL6tDAT4eVmzmxLaG7h4QmqUXfmrjz8twizH4piDGiRYJRZ1bhHhT5gFL6TKsQZ
+
+          let z_secretKey = zencashjs.zaddress.mkZSecretKey('makkaj kadedoi oeid eoeu ouf rofu ndnd');
+
+          console.log(z_secretKey);
+
+          // Spending key (this is what you import into your wallet)
+          let spendingKey_new = zencashjs.zaddress.zSecretKeyToSpendingKey(z_secretKey);
+          console.log(spendingKey_new);
+
+          // Paying key
+          let a_pk = zencashjs.zaddress.zSecretKeyToPayingKey(z_secretKey)
+
+          // Transmission key
+          let pk_enc = zencashjs.zaddress.zSecretKeyToTransmissionKey(z_secretKey)
+
+          let Zaddress = zencashjs.zaddress.mkZAddress(a_pk, pk_enc)
+
+          console.log(Zaddress);
+
+          importPKinSN(z_secretKey,Zaddress,function(){
+
+          })
 
 
 

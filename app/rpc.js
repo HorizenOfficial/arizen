@@ -96,9 +96,9 @@ function rpcCallResult(cmd,paramsUsed, callback){
 }
 
 function importPKinSN(pk,address,callback){
-  console.log(pk);
+  //console.log(pk);
   //console.log(zenextra.isWif(pk));
-  console.log(zencashjs.zaddress.zSecretKeyToSpendingKey(pk));
+  //console.log(zencashjs.zaddress.zSecretKeyToSpendingKey(pk));
 
     let cmd;
     if(zenextra.isZeroAddr(address)){
@@ -106,7 +106,7 @@ function importPKinSN(pk,address,callback){
         if(true){
           pk = zencashjs.zaddress.zSecretKeyToSpendingKey(pk);
         }
-        console.log(pk);
+        //console.log(pk);
     };
     if(zenextra.isTransaparentAddr(address)){
         cmd = "importprivkey";
@@ -115,7 +115,7 @@ function importPKinSN(pk,address,callback){
           console.log(pk);
         }
     };
-    rpcCallResult(cmd,[pk],callback);
+    rpcCallResult(cmd,[pk,"no"],callback);
   //callback
 }
 
@@ -253,6 +253,7 @@ module.exports = {
   sendFromOrToZaddress: sendFromOrToZaddress,
   getOperationStatus: getOperationStatus,
   updateAllZBalances: updateAllZBalances,
-  importAllZAddressesFromSNtoArizen: importAllZAddressesFromSNtoArizen
+  importAllZAddressesFromSNtoArizen: importAllZAddressesFromSNtoArizen,
+  importPKinSN: importPKinSN
   //getOperationResult: getOperationResult
 }
