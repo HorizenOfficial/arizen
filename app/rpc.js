@@ -127,7 +127,8 @@ function getNewZaddressPK(nameAddress){
     const newCmd = "z_exportkey";
     let paramsUsed = [zAddress];
     rpcCallResult(newCmd,paramsUsed,function(output,status){
-        pkZaddress = output;
+        let spendingKey = output;
+        let pkZaddress = zenextra.spendingKeyToSecretKey(spendingKey);
         // console.log(zAddress,pkZaddress);
         ipcRenderer.send("generate-Z-address", nameAddress,pkZaddress,zAddress);
 
