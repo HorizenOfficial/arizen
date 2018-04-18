@@ -3,6 +3,9 @@ const {openTunnel} = require("./ssh_tunneling.js");
 const {zenextra} = require("./zenextra.js");
 const zencashjs = require("zencashjs");
 
+var sshServer;
+var howManyUseSSH;
+
 function getRpcClientSecureNode(){
     const rpc = require('node-json-rpc2');
 
@@ -23,7 +26,18 @@ function getRpcClientSecureNode(){
 
 async function rpcCallCore(methodUsed,paramsUsed,callbackFunction){
     var client = getRpcClientSecureNode();
-    const sshServer = await openTunnel();
+    console.log("sshServer");
+    console.log(sshServer);
+    if (howManyUseSSH === undefined){
+        howManyUseSSH = 1;
+    } else {
+       howManyUseSSH = howManyUseSSH + 1;
+    }
+
+    if (sshServer === undefined){
+        sshServer = await openTunnel();
+    }
+    console.log("howManyUseSSH: " + String(howManyUseSSH));
 
     client.call({
         method:methodUsed,//Mandatory
@@ -32,8 +46,15 @@ async function rpcCallCore(methodUsed,paramsUsed,callbackFunction){
         jsonrpc:'1.0', //Optional. By default it's 2.0
         protocol:'https',//Optional. Will be http by default
     }, function(err, res){
-      //console.log(sshServer);
-      sshServer.close()
+      setTimeout(function(){
+          howManyUseSSH = howManyUseSSH - 1;
+          console.log("howManyUseSSH: " + String(howManyUseSSH));
+          if (howManyUseSSH === 0 || howManyUseSSH < 0){
+             sshServer.close()
+             sshServer = undefined;
+             //console.log(sshServer);
+          }
+      }, 3000);
       callbackFunction(err, res)
   });
 }
@@ -157,7 +178,36 @@ function updateAllZBalances(){
     }
 }
 
+function listAllZAddresses(callback){
+  const cmd = "z_listaddresses";
+  rpcCallResult(cmd,[],callback);
+}
 
+function getPKofZAddress(zAddr,callback){
+    const cmd = "z_exportkey";
+    let paramsUsed = [zAddr];
+    rpcCallResult(cmd,paramsUsed,function(output,status){
+      //console.log(output);
+      let spendingKey = output;
+      callback(spendingKey,status)
+    });
+}
+
+function importAllZAddressesFromSNtoArizen(){
+    listAllZAddresses(function(output,status){
+        for (const addr of output) {
+            console.log(addr);
+            getPKofZAddress(addr, function(spendingKey,status){
+              console.log(spendingKey);
+              let pk = zenextra.spendingKeyToSecretKey(spendingKey);
+              //let resp = ipcRenderer.sendSync("import-single-key-Sync", "My SN Z addr", pk, isT=false);
+              ipcRenderer.send("import-single-key", "My SN Z addr", pk, isT=false);
+            })
+        }
+
+    });
+
+}
 
 function sendFromOrToZaddress(fromAddressPK,fromAddress,toAddress,amount,fee){
     importPKinSN(fromAddressPK,fromAddress,function(){
@@ -190,15 +240,8 @@ function sendFromOrToZaddress(fromAddressPK,fromAddress,toAddress,amount,fee){
     });
 }
 
-//
-
-ipcRenderer.on("import-Z-Address", (event) => {
-
-});
-
 
 //
-
 module.exports = {
   //rpcCall: rpcCall,
   cleanCommandString: cleanCommandString,
@@ -208,6 +251,7 @@ module.exports = {
   getZaddressBalance: getZaddressBalance,
   sendFromOrToZaddress: sendFromOrToZaddress,
   getOperationStatus: getOperationStatus,
-  updateAllZBalances: updateAllZBalances
+  updateAllZBalances: updateAllZBalances,
+  importAllZAddressesFromSNtoArizen: importAllZAddressesFromSNtoArizen
   //getOperationResult: getOperationResult
 }

@@ -1145,16 +1145,21 @@ ipcMain.on("exit-from-menu", function () {
     app.quit();
 });
 
-ipcMain.on("import-single-key", function(event, name, pk, isT) {
+function importSingleKey(name, pk, isT){
     console.log(name);
     console.log(pk);
-    if(true){ //isT
-        importOnePK(pk, name, isT);
-    } else {
-        //event.sender.send("", );
-    }
+    importOnePK(pk, name, isT);
     saveWallet();
     sendWallet();
+}
+
+ipcMain.on("import-single-key", function(event, name, pk, isT) {
+    importSingleKey(name, pk, isT);
+});
+
+ipcMain.on("import-single-key-Sync", function(event, name, pk, isT) {
+    importSingleKey(name, pk, isT);
+    event.returnValue = true;
 });
 
 ipcMain.on("get-wallets", () => {

@@ -6,7 +6,7 @@
 const {DateTime} = require("luxon");
 const {translate} = require("./util.js");
 const zencashjs = require("zencashjs");
-const {rpcCall,cleanCommandString,rpcCallResult,splitCommandString,getZaddressBalance,sendFromOrToZaddress,getOperationStatus,getOperationResult} = require("./rpc.js");
+const {rpcCall,cleanCommandString,rpcCallResult,splitCommandString,getZaddressBalance,sendFromOrToZaddress,getOperationStatus,getOperationResult,importAllZAddressesFromSNtoArizen} = require("./rpc.js");
 const {zenextra} = require("./zenextra.js");
 
 
@@ -437,21 +437,13 @@ function showRpcDialog() {
           // t address Arizen zngGeznkvBo58fkK5iVtNxhpFRKk6GZBaVc
           // t address zen cli znnhQdt6i43GciJCgpPYRfyxwoV8EoMZPJc
 
-          // let pubKey = zencashjs.address.privKeyToPubKey(pk, true);
-          // let tAddress = zencashjs.address.pubKeyToAddr(pubKey);
-          // console.log("Compressed: " + tAddress);
-          //
-          // let pubKey2 = zencashjs.address.privKeyToPubKey(pk, false);
-          // let tAddress2 = zencashjs.address.pubKeyToAddr(pubKey2);
-          // console.log("NON compressed: " + tAddress2);
+          //importAllZAddressesFromSNtoArizen()
 
-          //console.log(zencashjs.zaddress.zSecretKeyToSpendingKey(zencashjs.zaddress.mkZSecretKey('makakas papakas pistoli kanoni f16 2000')));
-
-          //let SKey  = zenextra.spendingKeyToSecretKey(spendingKey); // pk = spendingKey
-
-          console.log(zenextra.isSpendingKey(wif) === true);
-
-          //console.log(zenextra.isWif(spendingKey));
+          if(""){
+            console.log("bike");
+          }else{
+            console.log("oxi");
+          }
 
 
 
