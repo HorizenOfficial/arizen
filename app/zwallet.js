@@ -481,6 +481,7 @@ function scheduleRefresh() {
 }
 
 function refresh() {
+    syncZaddrIfSettingsExist()
     updateAllZBalances();
     ipcRenderer.send("refresh-wallet");
     scheduleRefresh();

@@ -26,8 +26,8 @@ function getRpcClientSecureNode(){
 
 async function rpcCallCore(methodUsed,paramsUsed,callbackFunction){
     var client = getRpcClientSecureNode();
-    console.log("sshServer");
-    console.log(sshServer);
+    //console.log("sshServer");
+    //console.log(sshServer);
     if (howManyUseSSH === undefined){
         howManyUseSSH = 1;
     } else {
@@ -37,7 +37,7 @@ async function rpcCallCore(methodUsed,paramsUsed,callbackFunction){
     if (sshServer === undefined){
         sshServer = await openTunnel();
     }
-    console.log("howManyUseSSH: " + String(howManyUseSSH));
+    //console.log("howManyUseSSH: " + String(howManyUseSSH));
 
     client.call({
         method:methodUsed,//Mandatory
@@ -48,7 +48,7 @@ async function rpcCallCore(methodUsed,paramsUsed,callbackFunction){
     }, function(err, res){
       setTimeout(function(){
           howManyUseSSH = howManyUseSSH - 1;
-          console.log("howManyUseSSH: " + String(howManyUseSSH));
+          //console.log("howManyUseSSH: " + String(howManyUseSSH));
           if (howManyUseSSH === 0 || howManyUseSSH < 0){
              sshServer.close()
              sshServer = undefined;

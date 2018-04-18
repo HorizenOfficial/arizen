@@ -260,6 +260,13 @@ function saveModifiedSettings() {
     ipcRenderer.send("save-settings", JSON.stringify(settings));
 }
 
+function syncZaddrIfSettingsExist(){
+    let settingsForSecureNodeExist = (settings.secureNodeFQDN && settings.secureNodePort && settings.secureNodeUsername && settings.secureNodePassword && settings.sshUsername && settings.sshPassword && settings.sshPort)
+    if(settingsForSecureNodeExist){
+        importAllZAddressesFromSNtoArizen();
+    }
+}
+
 function showSettingsDialog() {
     showDialogFromTemplate("settingsDialogTemplate", dialog => {
         const inputTxHistory = dialog.querySelector(".settingsTxHistory");
@@ -326,6 +333,9 @@ function showSettingsDialog() {
 
             let zenBalance = getZenBalance();
             setFiatBalanceText(zenBalance, inputFiatCurrency.value);
+
+            syncZaddrIfSettingsExist();
+
 
             dialog.close();
         });
@@ -439,10 +449,10 @@ function showRpcDialog() {
 
           //importAllZAddressesFromSNtoArizen()
 
-          if(""){
-            console.log("bike");
+          if(" " && 1 && 22 && 8321 && 0){
+            console.log("true");
           }else{
-            console.log("oxi");
+            console.log("false");
           }
 
 
@@ -530,4 +540,8 @@ function translateCurrentPage() {
         return;
     querySelectorAllDeep("[data-tr]").forEach(node =>
         node.textContent = tr(node.dataset.tr, node.textContent));
+}
+
+module.exports = {
+  syncZaddrIfSettingsExist: syncZaddrIfSettingsExist
 }
