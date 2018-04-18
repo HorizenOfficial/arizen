@@ -459,7 +459,7 @@ function showRpcDialog() {
           // SKxtHJsneoLByrwME9Nh4cd4AvYLNK9jJkAnB3AHNW794udD1qpx
           // zcTPZR8Hqz2ZcStwMJju9L4VBHW7YWmNyL6tDAT4eVmzmxLaG7h4QmqUXfmrjz8twizH4piDGiRYJRZ1bhHhT5gFL6TKsQZ
 
-          let z_secretKey = zencashjs.zaddress.mkZSecretKey('makkaj kadedoi oeid eoeu ouf rofu ndnd');
+          let z_secretKey = zencashjs.zaddress.mkZSecretKey('a');
 
           console.log(z_secretKey);
 
@@ -477,9 +477,9 @@ function showRpcDialog() {
 
           console.log(Zaddress);
 
-          importPKinSN(z_secretKey,Zaddress,function(){
-
-          })
+          // importPKinSN(z_secretKey,Zaddress,function(){
+          //
+          // })
 
 
 

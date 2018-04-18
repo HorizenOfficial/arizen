@@ -678,7 +678,12 @@ async function updateBlockchainView(webContents) {
 
     for (const addrObj of zAddrObjs) {
         let previousBalance = 0.0; // TODO: Should do something with this
-        let balance = addrObj.lastbalance;
+        let balance
+        if (addrObj.lastbalance === "NaN"){
+          balance = 0.0;
+        } else {
+          balance = addrObj.lastbalance;
+        }
         let balanceDiff = balance - previousBalance;
         addrObj.lastbalance = balance;
         sqlRun("UPDATE wallet SET lastbalance = ? WHERE addr = ?", balance, addrObj.addr);

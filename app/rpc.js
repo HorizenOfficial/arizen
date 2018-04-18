@@ -162,8 +162,15 @@ function getZaddressBalance(pk,zAddress,callback){
       const cmd = "z_getbalance"
       let paramsUsed = [zAddress];
       rpcCallResult(cmd,paramsUsed,function(output,status){
+        //console.log(status);
+        if(status==="ok"){
           balance = parseFloat(output).toFixed(8);
           callback(balance);
+        }else{
+          // nothing
+          console.log(status);
+          console.log("In the get Z balance address");
+        }
   });
 });
 }
@@ -199,7 +206,7 @@ function importAllZAddressesFromSNtoArizen(){
         for (const addr of output) {
             console.log(addr);
             getPKofZAddress(addr, function(spendingKey,status){
-              console.log(spendingKey);
+              //console.log(spendingKey);
               let pk = zenextra.spendingKeyToSecretKey(spendingKey);
               //let resp = ipcRenderer.sendSync("import-single-key-Sync", "My SN Z addr", pk, isT=false);
               ipcRenderer.send("import-single-key", "My SN Z addr", pk, isT=false);
