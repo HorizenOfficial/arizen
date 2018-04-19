@@ -34,7 +34,9 @@ async function rpcCallCore(methodUsed,paramsUsed,callbackFunction){
        howManyUseSSH = howManyUseSSH + 1;
     }
 
-    if (sshServer === undefined){
+    let tunnelToLocalHost = (settings.secureNodeFQDN === "127.0.0.1" || settings.secureNodeFQDN.toLowerCase() === "localhost");
+
+    if (sshServer === undefined && !tunnelToLocalHost){
         sshServer = await openTunnel();
     }
     //console.log("howManyUseSSH: " + String(howManyUseSSH));
@@ -50,8 +52,10 @@ async function rpcCallCore(methodUsed,paramsUsed,callbackFunction){
           howManyUseSSH = howManyUseSSH - 1;
           //console.log("howManyUseSSH: " + String(howManyUseSSH));
           if (howManyUseSSH === 0 || howManyUseSSH < 0){
-             sshServer.close()
-             sshServer = undefined;
+              if (!tunnelToLocalHost){
+                  sshServer.close()
+                  sshServer = undefined;
+              }
              //console.log(sshServer);
           }
       }, 3000);
