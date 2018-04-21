@@ -6,7 +6,7 @@
 const {DateTime} = require("luxon");
 const {translate} = require("./util.js");
 const zencashjs = require("zencashjs");
-const {rpcCall,importPKinSN,cleanCommandString,rpcCallResult,splitCommandString,getZaddressBalance,sendFromOrToZaddress,getOperationStatus,getOperationResult,importAllZAddressesFromSNtoArizen} = require("./rpc.js");
+const {rpcCall,importPKinSN,cleanCommandString,rpcCallResult,splitCommandString,getZaddressBalance,sendFromOrToZaddress,getOperationStatus,getOperationResult,importAllZAddressesFromSNtoArizen,pingSecureNodeRPC} = require("./rpc.js");
 const {zenextra} = require("./zenextra.js");
 
 
@@ -247,6 +247,8 @@ let langDict;
     const {ipcRenderer} = require("electron");
     ipcRenderer.on("settings", (sender, settingsStr) => {
         // don't notify about new settings on startup
+        pingSecureNode();
+        //pingSecureNodeRPCResult();
         if (Object.keys(settings).length)
             showNotification(tr("notification.settingsUpdated", "Settings updated"));
         const newSettings = JSON.parse(settingsStr);
@@ -265,6 +267,34 @@ function syncZaddrIfSettingsExist(){
     if(settingsForSecureNodeExist){
         importAllZAddressesFromSNtoArizen();
     }
+}
+
+function pingSecureNode(){
+    if (settings.secureNodeFQDN){
+        var ping = require('ping');
+        var hosts = [settings.secureNodeFQDN];
+        hosts.forEach(function(host){
+            ping.sys.probe(host, function(isAlive){
+              if (isAlive){
+                  document.getElementById("dotSNstatus").style.backgroundColor = "#34A853"; // green
+              } else {
+                  document.getElementById("dotSNstatus").style.backgroundColor = "#EA4335"; // red #EA4335
+              }
+            });
+        });
+       }
+}
+
+function pingSecureNodeRPCResult(){
+    if (1===1){ // settings.secureNodeFQDN
+        pingSecureNodeRPC(function(isAlive){
+            if (isAlive){
+                document.getElementById("dotSNstatusRPC").style.backgroundColor = "#34A853"; // green
+            } else {
+                document.getElementById("dotSNstatusRPC").style.backgroundColor = "#EA4335"; // red #EA4335
+            }
+        });
+       }
 }
 
 function showSettingsDialog() {

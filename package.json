@@ -119,6 +119,7 @@
     "node-json-rpc2": "^1.1.0",
     "open-ssh-tunnel": "^0.3.1",
     "password-hash": "^1.2.2",
+    "ping": "^0.2.2",
     "qrcode": "^1.2.0",
     "sql.js": "^0.5.0",
     "zencashjs": "^1.1.9-a"

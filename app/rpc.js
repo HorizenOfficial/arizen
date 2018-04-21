@@ -123,6 +123,27 @@ function importPKinSN(pk,address,callback){
   //callback
 }
 
+function help(){
+    let cmd;
+    cmd = "help";
+    rpcCallResult(cmd,[],function(output,status){
+
+    });
+}
+
+function pingSecureNodeRPC(callback){
+    let cmd;
+    cmd = "help";
+    rpcCallResult(cmd,[],function(output,status){
+      let isAlive = false;
+      if(status==="ok"){
+        isAlive = true;
+      }
+      callback(isAlive);
+    });
+}
+
+
 function getNewZaddressPK(nameAddress){
   const cmd = "z_getnewaddress"
   rpcCallResult(cmd,[],function(output,status){
@@ -265,6 +286,7 @@ module.exports = {
   getOperationStatus: getOperationStatus,
   updateAllZBalances: updateAllZBalances,
   importAllZAddressesFromSNtoArizen: importAllZAddressesFromSNtoArizen,
-  importPKinSN: importPKinSN
+  importPKinSN: importPKinSN,
+  pingSecureNodeRPC:pingSecureNodeRPC
   //getOperationResult: getOperationResult
 }

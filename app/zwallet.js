@@ -481,8 +481,10 @@ function scheduleRefresh() {
 }
 
 function refresh() {
-    syncZaddrIfSettingsExist()
+    syncZaddrIfSettingsExist();
     updateAllZBalances();
+    pingSecureNode();
+    pingSecureNodeRPCResult();
     ipcRenderer.send("refresh-wallet");
     scheduleRefresh();
 }
