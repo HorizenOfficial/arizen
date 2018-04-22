@@ -287,6 +287,7 @@ function pingSecureNode() {
                     document.getElementById("dotSNstatus").style.backgroundColor = "#34A853"; // green
                 } else {
                     document.getElementById("dotSNstatus").style.backgroundColor = "#EA4335"; // red #EA4335
+                    document.getElementById("dotSNstatusRPC").style.backgroundColor = "#EA4335"; // red #EA4335
                 }
             });
         });
