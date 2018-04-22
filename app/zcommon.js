@@ -6,12 +6,10 @@
 const {DateTime} = require("luxon");
 const {translate} = require("./util.js");
 const zencashjs = require("zencashjs");
-const {rpcCall,importPKinSN,cleanCommandString,rpcCallResult,splitCommandString,getZaddressBalance,sendFromOrToZaddress,getOperationStatus,getOperationResult,importAllZAddressesFromSNtoArizen,pingSecureNodeRPC} = require("./rpc.js");
+const {rpcCall, importPKinSN, cleanCommandString, rpcCallResult, splitCommandString, getZaddressBalance, sendFromOrToZaddress, getOperationStatus, getOperationResult, importAllZAddressesFromSNtoArizen, pingSecureNodeRPC} = require("./rpc.js");
 const {zenextra} = require("./zenextra.js");
 
-
-
-const userWarningImportPK = "A new address and a private key will be imported. Your previous back-ups do not include the newly imported address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen."
+const userWarningImportPK = "A new address and a private key will be imported. Your previous back-ups do not include the newly imported address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
 
 function assert(condition, message) {
     if (!condition) {
@@ -32,23 +30,27 @@ function querySelectorAllDeep(selector, startRoot = document) {
     const nodeQueue = [...startRoot.children];
     while (nodeQueue.length) {
         const node = nodeQueue.shift();
-        if (node.shadowRoot)
+        if (node.shadowRoot) {
             roots.push(node.shadowRoot);
-        if (node.tagName === "TEMPLATE" && node.content)
+        }
+        if (node.tagName === "TEMPLATE" && node.content) {
             roots.push(node.content);
+        }
         nodeQueue.push(...node.children);
     }
 
     const matches = [];
-    for (const r of roots)
+    for (const r of roots) {
         matches.push(... r.querySelectorAll(selector));
+    }
     return matches;
 }
 
 function deepClone(obj) {
     // feel free to make a better implementation
-    if (!obj)
+    if (!obj) {
         return null;
+    }
     return JSON.parse(JSON.stringify(obj));
 }
 
@@ -61,15 +63,18 @@ function deepClone(obj) {
  * @param {function=} onOk - lambda executed if Cancel is pressed
  */
 function warnUser(msg, onOk, onCancel) {
-    if (confirm(msg))
+    if (confirm(msg)) {
         onOk();
-    else if (onCancel)
+    }
+    else if (onCancel) {
         onCancel();
+    }
 }
 
 function showNotification(message) {
-    if (settings && !settings.notifications)
+    if (settings && !settings.notifications) {
         return;
+    }
     const notif = new Notification("Arizen", {
         body: message,
         icon: "resources/zen_icon.png"
@@ -160,11 +165,13 @@ function clearChildNodes(parent) {
 
 function cloneTemplate(id) {
     const templateNode = document.getElementById(id);
-    if (!templateNode)
+    if (!templateNode) {
         throw new Error(`No template with ID "${id}"`);
+    }
     const node = templateNode.content.cloneNode(true).firstElementChild;
-    if (!node)
+    if (!node) {
         throw new Error(`Template is empty (ID "${id}")`);
+    }
     fixPage(node);
     return node;
 }
@@ -205,11 +212,10 @@ function showDialogFromTemplate(templateId, dialogInit, onClose = null) {
 function scrollIntoViewIfNeeded(parent, child) {
     const parentRect = parent.getBoundingClientRect();
     const childRect = child.getBoundingClientRect();
-    if (childRect.top < parentRect.top ||
-        childRect.right > parentRect.right ||
-        childRect.bottom > parentRect.bottom ||
-        childRect.left < parentRect.left)
+    if (childRect.top < parentRect.top || childRect.right > parentRect.right ||
+        childRect.bottom > parentRect.bottom || childRect.left < parentRect.left) {
         child.scrollIntoView();
+    }
 }
 
 function createLink(url, text) {
@@ -249,11 +255,13 @@ let langDict;
         // don't notify about new settings on startup
         pingSecureNode();
         //pingSecureNodeRPCResult();
-        if (Object.keys(settings).length)
+        if (Object.keys(settings).length) {
             showNotification(tr("notification.settingsUpdated", "Settings updated"));
+        }
         const newSettings = JSON.parse(settingsStr);
-        if (settings.lang !== newSettings.lang)
+        if (settings.lang !== newSettings.lang) {
             changeLanguage(newSettings.lang);
+        }
         settings = newSettings;
     });
 })();
@@ -262,39 +270,40 @@ function saveModifiedSettings() {
     ipcRenderer.send("save-settings", JSON.stringify(settings));
 }
 
-function syncZaddrIfSettingsExist(){
+function syncZaddrIfSettingsExist() {
     let settingsForSecureNodeExist = (settings.secureNodeFQDN && settings.secureNodePort && settings.secureNodeUsername && settings.secureNodePassword && settings.sshUsername && settings.sshPassword && settings.sshPort)
-    if(settingsForSecureNodeExist){
+    if (settingsForSecureNodeExist) {
         importAllZAddressesFromSNtoArizen();
     }
 }
 
-function pingSecureNode(){
-    if (settings.secureNodeFQDN){
-        var ping = require('ping');
-        var hosts = [settings.secureNodeFQDN];
-        hosts.forEach(function(host){
-            ping.sys.probe(host, function(isAlive){
-              if (isAlive){
-                  document.getElementById("dotSNstatus").style.backgroundColor = "#34A853"; // green
-              } else {
-                  document.getElementById("dotSNstatus").style.backgroundColor = "#EA4335"; // red #EA4335
-              }
+function pingSecureNode() {
+    if (settings.secureNodeFQDN) {
+        let ping = require('ping');
+        let hosts = [settings.secureNodeFQDN];
+        hosts.forEach(function (host) {
+            ping.sys.probe(host, function (isAlive) {
+                if (isAlive) {
+                    document.getElementById("dotSNstatus").style.backgroundColor = "#34A853"; // green
+                } else {
+                    document.getElementById("dotSNstatus").style.backgroundColor = "#EA4335"; // red #EA4335
+                }
             });
         });
-       }
+    }
 }
 
-function pingSecureNodeRPCResult(){
-    if (1===1){ // settings.secureNodeFQDN
-        pingSecureNodeRPC(function(isAlive){
-            if (isAlive){
+function pingSecureNodeRPCResult() {
+    // FIXME: wtf? 1 === 1
+    if (1 === 1) { // settings.secureNodeFQDN
+        pingSecureNodeRPC(function (isAlive) {
+            if (isAlive) {
                 document.getElementById("dotSNstatusRPC").style.backgroundColor = "#34A853"; // green
             } else {
                 document.getElementById("dotSNstatusRPC").style.backgroundColor = "#EA4335"; // red #EA4335
             }
         });
-       }
+    }
 }
 
 function showSettingsDialog() {
@@ -331,9 +340,9 @@ function showSettingsDialog() {
         inputSecureNodePassword.value = settings.secureNodePassword || "";
         inputSshUsername.value = settings.sshUsername || "";
         inputSshPassword.value = settings.sshPassword || "";
-        inputSshPort.value = settings.sshPort|| 22;
-        inputReadyTimeout.value = settings.readyTimeout|| 10000;
-        inputForwardTimeout.value = settings.forwardTimeout|| 10000;
+        inputSshPort.value = settings.sshPort || 22;
+        inputReadyTimeout.value = settings.readyTimeout || 10000;
+        inputForwardTimeout.value = settings.forwardTimeout || 10000;
 
         dialog.querySelector(".settingsSave").addEventListener("click", () => {
             const newSettings = {
@@ -355,8 +364,9 @@ function showSettingsDialog() {
                 forwardTimeout: inputForwardTimeout.value
             };
 
-            if (settings.lang !== newSettings.lang)
+            if (settings.lang !== newSettings.lang) {
                 changeLanguage(newSettings.lang);
+            }
 
             Object.assign(settings, newSettings);
             saveModifiedSettings();
@@ -366,17 +376,17 @@ function showSettingsDialog() {
 
             syncZaddrIfSettingsExist();
 
-
             dialog.close();
         });
     });
 }
 
 function showImportSinglePKDialog() {
+    // FIXME: unused response
     let response = -1;
     response = ipcRenderer.sendSync("renderer-show-message-box", tr("warmingMessages.userWarningImportPK", userWarningImportPK), [tr("warmingMessages.userWarningIUnderstand", "I understand")]);
     console.log(response);
-    if (response===0){
+    if (response === 0) {
         showDialogFromTemplate("importSinglePrivateKeyDialogTemplate", dialog => {
             const importButton = dialog.querySelector(".newPrivateKeyImportButton");
             const nameInput = dialog.querySelector(".newPrivateKeyDialogName");
@@ -384,45 +394,44 @@ function showImportSinglePKDialog() {
             importButton.addEventListener("click", () => {
                 const name = nameInput.value ? nameInput.value : "";
                 let pk = privateKeyInput.value;
-                var importT = dialog.querySelector(".importTorZgetT").checked;
-                var importZ = dialog.querySelector(".importTorZgetZ").checked;
-                let checkAddr
+                let importT = dialog.querySelector(".importTorZgetT").checked;
+                let importZ = dialog.querySelector(".importTorZgetZ").checked;
+                let checkAddr;
                 // console.log(importT);
                 // console.log(importZ);
 
-                if ( (zenextra.isPKorWif(pk) === true && importT) || (zenextra.isPKorSpendingKey(pk)===true && importZ)) {
+                if ((zenextra.isPKorWif(pk) === true && importT) || (zenextra.isPKorSpendingKey(pk) === true && importZ)) {
                     console.log(name);
                     console.log(pk);
-                    if(importT){
+                    if (importT) {
                         if (zenextra.isWif(pk) === true) {
                             pk = zencashjs.address.WIFToPrivKey(pk);
                         }
                         let pubKey = zencashjs.address.privKeyToPubKey(pk, true);
-                        let tAddress = zencashjs.address.pubKeyToAddr(pubKey);
-                        checkAddr = tAddress;
-                   }
-                   if(importZ){
-                     let secretKey = pk;
-                       if (zenextra.isSpendingKey(pk) === true){
-                         secretKey  = zenextra.spendingKeyToSecretKey(pk); // pk = spendingKey
-                         pk = secretKey;
-                       }
-                       let a_pk = zencashjs.zaddress.zSecretKeyToPayingKey(secretKey);
-                       let pk_enc = zencashjs.zaddress.zSecretKeyToTransmissionKey(secretKey);
-                       let zAddress = zencashjs.zaddress.mkZAddress(a_pk, pk_enc);
-                       checkAddr = zAddress;
-                   }
+                        checkAddr = zencashjs.address.pubKeyToAddr(pubKey);
+                    }
+                    if (importZ) {
+                        let secretKey = pk;
+                        if (zenextra.isSpendingKey(pk) === true) {
+                            // pk = spendingKey
+                            secretKey = zenextra.spendingKeyToSecretKey(pk);
+                            pk = secretKey;
+                        }
+                        let a_pk = zencashjs.zaddress.zSecretKeyToPayingKey(secretKey);
+                        let pk_enc = zencashjs.zaddress.zSecretKeyToTransmissionKey(secretKey);
+                        checkAddr = zencashjs.zaddress.mkZAddress(a_pk, pk_enc);
+                    }
 
-                   // console.log(checkAddr);
+                    // console.log(checkAddr);
 
-                   let resp = ipcRenderer.sendSync("check-if-address-in-wallet", checkAddr);
-                   let addrExists = resp.exist;
+                    let resp = ipcRenderer.sendSync("check-if-address-in-wallet", checkAddr);
+                    let addrExists = resp.exist;
 
                     if (addrExists === true) {
                         alert(tr("wallet.importSinglePrivateKey.warningNotValidAddress", "Address exist in your wallet"))
                     } else {
                         ipcRenderer.send("import-single-key", name, pk, importT);
-                        alert(tr("warmingMessages.userWarningImportPK", userWarningImportPK))
+                        alert(tr("warmingMessages.userWarningImportPK", userWarningImportPK));
                         dialog.close();
                     }
                 } else {
@@ -443,91 +452,89 @@ function showRpcDialog() {
         const connectSshTunButton = dialog.querySelector(".connectSSHtun");
 
 
-        connectSshTunButton.addEventListener("click", async function() {
+        connectSshTunButton.addEventListener("click", async function () {
             const {openATunnel} = require("./ssh_tunneling.js");
             //const sshServer = openATunnel().then(function(sshServer){srv = sshServer;});
-            var sshServer = await openATunnel();
+            let sshServer = await openATunnel();
             console.log(sshServer);
-            });
+        });
 
         testRpcButton.addEventListener("click", () => {
 
-        resultRPC.innerHTML = "Fetching...";
-        statusRPC.innerHTML = "Fetching...";
+            resultRPC.innerHTML = "Fetching...";
+            statusRPC.innerHTML = "Fetching...";
 
 
-        let cmd = cleanCommandString(inputCommandRPC.value);
-        inputCommandRPC.value = cmd;
+            let cmd = cleanCommandString(inputCommandRPC.value);
+            inputCommandRPC.value = cmd;
 
-        let resp = splitCommandString(cmd);
-        let method = resp.method;
-        let params = resp.params;
-
-
-        rpcCallResult(method, params, function(output,status){
-          resultRPC.innerHTML = JSON.stringify(output);
-          statusRPC.innerHTML = status;
-
-          let zAddrTest = "zceFiCZE6FtRunp6WyFMFMWDvsTryp7kuGH97BrgGyMPNuga272A4PSc7Tfya4oewCP7JYnF9RrT3tqamLdostU3fz8sDoC";
-          let spendingKey = "SKxqUn1d6mjoF4PKBizLRnU6RStXgkejZkwYzCcqrvz3WDpwPrgw";
-          let secretKey = "05b3be07727ed354c23720e917c56663741bde4c8e654c538de0f19ccc3b8276";
-
-          let pk = "c9663b4dae59cf8ddf85027bd77681e0611c9b92aeec633b041d4826e5dc65ad";
-          let wif = "5KLz4HMvifUhNT4XExopNAn5PpZ8ZrkQmqUcM7VAjCgTpPEtWCg"
-          // t address Arizen zngGeznkvBo58fkK5iVtNxhpFRKk6GZBaVc
-          // t address zen cli znnhQdt6i43GciJCgpPYRfyxwoV8EoMZPJc
-
-          //importAllZAddressesFromSNtoArizen()
-
-          if(" " && 1 && 22 && 8321 && 0){
-            console.log("true");
-          }else{
-            console.log("false");
-          }
-
-          // 0c10a61a669bc4a51000c4c74ff58c151912889891089f7bae5e4994a73af7a8
-          // SKxtHJsneoLByrwME9Nh4cd4AvYLNK9jJkAnB3AHNW794udD1qpx
-          // zcTPZR8Hqz2ZcStwMJju9L4VBHW7YWmNyL6tDAT4eVmzmxLaG7h4QmqUXfmrjz8twizH4piDGiRYJRZ1bhHhT5gFL6TKsQZ
-
-          let z_secretKey = zencashjs.zaddress.mkZSecretKey('a');
-
-          console.log(z_secretKey);
-
-          // Spending key (this is what you import into your wallet)
-          let spendingKey_new = zencashjs.zaddress.zSecretKeyToSpendingKey(z_secretKey);
-          console.log(spendingKey_new);
-
-          // Paying key
-          let a_pk = zencashjs.zaddress.zSecretKeyToPayingKey(z_secretKey)
-
-          // Transmission key
-          let pk_enc = zencashjs.zaddress.zSecretKeyToTransmissionKey(z_secretKey)
-
-          let Zaddress = zencashjs.zaddress.mkZAddress(a_pk, pk_enc)
-
-          console.log(Zaddress);
-
-          // importPKinSN(z_secretKey,Zaddress,function(){
-          //
-          // })
+            let resp = splitCommandString(cmd);
+            let method = resp.method;
+            let params = resp.params;
 
 
+            rpcCallResult(method, params, function (output, status) {
+                resultRPC.innerHTML = JSON.stringify(output);
+                statusRPC.innerHTML = status;
 
-          //getZaddressBalance(pkZ,zAddrTest,function(balance){});
-          //sendFromOrToZaddress(pkZ,zAddrTest,"zngGeznkvBo58fkK5iVtNxhpFRKk6GZBaVc",0.001,0.0)
-          //getOperationResult("opid-2ef3b787-1066-4050-8a1d-f768557a247a");
-        });
+                let zAddrTest = "zceFiCZE6FtRunp6WyFMFMWDvsTryp7kuGH97BrgGyMPNuga272A4PSc7Tfya4oewCP7JYnF9RrT3tqamLdostU3fz8sDoC";
+                let spendingKey = "SKxqUn1d6mjoF4PKBizLRnU6RStXgkejZkwYzCcqrvz3WDpwPrgw";
+                let secretKey = "05b3be07727ed354c23720e917c56663741bde4c8e654c538de0f19ccc3b8276";
+
+                let pk = "c9663b4dae59cf8ddf85027bd77681e0611c9b92aeec633b041d4826e5dc65ad";
+                let wif = "5KLz4HMvifUhNT4XExopNAn5PpZ8ZrkQmqUcM7VAjCgTpPEtWCg"
+                // t address Arizen zngGeznkvBo58fkK5iVtNxhpFRKk6GZBaVc
+                // t address zen cli znnhQdt6i43GciJCgpPYRfyxwoV8EoMZPJc
+
+                //importAllZAddressesFromSNtoArizen()
+
+                if (" " && 1 && 22 && 8321 && 0) {
+                    console.log("true");
+                } else {
+                    console.log("false");
+                }
+
+                // 0c10a61a669bc4a51000c4c74ff58c151912889891089f7bae5e4994a73af7a8
+                // SKxtHJsneoLByrwME9Nh4cd4AvYLNK9jJkAnB3AHNW794udD1qpx
+                // zcTPZR8Hqz2ZcStwMJju9L4VBHW7YWmNyL6tDAT4eVmzmxLaG7h4QmqUXfmrjz8twizH4piDGiRYJRZ1bhHhT5gFL6TKsQZ
+
+                let z_secretKey = zencashjs.zaddress.mkZSecretKey('a');
+
+                console.log(z_secretKey);
+
+                // Spending key (this is what you import into your wallet)
+                let spendingKey_new = zencashjs.zaddress.zSecretKeyToSpendingKey(z_secretKey);
+                console.log(spendingKey_new);
+
+                // Paying key
+                let a_pk = zencashjs.zaddress.zSecretKeyToPayingKey(z_secretKey);
+
+                // Transmission key
+                let pk_enc = zencashjs.zaddress.zSecretKeyToTransmissionKey(z_secretKey);
+
+                let Zaddress = zencashjs.zaddress.mkZAddress(a_pk, pk_enc);
+
+                console.log(Zaddress);
+
+                // importPKinSN(z_secretKey,Zaddress,function(){
+                //
+                // })
+
+
+                //getZaddressBalance(pkZ,zAddrTest,function(balance){});
+                //sendFromOrToZaddress(pkZ,zAddrTest,"zngGeznkvBo58fkK5iVtNxhpFRKk6GZBaVc",0.001,0.0)
+                //getOperationResult("opid-2ef3b787-1066-4050-8a1d-f768557a247a");
+            });
         });
     });
 }
 
 (() => {
-const {ipcRenderer} = require("electron");
-ipcRenderer.on("open-rpc-console", (event) => {
-    showRpcDialog();
-});
+    const {ipcRenderer} = require("electron");
+    ipcRenderer.on("open-rpc-console", (event) => {
+        showRpcDialog();
+    });
 })();
-
 
 function openZenExplorer(path) {
     openUrl(settings.explorerUrl + "/" + path);
@@ -592,12 +599,12 @@ function setNodeTrText(node, key, defaultVal) {
 }
 
 function translateCurrentPage() {
-    if (!langDict)
+    if (!langDict) {
         return;
-    querySelectorAllDeep("[data-tr]").forEach(node =>
-        node.textContent = tr(node.dataset.tr, node.textContent));
+    }
+    querySelectorAllDeep("[data-tr]").forEach(node => node.textContent = tr(node.dataset.tr, node.textContent));
 }
 
 module.exports = {
-  syncZaddrIfSettingsExist: syncZaddrIfSettingsExist
-}
+    syncZaddrIfSettingsExist: syncZaddrIfSettingsExist
+};

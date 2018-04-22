@@ -6,66 +6,64 @@ const zencashjs = require("zencashjs");
 var sshServer;
 var howManyUseSSH;
 
-function getRpcClientSecureNode(){
+function getRpcClientSecureNode() {
     const rpc = require('node-json-rpc2');
-
-    var options = {
-      port: settings.secureNodePort,
-      host: "127.0.0.1",//settings.secureNodeFQDN,
-      user: settings.secureNodeUsername,
-      password: settings.secureNodePassword,
-      protocol:"http", // should change to https
-      //method:'POST',
-      path: "/",
-      strict: true
+    let options = {
+        port: settings.secureNodePort,
+        host: "127.0.0.1",//settings.secureNodeFQDN,
+        user: settings.secureNodeUsername,
+        password: settings.secureNodePassword,
+        protocol: "http", // should change to https
+        //method:'POST',
+        path: "/",
+        strict: true
     };
 
-    var client = new rpc.Client(options);
-    return client;
+    return new rpc.Client(options);
 }
 
-async function rpcCallCore(methodUsed,paramsUsed,callbackFunction){
-    var client = getRpcClientSecureNode();
+async function rpcCallCore(methodUsed, paramsUsed, callbackFunction) {
+    let client = getRpcClientSecureNode();
     //console.log("sshServer");
     //console.log(sshServer);
-    if (howManyUseSSH === undefined){
+    if (howManyUseSSH === undefined) {
         howManyUseSSH = 1;
     } else {
-       howManyUseSSH = howManyUseSSH + 1;
+        howManyUseSSH = howManyUseSSH + 1;
     }
 
     let tunnelToLocalHost = (settings.secureNodeFQDN === "127.0.0.1" || settings.secureNodeFQDN.toLowerCase() === "localhost");
 
-    if (sshServer === undefined && !tunnelToLocalHost){
+    if (sshServer === undefined && !tunnelToLocalHost) {
         sshServer = await openTunnel();
     }
     //console.log("howManyUseSSH: " + String(howManyUseSSH));
 
     client.call({
-        method:methodUsed,//Mandatory
-        params:paramsUsed,//Will be [] by default
-        id:'rpcTest',//Optional. By default it's a random id
-        jsonrpc:'1.0', //Optional. By default it's 2.0
-        protocol:'https',//Optional. Will be http by default
-    }, function(err, res){
-      setTimeout(function(){
-          howManyUseSSH = howManyUseSSH - 1;
-          //console.log("howManyUseSSH: " + String(howManyUseSSH));
-          if (howManyUseSSH === 0 || howManyUseSSH < 0){
-              if (!tunnelToLocalHost){
-                  sshServer.close()
-                  sshServer = undefined;
-              }
-             //console.log(sshServer);
-          }
-      }, 3000);
-      callbackFunction(err, res)
-  });
+        method: methodUsed,//Mandatory
+        params: paramsUsed,//Will be [] by default
+        id: 'rpcTest',//Optional. By default it's a random id
+        jsonrpc: '1.0', //Optional. By default it's 2.0
+        protocol: 'https',//Optional. Will be http by default
+    }, function (err, res) {
+        setTimeout(function () {
+            howManyUseSSH = howManyUseSSH - 1;
+            //console.log("howManyUseSSH: " + String(howManyUseSSH));
+            if (howManyUseSSH === 0 || howManyUseSSH < 0) {
+                if (!tunnelToLocalHost) {
+                    sshServer.close();
+                    sshServer = undefined;
+                }
+                //console.log(sshServer);
+            }
+        }, 3000);
+        callbackFunction(err, res)
+    });
 }
 
-//
-function cleanCommandString(string){
-    return string.replace(/\s+$/, '').replace(/ +(?= )/g,''); // removes 1st and last whute space -- removes double spacing
+function cleanCommandString(string) {
+    // removes 1st and last white space -- removes double spacing
+    return string.replace(/\s+$/, "").replace(/ +(?= )/g, "");
 }
 
 function removeOneElement(array, element) {
@@ -73,101 +71,98 @@ function removeOneElement(array, element) {
     array.splice(index, 1);
 }
 
-function splitCommandString(stringCommand){
+function splitCommandString(stringCommand) {
     let splitString = stringCommand.split(/\s+/);
     method = splitString[0];
-    removeOneElement(splitString,method);
+    removeOneElement(splitString, method);
     params = splitString;
-    return {method:method, params:params}
+    return {method: method, params: params}
 }
 
-//
-
-function rpcCallResult(cmd,paramsUsed, callback){
-  let status = "ok";
-  let output
-  rpcCallCore(cmd,paramsUsed, function(err, res){
-      if(err){
-          console.log(err);
-          console.log(JSON.stringify(err));
-          output = err;
-          status = "error";
-      } else {
-          output = (res.result); //JSON.stringify
-      }
-      callback(output,status)
-      });
+function rpcCallResult(cmd, paramsUsed, callback) {
+    let status = "ok";
+    let output;
+    rpcCallCore(cmd, paramsUsed, function (err, res) {
+        if (err) {
+            console.log(err);
+            console.log(JSON.stringify(err));
+            output = err;
+            status = "error";
+        } else {
+            output = (res.result); //JSON.stringify
+        }
+        callback(output, status)
+    });
 }
 
-function importPKinSN(pk,address,callback){
-  //console.log(pk);
-  //console.log(zenextra.isWif(pk));
-  //console.log(zencashjs.zaddress.zSecretKeyToSpendingKey(pk));
+function importPKinSN(pk, address, callback) {
+    //console.log(pk);
+    //console.log(zenextra.isWif(pk));
+    //console.log(zencashjs.zaddress.zSecretKeyToSpendingKey(pk));
 
     let cmd;
-    if(zenextra.isZeroAddr(address)){
+    if (zenextra.isZeroAddr(address)) {
         cmd = "z_importkey";
-        if(true){
-          pk = zencashjs.zaddress.zSecretKeyToSpendingKey(pk);
+        // FIXME: wtf? always true
+        if (true) {
+            pk = zencashjs.zaddress.zSecretKeyToSpendingKey(pk);
         }
         //console.log(pk);
-    };
-    if(zenextra.isTransaparentAddr(address)){
+    }
+    if (zenextra.isTransaparentAddr(address)) {
         cmd = "importprivkey";
-        if (!zenextra.isWif(pk)){
-          pk = zencashjs.address.privKeyToWIF(pk);
-          console.log(pk);
+        if (!zenextra.isWif(pk)) {
+            pk = zencashjs.address.privKeyToWIF(pk);
+            console.log(pk);
         }
-    };
-    rpcCallResult(cmd,[pk,"no"],callback);
-  //callback
+    }
+    rpcCallResult(cmd, [pk, "no"], callback);
+    //callback
 }
 
-function help(){
+function help() {
     let cmd;
     cmd = "help";
-    rpcCallResult(cmd,[],function(output,status){
-
+    rpcCallResult(cmd, [], function (output, status) {
+        // FIXME: what here?
     });
 }
 
-function pingSecureNodeRPC(callback){
+function pingSecureNodeRPC(callback) {
     let cmd;
     cmd = "help";
-    rpcCallResult(cmd,[],function(output,status){
-      let isAlive = false;
-      if(status==="ok"){
-        isAlive = true;
-      }
-      callback(isAlive);
+    rpcCallResult(cmd, [], function (output, status) {
+        let isAlive = false;
+        if (status === "ok") {
+            isAlive = true;
+        }
+        callback(isAlive);
     });
 }
 
-
-function getNewZaddressPK(nameAddress){
-  const cmd = "z_getnewaddress"
-  rpcCallResult(cmd,[],function(output,status){
-    zAddress = output;
-    // console.log(zAddress);
-    const newCmd = "z_exportkey";
-    let paramsUsed = [zAddress];
-    rpcCallResult(newCmd,paramsUsed,function(output,status){
-        let spendingKey = output;
-        let pkZaddress = zenextra.spendingKeyToSecretKey(spendingKey);
-        // console.log(zAddress,pkZaddress);
-        ipcRenderer.send("generate-Z-address", nameAddress,pkZaddress,zAddress);
-
+function getNewZaddressPK(nameAddress) {
+    const cmd = "z_getnewaddress";
+    rpcCallResult(cmd, [], function (output, status) {
+        zAddress = output;
+        // console.log(zAddress);
+        const newCmd = "z_exportkey";
+        let paramsUsed = [zAddress];
+        rpcCallResult(newCmd, paramsUsed, function (output, status) {
+            let spendingKey = output;
+            let pkZaddress = zenextra.spendingKeyToSecretKey(spendingKey);
+            // console.log(zAddress,pkZaddress);
+            ipcRenderer.send("generate-Z-address", nameAddress, pkZaddress, zAddress);
+        });
     });
-  });
 }
 
-function getOperationStatus(opid){
+function getOperationStatus(opid) {
     const cmd = "z_getoperationstatus";
-    let paramsUsed = [ [opid]];
-    rpcCallResult(cmd,paramsUsed,function(output,status){
-      let statusTx = output;
-      console.log(JSON.stringify(statusTx[0]));
-      console.log(status);
+    let paramsUsed = [[opid]];
+    rpcCallResult(cmd, paramsUsed, function (output, status) {
+        let statusTx = output;
+        console.log(JSON.stringify(statusTx[0]));
+        console.log(status);
     });
 }
 
@@ -182,111 +177,106 @@ function getOperationStatus(opid){
 //     });
 // }
 
-function getZaddressBalance(pk,zAddress,callback){
-  importPKinSN(pk,zAddress,function(){
-      const cmd = "z_getbalance"
-      let paramsUsed = [zAddress];
-      rpcCallResult(cmd,paramsUsed,function(output,status){
-        //console.log(status);
-        if(status==="ok"){
-          balance = parseFloat(output).toFixed(8);
-          callback(balance);
-        }else{
-          // nothing
-          console.log(status);
-          console.log("In the get Z balance address");
-        }
-  });
-});
-}
-
-
-function updateAllZBalances(){
-    const zAddrObjs = ipcRenderer.sendSync("get-all-Z-addresses");
-    for (const addrObj of zAddrObjs) {
-        getZaddressBalance(addrObj.pk,addrObj.addr,function(newBalance){
-            addrObj.lastbalance = newBalance;
-            let resp = ipcRenderer.sendSync("update-addr-in-db",addrObj);
-        })
-    }
-}
-
-function listAllZAddresses(callback){
-  const cmd = "z_listaddresses";
-  rpcCallResult(cmd,[],callback);
-}
-
-function getPKofZAddress(zAddr,callback){
-    const cmd = "z_exportkey";
-    let paramsUsed = [zAddr];
-    rpcCallResult(cmd,paramsUsed,function(output,status){
-      //console.log(output);
-      let spendingKey = output;
-      callback(spendingKey,status)
-    });
-}
-
-function importAllZAddressesFromSNtoArizen(){
-    listAllZAddresses(function(output,status){
-        for (const addr of output) {
-            console.log(addr);
-            getPKofZAddress(addr, function(spendingKey,status){
-              //console.log(spendingKey);
-              let pk = zenextra.spendingKeyToSecretKey(spendingKey);
-              //let resp = ipcRenderer.sendSync("import-single-key-Sync", "My SN Z addr", pk, isT=false);
-              ipcRenderer.send("import-single-key", "My SN Z addr", pk, isT=false);
-            })
-        }
-
-    });
-
-}
-
-function sendFromOrToZaddress(fromAddressPK,fromAddress,toAddress,amount,fee){
-    importPKinSN(fromAddressPK,fromAddress,function(){
-        let minconf = 1;
-        let amounts = [{"address":toAddress,"amount":amount}]; //,"memo":"memo"
-        //console.log(JSON.stringify(amounts));
-        //console.log(amounts);
-        let cmd = "z_sendmany";
-        if(zenextra.isTransaparentAddr(fromAddress)){
-            cmd = "sendmany";
-        };
-        let paramsUsed = [fromAddress,amounts,minconf,fee];
-        console.log(paramsUsed);
-        rpcCallResult(cmd,paramsUsed,function(output,status){
-          let opid = output;
-          getOperationStatus(opid)
-          console.log(opid);
-          console.log(status);
-          if (status === "error"){
-              msg = output;
-              result = status;
-          }
-          if (status === "ok"){
-              msg = output;
-          }
-
-          updateWithdrawalStatus(result, msg)
-
+function getZaddressBalance(pk, zAddress, callback) {
+    importPKinSN(pk, zAddress, function () {
+        const cmd = "z_getbalance";
+        let paramsUsed = [zAddress];
+        rpcCallResult(cmd, paramsUsed, function (output, status) {
+            //console.log(status);
+            if (status === "ok") {
+                balance = parseFloat(output).toFixed(8);
+                callback(balance);
+            } else {
+                // nothing
+                console.log(status);
+                console.log("In the get Z balance address");
+            }
         });
     });
 }
 
-
-//
-module.exports = {
-  //rpcCall: rpcCall,
-  cleanCommandString: cleanCommandString,
-  rpcCallResult: rpcCallResult,
-  splitCommandString: splitCommandString,
-  getNewZaddressPK: getNewZaddressPK,
-  getZaddressBalance: getZaddressBalance,
-  sendFromOrToZaddress: sendFromOrToZaddress,
-  getOperationStatus: getOperationStatus,
-  updateAllZBalances: updateAllZBalances,
-  importAllZAddressesFromSNtoArizen: importAllZAddressesFromSNtoArizen,
-  importPKinSN: importPKinSN,
-  pingSecureNodeRPC:pingSecureNodeRPC
-  //getOperationResult: getOperationResult
+function updateAllZBalances() {
+    const zAddrObjs = ipcRenderer.sendSync("get-all-Z-addresses");
+    for (const addrObj of zAddrObjs) {
+        getZaddressBalance(addrObj.pk, addrObj.addr, function (newBalance) {
+            addrObj.lastbalance = newBalance;
+            let resp = ipcRenderer.sendSync("update-addr-in-db", addrObj);
+        })
+    }
 }
+
+function listAllZAddresses(callback) {
+    const cmd = "z_listaddresses";
+    rpcCallResult(cmd, [], callback);
+}
+
+function getPKofZAddress(zAddr, callback) {
+    const cmd = "z_exportkey";
+    let paramsUsed = [zAddr];
+    rpcCallResult(cmd, paramsUsed, function (output, status) {
+        //console.log(output);
+        let spendingKey = output;
+        callback(spendingKey, status)
+    });
+}
+
+function importAllZAddressesFromSNtoArizen() {
+    listAllZAddresses(function (output, status) {
+        for (const addr of output) {
+            console.log(addr);
+            getPKofZAddress(addr, function (spendingKey, status) {
+                //console.log(spendingKey);
+                let pk = zenextra.spendingKeyToSecretKey(spendingKey);
+                //let resp = ipcRenderer.sendSync("import-single-key-Sync", "My SN Z addr", pk, isT=false);
+                ipcRenderer.send("import-single-key", "My SN Z addr", pk, isT = false);
+            })
+        }
+    });
+}
+
+function sendFromOrToZaddress(fromAddressPK, fromAddress, toAddress, amount, fee) {
+    importPKinSN(fromAddressPK, fromAddress, function () {
+        let minconf = 1;
+        let amounts = [{"address": toAddress, "amount": amount}]; //,"memo":"memo"
+        //console.log(JSON.stringify(amounts));
+        //console.log(amounts);
+        let cmd = "z_sendmany";
+        if (zenextra.isTransaparentAddr(fromAddress)) {
+            cmd = "sendmany";
+        }
+
+        let paramsUsed = [fromAddress, amounts, minconf, fee];
+        console.log(paramsUsed);
+        rpcCallResult(cmd, paramsUsed, function (output, status) {
+            let opid = output;
+            getOperationStatus(opid);
+            console.log(opid);
+            console.log(status);
+            if (status === "error") {
+                msg = output;
+                result = status;
+            }
+            if (status === "ok") {
+                msg = output;
+            }
+
+            updateWithdrawalStatus(result, msg)
+        });
+    });
+}
+
+module.exports = {
+    //rpcCall: rpcCall,
+    cleanCommandString: cleanCommandString,
+    rpcCallResult: rpcCallResult,
+    splitCommandString: splitCommandString,
+    getNewZaddressPK: getNewZaddressPK,
+    getZaddressBalance: getZaddressBalance,
+    sendFromOrToZaddress: sendFromOrToZaddress,
+    getOperationStatus: getOperationStatus,
+    updateAllZBalances: updateAllZBalances,
+    importAllZAddressesFromSNtoArizen: importAllZAddressesFromSNtoArizen,
+    importPKinSN: importPKinSN,
+    pingSecureNodeRPC: pingSecureNodeRPC
+    //getOperationResult: getOperationResult
+};

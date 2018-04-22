@@ -5,7 +5,7 @@
 
 // These function could be integrated in zencash.js lib
 const zencashjs = require("zencashjs");
-const bs58check = require('bs58check');
+const bs58check = require("bs58check");
 
 function isWif(pk) {
     let isWif = true;
@@ -31,10 +31,8 @@ function isPKorWif(pk) {
     return (isWif(pk) || isPK(pk))
 }
 
-
 function isTransaparentAddr(str) {
     return (str.length === 35)
-
 }
 
 function isZeroAddr(str) {
@@ -44,7 +42,6 @@ function isZeroAddr(str) {
 function spendingKeyToSecretKey(spendingKey) {
     return bs58check.decode(spendingKey).toString('hex').substring(4)
 }
-
 
 function isSpendingKey(str) {
     return (str.length === 52 && str.substr(0, 2) === "SK")
@@ -64,6 +61,5 @@ module.exports = {
         spendingKeyToSecretKey: spendingKeyToSecretKey,
         isSpendingKey: isSpendingKey,
         isPKorSpendingKey: isPKorSpendingKey
-
     }
 };

@@ -7,7 +7,8 @@ const {ipcRenderer} = require("electron");
 const Qrcode = require("qrcode");
 const jsPDF = require("jspdf");
 const {showPaperWalletDialog} = require("./paperwallet.js");
-const {getNewZaddressPK,updateAllZBalances} = require("./rpc.js");
+const {getNewZaddressPK, updateAllZBalances} = require("./rpc.js");
+
 // const {zenextra} = require("./zenextra.js");
 
 function logIpc(msgType) {
@@ -140,7 +141,7 @@ ipcRenderer.on("generate-wallet-response", (event, msgStr) => {
 
 ipcRenderer.on("main-sends-alert", (event, msgStr) => {
     alert(msgStr)
- });
+});
 
 window.addEventListener("load", initWallet);
 
@@ -410,7 +411,7 @@ function showNewAddrDialog() {
     let response = -1;
     response = ipcRenderer.sendSync("renderer-show-message-box", tr("warmingMessages.userWarningCreateNewAddress", userWarningCreateNewAddress), [tr("warmingMessages.userWarningIUnderstand", "I understand")]);
     console.log(response);
-    if (response===0){
+    if (response === 0) {
         showDialogFromTemplate("newAddrDialogTemplate", dialog => {
             const createButton = dialog.querySelector(".newAddrDialogCreate");
             createButton.addEventListener("click", () => {
@@ -419,10 +420,10 @@ function showNewAddrDialog() {
                 var nameAddress = dialog.querySelector(".newAddrDialogName").value;
                 // console.log(getT);
                 // console.log(getZ);
-                if (getT){
+                if (getT) {
                     ipcRenderer.send("generate-wallet", nameAddress);
                 }
-                if (getZ){
+                if (getZ) {
                     getNewZaddressPK(nameAddress)
                 }
                 dialog.close();
@@ -451,7 +452,7 @@ function addTransactions(txs, newTx = false) {
         const oldTxItem = txListNode.querySelector(`[data-txid='${txObj.txid}']`);
         if (oldTxItem) {
             if (oldTxItem.dataset.blockheight !== "-1") {
-                console.error(tr("wallet.transactionHistory.replaceAttempt","Attempting to replace transaction in block"));
+                console.error(tr("wallet.transactionHistory.replaceAttempt", "Attempting to replace transaction in block"));
             } else if (txObj.block >= 0) {
                 txListNode.replaceChild(createTxItem(txObj, newTx), oldTxItem);
             }
@@ -517,7 +518,7 @@ function initDepositView() {
         updateDepositQrcode();
     }));
     depositSaveQrcodeButton.addEventListener("click", () => {
-        const pdf = new jsPDF({ unit: 'mm', format: [100, 100] });
+        const pdf = new jsPDF({unit: 'mm', format: [100, 100]});
         const w = pdf.internal.pageSize.width;
         const h = pdf.internal.pageSize.height;
         pdf.addImage(depositQrcodeImage.src, 'JPEG', 0, 0, w, h);
@@ -579,18 +580,18 @@ function initWithdrawView() {
         if (confirm(msg)) {
             let fromAddr = withdrawFromAddrInput.value;
             let toAddr = withdrawToAddrInput.value;
-            if (zenextra.isTransaparentAddr(fromAddr) && zenextra.isTransaparentAddr(toAddr) ){
+            if (zenextra.isTransaparentAddr(fromAddr) && zenextra.isTransaparentAddr(toAddr)) {
                 ipcRenderer.send("send",
                     withdrawFromAddrInput.value,
                     withdrawToAddrInput.value,
                     withdrawFeeInput.value,
                     withdrawAmountInput.value);
             } else {
-                let fromAddrObj = ipcRenderer.sendSync("get-address-object",fromAddr);
+                let fromAddrObj = ipcRenderer.sendSync("get-address-object", fromAddr);
                 let fromAddressPK = fromAddrObj.pk;
                 let myAmount = parseFloat(withdrawAmountInput.value).toFixed(8);
                 let myFees = parseFloat(withdrawFeeInput.value);
-                sendFromOrToZaddress(fromAddressPK,fromAddr,toAddr,myAmount,myFees);
+                sendFromOrToZaddress(fromAddressPK, fromAddr, toAddr, myAmount, myFees);
             }
         }
     });
@@ -704,7 +705,7 @@ function showBatchWithdrawDialog() {
 
         withdrawButton.addEventListener("click", () => {
             bwSettings.fromAddrs = [];
-            [... listNode.children].forEach(row => {
+            [...listNode.children].forEach(row => {
                 if (row.querySelector(".addrSelectCheckbox").checked)
                     bwSettings.fromAddrs.push(row.dataset.addr);
             });
@@ -728,12 +729,12 @@ function showBatchWithdrawDialog() {
         });
 
         selectAllButton.addEventListener("click", () => {
-            [... listNode.children].forEach(row => {
+            [...listNode.children].forEach(row => {
                 row.querySelector(".addrSelectCheckbox").checked = true;
             });
         });
         clearAllButton.addEventListener("click", () => {
-            [... listNode.children].forEach(row => {
+            [...listNode.children].forEach(row => {
                 row.querySelector(".addrSelectCheckbox").checked = false;
             });
         });

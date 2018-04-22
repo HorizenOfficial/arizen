@@ -3,7 +3,7 @@
 /*jslint node: true */
 "use strict";
 
-const openSshTunnel = require('open-ssh-tunnel');
+const openSshTunnel = require("open-ssh-tunnel");
 
 const localHost = "127.0.0.1";
 
@@ -11,7 +11,7 @@ async function openTunnel() {
     const server = await openSshTunnel({
         host: settings.secureNodeFQDN,// SSH server //settings.secureNodeFQDN,
         port: settings.sshPort, // SSH port
-        //keepAlive:true,
+        // keepAlive:true,
         username: settings.sshUsername, //settings.secureNodeUsername,
         password: settings.sshPassword, //settings.secureNodePassword,
         srcPort: settings.secureNodePort, // Arizen localhost port //settings.secureNodePort
@@ -26,7 +26,6 @@ async function openTunnel() {
 
     return server
 }
-
 
 module.exports = {
     openTunnel: openTunnel
