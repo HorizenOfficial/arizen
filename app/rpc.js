@@ -223,7 +223,7 @@ function getPKofZAddress(zAddr, callback) {
 function importAllZAddressesFromSNtoArizen() {
     listAllZAddresses(function (output, status) {
         for (const addr of output) {
-            console.log(addr);
+            //console.log(addr);
             getPKofZAddress(addr, function (spendingKey, status) {
                 //console.log(spendingKey);
                 let pk = zenextra.spendingKeyToSecretKey(spendingKey);
@@ -258,6 +258,7 @@ function sendFromOrToZaddress(fromAddressPK, fromAddress, toAddress, amount, fee
             }
             if (status === "ok") {
                 msg = output;
+                result = status;
             }
 
             updateWithdrawalStatus(result, msg)
