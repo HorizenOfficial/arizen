@@ -13,7 +13,7 @@ function getRpcClientSecureNode() {
         host: "127.0.0.1",//settings.secureNodeFQDN,
         user: settings.secureNodeUsername,
         password: settings.secureNodePassword,
-        protocol: "http", // should change to https
+        protocol: "http",
         //method:'POST',
         path: "/",
         strict: true
@@ -24,8 +24,6 @@ function getRpcClientSecureNode() {
 
 async function rpcCallCore(methodUsed, paramsUsed, callbackFunction) {
     let client = getRpcClientSecureNode();
-    //console.log("sshServer");
-    //console.log(sshServer);
     if (howManyUseSSH === undefined) {
         howManyUseSSH = 1;
     } else {
@@ -37,24 +35,21 @@ async function rpcCallCore(methodUsed, paramsUsed, callbackFunction) {
     if (sshServer === undefined && !tunnelToLocalHost) {
         sshServer = await openTunnel();
     }
-    //console.log("howManyUseSSH: " + String(howManyUseSSH));
 
     client.call({
-        method: methodUsed,//Mandatory
+        method: methodUsed,
         params: paramsUsed,//Will be [] by default
-        id: 'rpcTest',//Optional. By default it's a random id
+        id: 'rpcTest', //Optional. By default it's a random id
         jsonrpc: '1.0', //Optional. By default it's 2.0
-        protocol: 'https',//Optional. Will be http by default
+        protocol: 'https', //Optional. Will be http by default
     }, function (err, res) {
         setTimeout(function () {
             howManyUseSSH = howManyUseSSH - 1;
-            //console.log("howManyUseSSH: " + String(howManyUseSSH));
             if (howManyUseSSH === 0 || howManyUseSSH < 0) {
                 if (!tunnelToLocalHost) {
                     sshServer.close();
                     sshServer = undefined;
                 }
-                //console.log(sshServer);
             }
         }, 3000);
         callbackFunction(err, res)
@@ -96,18 +91,12 @@ function rpcCallResult(cmd, paramsUsed, callback) {
 }
 
 function importPKinSN(pk, address, callback) {
-    //console.log(pk);
-    //console.log(zenextra.isWif(pk));
-    //console.log(zencashjs.zaddress.zSecretKeyToSpendingKey(pk));
-
     let cmd;
     if (zenextra.isZeroAddr(address)) {
         cmd = "z_importkey";
-        // FIXME: wtf? always true
-        if (true) {
+        if (zenextra.isPK(pk)) {
             pk = zencashjs.zaddress.zSecretKeyToSpendingKey(pk);
         }
-        //console.log(pk);
     }
     if (zenextra.isTransaparentAddr(address)) {
         cmd = "importprivkey";
@@ -117,14 +106,13 @@ function importPKinSN(pk, address, callback) {
         }
     }
     rpcCallResult(cmd, [pk, "no"], callback);
-    //callback
 }
 
-function help() {
+function help(callback) {
     let cmd;
     cmd = "help";
     rpcCallResult(cmd, [], function (output, status) {
-        // FIXME: what here?
+        callback(output, status)
     });
 }
 
@@ -144,13 +132,11 @@ function getNewZaddressPK(nameAddress) {
     const cmd = "z_getnewaddress";
     rpcCallResult(cmd, [], function (output, status) {
         zAddress = output;
-        // console.log(zAddress);
         const newCmd = "z_exportkey";
         let paramsUsed = [zAddress];
         rpcCallResult(newCmd, paramsUsed, function (output, status) {
             let spendingKey = output;
             let pkZaddress = zenextra.spendingKeyToSecretKey(spendingKey);
-            // console.log(zAddress,pkZaddress);
             ipcRenderer.send("generate-Z-address", nameAddress, pkZaddress, zAddress);
         });
     });
@@ -182,14 +168,11 @@ function getZaddressBalance(pk, zAddress, callback) {
         const cmd = "z_getbalance";
         let paramsUsed = [zAddress];
         rpcCallResult(cmd, paramsUsed, function (output, status) {
-            //console.log(status);
             if (status === "ok") {
                 balance = parseFloat(output).toFixed(8);
                 callback(balance);
             } else {
-                // nothing
                 console.log(status);
-                console.log("In the get Z balance address");
             }
         });
     });
@@ -214,7 +197,6 @@ function getPKofZAddress(zAddr, callback) {
     const cmd = "z_exportkey";
     let paramsUsed = [zAddr];
     rpcCallResult(cmd, paramsUsed, function (output, status) {
-        //console.log(output);
         let spendingKey = output;
         callback(spendingKey, status)
     });
@@ -223,11 +205,8 @@ function getPKofZAddress(zAddr, callback) {
 function importAllZAddressesFromSNtoArizen() {
     listAllZAddresses(function (output, status) {
         for (const addr of output) {
-            //console.log(addr);
             getPKofZAddress(addr, function (spendingKey, status) {
-                //console.log(spendingKey);
                 let pk = zenextra.spendingKeyToSecretKey(spendingKey);
-                //let resp = ipcRenderer.sendSync("import-single-key-Sync", "My SN Z addr", pk, isT=false);
                 ipcRenderer.send("import-single-key", "My SN Z addr", pk, isT = false);
             })
         }
@@ -238,8 +217,6 @@ function sendFromOrToZaddress(fromAddressPK, fromAddress, toAddress, amount, fee
     importPKinSN(fromAddressPK, fromAddress, function () {
         let minconf = 1;
         let amounts = [{"address": toAddress, "amount": amount}]; //,"memo":"memo"
-        //console.log(JSON.stringify(amounts));
-        //console.log(amounts);
         let cmd = "z_sendmany";
         if (zenextra.isTransaparentAddr(fromAddress)) {
             cmd = "sendmany";
@@ -267,7 +244,6 @@ function sendFromOrToZaddress(fromAddressPK, fromAddress, toAddress, amount, fee
 }
 
 module.exports = {
-    //rpcCall: rpcCall,
     cleanCommandString: cleanCommandString,
     rpcCallResult: rpcCallResult,
     splitCommandString: splitCommandString,

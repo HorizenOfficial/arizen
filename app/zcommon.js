@@ -487,14 +487,6 @@ function showRpcDialog() {
                 // t address Arizen zngGeznkvBo58fkK5iVtNxhpFRKk6GZBaVc
                 // t address zen cli znnhQdt6i43GciJCgpPYRfyxwoV8EoMZPJc
 
-                //importAllZAddressesFromSNtoArizen()
-
-                if (" " && 1 && 22 && 8321 && 0) {
-                    console.log("true");
-                } else {
-                    console.log("false");
-                }
-
                 // 0c10a61a669bc4a51000c4c74ff58c151912889891089f7bae5e4994a73af7a8
                 // SKxtHJsneoLByrwME9Nh4cd4AvYLNK9jJkAnB3AHNW794udD1qpx
                 // zcTPZR8Hqz2ZcStwMJju9L4VBHW7YWmNyL6tDAT4eVmzmxLaG7h4QmqUXfmrjz8twizH4piDGiRYJRZ1bhHhT5gFL6TKsQZ
@@ -517,14 +509,6 @@ function showRpcDialog() {
 
                 console.log(Zaddress);
 
-                // importPKinSN(z_secretKey,Zaddress,function(){
-                //
-                // })
-
-
-                //getZaddressBalance(pkZ,zAddrTest,function(balance){});
-                //sendFromOrToZaddress(pkZ,zAddrTest,"zngGeznkvBo58fkK5iVtNxhpFRKk6GZBaVc",0.001,0.0)
-                //getOperationResult("opid-2ef3b787-1066-4050-8a1d-f768557a247a");
             });
         });
     });
