@@ -113,11 +113,13 @@ function getWalletPath() {
 }
 
 function storeFile(filename, data) {
-    fs.writeFileSync(filename, data, function (err) {
+    const filenameTmp = filename + ".bak";
+    fs.writeFileSync(filenameTmp, data, function (err) {
         if (err) {
             return console.log(err);
         }
     });
+    fs.renameSync(filenameTmp, filename);
 }
 
 function encryptWallet(login, password, inputBytes) {
