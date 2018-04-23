@@ -410,7 +410,6 @@ function setAddressName(addr, name) {
 function showNewAddrDialog() {
     let response = -1;
     response = ipcRenderer.sendSync("renderer-show-message-box", tr("warmingMessages.userWarningCreateNewAddress", userWarningCreateNewAddress), [tr("warmingMessages.userWarningIUnderstand", "I understand")]);
-    console.log(response);
     if (response === 0) {
         showDialogFromTemplate("newAddrDialogTemplate", dialog => {
             const createButton = dialog.querySelector(".newAddrDialogCreate");
@@ -418,8 +417,6 @@ function showNewAddrDialog() {
                 var getT = dialog.querySelector(".TorZgetT").checked;
                 var getZ = dialog.querySelector(".TorZgetZ").checked;
                 var nameAddress = dialog.querySelector(".newAddrDialogName").value;
-                // console.log(getT);
-                // console.log(getZ);
                 if (getT) {
                     ipcRenderer.send("generate-wallet", nameAddress);
                 }

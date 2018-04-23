@@ -277,8 +277,12 @@ function syncZaddrIfSettingsExist() {
     }
 }
 
+function isValidDomainName(domainOrIP){
+   return (domainOrIP!="" && domainOrIP!=undefined) // more to be added
+}
+
 function pingSecureNode() {
-    if (settings.secureNodeFQDN) {
+    if (isValidDomainName(settings.secureNodeFQDN)) {
         let ping = require('ping');
         let hosts = [settings.secureNodeFQDN];
         hosts.forEach(function (host) {
@@ -295,8 +299,7 @@ function pingSecureNode() {
 }
 
 function pingSecureNodeRPCResult() {
-    // FIXME: wtf? 1 === 1
-    if (1 === 1) { // settings.secureNodeFQDN
+    if (isValidDomainName(settings.secureNodeFQDN)) { // settings.secureNodeFQDN
         pingSecureNodeRPC(function (isAlive) {
             if (isAlive) {
                 document.getElementById("dotSNstatusRPC").style.backgroundColor = "#34A853"; // green

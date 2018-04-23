@@ -1151,8 +1151,6 @@ ipcMain.on("exit-from-menu", function () {
 });
 
 function importSingleKey(name, pk, isT){
-    console.log(name);
-    console.log(pk);
     importOnePK(pk, name, isT);
     saveWallet();
     sendWallet();

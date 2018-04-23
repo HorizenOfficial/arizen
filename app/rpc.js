@@ -102,7 +102,6 @@ function importPKinSN(pk, address, callback) {
         cmd = "importprivkey";
         if (!zenextra.isWif(pk)) {
             pk = zencashjs.address.privKeyToWIF(pk);
-            console.log(pk);
         }
     }
     rpcCallResult(cmd, [pk, "no"], callback);
@@ -146,9 +145,7 @@ function getOperationStatus(opid) {
     const cmd = "z_getoperationstatus";
     let paramsUsed = [[opid]];
     rpcCallResult(cmd, paramsUsed, function (output, status) {
-        let statusTx = output;
-        console.log(JSON.stringify(statusTx[0]));
-        console.log(status);
+        let statusTx = output; //console.log(JSON.stringify(statusTx[0]));        
     });
 }
 
