@@ -724,6 +724,25 @@ function importPKs() {
     });
 }
 
+function changeWalletPasswordBegin() {
+    mainWindow.webContents.send("change-wallet-password-begin", userInfo.pass);
+}
+
+function changeWalletPasswordContinue(newPassword) {
+    console.log("New PW: " + newPassword);
+    let result = {};
+    try {
+        userInfo.pass = newPassword;
+        saveWallet();
+        result.success = true;
+    }
+    catch (e) {
+        result.success = false;
+        result.error = e;
+    }
+    mainWindow.webContents.send("change-wallet-password-finish", JSON.stringify(result));
+}
+
 function updateMenuForDarwin(template) {
     if (os.platform() === "darwin") {
         template.unshift({
@@ -865,6 +884,13 @@ function updateMenuAtLogin() {
                     label: tr("menu.importPrivateKeys", "Import private keys"),
                     click: function () {
                         importPKs();
+                    }
+                },
+                { type: "separator" },
+                {
+                    label: tr("menu.changeWalletPassword", "Change wallet password"),
+                    click() {
+                        changeWalletPasswordBegin();
                     }
                 },
                 { type: "separator" },
@@ -1191,6 +1217,10 @@ ipcMain.on("check-if-z-address-in-wallet", function(event,zAddress){
       if (k.addr === zAddress) {exist = true ; break;}
     }
     event.returnValue = {exist: exist, result: result};
+});
+
+ipcMain.on("change-wallet-password-continue", (event, newPassword) => {
+    changeWalletPasswordContinue(newPassword);
 });
 
 function checkSendParameters(fromAddresses, toAddresses, fee) {

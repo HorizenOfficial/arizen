@@ -381,3 +381,21 @@ header button {
     max-height: 300px; /* cannot make table to not overflow in any otther way sadly */
     margin: 10px 0 20px 0;
 }
+
+.changeWalletPasswordDialogContent {
+    width: 600px;
+}
+
+.changeWalletPasswordDialogContent > :not(:first-child) {
+    margin-top: 10px;
+}
+
+.changeWalletPasswordWarning {
+    font-weight: bolder;
+    text-align: center;
+    color: red;
+}
+
+.changeWalletPasswordErrors {
+    color: red;
+}

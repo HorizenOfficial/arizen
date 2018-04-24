@@ -140,6 +140,15 @@ ipcRenderer.on("main-sends-alert", (event, msgStr) => {
     alert(msgStr)
  });
 
+ipcRenderer.on("change-wallet-password-begin", (event, currentPassword) => {
+    showChangeWalletPasswordDialog(currentPassword);
+});
+
+ipcRenderer.on("change-wallet-password-finish", (event, msgStr) => {
+    const msg = JSON.parse(msgStr);
+    showPasswordChangeNotice(msg);
+});
+
 window.addEventListener("load", initWallet);
 
 // FUNCTIONS
@@ -718,4 +727,49 @@ function initWallet() {
         });
     });
     ipcRenderer.send("get-wallets");
+}
+
+function showChangeWalletPasswordDialog(currentPassword) {
+    showDialogFromTemplate("changeWalletPasswordDialog", dialog => {
+        console.log(currentPassword);
+        const currentPasswordInput = dialog.querySelector(".currentPasswordText");
+        const newPassword1Input = dialog.querySelector(".newPasswordText1");
+        const newPassword2Input = dialog.querySelector(".newPasswordText2");
+        const okButton = dialog.querySelector(".changePasswordOK");
+        const cancelButton = dialog.querySelector(".changePasswordCancel");
+        const errorsText = dialog.querySelector(".changeWalletPasswordErrors");
+
+        cancelButton.addEventListener("click", () => dialog.close());
+
+        okButton.addEventListener("click", () => {
+            const typedCurrentPassword = currentPasswordInput.value;
+            const newPassword1 = newPassword1Input.value;
+            const newPassword2 = newPassword2Input.value;
+
+            if (currentPassword !== typedCurrentPassword) {
+                errorsText.textContent = tr("wallet.changePassword.error.wrongCurrentPassword", "Wrong current password");
+                return;
+            }
+
+            if (newPassword1 !== newPassword2) {
+                errorsText.textContent = tr("wallet.changePassword.error.newPasswordBadRetype", "New passwords do not match");
+                return;
+            }
+
+            if (newPassword1 === "") {
+                errorsText.textContent = tr("wallet.changePassword.error.emptyNewPassword", "New password cannot be empty");
+                return;
+            }
+
+            ipcRenderer.send("change-wallet-password-continue", newPassword1);
+            dialog.close();
+        });
+    });
+}
+
+function showPasswordChangeNotice(result) {
+    if (result.success)
+        alert(tr("wallet.changePassword.noticeSuccess", "Wallet password successfully changed"));
+    else
+        alert(tr("wallet.changePassword.noticeError", "Failed to change wallet password"));
 }

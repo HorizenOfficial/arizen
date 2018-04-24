@@ -285,6 +285,32 @@
     </arizen-dialog>
 </template>
 
+<template id=changeWalletPasswordDialog>
+    <arizen-dialog>
+        <h2 slot=headerText data-tr=wallet.changePassword.title>Change Wallet Password</h2>
+        <div slot=content class=changeWalletPasswordDialogContent>
+            <div class=changeWalletPasswordWarning data-tr="wallet.changePassword.warningText">
+                WARNING: Wallet backups won't be re-encrypted! If you need to
+                use them, you will have to use current password.
+            </div>
+            <div class=form>
+                <label for=currentPassword data-tr=wallet.changePassword.currentPassword>Current Password</label>
+                <input type=password name=currentPasswordText class=currentPasswordText />
+                <label for=newPassword1 data-tr=wallet.changePassword.newPassword1>New Password</label>
+                <input type=password name=newPasswordText1 class=newPasswordText1 />
+                <label for=newPassword2 data-tr=wallet.changePassword.newPassword2>New Password (Retype)</label>
+                <input type=password name=newPasswordText2 class=newPasswordText2 />
+            </div>
+            <div class=changeWalletPasswordErrors data-tr="wallet.changePassword.errorMessages">
+            </div>
+            <div class=formButtons>
+                <button class=changePasswordOK data-tr=common.okButtonText>OK</button>
+                <button class=changePasswordCancel data-tr=common.cancelButtonText>Cancel</button>
+            </div>
+        </div>
+    </arizen-dialog>
+</template>
+
 <div class=body>
 
 <header class='panel'>
