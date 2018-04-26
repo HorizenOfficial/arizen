@@ -81,9 +81,6 @@ let langDict;
 
 let axiosApi;
 
-const DOMAIN_FRONTING_PUBLIC_URL = "https://www.google.com";
-const DOMAIN_FRONTING_PRIVATE_HOST = "zendhide.appspot.com";
-
 const dbStructWallet = "CREATE TABLE wallet (id INTEGER PRIMARY KEY AUTOINCREMENT, pk TEXT, addr TEXT UNIQUE, lastbalance REAL, name TEXT);";
 const dbStructSettings = "CREATE TABLE settings (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE, value TEXT);";
 const dbStructTransactions = "CREATE TABLE transactions (id INTEGER PRIMARY KEY AUTOINCREMENT, txid TEXT, time INTEGER, address TEXT, vins TEXT, vouts TEXT, amount REAL, block INTEGER);";
@@ -420,9 +417,9 @@ function setSettings(newSettings) {
 
     if (settings.domainFronting) {
         axiosApi = axios.create({
-            baseURL: DOMAIN_FRONTING_PUBLIC_URL,
+            baseURL: settings.domainFrontingUrl,
             headers: {
-                "Host": DOMAIN_FRONTING_PRIVATE_HOST
+                "Host": settings.domainFrontingHost
             },
             timeout: 10000,
         });

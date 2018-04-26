@@ -272,11 +272,17 @@
                     <input type=checkbox class=enableNotifications name=enableNotifications />
                     <span class=checkmark></span>
                 </label>
-                <label for=enableDomainFronting data-tr=wallet.settings.enableDomainFronting>Domain fronting</label>
+
+                <label for=enableDomainFronting data-tr=wallet.settings.enableDomainFronting>Enable domain fronting</label>
                 <label class=container>
                     <input type=checkbox class=enableDomainFronting name=enableDomainFronting />
                     <span class=checkmark></span>
                 </label>
+                <label for=settingDomainFrontingUrl data-tr=wallet.settings.domainFrontingUrl>Domain fronting public base URL</label>
+                <input type=text name=settingDomainFrontingUrl class=settingDomainFrontingUrl />
+                <label for=settingDomainFrontingHost data-tr=wallet.settings.domainFrontingHost>Domain fronting private host</label>
+                <input type=text name=settingDomainFrontingHost class=settingDomainFrontingHost />
+
                 <label for=settingAutoLogOffEnable data-tr=wallet.settings.autoLogOffEnable>Enable automatic log off</label>
                 <label class=container>
                     <input type=checkbox class=settingAutoLogOffEnable name=settingAutoLogOffEnable />

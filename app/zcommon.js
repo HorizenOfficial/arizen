@@ -270,7 +270,9 @@ function showSettingsDialog() {
         const inputFiatCurrency = dialog.querySelector(".settingsFiatCurrency");
         const inputLanguages = dialog.querySelector(".settingsLanguage");
         const inputNotifications = dialog.querySelector(".enableNotifications");
-        const inputDomainFronting = dialog.querySelector(".enableDomainFronting");
+        const inputDomainFrontingEnable = dialog.querySelector(".enableDomainFronting");
+        const inputDomainFrontingUrl = dialog.querySelector(".settingDomainFrontingUrl");
+        const inputDomainFrontingHost = dialog.querySelector(".settingDomainFrontingHost");
         const inputAutoLogOffEnable = dialog.querySelector(".settingAutoLogOffEnable");
         const inputAutoLogOffTimeout = dialog.querySelector(".settingAutoLogOffTimeout");
 
@@ -280,7 +282,9 @@ function showSettingsDialog() {
         inputApiUrls.value = settings.apiUrls.join("\n");
         inputFiatCurrency.value = settings.fiatCurrency;
         inputNotifications.checked = settings.notifications;
-        inputDomainFronting.checked = settings.domainFronting || false;
+        inputDomainFrontingEnable.checked = settings.domainFronting || false;
+        inputDomainFrontingUrl.value = settings.domainFrontingUrl || "";
+        inputDomainFrontingHost.value = settings.domainFrontingHost || "";
         inputFiatCurrency.value = settings.fiatCurrency || "USD";
         inputAutoLogOffEnable.checked = settings.autoLogOffEnable;
         inputAutoLogOffTimeout.value = settings.autoLogOffTimeout || 5;
@@ -293,7 +297,9 @@ function showSettingsDialog() {
                 fiatCurrency: inputFiatCurrency.value,
                 lang: inputLanguages[inputLanguages.selectedIndex].value,
                 notifications: inputNotifications.checked ? 1 : 0,
-                domainFronting: inputDomainFronting.checked,
+                domainFronting: inputDomainFrontingEnable.checked,
+                domainFrontingUrl: inputDomainFrontingUrl.value,
+                domainFrontingHost: inputDomainFrontingHost.value,
                 autoLogOffEnable: inputAutoLogOffEnable.checked ? 1 : 0,
                 autoLogOffTimeout: inputAutoLogOffTimeout.value
             };
