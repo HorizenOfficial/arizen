@@ -248,6 +248,12 @@ let langDict;
         const newSettings = JSON.parse(settingsStr);
         if (settings.lang !== newSettings.lang)
             changeLanguage(newSettings.lang);
+
+        if (newSettings.autoLogOffEnable)
+            autoLogOffEnable(newSettings.autoLogOffTimeout);
+        else
+            autoLogOffDisable();
+
         settings = newSettings;
     });
 })();
@@ -265,6 +271,8 @@ function showSettingsDialog() {
         const inputLanguages = dialog.querySelector(".settingsLanguage");
         const inputNotifications = dialog.querySelector(".enableNotifications");
         const inputDomainFronting = dialog.querySelector(".enableDomainFronting");
+        const inputAutoLogOffEnable = dialog.querySelector(".settingAutoLogOffEnable");
+        const inputAutoLogOffTimeout = dialog.querySelector(".settingAutoLogOffTimeout");
 
         inputTxHistory.value = settings.txHistory;
         inputExplorerUrl.value = settings.explorerUrl;
@@ -274,6 +282,8 @@ function showSettingsDialog() {
         inputNotifications.checked = settings.notifications;
         inputDomainFronting.checked = settings.domainFronting || false;
         inputFiatCurrency.value = settings.fiatCurrency || "USD";
+        inputAutoLogOffEnable.checked = settings.autoLogOffEnable;
+        inputAutoLogOffTimeout.value = settings.autoLogOffTimeout || 5;
 
         dialog.querySelector(".settingsSave").addEventListener("click", () => {
             const newSettings = {
@@ -283,7 +293,9 @@ function showSettingsDialog() {
                 fiatCurrency: inputFiatCurrency.value,
                 lang: inputLanguages[inputLanguages.selectedIndex].value,
                 notifications: inputNotifications.checked ? 1 : 0,
-                domainFronting: inputDomainFronting.checked
+                domainFronting: inputDomainFronting.checked,
+                autoLogOffEnable: inputAutoLogOffEnable.checked ? 1 : 0,
+                autoLogOffTimeout: inputAutoLogOffTimeout.value
             };
 
             if (settings.lang !== newSettings.lang)
@@ -431,3 +443,59 @@ function isPK(pk) {
 function isPKorWif(pk) {
     return (isWif(pk) || isPK(pk))
 }
+
+//------------------------------------------------
+
+let autoLogOffTimerId;
+let autoLogOffEventHandler;
+
+function autoLogOffEnable(timeout) {
+    autoLogOffDisable();
+
+    let currentTime = timeout;
+    autoLogOffUpdateUI(currentTime);
+
+    autoLogOffTimerId = setInterval(() => {
+        currentTime--;
+        if (currentTime > 0)
+            autoLogOffUpdateUI(currentTime);
+        else {
+            autoLogOffDisable();
+            logout();
+        }
+    }, 1000);
+
+    autoLogOffEventHandler = () => {
+        currentTime = timeout;
+        autoLogOffUpdateUI(currentTime);
+    };
+
+    document.addEventListener("mousemove", autoLogOffEventHandler);
+    document.addEventListener("keypress", autoLogOffEventHandler);
+    document.addEventListener("click", autoLogOffEventHandler);
+
+    hideElement(document.getElementById("autoLogOffTimer"), false);
+}
+
+function autoLogOffDisable() {
+    if (!autoLogOffTimerId)
+        return;
+
+    clearInterval(autoLogOffTimerId);
+
+    document.removeEventListener("mousemove", autoLogOffEventHandler);
+    document.removeEventListener("keypress", autoLogOffEventHandler);
+    document.removeEventListener("click", autoLogOffEventHandler);
+
+    hideElement(document.getElementById("autoLogOffTimer"), true);
+
+    autoLogOffTimerId = 0;
+    autoLogOffEventHandler = null;
+}
+
+function autoLogOffUpdateUI(currentTime) {
+    const node = document.getElementById("autoLogOffTimerTime");
+    node.textContent = currentTime;
+}
+
+//------------------------------------------------
