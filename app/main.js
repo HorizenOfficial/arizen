@@ -65,17 +65,21 @@ let userInfo = {
 };
 
 const defaultSettings = {
-    notifications: 1,
+    txHistory: 50,
+    lang: "en",
     explorerUrl: "https://explorer.zensystem.io",
     apiUrls: [
         "https://explorer.zensystem.io/insight-api-zen",
         "http://explorer.zenmine.pro/insight-api-zen"
     ],
-    txHistory: 50,
     fiatCurrency: "USD",
-    lang: "en",
-    domainFronting: false
+    notifications: 1,
+    domainFronting: false,
+    domainFrontingUrl: "https://www.google.com",
+    domainFrontingHost: "zendhide.appspot.com",
+    autoLogOffEnable: 0
 };
+
 let settings = defaultSettings;
 let langDict;
 
