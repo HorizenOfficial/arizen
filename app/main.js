@@ -730,7 +730,6 @@ function changeWalletPasswordBegin() {
 }
 
 function changeWalletPasswordContinue(newPassword) {
-    console.log("New PW: " + newPassword);
     let result = {};
     try {
         userInfo.pass = newPassword;
