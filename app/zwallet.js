@@ -580,8 +580,8 @@ function initWithdrawView() {
 }
 
 function precisionRound(number, precision) {
-  var factor = Math.pow(10, precision);
-  return Math.round(number * factor) / factor;
+    let factor = Math.pow(10, precision);
+    return Math.round(number * factor) / factor;
 }
 
 function validateWithdrawForm() {
@@ -613,7 +613,7 @@ function validateWithdrawForm() {
         setNodeTrText(withdrawMsg, "wallet.tabWithdraw.messages.zeroAmount", "The amount is not positive");
         return;
     }
-    if ( precisionRound(amount+fee,precRoundDigit) > precisionRound(fromAddrObj.lastbalance,precRoundDigit)  ) {
+    if (precisionRound(amount + fee, precRoundDigit) > precisionRound(fromAddrObj.lastbalance, precRoundDigit)) {
         setNodeTrText(withdrawMsg, "wallet.tabWithdraw.messages.insufficientFunds", "Insufficient funds on the from address");
         return;
     }
