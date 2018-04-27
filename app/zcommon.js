@@ -315,7 +315,7 @@ function showSettingsDialog() {
                 domainFrontingUrl: inputDomainFrontingUrl.value,
                 domainFrontingHost: inputDomainFrontingHost.value,
                 autoLogOffEnable: inputAutoLogOffEnable.checked ? 1 : 0,
-                autoLogOffTimeout: inputAutoLogOffTimeout.value
+                autoLogOffTimeout: inputAutoLogOffTimeout.value < 60 ? 60 : inputAutoLogOffTimeout.value
             };
 
             if (settings.lang !== newSettings.lang) {
