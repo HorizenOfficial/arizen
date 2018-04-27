@@ -579,11 +579,17 @@ function initWithdrawView() {
     validateWithdrawForm();
 }
 
+function precisionRound(number, precision) {
+  var factor = Math.pow(10, precision);
+  return Math.round(number * factor) / factor;
+}
+
 function validateWithdrawForm() {
     const fromAddr = withdrawFromAddrInput.value;
     const toAddr = withdrawToAddrInput.value;
     const amount = parseFloat(withdrawAmountInput.value || 0);
     const fee = parseFloat(withdrawFeeInput.value || 0);
+    let precRoundDigit = 9;
 
     withdrawButton.disabled = true;
     setBalanceText(withdrawAvailBalance, 0);
@@ -607,7 +613,7 @@ function validateWithdrawForm() {
         setNodeTrText(withdrawMsg, "wallet.tabWithdraw.messages.zeroAmount", "The amount is not positive");
         return;
     }
-    if ((amount + fee) > fromAddrObj.lastbalance) {
+    if ( precisionRound(amount+fee,precRoundDigit) > precisionRound(fromAddrObj.lastbalance,precRoundDigit)  ) {
         setNodeTrText(withdrawMsg, "wallet.tabWithdraw.messages.insufficientFunds", "Insufficient funds on the from address");
         return;
     }
