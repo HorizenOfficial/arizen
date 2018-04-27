@@ -24,27 +24,31 @@ function assert(condition, message) {
  */
 function querySelectorAllDeep(selector, startRoot = document) {
     const roots = [startRoot];
-
     const nodeQueue = [...startRoot.children];
+
     while (nodeQueue.length) {
         const node = nodeQueue.shift();
-        if (node.shadowRoot)
+        if (node.shadowRoot) {
             roots.push(node.shadowRoot);
-        if (node.tagName === "TEMPLATE" && node.content)
+        }
+        if (node.tagName === "TEMPLATE" && node.content) {
             roots.push(node.content);
+        }
         nodeQueue.push(...node.children);
     }
 
     const matches = [];
-    for (const r of roots)
+    for (const r of roots) {
         matches.push(... r.querySelectorAll(selector));
+    }
     return matches;
 }
 
 function deepClone(obj) {
     // feel free to make a better implementation
-    if (!obj)
+    if (!obj) {
         return null;
+    }
     return JSON.parse(JSON.stringify(obj));
 }
 
@@ -57,15 +61,20 @@ function deepClone(obj) {
  * @param {function=} onOk - lambda executed if Cancel is pressed
  */
 function warnUser(msg, onOk, onCancel) {
-    if (confirm(msg))
+    if (confirm(msg)) {
         onOk();
-    else if (onCancel)
+    } else if (onCancel) {
         onCancel();
+    }
+    // else {
+    // FIXME: what here?
+    // }
 }
 
 function showNotification(message) {
-    if (settings && !settings.notifications)
+    if (settings && !settings.notifications) {
         return;
+    }
     const notif = new Notification("Arizen", {
         body: message,
         icon: "resources/zen_icon.png"
@@ -93,8 +102,7 @@ function linkHandler(event) {
 }
 
 function fixLinks(parent = document) {
-    querySelectorAllDeep("a[href^='http']", parent).forEach(link =>
-        link.addEventListener("click", linkHandler));
+    querySelectorAllDeep("a[href^='http']", parent).forEach(link => link.addEventListener("click", linkHandler));
 }
 
 function fixAmountInputs(parent = document) {
@@ -156,11 +164,13 @@ function clearChildNodes(parent) {
 
 function cloneTemplate(id) {
     const templateNode = document.getElementById(id);
-    if (!templateNode)
+    if (!templateNode) {
         throw new Error(`No template with ID "${id}"`);
+    }
     const node = templateNode.content.cloneNode(true).firstElementChild;
-    if (!node)
+    if (!node) {
         throw new Error(`Template is empty (ID "${id}")`);
+    }
     fixPage(node);
     return node;
 }
@@ -204,8 +214,9 @@ function scrollIntoViewIfNeeded(parent, child) {
     if (childRect.top < parentRect.top ||
         childRect.right > parentRect.right ||
         childRect.bottom > parentRect.bottom ||
-        childRect.left < parentRect.left)
+        childRect.left < parentRect.left) {
         child.scrollIntoView();
+    }
 }
 
 function createLink(url, text) {
@@ -243,16 +254,19 @@ let langDict;
     const {ipcRenderer} = require("electron");
     ipcRenderer.on("settings", (sender, settingsStr) => {
         // don't notify about new settings on startup
-        if (Object.keys(settings).length)
+        if (Object.keys(settings).length) {
             showNotification(tr("notification.settingsUpdated", "Settings updated"));
+        }
         const newSettings = JSON.parse(settingsStr);
-        if (settings.lang !== newSettings.lang)
+        if (settings.lang !== newSettings.lang) {
             changeLanguage(newSettings.lang);
+        }
 
-        if (newSettings.autoLogOffEnable)
+        if (newSettings.autoLogOffEnable) {
             autoLogOffEnable(newSettings.autoLogOffTimeout);
-        else
+        } else {
             autoLogOffDisable();
+        }
 
         settings = newSettings;
     });
@@ -283,11 +297,11 @@ function showSettingsDialog() {
         inputFiatCurrency.value = settings.fiatCurrency;
         inputNotifications.checked = settings.notifications;
         inputDomainFrontingEnable.checked = settings.domainFronting || false;
-        inputDomainFrontingUrl.value = settings.domainFrontingUrl || "";
-        inputDomainFrontingHost.value = settings.domainFrontingHost || "";
+        inputDomainFrontingUrl.value = settings.domainFrontingUrl || "https://www.google.com";
+        inputDomainFrontingHost.value = settings.domainFrontingHost || "zendhide.appspot.com";
         inputFiatCurrency.value = settings.fiatCurrency || "USD";
         inputAutoLogOffEnable.checked = settings.autoLogOffEnable;
-        inputAutoLogOffTimeout.value = settings.autoLogOffTimeout || 5;
+        inputAutoLogOffTimeout.value = settings.autoLogOffTimeout || 60;
 
         dialog.querySelector(".settingsSave").addEventListener("click", () => {
             const newSettings = {
@@ -304,8 +318,9 @@ function showSettingsDialog() {
                 autoLogOffTimeout: inputAutoLogOffTimeout.value
             };
 
-            if (settings.lang !== newSettings.lang)
+            if (settings.lang !== newSettings.lang) {
                 changeLanguage(newSettings.lang);
+            }
 
             Object.assign(settings, newSettings);
             saveModifiedSettings();
@@ -322,7 +337,7 @@ function showImportSinglePKDialog() {
     let response = -1;
     response = ipcRenderer.sendSync("renderer-show-message-box", tr("warmingMessages.userWarningImportPK", userWarningImportPK), [tr("warmingMessages.userWarningIUnderstand", "I understand")]);
     console.log(response);
-    if (response===0){
+    if (response === 0) {
         showDialogFromTemplate("importSinglePrivateKeyDialogTemplate", dialog => {
             const importButton = dialog.querySelector(".newPrivateKeyImportButton");
             const nameInput = dialog.querySelector(".newPrivateKeyDialogName");
@@ -420,10 +435,10 @@ function setNodeTrText(node, key, defaultVal) {
 }
 
 function translateCurrentPage() {
-    if (!langDict)
+    if (!langDict) {
         return;
-    querySelectorAllDeep("[data-tr]").forEach(node =>
-        node.textContent = tr(node.dataset.tr, node.textContent));
+    }
+    querySelectorAllDeep("[data-tr]").forEach(node => node.textContent = tr(node.dataset.tr, node.textContent));
 }
 
 function isWif(pk) {
@@ -454,7 +469,6 @@ function isPKorWif(pk) {
 
 let autoLogOffTimerId;
 let autoLogOffEventHandler;
-
 function autoLogOffEnable(timeout) {
     autoLogOffDisable();
 
@@ -463,9 +477,9 @@ function autoLogOffEnable(timeout) {
 
     autoLogOffTimerId = setInterval(() => {
         currentTime--;
-        if (currentTime > 0)
+        if (currentTime > 0) {
             autoLogOffUpdateUI(currentTime);
-        else {
+        } else {
             autoLogOffDisable();
             logout();
         }
@@ -484,8 +498,9 @@ function autoLogOffEnable(timeout) {
 }
 
 function autoLogOffDisable() {
-    if (!autoLogOffTimerId)
+    if (!autoLogOffTimerId) {
         return;
+    }
 
     clearInterval(autoLogOffTimerId);
 
