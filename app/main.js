@@ -504,10 +504,15 @@ function exportPKs() {
             if (err) {
                 console.error(`Couldn't open "${filename}" for writing: `, err);
             } else {
-                const keys = sqlSelectObjects("select pk, addr from wallet");
+                const keys = sqlSelectObjects("select pk, addr from wallet where length(addr)=35");
                 for (let k of keys) {
                     const wif = zencashjs.address.privKeyToWIF(k.pk,true);
                     fs.write(fd, wif + " " + k.addr + "\n");
+                }
+                const zkeys = sqlSelectObjects("select pk, addr from wallet where length(addr)=95");
+                for (let k of zkeys) {
+                    const spendingKey = zencashjs.zaddress.zSecretKeyToSpendingKey(k.pk);
+                    fs.write(fd, spendingKey + " " + k.addr + "\n");
                 }
             }
         });

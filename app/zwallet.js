@@ -577,13 +577,19 @@ function initWithdrawView() {
         if (confirm(msg)) {
             let fromAddr = withdrawFromAddrInput.value;
             let toAddr = withdrawToAddrInput.value;
-            if (zenextra.isTransaparentAddr(fromAddr) && zenextra.isTransaparentAddr(toAddr)) {
+            if (zenextra.isTransaparentAddr(fromAddr) && zenextra.isTransaparentAddr(toAddr)) { // T-T
                 ipcRenderer.send("send",
                     withdrawFromAddrInput.value,
                     withdrawToAddrInput.value,
                     withdrawFeeInput.value,
                     withdrawAmountInput.value);
-            } else {
+            } else if (zenextra.isTransaparentAddr(fromAddr) && zenextra.isZeroAddr(toAddr)) { // T - Z
+              // Get intermediate T address from SN or Create
+              // send from T-Arizen to T-SN, amount, fee/2
+              // set timeout every minute to check if balanceT-SN = amount
+              // if balanceT-SN = amount, then send from T-SN to Z
+
+            } else { // Z - Z or Z - T
                 let fromAddrObj = ipcRenderer.sendSync("get-address-object", fromAddr);
                 let fromAddressPK = fromAddrObj.pk;
                 let myAmount = parseFloat(withdrawAmountInput.value).toFixed(8);
@@ -622,6 +628,11 @@ function validateWithdrawForm() {
         return;
     }
     setBalanceText(withdrawAvailBalance, fromAddrObj.lastbalance);
+
+    // if (fromAddrObj.pk === "wo"){
+    //    setNodeTrText(withdrawMsg, "wallet.tabWithdraw.messages.watchOnlyAddrr", "The from address is a watch only address and you cannot spend its balance.");
+    //    return;
+  //  }
 
     if (!toAddr) {
         setNodeTrText(withdrawMsg, "wallet.tabWithdraw.messages.emptyToAddr", "The to address is empty");
