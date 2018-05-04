@@ -26,8 +26,8 @@ function assert(condition, message) {
  */
 function querySelectorAllDeep(selector, startRoot = document) {
     const roots = [startRoot];
-
     const nodeQueue = [...startRoot.children];
+
     while (nodeQueue.length) {
         const node = nodeQueue.shift();
         if (node.shadowRoot) {
@@ -65,10 +65,12 @@ function deepClone(obj) {
 function warnUser(msg, onOk, onCancel) {
     if (confirm(msg)) {
         onOk();
-    }
-    else if (onCancel) {
+    } else if (onCancel) {
         onCancel();
     }
+    // else {
+    // FIXME: what here?
+    // }
 }
 
 function showNotification(message) {
@@ -102,8 +104,7 @@ function linkHandler(event) {
 }
 
 function fixLinks(parent = document) {
-    querySelectorAllDeep("a[href^='http']", parent).forEach(link =>
-        link.addEventListener("click", linkHandler));
+    querySelectorAllDeep("a[href^='http']", parent).forEach(link => link.addEventListener("click", linkHandler));
 }
 
 function fixAmountInputs(parent = document) {
@@ -212,8 +213,10 @@ function showDialogFromTemplate(templateId, dialogInit, onClose = null) {
 function scrollIntoViewIfNeeded(parent, child) {
     const parentRect = parent.getBoundingClientRect();
     const childRect = child.getBoundingClientRect();
-    if (childRect.top < parentRect.top || childRect.right > parentRect.right ||
-        childRect.bottom > parentRect.bottom || childRect.left < parentRect.left) {
+    if (childRect.top < parentRect.top ||
+        childRect.right > parentRect.right ||
+        childRect.bottom > parentRect.bottom ||
+        childRect.left < parentRect.left) {
         child.scrollIntoView();
     }
 }
@@ -255,12 +258,19 @@ let langDict;
         // don't notify about new settings on startup
         pingSecureNode();
         //pingSecureNodeRPCResult();
+
         if (Object.keys(settings).length) {
             showNotification(tr("notification.settingsUpdated", "Settings updated"));
         }
         const newSettings = JSON.parse(settingsStr);
         if (settings.lang !== newSettings.lang) {
             changeLanguage(newSettings.lang);
+        }
+
+        if (newSettings.autoLogOffEnable) {
+            autoLogOffEnable(newSettings.autoLogOffTimeout);
+        } else {
+            autoLogOffDisable();
         }
         settings = newSettings;
     });
@@ -329,6 +339,11 @@ function showSettingsDialog() {
         const inputSshPort = dialog.querySelector(".settingsSshPort");
         const inputReadyTimeout = dialog.querySelector(".settingsReadyTimeout");
         const inputForwardTimeout = dialog.querySelector(".settingsForwardTimeout");
+        const inputDomainFrontingEnable = dialog.querySelector(".enableDomainFronting");
+        const inputDomainFrontingUrl = dialog.querySelector(".settingDomainFrontingUrl");
+        const inputDomainFrontingHost = dialog.querySelector(".settingDomainFrontingHost");
+        const inputAutoLogOffEnable = dialog.querySelector(".settingAutoLogOffEnable");
+        const inputAutoLogOffTimeout = dialog.querySelector(".settingAutoLogOffTimeout");
 
         inputTxHistory.value = settings.txHistory;
         inputExplorerUrl.value = settings.explorerUrl;
@@ -336,8 +351,11 @@ function showSettingsDialog() {
         inputApiUrls.value = settings.apiUrls.join("\n");
         inputFiatCurrency.value = settings.fiatCurrency;
         inputNotifications.checked = settings.notifications;
-        inputDomainFronting.checked = settings.domainFronting || false;
+        inputDomainFrontingEnable.checked = settings.domainFronting || false;
+        inputDomainFrontingUrl.value = settings.domainFrontingUrl || "https://www.google.com";
+        inputDomainFrontingHost.value = settings.domainFrontingHost || "zendhide.appspot.com";
         inputFiatCurrency.value = settings.fiatCurrency || "USD";
+      
         inputSecureNodeFQDN.value = settings.secureNodeFQDN;
         inputSecureNodePort.value = settings.secureNodePort || 8231;
         inputSecureNodeUsername.value = settings.secureNodeUsername || "";
@@ -348,6 +366,10 @@ function showSettingsDialog() {
         inputReadyTimeout.value = settings.readyTimeout || 10000;
         inputForwardTimeout.value = settings.forwardTimeout || 10000;
 
+        inputAutoLogOffEnable.checked = settings.autoLogOffEnable;
+        inputAutoLogOffTimeout.value = settings.autoLogOffTimeout || 60;
+
+
         dialog.querySelector(".settingsSave").addEventListener("click", () => {
             const newSettings = {
                 txHistory: parseInt(inputTxHistory.value),
@@ -356,6 +378,7 @@ function showSettingsDialog() {
                 fiatCurrency: inputFiatCurrency.value,
                 lang: inputLanguages[inputLanguages.selectedIndex].value,
                 notifications: inputNotifications.checked ? 1 : 0,
+
                 domainFronting: inputDomainFronting.checked,
                 secureNodeFQDN: inputSecureNodeFQDN.value,
                 secureNodePort: inputSecureNodePort.value,
@@ -365,7 +388,13 @@ function showSettingsDialog() {
                 sshPassword: inputSshPassword.value,
                 sshPort: inputSshPort.value,
                 readyTimeout: inputReadyTimeout.value,
-                forwardTimeout: inputForwardTimeout.value
+                forwardTimeout: inputForwardTimeout.value,
+
+                domainFronting: inputDomainFrontingEnable.checked,
+                domainFrontingUrl: inputDomainFrontingUrl.value,
+                domainFrontingHost: inputDomainFrontingHost.value,
+                autoLogOffEnable: inputAutoLogOffEnable.checked ? 1 : 0,
+                autoLogOffTimeout: inputAutoLogOffTimeout.value < 60 ? 60 : inputAutoLogOffTimeout.value
             };
 
             if (settings.lang !== newSettings.lang) {
@@ -598,6 +627,86 @@ function translateCurrentPage() {
     }
     querySelectorAllDeep("[data-tr]").forEach(node => node.textContent = tr(node.dataset.tr, node.textContent));
 }
+
+function isWif(pk) {
+    let isWif = true;
+    try {
+        let pktmp = zencashjs.address.WIFToPrivKey(pk);
+    } catch (err) {
+        isWif = false;
+    }
+    querySelectorAllDeep("[data-tr]").forEach(node => node.textContent = tr(node.dataset.tr, node.textContent));
+}
+
+function isPK(pk) {
+    let isPK = true;
+    try {
+        let pktmp = zencashjs.address.privKeyToPubKey(pk);
+    } catch (err) {
+        isPK = false;
+    }
+    return isPK
+}
+
+function isPKorWif(pk) {
+    return (isWif(pk) || isPK(pk))
+}
+
+//------------------------------------------------
+
+let autoLogOffTimerId;
+let autoLogOffEventHandler;
+function autoLogOffEnable(timeout) {
+    autoLogOffDisable();
+
+    let currentTime = timeout;
+    autoLogOffUpdateUI(currentTime);
+
+    autoLogOffTimerId = setInterval(() => {
+        currentTime--;
+        if (currentTime > 0) {
+            autoLogOffUpdateUI(currentTime);
+        } else {
+            autoLogOffDisable();
+            logout();
+        }
+    }, 1000);
+
+    autoLogOffEventHandler = () => {
+        currentTime = timeout;
+        autoLogOffUpdateUI(currentTime);
+    };
+
+    document.addEventListener("mousemove", autoLogOffEventHandler);
+    document.addEventListener("keypress", autoLogOffEventHandler);
+    document.addEventListener("click", autoLogOffEventHandler);
+
+    hideElement(document.getElementById("autoLogOffTimer"), false);
+}
+
+function autoLogOffDisable() {
+    if (!autoLogOffTimerId) {
+        return;
+    }
+
+    clearInterval(autoLogOffTimerId);
+
+    document.removeEventListener("mousemove", autoLogOffEventHandler);
+    document.removeEventListener("keypress", autoLogOffEventHandler);
+    document.removeEventListener("click", autoLogOffEventHandler);
+
+    hideElement(document.getElementById("autoLogOffTimer"), true);
+
+    autoLogOffTimerId = 0;
+    autoLogOffEventHandler = null;
+}
+
+function autoLogOffUpdateUI(currentTime) {
+    const node = document.getElementById("autoLogOffTimerTime");
+    node.textContent = currentTime;
+}
+
+//------------------------------------------------
 
 module.exports = {
     syncZaddrIfSettingsExist: syncZaddrIfSettingsExist

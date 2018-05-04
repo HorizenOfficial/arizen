@@ -65,24 +65,25 @@ let userInfo = {
 };
 
 const defaultSettings = {
-    notifications: 1,
+    txHistory: 50,
+    lang: "en",
     explorerUrl: "https://explorer.zensystem.io",
     apiUrls: [
         "https://explorer.zensystem.io/insight-api-zen",
         "http://explorer.zenmine.pro/insight-api-zen"
     ],
-    txHistory: 50,
     fiatCurrency: "USD",
-    lang: "en",
-    domainFronting: false
+    notifications: 1,
+    domainFronting: false,
+    domainFrontingUrl: "https://www.google.com",
+    domainFrontingHost: "zendhide.appspot.com",
+    autoLogOffEnable: 0
 };
+
 let settings = defaultSettings;
 let langDict;
 
 let axiosApi;
-
-const DOMAIN_FRONTING_PUBLIC_URL = "https://www.google.com";
-const DOMAIN_FRONTING_PRIVATE_HOST = "zendhide.appspot.com";
 
 const dbStructWallet = "CREATE TABLE wallet (id INTEGER PRIMARY KEY AUTOINCREMENT, pk TEXT, addr TEXT UNIQUE, lastbalance REAL, name TEXT);";
 const dbStructSettings = "CREATE TABLE settings (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE, value TEXT);";
@@ -113,11 +114,13 @@ function getWalletPath() {
 }
 
 function storeFile(filename, data) {
-    fs.writeFileSync(filename, data, function (err) {
+    const filenameTmp = filename + ".bak";
+    fs.writeFileSync(filenameTmp, data, function (err) {
         if (err) {
             return console.log(err);
         }
     });
+    fs.renameSync(filenameTmp, filename);
 }
 
 function encryptWallet(login, password, inputBytes) {
@@ -418,9 +421,9 @@ function setSettings(newSettings) {
 
     if (settings.domainFronting) {
         axiosApi = axios.create({
-            baseURL: DOMAIN_FRONTING_PUBLIC_URL,
+            baseURL: settings.domainFrontingUrl,
             headers: {
-                "Host": DOMAIN_FRONTING_PRIVATE_HOST
+                "Host": settings.domainFrontingHost
             },
             timeout: 10000,
         });
@@ -760,6 +763,24 @@ function importPKs() {
     });
 }
 
+function changeWalletPasswordBegin() {
+    mainWindow.webContents.send("change-wallet-password-begin", userInfo.pass);
+}
+
+function changeWalletPasswordContinue(newPassword) {
+    let result = {};
+    try {
+        userInfo.pass = newPassword;
+        saveWallet();
+        result.success = true;
+    }
+    catch (e) {
+        result.success = false;
+        result.error = e;
+    }
+    mainWindow.webContents.send("change-wallet-password-finish", JSON.stringify(result));
+}
+
 function updateMenuForDarwin(template) {
     if (os.platform() === "darwin") {
         template.unshift({
@@ -935,6 +956,13 @@ function updateMenuAtLogin() {
                     label: tr("menu.importPrivateKeys", "Import private keys"),
                     click: function () {
                         importPKs();
+                    }
+                },
+                { type: "separator" },
+                {
+                    label: tr("menu.changeWalletPassword", "Change wallet password"),
+                    click() {
+                        changeWalletPasswordBegin();
                     }
                 },
                 { type: "separator" },
@@ -1271,6 +1299,10 @@ ipcMain.on("check-if-address-in-wallet", function(event,address){
       if (k.addr === address) {exist = true ; break;}
     }
     event.returnValue = {exist: exist, result: result};
+});
+
+ipcMain.on("change-wallet-password-continue", (event, newPassword) => {
+    changeWalletPasswordContinue(newPassword);
 });
 
 function checkSendParameters(fromAddresses, toAddresses, fee) {

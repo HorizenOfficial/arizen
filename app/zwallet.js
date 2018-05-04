@@ -143,6 +143,15 @@ ipcRenderer.on("main-sends-alert", (event, msgStr) => {
     alert(msgStr)
 });
 
+ipcRenderer.on("change-wallet-password-begin", (event, currentPassword) => {
+    showChangeWalletPasswordDialog(currentPassword);
+});
+
+ipcRenderer.on("change-wallet-password-finish", (event, msgStr) => {
+    const msg = JSON.parse(msgStr);
+    showPasswordChangeNotice(msg);
+});
+
 window.addEventListener("load", initWallet);
 
 // FUNCTIONS
@@ -174,10 +183,11 @@ function getAddrData(addr) {
 function setBalanceText(balanceNode, balance) {
     const balanceAmountNode = balanceNode.firstElementChild;
     balanceAmountNode.textContent = formatBalance(balance);
-    if (balance > 0)
+    if (balance > 0) {
         balanceNode.classList.add("positive");
-    else
+    } else {
         balanceNode.classList.remove("positive");
+    }
 }
 
 function setFiatBalanceText(balanceZen, fiatCurrencySymbol = "") {
@@ -208,10 +218,11 @@ function setFiatBalanceText(balanceZen, fiatCurrencySymbol = "") {
 }
 
 function setAddressNodeName(addrObj, addrNode) {
-    if (addrObj.name)
+    if (addrObj.name) {
         setNodeTrText(addrNode, null, addrObj.name);
-    else
+    } else {
         setNodeTrText(addrNode, "wallet.tabOverview.unnamedAddress", "Unnamed address");
+    }
 }
 
 function formatAddressInList(addr) {
@@ -271,8 +282,9 @@ function showAddrDetail(addr) {
             ipcRenderer.send("rename-wallet", addr, nameNode.value);
         });
         dialog.addEventListener("keypress", ev => {
-            if (event.keyCode === 13)
+            if (event.keyCode === 13) {
                 saveButton.click();
+            }
         });
     });
 }
@@ -296,11 +308,13 @@ function createTxItem(txObj, newTx = false) {
     const node = txObj.block >= 0 ? cloneTemplate("txItemTemplate") : cloneTemplate("txMempoolItemTemplate");
     node.dataset.txid = txObj.txid;
     node.dataset.blockheight = txObj.block;
-    if (txObj.block >= 0)
+    if (txObj.block >= 0) {
         node.querySelector(".txDate").textContent = formatEpochTime(txObj.time * 1000);
+    }
     setTxBalanceText(node.querySelector(".txBalance"), txObj.amount);
-    if (newTx)
+    if (newTx) {
         node.classList.add("txItemNew");
+    }
     node.addEventListener("click", () => showTxDetail(txObj));
     return node;
 }
@@ -315,16 +329,18 @@ function showTxDetail(txObj) {
         txObj.vins.split(",").sort().forEach(addr => {
             const node = document.createElement("div");
             node.textContent = addr;
-            if (addrIdxByAddr.has(addr))
+            if (addrIdxByAddr.has(addr)) {
                 node.classList.add("negative");
+            }
             vinListNode.append(node);
         });
         const voutListNode = dialog.querySelector(".txDetailTo");
         txObj.vouts.split(",").sort().forEach(addr => {
             const node = document.createElement("div");
             node.textContent = addr;
-            if (addrIdxByAddr.has(addr))
+            if (addrIdxByAddr.has(addr)) {
                 node.classList.add("positive");
+            }
             voutListNode.append(node);
         });
         if (txObj.block >= 0) {
@@ -366,15 +382,17 @@ function sortAddresses() {
                 const addrB = b.addr;
                 return addrA.localeCompare(addrB);
             } else {
-                if (nameA === '')
+                if (nameA === '') {
                     return 1;
-                else if (nameB === '')
+                } else if (nameB === '') {
                     return -1;
-                else
+                } else {
                     return nameA.localeCompare(nameB);
+                }
             }
-        } else
+        } else {
             return balB - balA;
+        }
     });
     addrObjList.forEach((addrObj, idx) => addrIdxByAddr.set(addrObj.addr, idx));
     recreateAddrList();
@@ -382,10 +400,11 @@ function sortAddresses() {
 
 function addAddresses(newAddrs) {
     newAddrs.forEach(addrObj => {
-        if (!addrIdxByAddr.has(addrObj.addr))
+        if (!addrIdxByAddr.has(addrObj.addr)) {
             addrObjList.push(addrObj);
-        else
+        } else {
             console.warn(`Address ${addrObj.addr} is already in the list`);
+        }
     });
     sortAddresses();
 }
@@ -426,8 +445,9 @@ function showNewAddrDialog() {
                 dialog.close();
             });
             dialog.addEventListener("keypress", ev => {
-                if (event.keyCode === 13)
+                if (event.keyCode === 13) {
                     createButton.click();
+                }
             });
         });
     }
@@ -467,14 +487,16 @@ function setTotalBalance(balanceZen) {
 function toggleZeroBalanceAddrs() {
     showZeroBalances = !showZeroBalances;
     addrObjList.forEach((addrObj, idx) => {
-        if (!addrObj.lastbalance)
+        if (!addrObj.lastbalance) {
             hideElement(addrListNode.children[idx], !showZeroBalances);
+        }
     });
 }
 
 function scheduleRefresh() {
-    if (refreshTimer)
+    if (refreshTimer) {
         clearTimeout(refreshTimer);
+    }
     refreshTimer = setTimeout(() => refresh(), refreshTimeout * 1000);
 }
 
@@ -491,8 +513,9 @@ function showAddrSelectDialog(zeroBalanceAddrs, onSelected) {
     showDialogFromTemplate("addrSelectDialogTemplate", dialog => {
         const listNode = dialog.querySelector(".addrSelectList");
         for (const addrObj of addrObjList) {
-            if (!zeroBalanceAddrs && !addrObj.lastbalance)
+            if (!zeroBalanceAddrs && !addrObj.lastbalance) {
                 continue;
+            }
             const row = cloneTemplate("addrSelectRowTemplate");
             row.querySelector(".addrSelectRowName").textContent = addrObj.name;
             row.querySelector(".addrSelectRowAddr").textContent = addrObj.addr;
@@ -558,10 +581,11 @@ function updateDepositQrcode(qrcodeDelay = 0) {
     depositQrcodeTimer = setTimeout(() => {
         const json = {symbol: "zen", tAddr: toAddr, amount: amount};
         Qrcode.toDataURL(JSON.stringify(json), qrcodeOpts, (err, url) => {
-            if (err)
+            if (err) {
                 console.log(err);
-            else
+            } else {
                 depositQrcodeImage.src = url;
+            }
             depositQrcodeTimer = null;
         });
     }, qrcodeDelay);
@@ -653,11 +677,17 @@ function initWithdrawView() {
     validateWithdrawForm();
 }
 
+function precisionRound(number, precision) {
+    let factor = Math.pow(10, precision);
+    return Math.round(number * factor) / factor;
+}
+
 function validateWithdrawForm() {
     const fromAddr = withdrawFromAddrInput.value;
     const toAddr = withdrawToAddrInput.value;
     const amount = parseFloat(withdrawAmountInput.value || 0);
     const fee = parseFloat(withdrawFeeInput.value || 0);
+    let precRoundDigit = 9;
 
     withdrawButton.disabled = true;
     setBalanceText(withdrawAvailBalance, 0);
@@ -686,7 +716,7 @@ function validateWithdrawForm() {
         setNodeTrText(withdrawMsg, "wallet.tabWithdraw.messages.zeroAmount", "The amount is not positive");
         return;
     }
-    if ((amount + fee) > fromAddrObj.lastbalance) {
+    if (precisionRound(amount + fee, precRoundDigit) > precisionRound(fromAddrObj.lastbalance, precRoundDigit)) {
         setNodeTrText(withdrawMsg, "wallet.tabWithdraw.messages.insufficientFunds", "Insufficient funds on the from address");
         return;
     }
@@ -719,8 +749,9 @@ function showBatchWithdrawDialog() {
         const listNode = dialog.querySelector(".addrSelectList");
 
         for (const addrObj of addrObjList) {
-            if (addrObj.lastbalance === 0)
+            if (addrObj.lastbalance === 0) {
                 continue;
+            }
 
             const row = cloneTemplate("addrMultiselectRowTemplate");
             row.dataset.addr = addrObj.addr;
@@ -730,8 +761,9 @@ function showBatchWithdrawDialog() {
             const addrNode = row.querySelector(".addrSelectRowAddr");
             const balanceNode = row.querySelector(".addrSelectRowBalance");
 
-            if (fromAddrsSet.has(addrObj.addr))
+            if (fromAddrsSet.has(addrObj.addr)) {
                 selectCheckbox.checked = true;
+            }
             nameNode.textContent = addrObj.name;
             addrNode.textContent = addrObj.addr;
             setBalanceText(balanceNode, addrObj.lastbalance);
@@ -758,8 +790,9 @@ function showBatchWithdrawDialog() {
         withdrawButton.addEventListener("click", () => {
             bwSettings.fromAddrs = [];
             [...listNode.children].forEach(row => {
-                if (row.querySelector(".addrSelectCheckbox").checked)
+                if (row.querySelector(".addrSelectCheckbox").checked) {
                     bwSettings.fromAddrs.push(row.dataset.addr);
+                }
             });
             bwSettings.toAddr = toAddrInput.value;
             bwSettings.keepAmount = keepAmountInput.value;
@@ -806,4 +839,50 @@ function initWallet() {
         });
     });
     ipcRenderer.send("get-wallets");
+}
+
+function showChangeWalletPasswordDialog(currentPassword) {
+    showDialogFromTemplate("changeWalletPasswordDialog", dialog => {
+        console.log(currentPassword);
+        const currentPasswordInput = dialog.querySelector(".currentPasswordText");
+        const newPassword1Input = dialog.querySelector(".newPasswordText1");
+        const newPassword2Input = dialog.querySelector(".newPasswordText2");
+        const okButton = dialog.querySelector(".changePasswordOK");
+        const cancelButton = dialog.querySelector(".changePasswordCancel");
+        const errorsText = dialog.querySelector(".changeWalletPasswordErrors");
+
+        cancelButton.addEventListener("click", () => dialog.close());
+
+        okButton.addEventListener("click", () => {
+            const typedCurrentPassword = currentPasswordInput.value;
+            const newPassword1 = newPassword1Input.value;
+            const newPassword2 = newPassword2Input.value;
+
+            if (currentPassword !== typedCurrentPassword) {
+                errorsText.textContent = tr("wallet.changePassword.error.wrongCurrentPassword", "Wrong current password");
+                return;
+            }
+
+            if (newPassword1 !== newPassword2) {
+                errorsText.textContent = tr("wallet.changePassword.error.newPasswordBadRetype", "New passwords do not match");
+                return;
+            }
+
+            if (newPassword1 === "") {
+                errorsText.textContent = tr("wallet.changePassword.error.emptyNewPassword", "New password cannot be empty");
+                return;
+            }
+
+            ipcRenderer.send("change-wallet-password-continue", newPassword1);
+            dialog.close();
+        });
+    });
+}
+
+function showPasswordChangeNotice(result) {
+    if (result.success) {
+        alert(tr("wallet.changePassword.noticeSuccess", "Wallet password successfully changed"));
+    } else {
+        alert(tr("wallet.changePassword.noticeError", "Failed to change wallet password"));
+    }
 }

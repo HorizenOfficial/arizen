@@ -311,11 +311,13 @@
                     <input type=checkbox class=enableNotifications name=enableNotifications />
                     <span class=checkmark></span>
                 </label>
-                <label for=enableDomainFronting data-tr=wallet.settings.enableDomainFronting>Domain fronting</label>
+
+                <label for=enableDomainFronting data-tr=wallet.settings.enableDomainFronting>Enable domain fronting</label>
                 <label class=container>
                     <input type=checkbox class=enableDomainFronting name=enableDomainFronting />
                     <span class=checkmark></span>
                 </label>
+
                 <label for=secureNodeFQDN data-tr=wallet.settings.secureNodeFQDN>Secure Node FQDN</label>
                 <input type=text name=settingsSecureNodeFQDN class=settingsSecureNodeFQDN />
                 <label for=sshUsername data-tr=wallet.settings.sshUsername>SSH username</label>
@@ -335,9 +337,50 @@
                 <label for=forwardTimeout data-tr=wallet.settings.forwardTimeout>Forward Timeout (default: 10000)</label>
                 <input type=text name=settingsForwardTimeout class=settingsForwardTimeout />
 
+                <label for=settingDomainFrontingUrl data-tr=wallet.settings.domainFrontingUrl>Domain fronting public base URL</label>
+                <input type=text name=settingDomainFrontingUrl class=settingDomainFrontingUrl />
+                <label for=settingDomainFrontingHost data-tr=wallet.settings.domainFrontingHost>Domain fronting private host</label>
+                <input type=text name=settingDomainFrontingHost class=settingDomainFrontingHost />
+
+                <label for=settingAutoLogOffEnable data-tr=wallet.settings.autoLogOffEnable>Enable automatic log off</label>
+                <label class=container>
+                    <input type=checkbox class=settingAutoLogOffEnable name=settingAutoLogOffEnable />
+                    <span class=checkmark></span>
+                </label>
+                <label for=settingAutoLogOffTimeout data-tr=wallet.settings.autoLogOffTimeout>Auto log off timeout in seconds</label>
+                <span class=formInput>
+                    <input type=number name=settingAutoLogOffTimeout class=settingAutoLogOffTimeout min=60 step=1/>
+                    <span>s</span>
+                </span>
             </div>
             <div class=formButtons>
                 <button class=settingsSave data-tr=wallet.settings.save>Save</button>
+            </div>
+        </div>
+    </arizen-dialog>
+</template>
+
+<template id=changeWalletPasswordDialog>
+    <arizen-dialog>
+        <h2 slot=headerText data-tr=wallet.changePassword.title>Change Wallet Password</h2>
+        <div slot=content class=changeWalletPasswordDialogContent>
+            <div class=changeWalletPasswordWarning data-tr="wallet.changePassword.warningText">
+                WARNING: Wallet backups won't be re-encrypted! If you need to
+                use them, you will have to use current password.
+            </div>
+            <div class=form>
+                <label for=currentPassword data-tr=wallet.changePassword.currentPassword>Current Password</label>
+                <input type=password name=currentPasswordText class=currentPasswordText />
+                <label for=newPassword1 data-tr=wallet.changePassword.newPassword1>New Password</label>
+                <input type=password name=newPasswordText1 class=newPasswordText1 />
+                <label for=newPassword2 data-tr=wallet.changePassword.newPassword2>New Password (Retype)</label>
+                <input type=password name=newPasswordText2 class=newPasswordText2 />
+            </div>
+            <div class=changeWalletPasswordErrors data-tr="wallet.changePassword.errorMessages">
+            </div>
+            <div class=formButtons>
+                <button class=changePasswordOK data-tr=common.okButtonText>OK</button>
+                <button class=changePasswordCancel data-tr=common.cancelButtonText>Cancel</button>
             </div>
         </div>
     </arizen-dialog>
@@ -478,6 +521,12 @@
     <span>Server: <span id=dotSNstatus class=dotSNstatus></span></span>
     <span>zend: <span id=dotSNstatusRPC class=dotSNstatusRPC></span></span>
     <span><a id=loadingImage class=loading></a></span>
+    <span id=autoLogOffTimer class=hidden>
+        <span> / </span>
+        <span data-tr=wallet.autoLogOffLabel>Log off in </span>
+        <span id=autoLogOffTimerTime></span>
+        s
+    </span>
 </footer>
 
 </div>

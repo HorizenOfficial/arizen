@@ -132,9 +132,9 @@
     "deepmerge": "^2.0.1",
     "devtron": "^1.4.0",
     "electron": "^2.0.0-beta.6",
-    "electron-builder": "20.8.2",
-    "electron-builder-squirrel-windows": "20.8.0",
-    "flow-bin": "^0.69.0",
+    "electron-builder": "20.10.0",
+    "electron-builder-squirrel-windows": "20.11.0",
+    "flow-bin": "^0.71.0",
     "json-file-plus": "^3.3.0",
     "yargs": "^11.0.0"
   },

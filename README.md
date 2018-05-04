@@ -19,6 +19,11 @@
 - [x] When you are connected to your Security Node / Full Node, then all of your T and Z transactions go through your own node (no more 3rd party servers).
 - [x] Travis CI support enabled for faster development cycle.
 - [x] Note: Transaction history for Z addresses is not available.
+- [x] Automatic logoff timeout can be now enabled and set in Settings (minimum 60s of inactivity).
+- [x] Domain Fronting servers can be set in Settings.
+- [x] User now can change password - from File menu.
+
+
 
 ## v1.1.5
 - [x] Domain fronting support.
