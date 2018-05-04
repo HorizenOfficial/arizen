@@ -567,6 +567,39 @@ function updateDepositQrcode(qrcodeDelay = 0) {
     }, qrcodeDelay);
 }
 
+// function createTimeout(timeoutHandler, delay) {
+//     var timeoutId;
+//     timeoutId = setTimeout(timeoutHandler, delay);
+//     return {
+//         clear: function() {
+//             clearTimeout(timeoutId);
+//         },
+//         trigger: function() {
+//             clearTimeout(timeoutId);
+//             return timeoutHandler();
+//         }
+//     };
+// }
+
+// timeout.clear();
+// timeout.trigger();
+
+function checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo) {
+    console.log("Intermediate function entered........");
+    getTaddressBalance(tIntermediateAddress, function(balance){
+        if(balance>= amount){
+            // send from T to Z
+            console.log("Sending.....");
+            sendFromOrToZaddress(undefined, tIntermediateAddress, toAddr, amount, feeTwo)
+
+        } else {
+            // then setTimeout() again
+            console.log("Will check again in 0.5 minutes......");
+            setTimeout( () => checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo), 30000) // 2 mins
+        }
+    })
+}
+
 function initWithdrawView() {
     withdrawFromAddrInput.addEventListener("input", validateWithdrawForm);
     withdrawToAddrInput.addEventListener("input", validateWithdrawForm);
@@ -577,6 +610,8 @@ function initWithdrawView() {
         if (confirm(msg)) {
             let fromAddr = withdrawFromAddrInput.value;
             let toAddr = withdrawToAddrInput.value;
+            let fee = withdrawFeeInput.value;
+            let amount = withdrawAmountInput.value;
             if (zenextra.isTransaparentAddr(fromAddr) && zenextra.isTransaparentAddr(toAddr)) { // T-T
                 ipcRenderer.send("send",
                     withdrawFromAddrInput.value,
@@ -585,9 +620,18 @@ function initWithdrawView() {
                     withdrawAmountInput.value);
             } else if (zenextra.isTransaparentAddr(fromAddr) && zenextra.isZeroAddr(toAddr)) { // T - Z
               // Get intermediate T address from SN or Create
-              // send from T-Arizen to T-SN, amount, fee/2
-              // set timeout every minute to check if balanceT-SN = amount
-              // if balanceT-SN = amount, then send from T-SN to Z
+              let feeOne = fee/2;
+              let feeTwo = fee/2;
+              getSecureNodeTaddressOrGenerate(function(tIntermediateAddress){
+                 // send from T-Arizen to T-SN, amount, fee/2
+                  ipcRenderer.send("send",
+                      fromAddr,
+                      tIntermediateAddress,
+                      feeOne,
+                      amount);
+                  checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo);
+              });
+
 
             } else { // Z - Z or Z - T
                 let fromAddrObj = ipcRenderer.sendSync("get-address-object", fromAddr);
@@ -629,10 +673,10 @@ function validateWithdrawForm() {
     }
     setBalanceText(withdrawAvailBalance, fromAddrObj.lastbalance);
 
-    // if (fromAddrObj.pk === "wo"){
-    //    setNodeTrText(withdrawMsg, "wallet.tabWithdraw.messages.watchOnlyAddrr", "The from address is a watch only address and you cannot spend its balance.");
-    //    return;
-  //  }
+    if (fromAddrObj.pk === "watchOnlyAddrr"){
+        setNodeTrText(withdrawMsg, "wallet.tabWithdraw.messages.watchOnlyAddrr", "The from address is a watch only address and you cannot spend its balance.");
+        return;
+    }
 
     if (!toAddr) {
         setNodeTrText(withdrawMsg, "wallet.tabWithdraw.messages.emptyToAddr", "The to address is empty");

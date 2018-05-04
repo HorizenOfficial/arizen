@@ -6,7 +6,7 @@
 const {DateTime} = require("luxon");
 const {translate} = require("./util.js");
 const zencashjs = require("zencashjs");
-const {rpcCall, importPKinSN, cleanCommandString, rpcCallResult, splitCommandString, getZaddressBalance, sendFromOrToZaddress, getOperationStatus, getOperationResult, importAllZAddressesFromSNtoArizen, pingSecureNodeRPC} = require("./rpc.js");
+const {rpcCall, importPKinSN, cleanCommandString, rpcCallResult, splitCommandString, getZaddressBalance, sendFromOrToZaddress, getOperationStatus, getOperationResult, importAllZAddressesFromSNtoArizen, pingSecureNodeRPC, getSecureNodeTaddressOrGenerate,getTaddressBalance} = require("./rpc.js");
 const {zenextra} = require("./zenextra.js");
 
 const userWarningImportPK = "A new address and a private key will be imported. Your previous back-ups do not include the newly imported address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
@@ -481,6 +481,12 @@ function showRpcDialog() {
                 resultRPC.innerHTML = JSON.stringify(output);
                 statusRPC.innerHTML = status;
 
+                //getSecureNodeTaddressOrGenerate();
+
+                getTaddressBalance("znhXaTGLtCmCKimijsxaAb2xAiqWPtZHAk9",function(balance){
+                  console.log(balance);
+                })
+
                 let zAddrTest = "zceFiCZE6FtRunp6WyFMFMWDvsTryp7kuGH97BrgGyMPNuga272A4PSc7Tfya4oewCP7JYnF9RrT3tqamLdostU3fz8sDoC";
                 let spendingKey = "SKxqUn1d6mjoF4PKBizLRnU6RStXgkejZkwYzCcqrvz3WDpwPrgw";
                 let secretKey = "05b3be07727ed354c23720e917c56663741bde4c8e654c538de0f19ccc3b8276";
@@ -494,23 +500,23 @@ function showRpcDialog() {
                 // SKxtHJsneoLByrwME9Nh4cd4AvYLNK9jJkAnB3AHNW794udD1qpx
                 // zcTPZR8Hqz2ZcStwMJju9L4VBHW7YWmNyL6tDAT4eVmzmxLaG7h4QmqUXfmrjz8twizH4piDGiRYJRZ1bhHhT5gFL6TKsQZ
 
-                let z_secretKey = zencashjs.zaddress.mkZSecretKey('a');
-
-                console.log(z_secretKey);
-
-                // Spending key (this is what you import into your wallet)
-                let spendingKey_new = zencashjs.zaddress.zSecretKeyToSpendingKey(z_secretKey);
-                console.log(spendingKey_new);
-
-                // Paying key
-                let a_pk = zencashjs.zaddress.zSecretKeyToPayingKey(z_secretKey);
-
-                // Transmission key
-                let pk_enc = zencashjs.zaddress.zSecretKeyToTransmissionKey(z_secretKey);
-
-                let Zaddress = zencashjs.zaddress.mkZAddress(a_pk, pk_enc);
-
-                console.log(Zaddress);
+                // let z_secretKey = zencashjs.zaddress.mkZSecretKey('a');
+                //
+                // console.log(z_secretKey);
+                //
+                // // Spending key (this is what you import into your wallet)
+                // let spendingKey_new = zencashjs.zaddress.zSecretKeyToSpendingKey(z_secretKey);
+                // console.log(spendingKey_new);
+                //
+                // // Paying key
+                // let a_pk = zencashjs.zaddress.zSecretKeyToPayingKey(z_secretKey);
+                //
+                // // Transmission key
+                // let pk_enc = zencashjs.zaddress.zSecretKeyToTransmissionKey(z_secretKey);
+                //
+                // let Zaddress = zencashjs.zaddress.mkZAddress(a_pk, pk_enc);
+                //
+                // console.log(Zaddress);
 
             });
         });

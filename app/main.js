@@ -1659,7 +1659,7 @@ ipcMain.on("get-address-object", (event,fromAddress) => {
     event.returnValue = addrObjs;
 });
 
-ipcMain.on("generate-Z-address", function (event, nameAddress,pkZaddress,zAddress) {
+ipcMain.on("DB-insert-address", function (event, nameAddress,pkZaddress,zAddress) {
     let resp = {
         response: "ERR",
         msg: "not logged in"

@@ -91,20 +91,24 @@ function rpcCallResult(cmd, paramsUsed, callback) {
 }
 
 function importPKinSN(pk, address, callback) {
-    let cmd;
-    if (zenextra.isZeroAddr(address)) {
-        cmd = "z_importkey";
-        if (zenextra.isPK(pk)) {
-            pk = zencashjs.zaddress.zSecretKeyToSpendingKey(pk);
+    if (pk === undefined){
+        callback();
+    } else {
+        let cmd;
+        if (zenextra.isZeroAddr(address)) {
+            cmd = "z_importkey";
+            if (zenextra.isPK(pk)) {
+                pk = zencashjs.zaddress.zSecretKeyToSpendingKey(pk);
+            }
         }
-    }
-    if (zenextra.isTransaparentAddr(address)) {
-        cmd = "importprivkey";
-        if (!zenextra.isWif(pk)) {
-            pk = zencashjs.address.privKeyToWIF(pk);
+        if (zenextra.isTransaparentAddr(address)) {
+            cmd = "importprivkey";
+            if (!zenextra.isWif(pk)) {
+                pk = zencashjs.address.privKeyToWIF(pk);
+            }
         }
+        rpcCallResult(cmd, [pk, "no"], callback);
     }
-    rpcCallResult(cmd, [pk, "no"], callback);
 }
 
 function help(callback) {
@@ -130,35 +134,81 @@ function pingSecureNodeRPC(callback) {
 function getNewZaddressPK(nameAddress) {
     const cmd = "z_getnewaddress";
     rpcCallResult(cmd, [], function (output, status) {
-        zAddress = output;
+        let zAddress = output;
         const newCmd = "z_exportkey";
         let paramsUsed = [zAddress];
         rpcCallResult(newCmd, paramsUsed, function (output, status) {
             let spendingKey = output;
             let pkZaddress = zenextra.spendingKeyToSecretKey(spendingKey);
-            ipcRenderer.send("generate-Z-address", nameAddress, pkZaddress, zAddress);
+            ipcRenderer.send("DB-insert-address", nameAddress, pkZaddress, zAddress);
         });
     });
 }
 
+function getNewTaddressPK(nameAddress) {
+    const cmd = "getnewaddress";
+    rpcCallResult(cmd, [], function (output, status) {
+        let tAddress = output;
+        const newCmd = "dumpprivkey";
+        let paramsUsed = [taddress];
+        rpcCallResult(newCmd, paramsUsed, function (output, status) {
+            let wif = output;
+            let pkTaddress = zencashjs.address.WIFToPrivKey(wif);
+            ipcRenderer.send("DB-insert-address", nameAddress, pkTaddress, tAddress);
+        });
+    });
+}
+
+function getNewTaddressWatchOnly(nameAddress, callback) {
+    const cmd = "getnewaddress";
+    rpcCallResult(cmd, [], function (output, status) {
+        let tAddress = output;
+        let pkTaddress = "watchOnlyAddrr"
+        ipcRenderer.send("DB-insert-address", nameAddress, pkTaddress, tAddress);
+        callback(tAddress)
+        });
+}
+
+function getSecureNodeTaddressOrGenerate(callback){
+  const cmd = "listaddresses"; // listaddresses // getnewaddress
+  rpcCallResult(cmd, [], function (output, status) {
+    console.log(output);
+    let theT;
+    let nameAddress = "My Watch Only Secure Node addr";
+    let pkTaddress = "watchOnlyAddrr";
+
+    if (output.length === 0){
+      getNewTaddressWatchOnly(nameAddress,calback)
+    } else {
+      theT = output[0];
+      let resp = ipcRenderer.sendSync("check-if-address-in-wallet", theT);
+      let addrExists = resp.exist;
+
+      if (addrExists){
+          callback(theT);
+      } else {
+          ipcRenderer.send("DB-insert-address", nameAddress, pkTaddress, theT);
+          callback(theT);
+      }
+    }
+      //let tAddress = output;
+      //let pkTaddress = "watchOnlyAddrr"
+      //ipcRenderer.send("DB-insert-address", nameAddress, pkTaddress, tAddress);
+      //callback(tAddress)
+      });
+}
+
+
+//
 function getOperationStatus(opid) {
     const cmd = "z_getoperationstatus";
     let paramsUsed = [[opid]];
     rpcCallResult(cmd, paramsUsed, function (output, status) {
-        let statusTx = output; //console.log(JSON.stringify(statusTx[0]));        
+        let statusTx = output; //console.log(JSON.stringify(statusTx[0]));
     });
 }
 
-// Not working - May be deleted
-// function getOperationResult(opid){
-//     const cmd = "z_getoperationresult";
-//     let paramsUsed = [ [opid]];
-//     rpcCallResult(cmd,paramsUsed,function(output,status){
-//       let statusTx = output;
-//       console.log(JSON.stringify(statusTx[0]));
-//       console.log(status);
-//     });
-// }
+//
 
 function getZaddressBalance(pk, zAddress, callback) {
     importPKinSN(pk, zAddress, function () {
@@ -175,6 +225,19 @@ function getZaddressBalance(pk, zAddress, callback) {
     });
 }
 
+function getTaddressBalance(address, callback) {
+    const cmd = "z_getbalance";
+    let paramsUsed = [address];
+    rpcCallResult(cmd, paramsUsed, function (output, status) {
+        if (status === "ok") {
+            balance = parseFloat(output).toFixed(8);
+            callback(balance);
+        } else {
+            console.log(status);
+        }
+    });
+}
+
 function updateAllZBalances() {
     const zAddrObjs = ipcRenderer.sendSync("get-all-Z-addresses");
     for (const addrObj of zAddrObjs) {
@@ -184,6 +247,8 @@ function updateAllZBalances() {
         })
     }
 }
+
+//
 
 function listAllZAddresses(callback) {
     const cmd = "z_listaddresses";
@@ -209,14 +274,34 @@ function importAllZAddressesFromSNtoArizen() {
         }
     });
 }
+//
+function listAllTAddresses(callback) {
+    const cmd = "listaddresses";
+    rpcCallResult(cmd, [], callback);
+}
 
+function getTAddressOrCreateInSecureNode(callback) {
+    listAllTAddresses(function (output, status) {
+        if (output === undefined || output.length == 0) {
+           // get new Address
+           getNewTaddressWatchOnly("My SN watch Only addr", function(tAddress){
+               callback(tAddress)
+           });
+        } else {
+            callback(output[0])
+        }
+
+    });
+
+}
+//
 function sendFromOrToZaddress(fromAddressPK, fromAddress, toAddress, amount, fee) {
     importPKinSN(fromAddressPK, fromAddress, function () {
         let minconf = 1;
         let amounts = [{"address": toAddress, "amount": amount}]; //,"memo":"memo"
         let cmd = "z_sendmany";
         if (zenextra.isTransaparentAddr(fromAddress)) {
-            cmd = "sendmany";
+            cmd = "z_sendmany";
         }
 
         let paramsUsed = [fromAddress, amounts, minconf, fee];
@@ -251,6 +336,8 @@ module.exports = {
     updateAllZBalances: updateAllZBalances,
     importAllZAddressesFromSNtoArizen: importAllZAddressesFromSNtoArizen,
     importPKinSN: importPKinSN,
-    pingSecureNodeRPC: pingSecureNodeRPC
+    pingSecureNodeRPC: pingSecureNodeRPC,
+    getSecureNodeTaddressOrGenerate: getSecureNodeTaddressOrGenerate,
+    getTaddressBalance: getTaddressBalance
     //getOperationResult: getOperationResult
 };
