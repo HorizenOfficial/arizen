@@ -591,25 +591,7 @@ function updateDepositQrcode(qrcodeDelay = 0) {
     }, qrcodeDelay);
 }
 
-// function createTimeout(timeoutHandler, delay) {
-//     var timeoutId;
-//     timeoutId = setTimeout(timeoutHandler, delay);
-//     return {
-//         clear: function() {
-//             clearTimeout(timeoutId);
-//         },
-//         trigger: function() {
-//             clearTimeout(timeoutId);
-//             return timeoutHandler();
-//         }
-//     };
-// }
-
-// timeout.clear();
-// timeout.trigger();
-
 function checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo) {
-    console.log("Intermediate function entered........");
     getTaddressBalance(tIntermediateAddress, function(balance){
         if(balance>= amount){
             // send from T to Z
@@ -617,8 +599,8 @@ function checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo) {
             sendFromOrToZaddress(undefined, tIntermediateAddress, toAddr, amount, feeTwo)
 
         } else {
-            // then setTimeout() again
-            console.log("Will check again in 0.5 minutes......");
+            // setTimeout() again
+            console.log("Will check again in 2 minutes.");
             setTimeout( () => checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo), 30000) // 2 mins
         }
     })

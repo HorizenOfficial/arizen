@@ -355,7 +355,7 @@ function showSettingsDialog() {
         inputDomainFrontingUrl.value = settings.domainFrontingUrl || "https://www.google.com";
         inputDomainFrontingHost.value = settings.domainFrontingHost || "zendhide.appspot.com";
         inputFiatCurrency.value = settings.fiatCurrency || "USD";
-      
+
         inputSecureNodeFQDN.value = settings.secureNodeFQDN;
         inputSecureNodePort.value = settings.secureNodePort || 8231;
         inputSecureNodeUsername.value = settings.secureNodeUsername || "";
@@ -415,10 +415,8 @@ function showSettingsDialog() {
 }
 
 function showImportSinglePKDialog() {
-    // FIXME: unused response
     let response = -1;
     response = ipcRenderer.sendSync("renderer-show-message-box", tr("warmingMessages.userWarningImportPK", userWarningImportPK), [tr("warmingMessages.userWarningIUnderstand", "I understand")]);
-    console.log(response);
     if (response === 0) {
         showDialogFromTemplate("importSinglePrivateKeyDialogTemplate", dialog => {
             const importButton = dialog.querySelector(".newPrivateKeyImportButton");
@@ -429,9 +427,7 @@ function showImportSinglePKDialog() {
                 let pk = privateKeyInput.value;
                 let importT = dialog.querySelector(".importTorZgetT").checked;
                 let importZ = dialog.querySelector(".importTorZgetZ").checked;
-                let checkAddr;
-                // console.log(importT);
-                // console.log(importZ);
+                let checkAddr;                
 
                 if ((zenextra.isPKorWif(pk) === true && importT) || (zenextra.isPKorSpendingKey(pk) === true && importZ)) {
                     console.log(name);
@@ -454,8 +450,6 @@ function showImportSinglePKDialog() {
                         let pk_enc = zencashjs.zaddress.zSecretKeyToTransmissionKey(secretKey);
                         checkAddr = zencashjs.zaddress.mkZAddress(a_pk, pk_enc);
                     }
-
-                    // console.log(checkAddr);
 
                     let resp = ipcRenderer.sendSync("check-if-address-in-wallet", checkAddr);
                     let addrExists = resp.exist;
@@ -482,14 +476,13 @@ function showRpcDialog() {
         const inputCommandRPC = dialog.querySelector(".giveCommandRPC");
         const statusRPC = dialog.querySelector(".statusRPC");
 
-        const connectSshTunButton = dialog.querySelector(".connectSSHtun");
+        const testFunctionButton = dialog.querySelector(".testFunction");
 
 
-        connectSshTunButton.addEventListener("click", async function () {
-            const {openATunnel} = require("./ssh_tunneling.js");
-            //const sshServer = openATunnel().then(function(sshServer){srv = sshServer;});
-            let sshServer = await openATunnel();
-            console.log(sshServer);
+        testFunctionButton.addEventListener("click", async function () {
+            // Put here what you want to test...
+
+
         });
 
         testRpcButton.addEventListener("click", () => {
@@ -509,44 +502,6 @@ function showRpcDialog() {
             rpcCallResult(method, params, function (output, status) {
                 resultRPC.innerHTML = JSON.stringify(output);
                 statusRPC.innerHTML = status;
-
-                //getSecureNodeTaddressOrGenerate();
-
-                getTaddressBalance("znhXaTGLtCmCKimijsxaAb2xAiqWPtZHAk9",function(balance){
-                  console.log(balance);
-                })
-
-                let zAddrTest = "zceFiCZE6FtRunp6WyFMFMWDvsTryp7kuGH97BrgGyMPNuga272A4PSc7Tfya4oewCP7JYnF9RrT3tqamLdostU3fz8sDoC";
-                let spendingKey = "SKxqUn1d6mjoF4PKBizLRnU6RStXgkejZkwYzCcqrvz3WDpwPrgw";
-                let secretKey = "05b3be07727ed354c23720e917c56663741bde4c8e654c538de0f19ccc3b8276";
-
-                let pk = "c9663b4dae59cf8ddf85027bd77681e0611c9b92aeec633b041d4826e5dc65ad";
-                let wif = "5KLz4HMvifUhNT4XExopNAn5PpZ8ZrkQmqUcM7VAjCgTpPEtWCg"
-                // t address Arizen zngGeznkvBo58fkK5iVtNxhpFRKk6GZBaVc
-                // t address zen cli znnhQdt6i43GciJCgpPYRfyxwoV8EoMZPJc
-
-                // 0c10a61a669bc4a51000c4c74ff58c151912889891089f7bae5e4994a73af7a8
-                // SKxtHJsneoLByrwME9Nh4cd4AvYLNK9jJkAnB3AHNW794udD1qpx
-                // zcTPZR8Hqz2ZcStwMJju9L4VBHW7YWmNyL6tDAT4eVmzmxLaG7h4QmqUXfmrjz8twizH4piDGiRYJRZ1bhHhT5gFL6TKsQZ
-
-                // let z_secretKey = zencashjs.zaddress.mkZSecretKey('a');
-                //
-                // console.log(z_secretKey);
-                //
-                // // Spending key (this is what you import into your wallet)
-                // let spendingKey_new = zencashjs.zaddress.zSecretKeyToSpendingKey(z_secretKey);
-                // console.log(spendingKey_new);
-                //
-                // // Paying key
-                // let a_pk = zencashjs.zaddress.zSecretKeyToPayingKey(z_secretKey);
-                //
-                // // Transmission key
-                // let pk_enc = zencashjs.zaddress.zSecretKeyToTransmissionKey(z_secretKey);
-                //
-                // let Zaddress = zencashjs.zaddress.mkZAddress(a_pk, pk_enc);
-                //
-                // console.log(Zaddress);
-
             });
         });
     });
@@ -626,30 +581,6 @@ function translateCurrentPage() {
         return;
     }
     querySelectorAllDeep("[data-tr]").forEach(node => node.textContent = tr(node.dataset.tr, node.textContent));
-}
-
-function isWif(pk) {
-    let isWif = true;
-    try {
-        let pktmp = zencashjs.address.WIFToPrivKey(pk);
-    } catch (err) {
-        isWif = false;
-    }
-    querySelectorAllDeep("[data-tr]").forEach(node => node.textContent = tr(node.dataset.tr, node.textContent));
-}
-
-function isPK(pk) {
-    let isPK = true;
-    try {
-        let pktmp = zencashjs.address.privKeyToPubKey(pk);
-    } catch (err) {
-        isPK = false;
-    }
-    return isPK
-}
-
-function isPKorWif(pk) {
-    return (isWif(pk) || isPK(pk))
 }
 
 //------------------------------------------------

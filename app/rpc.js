@@ -38,7 +38,7 @@ async function rpcCallCore(methodUsed, paramsUsed, callbackFunction) {
 
     client.call({
         method: methodUsed,
-        params: paramsUsed,//Will be [] by default
+        params: paramsUsed, //Will be [] by default
         id: 'rpcTest', //Optional. By default it's a random id
         jsonrpc: '1.0', //Optional. By default it's 2.0
         protocol: 'https', //Optional. Will be http by default
@@ -300,10 +300,6 @@ function sendFromOrToZaddress(fromAddressPK, fromAddress, toAddress, amount, fee
         let minconf = 1;
         let amounts = [{"address": toAddress, "amount": amount}]; //,"memo":"memo"
         let cmd = "z_sendmany";
-        if (zenextra.isTransaparentAddr(fromAddress)) {
-            cmd = "z_sendmany";
-        }
-
         let paramsUsed = [fromAddress, amounts, minconf, fee];
         console.log(paramsUsed);
         rpcCallResult(cmd, paramsUsed, function (output, status) {
