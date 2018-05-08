@@ -10,6 +10,7 @@ const {rpcCall, importPKinSN, cleanCommandString, rpcCallResult, splitCommandStr
 const {zenextra} = require("./zenextra.js");
 
 const userWarningImportPK = "A new address and a private key will be imported. Your previous back-ups do not include the newly imported address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
+const userWarningImportPkUserZendRescan = "The balance of the Z address you imported will be visible after you rescan the blockchain. Please run 'zen-cli stop && sleep 8 && zend -rescan' in your secure node (linux)."
 
 function assert(condition, message) {
     if (!condition) {
@@ -427,7 +428,7 @@ function showImportSinglePKDialog() {
                 let pk = privateKeyInput.value;
                 let importT = dialog.querySelector(".importTorZgetT").checked;
                 let importZ = dialog.querySelector(".importTorZgetZ").checked;
-                let checkAddr;                
+                let checkAddr;
 
                 if ((zenextra.isPKorWif(pk) === true && importT) || (zenextra.isPKorSpendingKey(pk) === true && importZ)) {
                     console.log(name);
@@ -459,6 +460,9 @@ function showImportSinglePKDialog() {
                     } else {
                         ipcRenderer.send("import-single-key", name, pk, importT);
                         alert(tr("warmingMessages.userWarningImportPK", userWarningImportPK));
+                        if (importZ) {
+                            alert(tr("warmingMessages.userWarningImportPkUserZendRescan", userWarningImportPkUserZendRescan));
+                        }
                         dialog.close();
                     }
                 } else {
@@ -481,6 +485,31 @@ function showRpcDialog() {
 
         testFunctionButton.addEventListener("click", async function () {
             // Put here what you want to test...
+
+            const node_ssh = require('node-ssh');
+            let ssh = new node_ssh();
+
+            await ssh.connect({
+              host: settings.secureNodeFQDN,
+              username: settings.sshUsername,
+              password: settings.sshPassword
+              //privateKey: '../id_rsa.npm',
+              //passphrase: '199028'
+            })
+            // .then(function() {
+            //     console.log(ssh);
+            //     //let result = await ssh.execCommand('ls')
+            //
+            //     ssh.execCommand('pwd').then(function(result){
+            //       console.log(result);
+            //     })
+            //
+            // })
+
+               let result = await ssh.execCommand('zen-cli stop && sleep 8 && zend -rescan');
+               console.log(result);
+               console.log(JSON.stringify(result));
+
 
 
         });
