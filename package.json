@@ -1,6 +1,6 @@
 {
   "name": "Arizen",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "Arizen is light API wallet for ZenCash with localy stored and encrypted files.",
   "main": "app/main.js",
   "scripts": {
@@ -41,24 +41,24 @@
       "email": "lukas@zensystem.io"
     },
     {
+      "name": "@woky",
+      "email": "woky@zensystem.io"
+    },
+    {
+      "name": "@gsfakianakis",
+      "email": "georgios@zensystem.io"
+    },
+    {
+      "name": "@Tigger",
+      "email": "kamila@zensystem.io"
+    },
+    {
       "name": "@nonghost",
       "email": "neduchal@gmail.com"
     },
     {
       "name": "@k4chn1k",
       "email": "k4chn1k@gmail.com"
-    },
-    {
-      "name": "@woky",
-      "email": "nechtom@gmail.com"
-    },
-    {
-      "name": "@gsfakianakis",
-      "email": "g.e.sfakianakis@gmail.com"
-    },
-    {
-      "name": "@Tigger",
-      "email": "-"
     }
   ],
   "license": "MIT",
@@ -108,7 +108,7 @@
     "bitcoinjs-lib": "^3.3.1",
     "electron-debug": "^1.5.0",
     "electron-download": "^4.1.0",
-    "electron-packager": "^11.2.0",
+    "electron-packager": "^12.0.1",
     "electron-simple-updater": "^1.2.3",
     "electron-tabs": "^0.9.1",
     "errors": "^0.3.0",
@@ -128,15 +128,15 @@
     "deepmerge": "^2.0.1",
     "devtron": "^1.4.0",
     "electron": "^2.0.0-beta.6",
-    "electron-builder": "20.8.2",
-    "electron-builder-squirrel-windows": "20.8.0",
-    "flow-bin": "^0.69.0",
+    "electron-builder": "20.10.0",
+    "electron-builder-squirrel-windows": "20.11.0",
+    "flow-bin": "^0.71.0",
     "json-file-plus": "^3.3.0",
     "yargs": "^11.0.0"
   },
   "optionalDependencies": {
     "electron-installer-debian": "^0.8.1",
-    "electron-installer-dmg": "^0.2.1",
+    "electron-installer-dmg": "^1.0.0",
     "electron-installer-windows": "^1.0.2"
   }
 }

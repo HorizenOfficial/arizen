@@ -3,10 +3,8 @@
 [![Build status][travis-img]][travis-url]
 [![Code Climate][codeclimate-img]][codeclimate-url]
 
-# Arizen
-Arizen is ZenCash light wallet.
-
 # User Manuals
+- v1.1.6: [Arizen v1.1.6 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.6/Arizen.v1.1.6.Wallet.User.Manual.pdf)
 - v1.1.5: [Arizen v1.1.5 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.5/Arizen.v1.1.5.Wallet.User.Manual.pdf)
 - v1.1.4: [Arizen v1.1.4 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.4/Arizen.v1.1.4.Wallet.User.Manual.pdf)
 - v1.1.3: [Arizen v1.1.3 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.3/Arizen.v1.1.3.Wallet.User.Manual.pdf)
@@ -14,6 +12,13 @@ Arizen is ZenCash light wallet.
 - v1.0.0: [Arizen v1.0.0 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.0.0/Arizen.Wallet.User.Manual.pdf)
 
 # Version History
+
+## v1.1.6
+- [x] Automatic logoff timeout can be now enabled and set in Settings (minimum 60s of inactivity).
+- [x] Domain Fronting servers can be set in Settings.
+- [x] User now can change password - from File menu (this password doesn't need to meet any criteria). Password will be changed only in last `.awd` file.
+- [x] Fixed: rounding issue.
+- [x] Travis CI support enabled for the faster development cycle.
 
 ## v1.1.5
 - [x] Domain fronting support.

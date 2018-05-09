@@ -29,7 +29,7 @@ const userWarningExportWalletUnencrypted = "You are going to export an UNENCRYPT
 const userWarningExportWalletEncrypted = "You are going to export an ENCRYPTED wallet and your private keys will be encrypted. That means that in order to access your private keys you need to know the corresponding username and password. In case you don't know them you cannot control the ZENs that are controled by these private keys. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
 
 // Press F12 to open the DevTools. See https://github.com/sindresorhus/electron-debug.
-// require("electron-debug")();
+require("electron-debug")();
 
 // Uncomment if you want to run in production
 // process.env.NODE_ENV !== "production"
@@ -40,7 +40,7 @@ function attachUpdaterHandlers() {
         dialog.showMessageBox({
             type: "info",
             title: "Update is here!",
-            message: `Arizen will be closed and the new ${version} version will be installed. When the update is complete, the Arizen wallet will be reopened itself.`
+            message: `Arizen will close and the new ${version} version will be installed. When the update is complete, the Arizen wallet will reopen.`
         }, function () {
             // application forces to update itself
             updater.quitAndInstall();
@@ -65,24 +65,25 @@ let userInfo = {
 };
 
 const defaultSettings = {
-    notifications: 1,
+    txHistory: 50,
+    lang: "en",
     explorerUrl: "https://explorer.zensystem.io",
     apiUrls: [
         "https://explorer.zensystem.io/insight-api-zen",
         "http://explorer.zenmine.pro/insight-api-zen"
     ],
-    txHistory: 50,
     fiatCurrency: "USD",
-    lang: "en",
-    domainFronting: false
+    notifications: 1,
+    domainFronting: false,
+    domainFrontingUrl: "https://www.google.com",
+    domainFrontingHost: "zendhide.appspot.com",
+    autoLogOffEnable: 0
 };
+
 let settings = defaultSettings;
 let langDict;
 
 let axiosApi;
-
-const DOMAIN_FRONTING_PUBLIC_URL = "https://www.google.com";
-const DOMAIN_FRONTING_PRIVATE_HOST = "zendhide.appspot.com";
 
 const dbStructWallet = "CREATE TABLE wallet (id INTEGER PRIMARY KEY AUTOINCREMENT, pk TEXT, addr TEXT UNIQUE, lastbalance REAL, name TEXT);";
 const dbStructSettings = "CREATE TABLE settings (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE, value TEXT);";
@@ -113,11 +114,13 @@ function getWalletPath() {
 }
 
 function storeFile(filename, data) {
-    fs.writeFileSync(filename, data, function (err) {
+    const filenameTmp = filename + ".bak";
+    fs.writeFileSync(filenameTmp, data, function (err) {
         if (err) {
             return console.log(err);
         }
     });
+    fs.renameSync(filenameTmp, filename);
 }
 
 function encryptWallet(login, password, inputBytes) {
@@ -418,9 +421,9 @@ function setSettings(newSettings) {
 
     if (settings.domainFronting) {
         axiosApi = axios.create({
-            baseURL: DOMAIN_FRONTING_PUBLIC_URL,
+            baseURL: settings.domainFrontingUrl,
             headers: {
-                "Host": DOMAIN_FRONTING_PRIVATE_HOST
+                "Host": settings.domainFrontingHost
             },
             timeout: 10000,
         });
@@ -722,6 +725,24 @@ function importPKs() {
     });
 }
 
+function changeWalletPasswordBegin() {
+    mainWindow.webContents.send("change-wallet-password-begin", userInfo.pass);
+}
+
+function changeWalletPasswordContinue(newPassword) {
+    let result = {};
+    try {
+        userInfo.pass = newPassword;
+        saveWallet();
+        result.success = true;
+    }
+    catch (e) {
+        result.success = false;
+        result.error = e;
+    }
+    mainWindow.webContents.send("change-wallet-password-finish", JSON.stringify(result));
+}
+
 function updateMenuForDarwin(template) {
     if (os.platform() === "darwin") {
         template.unshift({
@@ -799,7 +820,7 @@ function createEditSubmenu() {
 function createHelpSubmenu() {
     return [
         {
-            label: tr("menu.helpSubmenu.arizenManual", "Arizen Manual"),
+            label: tr("menu.helpSubmenu.arizenManual", "User Manual"),
             accelerator: "CmdOrCtrl+H",
             click: () => {
                 require("electron").shell.openExternal("https://github.com/ZencashOfficial/arizen#user-manuals");
@@ -863,6 +884,13 @@ function updateMenuAtLogin() {
                     label: tr("menu.importPrivateKeys", "Import private keys"),
                     click: function () {
                         importPKs();
+                    }
+                },
+                { type: "separator" },
+                {
+                    label: tr("menu.changeWalletPassword", "Change wallet password"),
+                    click() {
+                        changeWalletPasswordBegin();
                     }
                 },
                 { type: "separator" },
@@ -1189,6 +1217,10 @@ ipcMain.on("check-if-z-address-in-wallet", function(event,zAddress){
       if (k.addr === zAddress) {exist = true ; break;}
     }
     event.returnValue = {exist: exist, result: result};
+});
+
+ipcMain.on("change-wallet-password-continue", (event, newPassword) => {
+    changeWalletPasswordContinue(newPassword);
 });
 
 function checkSendParameters(fromAddresses, toAddresses, fee) {

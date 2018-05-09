@@ -10,6 +10,7 @@ branches:
   only:
     # release tags
     - /^v\d+\.\d+\.\d+.*$/
+    - development
     - master
 env:
   global:
