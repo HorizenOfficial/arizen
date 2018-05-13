@@ -1,16 +1,21 @@
+// @flow
+/*jshint esversion: 6 */
+/*jslint node: true */
+"use strict";
+
 const {ipcRenderer} = require("electron");
 const {openTunnel} = require("./ssh_tunneling.js");
 const {zenextra} = require("./zenextra.js");
 const zencashjs = require("zencashjs");
 
-var sshServer;
-var howManyUseSSH;
+let sshServer;
+let howManyUseSSH;
 
 function getRpcClientSecureNode() {
-    const rpc = require('node-json-rpc2');
+    const rpc = require("node-json-rpc2");
     let options = {
         port: settings.secureNodePort,
-        host: "127.0.0.1",//settings.secureNodeFQDN,
+        host: "127.0.0.1", // settings.secureNodeFQDN,
         user: settings.secureNodeUsername,
         password: settings.secureNodePassword,
         protocol: "http",
@@ -38,10 +43,10 @@ async function rpcCallCore(methodUsed, paramsUsed, callbackFunction) {
 
     client.call({
         method: methodUsed,
-        params: paramsUsed, //Will be [] by default
-        id: 'rpcTest', //Optional. By default it's a random id
-        jsonrpc: '1.0', //Optional. By default it's 2.0
-        protocol: 'https', //Optional. Will be http by default
+        params: paramsUsed, // Will be [] by default
+        id: "rpcTest", // Optional. By default it's a random id
+        jsonrpc: "1.0", // Optional. By default it's 2.0
+        protocol: "https", // Optional. Will be http by default
     }, function (err, res) {
         setTimeout(function () {
             howManyUseSSH = howManyUseSSH - 1;
@@ -84,14 +89,15 @@ function rpcCallResult(cmd, paramsUsed, callback) {
             output = err;
             status = "error";
         } else {
-            output = (res.result); //JSON.stringify
+            // JSON.stringify
+            output = (res.result);
         }
         callback(output, status)
     });
 }
 
 function importPKinSN(pk, address, callback) {
-    if (pk === undefined){
+    if (pk === undefined) {
         callback();
     } else {
         let cmd;
@@ -138,13 +144,14 @@ function getNewZaddressPK(nameAddress) {
         const newCmd = "z_exportkey";
         let paramsUsed = [zAddress];
         rpcCallResult(newCmd, paramsUsed, function (output, status) {
-            let spendingKey = output;
-            let pkZaddress = zenextra.spendingKeyToSecretKey(spendingKey);
+            // let spendingKey = output;
+            let pkZaddress = zenextra.spendingKeyToSecretKey(output);
             ipcRenderer.send("DB-insert-address", nameAddress, pkZaddress, zAddress);
         });
     });
 }
 
+// FIXME: unused?
 function getNewTaddressPK(nameAddress) {
     const cmd = "getnewaddress";
     rpcCallResult(cmd, [], function (output, status) {
@@ -152,8 +159,8 @@ function getNewTaddressPK(nameAddress) {
         const newCmd = "dumpprivkey";
         let paramsUsed = [taddress];
         rpcCallResult(newCmd, paramsUsed, function (output, status) {
-            let wif = output;
-            let pkTaddress = zencashjs.address.WIFToPrivKey(wif);
+            // let wif = output;
+            let pkTaddress = zencashjs.address.WIFToPrivKey(output);
             ipcRenderer.send("DB-insert-address", nameAddress, pkTaddress, tAddress);
         });
     });
@@ -163,52 +170,51 @@ function getNewTaddressWatchOnly(nameAddress, callback) {
     const cmd = "getnewaddress";
     rpcCallResult(cmd, [], function (output, status) {
         let tAddress = output;
-        let pkTaddress = "watchOnlyAddrr"
+        let pkTaddress = "watchOnlyAddrr";
         ipcRenderer.send("DB-insert-address", nameAddress, pkTaddress, tAddress);
         callback(tAddress)
-        });
+    });
 }
 
-function getSecureNodeTaddressOrGenerate(callback){
-  const cmd = "listaddresses"; // listaddresses // getnewaddress
-  rpcCallResult(cmd, [], function (output, status) {
-    console.log(output);
-    let theT;
-    let nameAddress = "My Watch Only Secure Node addr";
-    let pkTaddress = "watchOnlyAddrr";
+function getSecureNodeTaddressOrGenerate(callback) {
+    // listaddresses
+    // getnewaddress
+    const cmd = "listaddresses";
+    rpcCallResult(cmd, [], function (output, status) {
+        console.log(output);
+        let theT;
+        let nameAddress = "My Watch Only Secure Node addr";
+        let pkTaddress = "watchOnlyAddrr";
 
-    if (output.length === 0){
-      getNewTaddressWatchOnly(nameAddress,calback)
-    } else {
-      theT = output[0];
-      let resp = ipcRenderer.sendSync("check-if-address-in-wallet", theT);
-      let addrExists = resp.exist;
+        if (output.length === 0) {
+            getNewTaddressWatchOnly(nameAddress, calback)
+        } else {
+            theT = output[0];
+            let resp = ipcRenderer.sendSync("check-if-address-in-wallet", theT);
+            let addrExists = resp.exist;
 
-      if (addrExists){
-          callback(theT);
-      } else {
-          ipcRenderer.send("DB-insert-address", nameAddress, pkTaddress, theT);
-          callback(theT);
-      }
-    }
-      //let tAddress = output;
-      //let pkTaddress = "watchOnlyAddrr"
-      //ipcRenderer.send("DB-insert-address", nameAddress, pkTaddress, tAddress);
-      //callback(tAddress)
-      });
+            if (addrExists) {
+                callback(theT);
+            } else {
+                ipcRenderer.send("DB-insert-address", nameAddress, pkTaddress, theT);
+                callback(theT);
+            }
+        }
+        //let tAddress = output;
+        //let pkTaddress = "watchOnlyAddrr"
+        //ipcRenderer.send("DB-insert-address", nameAddress, pkTaddress, tAddress);
+        //callback(tAddress)
+    });
 }
 
-
-//
 function getOperationStatus(opid) {
     const cmd = "z_getoperationstatus";
     let paramsUsed = [[opid]];
     rpcCallResult(cmd, paramsUsed, function (output, status) {
-        let statusTx = output; //console.log(JSON.stringify(statusTx[0]));
+        let statusTx = output;
+        //console.log(JSON.stringify(statusTx[0]));
     });
 }
-
-//
 
 function getZaddressBalance(pk, zAddress, callback) {
     importPKinSN(pk, zAddress, function () {
@@ -216,7 +222,7 @@ function getZaddressBalance(pk, zAddress, callback) {
         let paramsUsed = [zAddress];
         rpcCallResult(cmd, paramsUsed, function (output, status) {
             if (status === "ok") {
-                balance = parseFloat(output).toFixed(8);
+                let balance = parseFloat(output).toFixed(8);
                 callback(balance);
             } else {
                 console.log(status);
@@ -230,7 +236,7 @@ function getTaddressBalance(address, callback) {
     let paramsUsed = [address];
     rpcCallResult(cmd, paramsUsed, function (output, status) {
         if (status === "ok") {
-            balance = parseFloat(output).toFixed(8);
+            let balance = parseFloat(output).toFixed(8);
             callback(balance);
         } else {
             console.log(status);
@@ -248,8 +254,6 @@ function updateAllZBalances() {
     }
 }
 
-//
-
 function listAllZAddresses(callback) {
     const cmd = "z_listaddresses";
     rpcCallResult(cmd, [], callback);
@@ -259,8 +263,8 @@ function getPKofZAddress(zAddr, callback) {
     const cmd = "z_exportkey";
     let paramsUsed = [zAddr];
     rpcCallResult(cmd, paramsUsed, function (output, status) {
-        let spendingKey = output;
-        callback(spendingKey, status)
+        // let spendingKey = output;
+        callback(output, status)
     });
 }
 
@@ -269,54 +273,48 @@ function importAllZAddressesFromSNtoArizen() {
         for (const addr of output) {
             getPKofZAddress(addr, function (spendingKey, status) {
                 let pk = zenextra.spendingKeyToSecretKey(spendingKey);
-                ipcRenderer.send("import-single-key", "My SN Z addr", pk, isT = false);
+                let isT = false;
+                ipcRenderer.send("import-single-key", "My SN Z addr", pk, isT);
             })
         }
     });
 }
-//
+
 function listAllTAddresses(callback) {
     const cmd = "listaddresses";
     rpcCallResult(cmd, [], callback);
 }
 
+// FIXME: unused?
 function getTAddressOrCreateInSecureNode(callback) {
     listAllTAddresses(function (output, status) {
-        if (output === undefined || output.length == 0) {
-           // get new Address
-           getNewTaddressWatchOnly("My SN watch Only addr", function(tAddress){
-               callback(tAddress)
-           });
+        if (output === undefined || output.length === 0) {
+            // get new Address
+            getNewTaddressWatchOnly("My SN watch Only addr", function (tAddress) {
+                callback(tAddress)
+            });
         } else {
             callback(output[0])
         }
-
     });
-
 }
-//
+
 function sendFromOrToZaddress(fromAddressPK, fromAddress, toAddress, amount, fee) {
     importPKinSN(fromAddressPK, fromAddress, function () {
         let minconf = 1;
-        let amounts = [{"address": toAddress, "amount": amount}]; //,"memo":"memo"
+        let amounts = [{"address": toAddress, "amount": amount}];
         let cmd = "z_sendmany";
         let paramsUsed = [fromAddress, amounts, minconf, fee];
-        console.log(paramsUsed);
+        // console.log(paramsUsed);
         rpcCallResult(cmd, paramsUsed, function (output, status) {
-            let opid = output;
-            getOperationStatus(opid);
-            console.log(opid);
-            console.log(status);
-            if (status === "error") {
-                msg = output;
-                result = status;
-            }
-            if (status === "ok") {
-                msg = output;
-                result = status;
-            }
+            // let opid = output;
+            getOperationStatus(output);
+            console.log("opid: " + output);
+            // console.log(status);
 
-            updateWithdrawalStatus(result, msg)
+            // let msg = output;
+            // let result = status;
+            updateWithdrawalStatus(status, output)
         });
     });
 }
@@ -335,5 +333,5 @@ module.exports = {
     pingSecureNodeRPC: pingSecureNodeRPC,
     getSecureNodeTaddressOrGenerate: getSecureNodeTaddressOrGenerate,
     getTaddressBalance: getTaddressBalance
-    //getOperationResult: getOperationResult
+    // getOperationResult: getOperationResult
 };
