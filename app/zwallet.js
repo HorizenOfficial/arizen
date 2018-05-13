@@ -84,6 +84,8 @@ ipcRenderer.on("get-wallets-response", (event, msgStr) => {
     addTransactions(msg.transactions);
     setTotalBalance(msg.total);
     scheduleRefresh();
+    pingSecureNode();
+    pingSecureNodeRPCResult();
 });
 
 ipcRenderer.on("update-wallet-balance", (event, msgStr) => {
@@ -502,9 +504,7 @@ function scheduleRefresh() {
 
 function refresh() {
     syncZaddrIfSettingsExist();
-    updateAllZBalances();
-    pingSecureNode();
-    pingSecureNodeRPCResult();
+    updateAllZBalances();    
     ipcRenderer.send("refresh-wallet");
     scheduleRefresh();
 }
