@@ -628,13 +628,15 @@ function initWithdrawView() {
               // Get intermediate T address from SN or Create
               let feeOne = fee/2;
               let feeTwo = fee/2;
+              let amountOne = parseFloat(amount)+feeTwo;
+              console.log(amountOne);
               getSecureNodeTaddressOrGenerate(function(tIntermediateAddress){
                  // send from T-Arizen to T-SN, amount, fee/2
                   ipcRenderer.send("send",
                       fromAddr,
                       tIntermediateAddress,
                       feeOne,
-                      (amount+feeTwo));
+                      amountOne);
                   checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo);
               });
 
