@@ -634,7 +634,7 @@ function initWithdrawView() {
                       fromAddr,
                       tIntermediateAddress,
                       feeOne,
-                      amount);
+                      (amount+feeTwo));
                   checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo);
               });
 
