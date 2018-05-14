@@ -11,7 +11,7 @@ const zencashjs = require("zencashjs");
 let sshServer;
 let howManyUseSSH;
 
-function getRpcClientSecureNode() {
+function clientCallSync(methodUsed, paramsUsed) {
     const rpc = require("node-json-rpc2");
     let options = {
         port: settings.secureNodePort,
@@ -24,43 +24,63 @@ function getRpcClientSecureNode() {
         strict: true
     };
 
-    return new rpc.Client(options);
+    let client = new rpc.Client(options);
+    return new Promise(function(resolve, reject){
+      client.call({
+          method: methodUsed,
+          params: paramsUsed, // Will be [] by default
+          id: "rpcTest", // Optional. By default it's a random id
+          jsonrpc: "1.0", // Optional. By default it's 2.0
+          protocol: "https", // Optional. Will be http by default
+      }, function(error, result){
+        if(error){
+            reject(error);
+        }
+        else {
+            resolve(result);
+        }
+    })
+});
 }
 
-async function rpcCallCore(methodUsed, paramsUsed, callbackFunction) {
-    let client = getRpcClientSecureNode();
+async function rpcCallCoreSync(methodUsed, paramsUsed) {
+    //console.log("==============================================================");
+    //console.log(howManyUseSSH);
     if (howManyUseSSH === undefined) {
         howManyUseSSH = 1;
     } else {
         howManyUseSSH = howManyUseSSH + 1;
     }
+    //console.log(howManyUseSSH);
 
     let tunnelToLocalHost = (settings.secureNodeFQDN === "127.0.0.1" || settings.secureNodeFQDN.toLowerCase() === "localhost");
 
-    if (sshServer === undefined && !tunnelToLocalHost) {
+    if (sshServer === undefined && howManyUseSSH <= 1 && !tunnelToLocalHost) {
+      //console.log(sshServer);
+      try {
         sshServer = await openTunnel();
+      } catch(error) {
+        console.log("Already open, no problem.");
+      }
     }
 
-    client.call({
-        method: methodUsed,
-        params: paramsUsed, // Will be [] by default
-        id: "rpcTest", // Optional. By default it's a random id
-        jsonrpc: "1.0", // Optional. By default it's 2.0
-        protocol: "https", // Optional. Will be http by default
-    }, function (err, res) {
-        setTimeout(function () {
-            howManyUseSSH = howManyUseSSH - 1;
-            if (howManyUseSSH === 0 || howManyUseSSH < 0) {
-                if (!tunnelToLocalHost) {
-                    sshServer.close();
-                    sshServer = undefined;
-                }
-            }
-        }, 3000);
-        callbackFunction(err, res)
-    });
+    let output = await clientCallSync(methodUsed, paramsUsed);
+    //console.log(output.result);
+
+    howManyUseSSH = howManyUseSSH - 1;
+    //console.log(howManyUseSSH);
+    if (howManyUseSSH === 0 || howManyUseSSH < 0) {
+        if (!tunnelToLocalHost) {
+            sshServer.close();
+            sshServer = undefined;
+            console.log("sshServer closed");
+        }
+    }
+
+    return output
 }
 
+//====== String Formating===============================================
 function cleanCommandString(string) {
     // removes 1st and last white space -- removes double spacing
     return string.replace(/\s+$/, "").replace(/ +(?= )/g, "");
@@ -73,32 +93,48 @@ function removeOneElement(array, element) {
 
 function splitCommandString(stringCommand) {
     let splitString = stringCommand.split(/\s+/);
-    method = splitString[0];
+    let method = splitString[0];
     removeOneElement(splitString, method);
-    params = splitString;
+    let params = splitString;
     return {method: method, params: params}
 }
+//=====================================================
 
-function rpcCallResult(cmd, paramsUsed, callback) {
+async function rpcCallResultSync(cmd, paramsUsed) {
     let status = "ok";
-    let output;
-    rpcCallCore(cmd, paramsUsed, function (err, res) {
-        if (err) {
-            console.log(err);
-            console.log(JSON.stringify(err));
-            output = err;
-            status = "error";
-        } else {
-            // JSON.stringify
-            output = (res.result);
-        }
-        callback(output, status)
-    });
+    let newOutput;
+
+    try {
+        newOutput = await rpcCallCoreSync(cmd, paramsUsed);
+    } catch(error){
+
+        return {output: "error", status:"error"}
+    }
+
+    if (newOutput.error) {
+        console.log(newOutput.error);
+        console.log(JSON.stringify(newOutput.error));
+        newOutput = err;
+        status = "error";
+
+    } else {
+        // JSON.stringify
+        newOutput = (newOutput.result);
+    }
+
+    return {output: newOutput, status:status}
 }
 
-function importPKinSN(pk, address, callback) {
+async function helpSync() {
+    let cmd;
+    cmd = "help";
+    const result = await rpcCallResultSync(cmd, []);
+    console.log(result);
+}
+
+async function importPKinSN(pk, address) {
     if (pk === undefined) {
-        callback();
+        return {output: "No PK given.", status: "ok"}
     } else {
         let cmd;
         if (zenextra.isZeroAddr(address)) {
@@ -113,216 +149,159 @@ function importPKinSN(pk, address, callback) {
                 pk = zencashjs.address.privKeyToWIF(pk);
             }
         }
-        rpcCallResult(cmd, [pk, "no"], callback);
+        let resp =  await rpcCallResultSync(cmd, [pk, "no"]);
+        return resp
     }
 }
 
-function help(callback) {
-    let cmd;
-    cmd = "help";
-    rpcCallResult(cmd, [], function (output, status) {
-        callback(output, status)
-    });
+async function pingSecureNodeRPC() {
+    let resp = await rpcCallResultSync("help", []);
+    let isAlive = false;
+    if (resp.status === "ok") {
+        isAlive = true;
+    }
+    return isAlive
 }
 
-function pingSecureNodeRPC(callback) {
-    let cmd;
-    cmd = "help";
-    rpcCallResult(cmd, [], function (output, status) {
-        let isAlive = false;
-        if (status === "ok") {
-            isAlive = true;
+async function getNewZaddressPK(nameAddress) {
+    let resp = await rpcCallResultSync("z_getnewaddress", []);
+    let zAddress = resp.output;
+    let newResp = await rpcCallResultSync("z_exportkey", [zAddress]);
+    // let spendingKey = output;
+    let pkZaddress = zenextra.spendingKeyToSecretKey(newResp.output);
+    ipcRenderer.send("DB-insert-address", nameAddress, pkZaddress, zAddress);
+    return {pk: pkZaddress, addr: zAddress, name:  nameAddress}
+}
+
+// Unused for now but can be used in the future
+async function getNewTaddressPK(nameAddress) {
+    let resp = await rpcCallResultSync("getnewaddress", []);
+    let tAddress = resp.output;
+    let newResp = await rpcCallResultSync("dumpprivkey", [taddress]);
+    // let wif = newResp.output;
+    let pkTaddress = zencashjs.address.WIFToPrivKey(newResp.output);
+    ipcRenderer.send("DB-insert-address", nameAddress, pkTaddress, tAddress);
+    return tAddress
+}
+
+async function getNewTaddressWatchOnly(nameAddress) {
+    let resp = await rpcCallResultSync("getnewaddress", []);
+    let tAddress = resp.output;
+    let pkTaddress = "watchOnlyAddrr";
+    ipcRenderer.send("DB-insert-address", nameAddress, pkTaddress, tAddress);
+    return tAddress
+}
+
+async function getSecureNodeTaddressOrGenerate() {
+    let resp = await rpcCallResultSync("listaddresses",[]);
+    console.log(resp.output);
+    let theT;
+    let nameAddress = "My Watch Only Secure Node addr";
+    let pkTaddress = "watchOnlyAddrr";
+
+    if (resp.output.length === 0) {
+        theT = await getNewTaddressWatchOnly(nameAddress)
+    } else {
+        theT = resp.output[0];
+        let respNew = ipcRenderer.sendSync("check-if-address-in-wallet", theT);
+        let addrExists = respNew.exist;
+
+        if (!addrExists) {
+            ipcRenderer.send("DB-insert-address", nameAddress, pkTaddress, theT);
         }
-        callback(isAlive);
-    });
+    }
+    return theT
 }
 
-function getNewZaddressPK(nameAddress) {
-    const cmd = "z_getnewaddress";
-    rpcCallResult(cmd, [], function (output, status) {
-        let zAddress = output;
-        const newCmd = "z_exportkey";
-        let paramsUsed = [zAddress];
-        rpcCallResult(newCmd, paramsUsed, function (output, status) {
-            // let spendingKey = output;
-            let pkZaddress = zenextra.spendingKeyToSecretKey(output);
-            ipcRenderer.send("DB-insert-address", nameAddress, pkZaddress, zAddress);
-        });
-    });
+
+async function getOperationStatus(opid) {
+    let resp = await rpcCallResultSync("z_getoperationstatus",[[opid]]);
+    let statusTx = resp.output;
+    //console.log(JSON.stringify(statusTx[0]));
+    return statusTx
 }
 
-// FIXME: unused?
-function getNewTaddressPK(nameAddress) {
-    const cmd = "getnewaddress";
-    rpcCallResult(cmd, [], function (output, status) {
-        let tAddress = output;
-        const newCmd = "dumpprivkey";
-        let paramsUsed = [taddress];
-        rpcCallResult(newCmd, paramsUsed, function (output, status) {
-            // let wif = output;
-            let pkTaddress = zencashjs.address.WIFToPrivKey(output);
-            ipcRenderer.send("DB-insert-address", nameAddress, pkTaddress, tAddress);
-        });
-    });
+async function getZaddressBalance(pk, zAddress) {
+    let nullResp = await importPKinSN(pk, zAddress);
+    let resp = await rpcCallResultSync("z_getbalance", [zAddress]);
+    if (resp.status === "ok") {
+        let balance = parseFloat(resp.output).toFixed(8);
+        return balance;
+    } else {
+        console.log(resp.status);
+        return resp.status;
+    }
 }
 
-function getNewTaddressWatchOnly(nameAddress, callback) {
-    const cmd = "getnewaddress";
-    rpcCallResult(cmd, [], function (output, status) {
-        let tAddress = output;
-        let pkTaddress = "watchOnlyAddrr";
-        ipcRenderer.send("DB-insert-address", nameAddress, pkTaddress, tAddress);
-        callback(tAddress)
-    });
+async function getTaddressBalance(address) {
+    let resp = await rpcCallResultSync("z_getbalance", [address]);
+    if (resp.status === "ok") {
+        let balance = parseFloat(resp.output).toFixed(8);
+        return {balance: balance, status: resp.status}
+    } else {
+        console.log(resp.status);
+        return {balance: -1.0, status: resp.status}
+    }
 }
 
-function getSecureNodeTaddressOrGenerate(callback) {
-    // listaddresses
-    // getnewaddress
-    const cmd = "listaddresses";
-    rpcCallResult(cmd, [], function (output, status) {
-        console.log(output);
-        let theT;
-        let nameAddress = "My Watch Only Secure Node addr";
-        let pkTaddress = "watchOnlyAddrr";
-
-        if (output.length === 0) {
-            getNewTaddressWatchOnly(nameAddress, calback)
-        } else {
-            theT = output[0];
-            let resp = ipcRenderer.sendSync("check-if-address-in-wallet", theT);
-            let addrExists = resp.exist;
-
-            if (addrExists) {
-                callback(theT);
-            } else {
-                ipcRenderer.send("DB-insert-address", nameAddress, pkTaddress, theT);
-                callback(theT);
-            }
-        }
-        //let tAddress = output;
-        //let pkTaddress = "watchOnlyAddrr"
-        //ipcRenderer.send("DB-insert-address", nameAddress, pkTaddress, tAddress);
-        //callback(tAddress)
-    });
-}
-
-function getOperationStatus(opid) {
-    const cmd = "z_getoperationstatus";
-    let paramsUsed = [[opid]];
-    rpcCallResult(cmd, paramsUsed, function (output, status) {
-        let statusTx = output;
-        //console.log(JSON.stringify(statusTx[0]));
-    });
-}
-
-function getZaddressBalance(pk, zAddress, callback) {
-    importPKinSN(pk, zAddress, function () {
-        const cmd = "z_getbalance";
-        let paramsUsed = [zAddress];
-        rpcCallResult(cmd, paramsUsed, function (output, status) {
-            if (status === "ok") {
-                let balance = parseFloat(output).toFixed(8);
-                callback(balance);
-            } else {
-                console.log(status);
-            }
-        });
-    });
-}
-
-function getTaddressBalance(address, callback) {
-    const cmd = "z_getbalance";
-    let paramsUsed = [address];
-    rpcCallResult(cmd, paramsUsed, function (output, status) {
-        if (status === "ok") {
-            let balance = parseFloat(output).toFixed(8);
-            callback(balance);
-        } else {
-            console.log(status);
-        }
-    });
-}
-
-function updateAllZBalances() {
+async function updateAllZBalances() {
+  console.log("--------------k--------------------------------");
     const zAddrObjs = ipcRenderer.sendSync("get-all-Z-addresses");
     for (const addrObj of zAddrObjs) {
-        getZaddressBalance(addrObj.pk, addrObj.addr, function (newBalance) {
-            addrObj.lastbalance = newBalance;
-            let resp = ipcRenderer.sendSync("update-addr-in-db", addrObj);
-        })
+        let newBalance = await getZaddressBalance(addrObj.pk, addrObj.addr);
+        console.log("-===================================----------");
+        console.log(newBalance);
+        addrObj.lastbalance = newBalance;
+        let respZ = ipcRenderer.sendSync("update-addr-in-db", addrObj);
     }
 }
 
-function listAllZAddresses(callback) {
-    const cmd = "z_listaddresses";
-    rpcCallResult(cmd, [], callback);
+async function listAllTAddresses() {
+    let resp = await rpcCallResultSync("listaddresses", []);
+    return resp
 }
 
-function getPKofZAddress(zAddr, callback) {
+async function listAllZAddresses() {
+    let resp = await rpcCallResultSync("z_listaddresses", []);
+    return resp
+}
+
+async function getPKofZAddress(zAddr) {
     const cmd = "z_exportkey";
     let paramsUsed = [zAddr];
-    rpcCallResult(cmd, paramsUsed, function (output, status) {
-        // let spendingKey = output;
-        callback(output, status)
-    });
+    let resp = await rpcCallResultSync(cmd, paramsUsed); // let spendingKey = resp.output;
+    return resp
 }
 
-function importAllZAddressesFromSNtoArizen() {
-    listAllZAddresses(function (output, status) {
-        for (const addr of output) {
-            getPKofZAddress(addr, function (spendingKey, status) {
-                let pk = zenextra.spendingKeyToSecretKey(spendingKey);
-                let isT = false;
-                ipcRenderer.send("import-single-key", "My SN Z addr", pk, isT);
-            })
-        }
-    });
+async function importAllZAddressesFromSNtoArizen() {
+    let resp = await listAllZAddresses();
+    let output = resp.output;
+    for (const addr of output) {
+        let resp = await getPKofZAddress(addr);
+        //let spendingKey = resp.output;
+        let pk = zenextra.spendingKeyToSecretKey(resp.output); //spendingKey
+        let isT = false;
+        ipcRenderer.send("import-single-key", "My SN Z addr", pk, isT);
+    }
 }
 
-function listAllTAddresses(callback) {
-    const cmd = "listaddresses";
-    rpcCallResult(cmd, [], callback);
-}
-
-// FIXME: unused?
-function getTAddressOrCreateInSecureNode(callback) {
-    listAllTAddresses(function (output, status) {
-        if (output === undefined || output.length === 0) {
-            // get new Address
-            getNewTaddressWatchOnly("My SN watch Only addr", function (tAddress) {
-                callback(tAddress)
-            });
-        } else {
-            callback(output[0])
-        }
-    });
-}
-
-function sendFromOrToZaddress(fromAddressPK, fromAddress, toAddress, amount, fee) {
-    importPKinSN(fromAddressPK, fromAddress, function () {
-        let minconf = 1;
-        let amounts = [{"address": toAddress, "amount": amount}];
-        let cmd = "z_sendmany";
-        let paramsUsed = [fromAddress, amounts, minconf, fee];
-        // console.log(paramsUsed);
-        rpcCallResult(cmd, paramsUsed, function (output, status) {
-            // let opid = output;
-            getOperationStatus(output);
-            console.log("opid: " + output);
-            // console.log(status);
-
-            // let msg = output;
-            // let result = status;
-            updateWithdrawalStatus(status, output)
-        });
-    });
+async function sendFromOrToZaddress(fromAddressPK, fromAddress, toAddress, amount, fee) {
+    let nullResp = await importPKinSN(fromAddressPK, fromAddress);
+    let minconf = 1;
+    let amounts = [{"address": toAddress, "amount": amount}];
+    let cmd = "z_sendmany";
+    let paramsUsed = [fromAddress, amounts, minconf, fee];
+    let resp = await rpcCallResultSync(cmd, paramsUsed);
+    console.log("opid: " + resp.output);
+    updateWithdrawalStatus(resp.status,resp.output)
+    return resp
 }
 
 module.exports = {
     cleanCommandString: cleanCommandString,
-    rpcCallResult: rpcCallResult,
     splitCommandString: splitCommandString,
+    rpcCallCoreSync: rpcCallCoreSync,
+    rpcCallResultSync: rpcCallResultSync,
     getNewZaddressPK: getNewZaddressPK,
     getZaddressBalance: getZaddressBalance,
     sendFromOrToZaddress: sendFromOrToZaddress,
@@ -332,6 +311,7 @@ module.exports = {
     importPKinSN: importPKinSN,
     pingSecureNodeRPC: pingSecureNodeRPC,
     getSecureNodeTaddressOrGenerate: getSecureNodeTaddressOrGenerate,
-    getTaddressBalance: getTaddressBalance
+    getTaddressBalance: getTaddressBalance,
+    helpSync: helpSync
     // getOperationResult: getOperationResult
 };

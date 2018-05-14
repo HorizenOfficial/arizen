@@ -7,7 +7,7 @@ const {ipcRenderer} = require("electron");
 const Qrcode = require("qrcode");
 const jsPDF = require("jspdf");
 const {showPaperWalletDialog} = require("./paperwallet.js");
-const {getNewZaddressPK, updateAllZBalances} = require("./rpc.js");
+const {getNewZaddressPK, updateAllZBalances, getSecureNodeTaddressOrGenerate} = require("./rpc.js");
 
 // const {zenextra} = require("./zenextra.js");
 
@@ -504,7 +504,7 @@ function scheduleRefresh() {
 
 function refresh() {
     syncZaddrIfSettingsExist();
-    updateAllZBalances();    
+    updateAllZBalances();
     ipcRenderer.send("refresh-wallet");
     scheduleRefresh();
 }
@@ -591,27 +591,28 @@ function updateDepositQrcode(qrcodeDelay = 0) {
     }, qrcodeDelay);
 }
 
-function checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo) {
-    getTaddressBalance(tIntermediateAddress, function(balance){
-        if(balance>= amount){
-            // send from T to Z
-            console.log("Sending.....");
-            sendFromOrToZaddress(undefined, tIntermediateAddress, toAddr, amount, feeTwo)
+async function checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo) {
+    console.log("In set Timeout..----------");
+    let resp = await getTaddressBalance(tIntermediateAddress);
+    let balance = resp.balance;
+    if (balance>= amount){
+        // send from T to Z
+        console.log("Sending.....");
+        sendFromOrToZaddress(undefined, tIntermediateAddress, toAddr, amount, feeTwo)
 
-        } else {
-            // setTimeout() again
-            console.log("Will check again in 2 minutes.");
-            setTimeout( () => checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo), 30000) // 2 mins
-        }
-    })
+    } else {
+        // setTimeout() again
+        console.log("Will check again in 2 minutes.");
+        setTimeout( () => checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo), 30000) // 2 mins
+    }
 }
 
-function initWithdrawView() {
+async function initWithdrawView() {
     withdrawFromAddrInput.addEventListener("input", validateWithdrawForm);
     withdrawToAddrInput.addEventListener("input", validateWithdrawForm);
     withdrawAmountInput.addEventListener("input", validateWithdrawForm);
     withdrawFeeInput.addEventListener("input", validateWithdrawForm);
-    withdrawButton.addEventListener("click", () => {
+    withdrawButton.addEventListener("click", async function() {
         const msg = tr("wallet.tabWithdraw.withdrawConfirmQuestion", "Do you really want to send this transaction?");
         if (confirm(msg)) {
             let fromAddr = withdrawFromAddrInput.value;
@@ -630,15 +631,14 @@ function initWithdrawView() {
               let feeTwo = fee/2;
               let amountOne = parseFloat(amount)+feeTwo;
               console.log(amountOne);
-              getSecureNodeTaddressOrGenerate(function(tIntermediateAddress){
+              let tIntermediateAddress = await getSecureNodeTaddressOrGenerate();
                  // send from T-Arizen to T-SN, amount, fee/2
-                  ipcRenderer.send("send",
-                      fromAddr,
-                      tIntermediateAddress,
-                      feeOne,
-                      amountOne);
-                  checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo);
-              });
+              ipcRenderer.send("send",
+                  fromAddr,
+                  tIntermediateAddress,
+                  feeOne,
+                  amountOne);
+              checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo);
 
 
             } else { // Z - Z or Z - T
