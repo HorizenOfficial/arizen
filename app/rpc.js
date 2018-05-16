@@ -343,5 +343,4 @@ module.exports = {
     getSecureNodeTaddressOrGenerate: getSecureNodeTaddressOrGenerate,
     getTaddressBalance: getTaddressBalance,
     helpSync: helpSync
-    // getOperationResult: getOperationResult
 };

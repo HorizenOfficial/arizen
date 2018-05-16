@@ -6,7 +6,8 @@
 const {DateTime} = require("luxon");
 const {translate} = require("./util.js");
 const zencashjs = require("zencashjs");
-const {rpcCallResultSync,rpcCallCoreSync, cleanCommandString, rpcCallResult, splitCommandString, sendFromOrToZaddress, getOperationResult, importAllZAddressesFromSNtoArizen,importAllZAddressesFromArizentoSN, pingSecureNodeRPC,getTaddressBalance} = require("./rpc.js");
+//const {rpcCallResultSync, cleanCommandString, rpcCallResult, splitCommandString, sendFromOrToZaddress, getOperationResult, importAllZAddressesFromSNtoArizen,importAllZAddressesFromArizentoSN, pingSecureNodeRPC,getTaddressBalance} = require("./rpc.js");
+const rpc = require("./rpc.js");
 const {zenextra} = require("./zenextra.js");
 
 const userWarningImportPK = "A new address and a private key will be imported. Your previous back-ups do not include the newly imported address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
@@ -284,8 +285,8 @@ function saveModifiedSettings() {
 function syncZaddrIfSettingsExist() {
     let settingsForSecureNodeExist = (settings.secureNodeFQDN && settings.secureNodePort && settings.secureNodeUsername && settings.secureNodePassword && settings.sshUsername && settings.sshPassword && settings.sshPort)
     if (settingsForSecureNodeExist) {
-        importAllZAddressesFromSNtoArizen();
-        importAllZAddressesFromArizentoSN();
+        rpc.importAllZAddressesFromSNtoArizen();
+        rpc.importAllZAddressesFromArizentoSN();
     }
 }
 
@@ -319,8 +320,8 @@ function colorRpcLEDs(isAlive){
 }
 
 async function pingSecureNodeRPCResult() {
-    if (isValidDomainName(settings.secureNodeFQDN)) { // settings.secureNodeFQDN
-        let isAlive = await pingSecureNodeRPC();
+    if (isValidDomainName(settings.secureNodeFQDN)) {
+        let isAlive = await rpc.pingSecureNodeRPC();
         colorRpcLEDs(isAlive);
     }
 }
@@ -524,7 +525,7 @@ function showRpcDialog() {
             //   console.log(error);
             // });
 
-            let res = await rpcCallResultSync("z_listaddresses",[]);
+            let res = await rpc.rpcCallResultSync("z_listaddresses",[]);
             console.log(res);
 
 
@@ -537,15 +538,15 @@ function showRpcDialog() {
             statusRPC.innerHTML = "Fetching...";
 
 
-            let cmd = cleanCommandString(inputCommandRPC.value);
+            let cmd = rpc.cleanCommandString(inputCommandRPC.value);
             inputCommandRPC.value = cmd;
 
-            let resp = splitCommandString(cmd);
+            let resp = rpc.splitCommandString(cmd);
             let method = resp.method;
             let params = resp.params;
 
 
-            let respTwo = await rpcCallResultSync(method, params)//, function (output, status) {
+            let respTwo = await rpc.rpcCallResultSync(method, params);
             resultRPC.innerHTML = JSON.stringify(respTwo.output);
             statusRPC.innerHTML = respTwo.status;
 

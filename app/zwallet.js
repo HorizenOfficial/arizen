@@ -7,7 +7,7 @@ const {ipcRenderer} = require("electron");
 const Qrcode = require("qrcode");
 const jsPDF = require("jspdf");
 const {showPaperWalletDialog} = require("./paperwallet.js");
-const {getNewZaddressPK, updateAllZBalances, getSecureNodeTaddressOrGenerate} = require("./rpc.js");
+//const {getNewZaddressPK, updateAllZBalances, getSecureNodeTaddressOrGenerate} = require("./rpc.js");
 
 // const {zenextra} = require("./zenextra.js");
 
@@ -442,7 +442,7 @@ function showNewAddrDialog() {
                     ipcRenderer.send("generate-wallet", nameAddress);
                 }
                 if (getZ) {
-                    getNewZaddressPK(nameAddress)
+                    rpc.getNewZaddressPK(nameAddress)
                 }
                 dialog.close();
             });
@@ -504,7 +504,7 @@ function scheduleRefresh() {
 
 function refresh() {
     syncZaddrIfSettingsExist();
-    updateAllZBalances();
+    rpc.updateAllZBalances();
     ipcRenderer.send("refresh-wallet");
     scheduleRefresh();
 }
@@ -631,7 +631,7 @@ async function initWithdrawView() {
               let feeTwo = fee/2;
               let amountOne = parseFloat(amount)+feeTwo;
               console.log(amountOne);
-              let tIntermediateAddress = await getSecureNodeTaddressOrGenerate();
+              let tIntermediateAddress = await rpc.getSecureNodeTaddressOrGenerate();
                  // send from T-Arizen to T-SN, amount, fee/2
               ipcRenderer.send("send",
                   fromAddr,
