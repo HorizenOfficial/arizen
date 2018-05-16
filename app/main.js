@@ -683,11 +683,12 @@ async function updateBlockchainView(webContents) {
     }
 
     const zAddrObjs = sqlSelectObjects("SELECT addr, name, lastbalance,pk FROM wallet where length(addr)=95");
+    console.log(zAddrObjs.length);
 
     for (const addrObj of zAddrObjs) {
         let previousBalance = 0.0; // TODO: Should do something with this
         let balance
-        if (addrObj.lastbalance === "NaN"){
+        if (addrObj.lastbalance === "NaN" || addrObj.lastbalance === undefined){
           balance = 0.0;
         } else {
           balance = addrObj.lastbalance;

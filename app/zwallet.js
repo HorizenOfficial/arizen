@@ -639,6 +639,7 @@ async function initWithdrawView() {
                   feeOne,
                   amountOne);
               checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo);
+              alert(tr("wallet.sendTTZ.doNotCloseArizen", "Arizen is Sending ZEN from yout T address to an intermediate T and then to the Z address. Please do not close Arizen until the 2nd transaction is sent (opid appears below withdraw)."));
 
 
             } else { // Z - Z or Z - T

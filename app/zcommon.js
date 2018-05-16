@@ -310,14 +310,18 @@ function pingSecureNode() {
     }
 }
 
+function colorRpcLEDs(isAlive){
+    if (isAlive) {
+        document.getElementById("dotSNstatusRPC").style.backgroundColor = "#34A853"; // green "#34A853"
+    } else {
+        document.getElementById("dotSNstatusRPC").style.backgroundColor = "#EA4335"; // red #EA4335
+    }
+}
+
 async function pingSecureNodeRPCResult() {
     if (isValidDomainName(settings.secureNodeFQDN)) { // settings.secureNodeFQDN
         let isAlive = await pingSecureNodeRPC();
-        if (isAlive) {
-            document.getElementById("dotSNstatusRPC").style.backgroundColor = "#34A853"; // green "#34A853"
-        } else {
-            document.getElementById("dotSNstatusRPC").style.backgroundColor = "#EA4335"; // red #EA4335
-        }
+        colorRpcLEDs(isAlive);
     }
 }
 

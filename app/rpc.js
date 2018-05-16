@@ -73,10 +73,12 @@ async function rpcCallCoreSync(methodUsed, paramsUsed) {
 
     try {
         outputCore = await clientCallSync(methodUsed, paramsUsed);
+        colorRpcLEDs(true); // false = Red // true = Green
     } catch (error){
         outputCore = "rpcCallCoreSync error in method : " + methodUsed + " ";
         status = "error"
         console.log(outputCore);
+        colorRpcLEDs(false); // false = Red
         //new Error('Error :  using method ' + methodUsed);
 
     }
