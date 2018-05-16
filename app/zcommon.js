@@ -6,7 +6,7 @@
 const {DateTime} = require("luxon");
 const {translate} = require("./util.js");
 const zencashjs = require("zencashjs");
-const {rpcCallResultSync,rpcCallCoreSync, cleanCommandString, rpcCallResult, splitCommandString, sendFromOrToZaddress, getOperationResult, importAllZAddressesFromSNtoArizen, pingSecureNodeRPC,getTaddressBalance} = require("./rpc.js");
+const {rpcCallResultSync,rpcCallCoreSync, cleanCommandString, rpcCallResult, splitCommandString, sendFromOrToZaddress, getOperationResult, importAllZAddressesFromSNtoArizen,importAllZAddressesFromArizentoSN, pingSecureNodeRPC,getTaddressBalance} = require("./rpc.js");
 const {zenextra} = require("./zenextra.js");
 
 const userWarningImportPK = "A new address and a private key will be imported. Your previous back-ups do not include the newly imported address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
@@ -285,6 +285,7 @@ function syncZaddrIfSettingsExist() {
     let settingsForSecureNodeExist = (settings.secureNodeFQDN && settings.secureNodePort && settings.secureNodeUsername && settings.secureNodePassword && settings.sshUsername && settings.sshPassword && settings.sshPort)
     if (settingsForSecureNodeExist) {
         importAllZAddressesFromSNtoArizen();
+        importAllZAddressesFromArizentoSN();
     }
 }
 
@@ -519,8 +520,8 @@ function showRpcDialog() {
             //   console.log(error);
             // });
 
-            //let res = rpcCallResultSync("help",[]);
-            // console.log(res);
+            let res = await rpcCallResultSync("z_listaddresses",[]);
+            console.log(res);
 
 
 

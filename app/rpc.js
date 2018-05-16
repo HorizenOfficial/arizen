@@ -31,7 +31,7 @@ function clientCallSync(methodUsed, paramsUsed) {
           params: paramsUsed, // Will be [] by default
           id: "rpcTest", // Optional. By default it's a random id
           jsonrpc: "1.0", // Optional. By default it's 2.0
-          protocol: "https", // Optional. Will be http by default
+          protocol: "http", // Optional. Will be http by default
       }, function(error, result){
         if(error){
             reject(error);
@@ -46,6 +46,10 @@ function clientCallSync(methodUsed, paramsUsed) {
 async function rpcCallCoreSync(methodUsed, paramsUsed) {
     //console.log("==============================================================");
     //console.log(howManyUseSSH);
+    //console.log(sshServer);
+    let status = "ok"
+    let outputCore;
+
     if (howManyUseSSH === undefined) {
         howManyUseSSH = 1;
     } else {
@@ -59,25 +63,38 @@ async function rpcCallCoreSync(methodUsed, paramsUsed) {
       //console.log(sshServer);
       try {
         sshServer = await openTunnel();
+        console.log("SSH Tunnel to Server: Opened");
       } catch(error) {
-        console.log("Already open, no problem.");
+        console.log(error);
+        //console.log("Already open, no problem.");
       }
     }
 
-    let output = await clientCallSync(methodUsed, paramsUsed);
-    //console.log(output.result);
+
+    try {
+        outputCore = await clientCallSync(methodUsed, paramsUsed);
+    } catch (error){
+        outputCore = "rpcCallCoreSync error in method : " + methodUsed + " ";
+        status = "error"
+        console.log(outputCore);
+        //new Error('Error :  using method ' + methodUsed);
+
+    }
 
     howManyUseSSH = howManyUseSSH - 1;
     //console.log(howManyUseSSH);
+    //console.log(sshServer);
     if (howManyUseSSH === 0 || howManyUseSSH < 0) {
         if (!tunnelToLocalHost) {
             sshServer.close();
             sshServer = undefined;
-            console.log("sshServer closed");
+            console.log("SSH Tunnel to Server: Closed");
         }
     }
 
-    return output
+    //console.log(outputCore);
+
+    return {output: outputCore, status:status}
 }
 
 //====== String Formating===============================================
@@ -102,28 +119,28 @@ function splitCommandString(stringCommand) {
 
 async function rpcCallResultSync(cmd, paramsUsed) {
     let status = "ok";
-    let newOutput;
+    let respCore;
+    let outputLast;
 
     try {
-        newOutput = await rpcCallCoreSync(cmd, paramsUsed);
+        respCore = await rpcCallCoreSync(cmd, paramsUsed);
     } catch(error){
-
-        return {output: "error", status:"error"}
+        return {output: error, status:"error"}
     }
 
-    if (newOutput.error) {
-        console.log(newOutput.error);
-        console.log(JSON.stringify(newOutput.error));
-        newOutput = err;
+    if (respCore.error) {
+        console.log(respCore.error);
+        console.log(JSON.stringify(respCore.error));
+        outputLast = err;
         status = "error";
-
     } else {
-        // JSON.stringify
-        newOutput = (newOutput.result);
+        outputLast = (respCore.output.result);
     }
 
-    return {output: newOutput, status:status}
-}
+    return {output: outputLast, status:status}
+  }
+
+//
 
 async function helpSync() {
     let cmd;
@@ -222,7 +239,7 @@ async function getOperationStatus(opid) {
 }
 
 async function getZaddressBalance(pk, zAddress) {
-    let nullResp = await importPKinSN(pk, zAddress);
+    //let nullResp = await importPKinSN(pk, zAddress);
     let resp = await rpcCallResultSync("z_getbalance", [zAddress]);
     if (resp.status === "ok") {
         let balance = parseFloat(resp.output).toFixed(8);
@@ -245,14 +262,13 @@ async function getTaddressBalance(address) {
 }
 
 async function updateAllZBalances() {
-  console.log("--------------k--------------------------------");
     const zAddrObjs = ipcRenderer.sendSync("get-all-Z-addresses");
     for (const addrObj of zAddrObjs) {
         let newBalance = await getZaddressBalance(addrObj.pk, addrObj.addr);
-        console.log("-===================================----------");
-        console.log(newBalance);
-        addrObj.lastbalance = newBalance;
-        let respZ = ipcRenderer.sendSync("update-addr-in-db", addrObj);
+        if(newBalance >= 0.0){
+            addrObj.lastbalance = newBalance;
+            let respZ = ipcRenderer.sendSync("update-addr-in-db", addrObj);
+      }
     }
 }
 
@@ -275,8 +291,10 @@ async function getPKofZAddress(zAddr) {
 
 async function importAllZAddressesFromSNtoArizen() {
     let resp = await listAllZAddresses();
-    let output = resp.output;
-    for (const addr of output) {
+    //console.log(resp);
+    let addrList = resp.output;
+    //console.log(addrList);
+    for (const addr of addrList) {
         let resp = await getPKofZAddress(addr);
         //let spendingKey = resp.output;
         let pk = zenextra.spendingKeyToSecretKey(resp.output); //spendingKey
@@ -285,8 +303,17 @@ async function importAllZAddressesFromSNtoArizen() {
     }
 }
 
+async function importAllZAddressesFromArizentoSN() {
+  const zAddrObjs = ipcRenderer.sendSync("get-all-Z-addresses");
+  let nullResp;
+  for (const addrObj of zAddrObjs) {
+      nullResp = await importPKinSN(addrObj.pk, addrObj.addr);
+  }
+}
+
+
 async function sendFromOrToZaddress(fromAddressPK, fromAddress, toAddress, amount, fee) {
-    let nullResp = await importPKinSN(fromAddressPK, fromAddress);
+    //let nullResp = await importPKinSN(fromAddressPK, fromAddress);
     let minconf = 1;
     let amounts = [{"address": toAddress, "amount": amount}];
     let cmd = "z_sendmany";
@@ -308,6 +335,7 @@ module.exports = {
     getOperationStatus: getOperationStatus,
     updateAllZBalances: updateAllZBalances,
     importAllZAddressesFromSNtoArizen: importAllZAddressesFromSNtoArizen,
+    importAllZAddressesFromArizentoSN: importAllZAddressesFromArizentoSN,
     importPKinSN: importPKinSN,
     pingSecureNodeRPC: pingSecureNodeRPC,
     getSecureNodeTaddressOrGenerate: getSecureNodeTaddressOrGenerate,
