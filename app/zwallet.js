@@ -510,6 +510,11 @@ function showAddrSelectDialog(zeroBalanceAddrs, onSelected) {
     showDialogFromTemplate("addrSelectDialogTemplate", dialog => {
         const listNode = dialog.querySelector(".addrSelectList");
         for (const addrObj of addrObjList) {
+            if (addrObj.addr.length !== 35){
+                // it is Z address
+                continue;
+            }
+
             if (!zeroBalanceAddrs && !addrObj.lastbalance) {
                 continue;
             }
@@ -720,6 +725,8 @@ function updateWithdrawalStatus(result, msg) {
     withdrawStatusBodyNode.innerHTML = msg;
 }
 
+fun
+
 function showBatchWithdrawDialog() {
     showDialogFromTemplate("batchWithdrawDialogTemplate", dialog => {
         const bwSettings = deepClone(settings.batchWithdraw) || {
@@ -732,6 +739,11 @@ function showBatchWithdrawDialog() {
         const listNode = dialog.querySelector(".addrSelectList");
 
         for (const addrObj of addrObjList) {
+            if (addrObj.addr.length !== 35) {
+                // it is Z address
+                continue;
+            }
+
             if (addrObj.lastbalance === 0) {
                 continue;
             }
