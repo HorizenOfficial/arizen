@@ -25,29 +25,29 @@ function clientCallSync(methodUsed, paramsUsed) {
     };
 
     let client = new rpc.Client(options);
-    return new Promise(function(resolve, reject){
-      client.call({
-          method: methodUsed,
-          params: paramsUsed, // Will be [] by default
-          id: "rpcTest", // Optional. By default it's a random id
-          jsonrpc: "1.0", // Optional. By default it's 2.0
-          protocol: "http", // Optional. Will be http by default
-      }, function(error, result){
-        if(error){
-            reject(error);
-        }
-        else {
-            resolve(result);
-        }
-    })
-});
+    return new Promise(function (resolve, reject) {
+        client.call({
+            method: methodUsed,
+            params: paramsUsed, // Will be [] by default
+            id: "rpcTest", // Optional. By default it's a random id
+            jsonrpc: "1.0", // Optional. By default it's 2.0
+            protocol: "http", // Optional. Will be http by default
+        }, function (error, result) {
+            if (error) {
+                reject(error);
+            }
+            else {
+                resolve(result);
+            }
+        });
+    });
 }
 
 async function rpcCallCoreSync(methodUsed, paramsUsed) {
     //console.log("==============================================================");
     //console.log(howManyUseSSH);
     //console.log(sshServer);
-    let status = "ok"
+    let status = "ok";
     let outputCore;
 
     if (howManyUseSSH === undefined) {
@@ -60,27 +60,26 @@ async function rpcCallCoreSync(methodUsed, paramsUsed) {
     let tunnelToLocalHost = (settings.secureNodeFQDN === "127.0.0.1" || settings.secureNodeFQDN.toLowerCase() === "localhost");
 
     if (sshServer === undefined && howManyUseSSH <= 1 && !tunnelToLocalHost) {
-      //console.log(sshServer);
-      try {
-        sshServer = await openTunnel();
-        console.log("SSH Tunnel to Server: Opened");
-      } catch(error) {
-        console.log(error);
-        //console.log("Already open, no problem.");
-      }
+        //console.log(sshServer);
+        try {
+            sshServer = await openTunnel();
+            console.log("SSH Tunnel to Server: Opened");
+        } catch (error) {
+            console.log(error);
+            //console.log("Already open, no problem.");
+        }
     }
 
-
+    // FIXME: colorRpcLEDs - element is not exported
     try {
         outputCore = await clientCallSync(methodUsed, paramsUsed);
         colorRpcLEDs(true); // false = Red // true = Green
-    } catch (error){
+    } catch (error) {
         outputCore = "rpcCallCoreSync error in method : " + methodUsed + " ";
-        status = "error"
+        status = "error";
         console.log(outputCore);
         colorRpcLEDs(false); // false = Red
         //new Error('Error :  using method ' + methodUsed);
-
     }
 
     howManyUseSSH = howManyUseSSH - 1;
@@ -96,7 +95,7 @@ async function rpcCallCoreSync(methodUsed, paramsUsed) {
 
     //console.log(outputCore);
 
-    return {output: outputCore, status:status}
+    return {output: outputCore, status: status}
 }
 
 //====== String Formating===============================================
@@ -114,11 +113,11 @@ function splitCommandString(stringCommand) {
     let splitString = stringCommand.split(/\s+/);
     let method = splitString[0];
     removeOneElement(splitString, method);
-    let params = splitString;
-    return {method: method, params: params}
+    // let params = splitString;
+    return {method: method, params: splitString}
 }
-//=====================================================
 
+//=====================================================
 async function rpcCallResultSync(cmd, paramsUsed) {
     let status = "ok";
     let respCore;
@@ -126,23 +125,22 @@ async function rpcCallResultSync(cmd, paramsUsed) {
 
     try {
         respCore = await rpcCallCoreSync(cmd, paramsUsed);
-    } catch(error){
-        return {output: error, status:"error"}
+    } catch (error) {
+        return {output: error, status: "error"}
     }
 
     if (respCore.error) {
         console.log(respCore.error);
         console.log(JSON.stringify(respCore.error));
+        // FIXME: err is unresolved - should be like this? or?: outputLast = respCore.error;
         outputLast = err;
         status = "error";
     } else {
         outputLast = (respCore.output.result);
     }
 
-    return {output: outputLast, status:status}
-  }
-
-//
+    return {output: outputLast, status: status}
+}
 
 async function helpSync() {
     let cmd;
@@ -168,8 +166,8 @@ async function importPKinSN(pk, address) {
                 pk = zencashjs.address.privKeyToWIF(pk);
             }
         }
-        let resp =  await rpcCallResultSync(cmd, [pk, "no"]);
-        return resp
+        // let resp = await rpcCallResultSync(cmd, [pk, "no"]);
+        return await rpcCallResultSync(cmd, [pk, "no"]);
     }
 }
 
@@ -189,14 +187,14 @@ async function getNewZaddressPK(nameAddress) {
     // let spendingKey = output;
     let pkZaddress = zenextra.spendingKeyToSecretKey(newResp.output);
     ipcRenderer.send("DB-insert-address", nameAddress, pkZaddress, zAddress);
-    return {pk: pkZaddress, addr: zAddress, name:  nameAddress}
+    return {pk: pkZaddress, addr: zAddress, name: nameAddress}
 }
 
 // Unused for now but can be used in the future
 async function getNewTaddressPK(nameAddress) {
     let resp = await rpcCallResultSync("getnewaddress", []);
     let tAddress = resp.output;
-    let newResp = await rpcCallResultSync("dumpprivkey", [taddress]);
+    let newResp = await rpcCallResultSync("dumpprivkey", [tAddress]);
     // let wif = newResp.output;
     let pkTaddress = zencashjs.address.WIFToPrivKey(newResp.output);
     ipcRenderer.send("DB-insert-address", nameAddress, pkTaddress, tAddress);
@@ -212,7 +210,7 @@ async function getNewTaddressWatchOnly(nameAddress) {
 }
 
 async function getSecureNodeTaddressOrGenerate() {
-    let resp = await rpcCallResultSync("listaddresses",[]);
+    let resp = await rpcCallResultSync("listaddresses", []);
     console.log(resp.output);
     let theT;
     let nameAddress = "My Watch Only Secure Node addr";
@@ -232,23 +230,23 @@ async function getSecureNodeTaddressOrGenerate() {
     return theT
 }
 
-
 async function getOperationStatus(opid) {
-    let resp = await rpcCallResultSync("z_getoperationstatus",[[opid]]);
-    let statusTx = resp.output;
-    //console.log(JSON.stringify(statusTx[0]));
-    return statusTx
+    let resp = await rpcCallResultSync("z_getoperationstatus", [[opid]]);
+    // let statusTx = resp.output;
+    // console.log(JSON.stringify(statusTx[0]));
+    return resp.output
 }
 
 async function getZaddressBalance(pk, zAddress) {
     //let nullResp = await importPKinSN(pk, zAddress);
     let resp = await rpcCallResultSync("z_getbalance", [zAddress]);
     if (resp.status === "ok") {
-        let balance = parseFloat(resp.output).toFixed(8);
-        return balance;
+        // balance
+        // let balance = parseFloat(resp.output).toFixed(8);
+        return parseFloat(resp.output).toFixed(8)
     } else {
         console.log(resp.status);
-        return resp.status;
+        return resp.status
     }
 }
 
@@ -267,28 +265,29 @@ async function updateAllZBalances() {
     const zAddrObjs = ipcRenderer.sendSync("get-all-Z-addresses");
     for (const addrObj of zAddrObjs) {
         let newBalance = await getZaddressBalance(addrObj.pk, addrObj.addr);
-        if(newBalance >= 0.0){
+        if (newBalance >= 0.0) {
             addrObj.lastbalance = newBalance;
             let respZ = ipcRenderer.sendSync("update-addr-in-db", addrObj);
-      }
+        }
     }
 }
 
 async function listAllTAddresses() {
-    let resp = await rpcCallResultSync("listaddresses", []);
-    return resp
+    // let resp = await rpcCallResultSync("listaddresses", []);
+    return await rpcCallResultSync("listaddresses", [])
 }
 
 async function listAllZAddresses() {
-    let resp = await rpcCallResultSync("z_listaddresses", []);
-    return resp
+    // let resp = await rpcCallResultSync("z_listaddresses", []);
+    return await rpcCallResultSync("z_listaddresses", [])
 }
 
 async function getPKofZAddress(zAddr) {
     const cmd = "z_exportkey";
     let paramsUsed = [zAddr];
-    let resp = await rpcCallResultSync(cmd, paramsUsed); // let spendingKey = resp.output;
-    return resp
+    // let spendingKey = resp.output;
+    // let resp = await rpcCallResultSync(cmd, paramsUsed);
+    return await rpcCallResultSync(cmd, paramsUsed)
 }
 
 async function importAllZAddressesFromSNtoArizen() {
@@ -306,13 +305,12 @@ async function importAllZAddressesFromSNtoArizen() {
 }
 
 async function importAllZAddressesFromArizentoSN() {
-  const zAddrObjs = ipcRenderer.sendSync("get-all-Z-addresses");
-  let nullResp;
-  for (const addrObj of zAddrObjs) {
-      nullResp = await importPKinSN(addrObj.pk, addrObj.addr);
-  }
+    const zAddrObjs = ipcRenderer.sendSync("get-all-Z-addresses");
+    let nullResp;
+    for (const addrObj of zAddrObjs) {
+        nullResp = await importPKinSN(addrObj.pk, addrObj.addr);
+    }
 }
-
 
 async function sendFromOrToZaddress(fromAddressPK, fromAddress, toAddress, amount, fee) {
     //let nullResp = await importPKinSN(fromAddressPK, fromAddress);
@@ -322,10 +320,12 @@ async function sendFromOrToZaddress(fromAddressPK, fromAddress, toAddress, amoun
     let paramsUsed = [fromAddress, amounts, minconf, fee];
     let resp = await rpcCallResultSync(cmd, paramsUsed);
     console.log("opid: " + resp.output);
-    updateWithdrawalStatus(resp.status,resp.output)
+    // FIXME: updateWithdrawalStatus - element is not exported
+    updateWithdrawalStatus(resp.status, resp.output);
     return resp
 }
 
+// FIXME: rpcCallCoreSync, getZaddressBalance, getOperationStatus, importPKinSN, and helpSync are unused
 module.exports = {
     cleanCommandString: cleanCommandString,
     splitCommandString: splitCommandString,
