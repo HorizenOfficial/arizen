@@ -19,7 +19,7 @@ function clientCallSync(methodUsed, paramsUsed) {
         user: settings.secureNodeUsername,
         password: settings.secureNodePassword,
         protocol: "http",
-        //method:'POST',
+        // method:'POST',
         path: "/",
         strict: true
     };
@@ -44,9 +44,9 @@ function clientCallSync(methodUsed, paramsUsed) {
 }
 
 async function rpcCallCoreSync(methodUsed, paramsUsed) {
-    //console.log("==============================================================");
-    //console.log(howManyUseSSH);
-    //console.log(sshServer);
+    // console.log("==============================================================");
+    // console.log(howManyUseSSH);
+    // console.log(sshServer);
     let status = "ok";
     let outputCore;
 
@@ -55,18 +55,18 @@ async function rpcCallCoreSync(methodUsed, paramsUsed) {
     } else {
         howManyUseSSH = howManyUseSSH + 1;
     }
-    //console.log(howManyUseSSH);
+    // console.log(howManyUseSSH);
 
     let tunnelToLocalHost = (settings.secureNodeFQDN === "127.0.0.1" || settings.secureNodeFQDN.toLowerCase() === "localhost");
 
     if (sshServer === undefined && howManyUseSSH <= 1 && !tunnelToLocalHost) {
-        //console.log(sshServer);
+        // console.log(sshServer);
         try {
             sshServer = await openTunnel();
             console.log("SSH Tunnel to Server: Opened");
         } catch (error) {
             console.log(error);
-            //console.log("Already open, no problem.");
+            // console.log("Already open, no problem.");
         }
     }
 
@@ -83,8 +83,8 @@ async function rpcCallCoreSync(methodUsed, paramsUsed) {
     }
 
     howManyUseSSH = howManyUseSSH - 1;
-    //console.log(howManyUseSSH);
-    //console.log(sshServer);
+    // console.log(howManyUseSSH);
+    // console.log(sshServer);
     if (howManyUseSSH === 0 || howManyUseSSH < 0) {
         if (!tunnelToLocalHost) {
             sshServer.close();
@@ -93,12 +93,12 @@ async function rpcCallCoreSync(methodUsed, paramsUsed) {
         }
     }
 
-    //console.log(outputCore);
+    // console.log(outputCore);
 
     return {output: outputCore, status: status}
 }
 
-//====== String Formating===============================================
+// ====== String Formating ===============================================
 function cleanCommandString(string) {
     // removes 1st and last white space -- removes double spacing
     return string.replace(/\s+$/, "").replace(/ +(?= )/g, "");
@@ -235,7 +235,7 @@ async function getOperationStatus(opid) {
 }
 
 async function getZaddressBalance(pk, zAddress) {
-    //let nullResp = await importPKinSN(pk, zAddress);
+    // let nullResp = await importPKinSN(pk, zAddress);
     let resp = await rpcCallResultSync("z_getbalance", [zAddress]);
     if (resp.status === "ok") {
         return parseFloat(resp.output).toFixed(8) //balance
@@ -287,9 +287,9 @@ async function getPKofZAddress(zAddr) {
 
 async function importAllZAddressesFromSNtoArizen() {
     let resp = await listAllZAddresses();
-    //console.log(resp);
+    // console.log(resp);
     let addrList = resp.output;
-    //console.log(addrList);
+    // console.log(addrList);
     for (const addr of addrList) {
         let resp = await getPKofZAddress(addr);
         //let spendingKey = resp.output;
@@ -324,16 +324,16 @@ async function sendFromOrToZaddress(fromAddressPK, fromAddress, toAddress, amoun
 module.exports = {
     cleanCommandString: cleanCommandString,
     splitCommandString: splitCommandString,
-    //rpcCallCoreSync: rpcCallCoreSync,
+    // rpcCallCoreSync: rpcCallCoreSync,
     rpcCallResultSync: rpcCallResultSync,
     getNewZaddressPK: getNewZaddressPK,
-    //getZaddressBalance: getZaddressBalance,
+    // getZaddressBalance: getZaddressBalance,
     sendFromOrToZaddress: sendFromOrToZaddress,
-    //getOperationStatus: getOperationStatus,
+    // getOperationStatus: getOperationStatus,
     updateAllZBalances: updateAllZBalances,
     importAllZAddressesFromSNtoArizen: importAllZAddressesFromSNtoArizen,
     importAllZAddressesFromArizentoSN: importAllZAddressesFromArizentoSN,
-    //importPKinSN: importPKinSN,
+    // importPKinSN: importPKinSN,
     pingSecureNodeRPC: pingSecureNodeRPC,
     getSecureNodeTaddressOrGenerate: getSecureNodeTaddressOrGenerate,
     getTaddressBalance: getTaddressBalance,

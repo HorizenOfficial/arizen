@@ -8,9 +8,6 @@ const Qrcode = require("qrcode");
 const jsPDF = require("jspdf");
 const {showPaperWalletDialog} = require("./paperwallet.js");
 
-
-// const {zenextra} = require("./zenextra.js");
-
 function logIpc(msgType) {
     ipcRenderer.on(msgType, (...args) => {
         console.log(`IPC Message: ${msgType}, Args:`);

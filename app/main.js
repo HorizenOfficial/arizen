@@ -82,7 +82,6 @@ const defaultSettings = {
 
 let settings = defaultSettings;
 let langDict;
-
 let axiosApi;
 
 const dbStructWallet = "CREATE TABLE wallet (id INTEGER PRIMARY KEY AUTOINCREMENT, pk TEXT, addr TEXT UNIQUE, lastbalance REAL, name TEXT);";
@@ -535,10 +534,11 @@ function exportPKs() {
     });
 }
 
-function importOnePK(pk, name = "", isT = true) { // input is PK not wif, not spending key
+// input is PK not wif, not spending key
+function importOnePK(pk, name = "", isT = true) {
     try {
-        let addr
-        if(isT){
+        let addr;
+        if (isT) {
             if (pk.length !== 64) {
                 pk = zencashjs.address.WIFToPrivKey(pk);
             }
@@ -548,10 +548,10 @@ function importOnePK(pk, name = "", isT = true) { // input is PK not wif, not sp
             if (pk.length !== 64) {
                 pk = zenextra.spendingKeyToSecretKey(pk); // pk = spendingKey
             }
-            let secretKey  = pk;
-            let a_pk = zencashjs.zaddress.zSecretKeyToPayingKey(secretKey);
-            let pk_enc = zencashjs.zaddress.zSecretKeyToTransmissionKey(secretKey);
-            addr = zencashjs.zaddress.mkZAddress(a_pk, pk_enc);
+            let secretKey = pk;
+            let aPk = zencashjs.zaddress.zSecretKeyToPayingKey(secretKey);
+            let encPk = zencashjs.zaddress.zSecretKeyToTransmissionKey(secretKey);
+            addr = zencashjs.zaddress.mkZAddress(aPk, encPk);
         }
         sqlRun("insert or ignore into wallet (pk, addr, lastbalance, name) values (?, ?, 0, ?)", pk, addr, name);
     } catch (err) {
@@ -686,11 +686,11 @@ async function updateBlockchainView(webContents) {
 
     for (const addrObj of zAddrObjs) {
         let previousBalance = 0.0; // TODO: Should do something with this
-        let balance
-        if (addrObj.lastbalance === "NaN" || addrObj.lastbalance === undefined){
-          balance = 0.0;
+        let balance;
+        if (addrObj.lastbalance === "NaN" || addrObj.lastbalance === undefined) {
+            balance = 0.0;
         } else {
-          balance = addrObj.lastbalance;
+            balance = addrObj.lastbalance;
         }
         let balanceDiff = balance - previousBalance;
         addrObj.lastbalance = balance;
@@ -831,7 +831,7 @@ function createEditSubmenu() {
             accelerator: "Shift+CmdOrCtrl+Z",
             selector: "redo:"
         },
-        { type: "separator" },
+        {type: "separator"},
         {
             label: tr("menu.editSubmenu.cut", "Cut"),
             accelerator: "CmdOrCtrl+X",
@@ -871,7 +871,7 @@ function createHelpSubmenu() {
                 require("electron").shell.openExternal("https://support.zencash.com");
             }
         },
-        { type: "separator" },
+        {type: "separator"},
         {
             label: tr("menu.helpSubmenu.zencash", "ZenCash"),
             click: () => {
@@ -881,37 +881,35 @@ function createHelpSubmenu() {
     ];
 }
 
-function includeDeveloperMenu(template){
-  if (process.env.NODE_ENV !== 'production'){
-    template.push({
-      label: 'Developer Tools',
-      submenu:[
-        {
-          label: 'Toggle DevTools',
-          accelerator: process.platform == 'darwin' ? 'Command+I':
-          'Ctrl+I',
-          click(item, focusedWindow){
-            focusedWindow.toggleDevTools();
-          }
-        },
-        {role: 'reload'},
-        { type: "separator" },
-        {
-            label: tr("menu.backupUnencrypted", "Backup UNENCRYPTED wallet"),
-            click() {
-                exportWalletArizen("uawd", false);
-            }
-        },
-        { type: "separator" },
-        {
-            label: "RPC console",
-            click() {
-                mainWindow.webContents.send("open-rpc-console");
-            }
-        }
-      ]
-    })
-
+function includeDeveloperMenu(template) {
+    if (process.env.NODE_ENV !== "production") {
+        template.push({
+            label: "Developer Tools",
+            submenu: [
+                {
+                    label: "Toggle DevTools",
+                    accelerator: process.platform === "darwin" ? "Command+I" : "Ctrl+I",
+                    click(item, focusedWindow) {
+                        focusedWindow.toggleDevTools();
+                    }
+                },
+                {role: "reload"},
+                {type: "separator"},
+                {
+                    label: tr("menu.backupUnencrypted", "Backup UNENCRYPTED wallet"),
+                    click() {
+                        exportWalletArizen("uawd", false);
+                    }
+                },
+                {type: "separator"},
+                {
+                    label: "RPC console",
+                    click() {
+                        mainWindow.webContents.send("open-rpc-console");
+                    }
+                }
+            ]
+        })
     }
 }
 
@@ -1676,8 +1674,8 @@ ipcMain.on("renderer-show-message-box", (event, msgStr, buttons) => {
 
 
 ipcMain.on("get-all-Z-addresses", (event) => {
-    const zAddrObjs = sqlSelectObjects("SELECT addr, name, lastbalance,pk FROM wallet where length(addr)=95");
-    event.returnValue = zAddrObjs;
+    // zAddrObjs
+    event.returnValue = sqlSelectObjects("SELECT addr, name, lastbalance,pk FROM wallet where length(addr)=95");
 });
 
 ipcMain.on("update-addr-in-db", (event,addrObj) => {
@@ -1687,8 +1685,8 @@ ipcMain.on("update-addr-in-db", (event,addrObj) => {
 
 
 ipcMain.on("get-address-object", (event,fromAddress) => {
-    let addrObjs = sqlSelectObjects("SELECT * FROM wallet WHERE addr = ?", fromAddress)[0];
-    event.returnValue = addrObjs;
+    // addrObjs
+    event.returnValue = sqlSelectObjects("SELECT * FROM wallet WHERE addr = ?", fromAddress)[0];
 });
 
 ipcMain.on("DB-insert-address", function (event, nameAddress,pkZaddress,zAddress) {
@@ -1706,44 +1704,3 @@ ipcMain.on("DB-insert-address", function (event, nameAddress,pkZaddress,zAddress
 
     event.sender.send("generate-wallet-response", JSON.stringify(resp));
 });
-
-
-// Unused
-
-// function importWalletDat(login, pass, wallet) {
-//     let walletBytes = fs.readFileSync(wallet, "binary");
-//     let re = /\x30\x81\xD3\x02\x01\x01\x04\x20(.{32})/gm;
-//     let privateKeys = walletBytes.match(re);
-//     privateKeys = privateKeys.map(function (x) {
-//         x = x.replace("\x30\x81\xD3\x02\x01\x01\x04\x20", "");
-//         x = Buffer.from(x, "latin1").toString("hex");
-//         return x;
-//     });
-//
-//     let pk;
-//     let pubKey;
-//     //Create the database
-//     let db = new sql.Database();
-//     // Run a query without reading the results
-//     db.run(dbStructWallet);
-//
-//     for (let i = 0; i < privateKeys.length; i += 1) {
-//         // If not 64 length, probs WIF format
-//         if (privateKeys[i].length !== 64) {
-//             pk = zencashjs.address.WIFToPrivKey(privateKeys[i]);
-//         } else {
-//             pk = privateKeys[i];
-//         }
-//         pubKey = zencashjs.address.privKeyToPubKey(pk, true);
-//         db.run("INSERT OR IGNORE INTO wallet VALUES (?,?,?,?,?)", [null, pk, zencashjs.address.pubKeyToAddr(pubKey), 0, ""]);
-//     }
-//
-//     let data = db.export();
-//     let walletEncrypted = encryptWallet(login, pass, data);
-//     storeFile(getWalletPath() + login + ".awd", walletEncrypted);
-//
-//     userInfo.walletDb = db;
-//     loadSettings();
-//     // mainWindow.webContents.send("zz-get-wallets");
-//     // loadTransactions(mainWindow.webContents);
-// }

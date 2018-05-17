@@ -10,7 +10,10 @@ const rpc = require("./rpc.js");
 const {zenextra} = require("./zenextra.js");
 
 const userWarningImportPK = "A new address and a private key will be imported. Your previous back-ups do not include the newly imported address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
-const userWarningImportPkUserZendRescan = "The balance of the Z address you imported will be visible after you rescan the blockchain. Please run 'zen-cli stop && sleep 8 && zend -rescan' in your secure node (linux)."
+const userWarningImportPkUserZendRescan = "The balance of the Z address you imported will be visible after you rescan the blockchain. Please run 'zen-cli stop && sleep 8 && zend -rescan' in your secure node (linux).";
+
+let settings = {};
+let langDict;
 
 function assert(condition, message) {
     if (!condition) {
@@ -23,6 +26,7 @@ function assert(condition, message) {
  * contents too and returns an `Array` of nodes instead of a `NodeList`.
  *
  * @param {string} selector - selector string
+ * @param {string} startRoot -
  * @returns {Array} array of matched nodes
  */
 function querySelectorAllDeep(selector, startRoot = document) {
@@ -251,8 +255,6 @@ function showAboutDialog() {
 }
 
 // TODO this doesn't belong here
-let settings = {};
-let langDict;
 (() => {
     const {ipcRenderer} = require("electron");
     ipcRenderer.on("settings", (sender, settingsStr) => {
@@ -333,7 +335,6 @@ function showSettingsDialog() {
         const inputFiatCurrency = dialog.querySelector(".settingsFiatCurrency");
         const inputLanguages = dialog.querySelector(".settingsLanguage");
         const inputNotifications = dialog.querySelector(".enableNotifications");
-        const inputDomainFronting = dialog.querySelector(".enableDomainFronting");
         const inputSecureNodeFQDN = dialog.querySelector(".settingsSecureNodeFQDN");
         const inputSecureNodePort = dialog.querySelector(".settingsSecureNodePort");
         const inputSecureNodeUsername = dialog.querySelector(".settingsSecureNodeUsername");
@@ -384,7 +385,6 @@ function showSettingsDialog() {
                 lang: inputLanguages[inputLanguages.selectedIndex].value,
                 notifications: inputNotifications.checked ? 1 : 0,
 
-                domainFronting: inputDomainFronting.checked,
                 secureNodeFQDN: inputSecureNodeFQDN.value,
                 secureNodePort: inputSecureNodePort.value,
                 secureNodeUsername: inputSecureNodeUsername.value,
