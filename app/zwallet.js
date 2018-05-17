@@ -725,8 +725,6 @@ function updateWithdrawalStatus(result, msg) {
     withdrawStatusBodyNode.innerHTML = msg;
 }
 
-fun
-
 function showBatchWithdrawDialog() {
     showDialogFromTemplate("batchWithdrawDialogTemplate", dialog => {
         const bwSettings = deepClone(settings.batchWithdraw) || {
