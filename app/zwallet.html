@@ -125,26 +125,25 @@
 </template>
 
 
-<!-- Delet me  -->
+<!-- FIXME: Delete me  -->
 <template id=tempRpcTemplate>
     <arizen-dialog>
-        <h2 slot=headerText data-tr=wallet.rpcConsole.tmp>RPC</h2>
+        <h2 slot=headerText data-tr=wallet.rpcConsole.title>RPC</h2>
         <div slot=content>
             <div class=form>
-                <div data-tr=wallet.rpcConsole.tmp>Command</div>
-                <input type=text class=giveCommandRPC value=help />
+                <div data-tr=wallet.rpcConsole.command>Command</div>
+                <input type=text class=giveCommandRPC value="getinfo" />
             </div>
             <div class=formButtons>
-                <button class=testRPCButton data-tr=wallet.rpcConsole.tmp>Test Me</button>
+                <button class=testRPCButton data-tr=wallet.rpcConsole.test>Test Me</button>
             </div>
-            <textarea id=resultRPC class=resultRPC slot=headerText rows=20 data-tr=wallet.rpcConsole.tmp>RPC Results....</textarea>
-            <div data-tr=wallet.rpcConsole.tmp>Status: </div> <div data-tr=wallet.rpcConsole.tmp class=statusRPC></div>
-            <button class=testFunction data-tr=wallet.rpcConsole.tmp>Test Function</button>
+            <textarea id=resultRPC class=resultRPC slot=headerText rows=20 cols=100 data-tr=wallet.rpcConsole.results>RPC Results ...</textarea>
+            <div data-tr=wallet.rpcConsole.status>Status: </div><div class=statusRPC></div>
+            <button class=testFunction data-tr=wallet.rpcConsole.testFunctionButton>Test Function</button>
         </div>
-
     </arizen-dialog>
 </template>
-<!-- Delet me  -->
+<!-- Delete me  -->
 
 <template id=addrSelectRowTemplate>
     <tr class=addrSelectRow>
@@ -373,7 +372,7 @@
                 <label for=newPassword2 data-tr=wallet.changePassword.newPassword2>New Password (Retype)</label>
                 <input type=password name=newPasswordText2 class=newPasswordText2 />
             </div>
-            <div class=changeWalletPasswordErrors data-tr="wallet.changePassword.errorMessages">
+            <div class=changeWalletPasswordErrors>
             </div>
             <div class=formButtons>
                 <button class=changePasswordOK data-tr=common.okButtonText>OK</button>

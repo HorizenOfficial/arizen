@@ -47,6 +47,12 @@
     "balanceUpdated": "Balance Updated",
     "newTransactions": "New transaction"
   },
+  "common": {
+    "selectAll": "Select all",
+    "clearAll": "Clear all",
+    "okButtonText": "OK",
+    "cancelButtonText": "Cancel"
+  },
   "importExportPks": {
     "chooseFileExport": "Choose file for private keys",
     "chooseFileImport": "Choose file with private keys",
@@ -76,6 +82,7 @@
     "fetchBlockchainFailed": "Failed to fetch blockchain changes:",
     "save": "Save",
     "pdfExported": "PDF exported",
+    "autoLogOffLabel": "Log off in ",
     "tabOverview": {
       "label": "Overview",
       "showZeroBalances": "Show zero balances",
@@ -202,6 +209,21 @@
       "importButtonLabel": "Import",
       "warningNotValidAddress": "Address exist in your wallet",
       "warningNotValidPK": "This is not a valid Private Key or you try to import a Spending Key (only for Z addresses) as T address Private key."
+    },
+    "changePassword": {
+      "title": "Change Wallet Password",
+      "warningText": "WARNING: Wallet backups won't be re-encrypted! If you need to use them, you will have to use current password.",
+      "currentPassword": "Current Password",
+      "newPassword1": "New Password",
+      "newPassword2": "New Password (Retype)"
+    },
+    "rpcConsole": {
+      "title": "RPC",
+      "command": "Command",
+      "test": "Test Me",
+      "results": "RPC Results ...",
+      "status": "Status: ",
+      "testFunctionButton": "Test Function"
     }
   },
   "menu": {
@@ -212,6 +234,7 @@
     "importUnencrypted": "Import UNENCRYPTED Arizen wallet",
     "importPrivateKeys": "Import private keys",
     "exportPrivateKeys": "Export private keys",
+    "changeWalletPassword": "Change wallet password",
     "exit": "Exit",
     "edit": "Edit",
     "editSubmenu": {

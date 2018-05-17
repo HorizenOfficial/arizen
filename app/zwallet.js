@@ -593,7 +593,7 @@ async function checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo) 
     let balance = resp.balance;
     if (balance>= amount){
         // send from T to Z
-        console.log("Sending.....");
+        console.log("Sending ...");
         rpc.sendFromOrToZaddress(undefined, tIntermediateAddress, toAddr, amount, feeTwo)
 
     } else {

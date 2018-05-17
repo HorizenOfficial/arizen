@@ -483,25 +483,17 @@ function showRpcDialog() {
         const resultRPC = dialog.querySelector(".resultRPC");
         const inputCommandRPC = dialog.querySelector(".giveCommandRPC");
         const statusRPC = dialog.querySelector(".statusRPC");
-
         const testFunctionButton = dialog.querySelector(".testFunction");
 
-
         testFunctionButton.addEventListener("click", async function () {
-            // Put here what you want to test...
-
+            // Put here what you want to test ...
             let res = await rpc.rpcCallResultSync("z_listaddresses",[]);
             console.log(res);
-
-
-
         });
 
         testRpcButton.addEventListener("click", async function () {
-
-            resultRPC.innerHTML = "Fetching...";
-            statusRPC.innerHTML = "Fetching...";
-
+            resultRPC.innerHTML = "Fetching ...";
+            statusRPC.innerHTML = "Fetching ...";
 
             let cmd = rpc.cleanCommandString(inputCommandRPC.value);
             inputCommandRPC.value = cmd;
@@ -509,10 +501,9 @@ function showRpcDialog() {
             let resp = rpc.splitCommandString(cmd);
             let method = resp.method;
             let params = resp.params;
-
-
             let respTwo = await rpc.rpcCallResultSync(method, params);
-            resultRPC.innerHTML = JSON.stringify(respTwo.output);
+
+            resultRPC.innerHTML = JSON.stringify(respTwo.output, undefined, 4);
             statusRPC.innerHTML = respTwo.status;
 
         });

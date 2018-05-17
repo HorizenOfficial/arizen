@@ -397,6 +397,7 @@ header button {
     background-color: #bbb;
     border-radius: 50%;
     display: inline-block;
+}
 
 .changeWalletPasswordDialogContent {
     width: 600px;
