@@ -6,7 +6,6 @@
 const {DateTime} = require("luxon");
 const {translate} = require("./util.js");
 const zencashjs = require("zencashjs");
-//const {rpcCallResultSync, cleanCommandString, rpcCallResult, splitCommandString, sendFromOrToZaddress, getOperationResult, importAllZAddressesFromSNtoArizen,importAllZAddressesFromArizentoSN, pingSecureNodeRPC,getTaddressBalance} = require("./rpc.js");
 const rpc = require("./rpc.js");
 const {zenextra} = require("./zenextra.js");
 
@@ -259,7 +258,7 @@ let langDict;
     ipcRenderer.on("settings", (sender, settingsStr) => {
         // don't notify about new settings on startup
         pingSecureNode();
-        //pingSecureNodeRPCResult();
+        //rpc.pingSecureNodeRPCResult();
 
         if (Object.keys(settings).length) {
             showNotification(tr("notification.settingsUpdated", "Settings updated"));
@@ -490,40 +489,6 @@ function showRpcDialog() {
 
         testFunctionButton.addEventListener("click", async function () {
             // Put here what you want to test...
-
-            // const node_ssh = require('node-ssh');
-            // let ssh = new node_ssh();
-            //
-            // await ssh.connect({
-            //   host: settings.secureNodeFQDN,
-            //   username: settings.sshUsername,
-            //   password: settings.sshPassword
-            //   //privateKey: '../id_rsa.npm',
-            //   //passphrase: '199028'
-            // })
-            // // .then(function() {
-            // //     console.log(ssh);
-            // //     //let result = await ssh.execCommand('ls')
-            // //
-            // //     ssh.execCommand('pwd').then(function(result){
-            // //       console.log(result);
-            // //     })
-            // //
-            // // })
-            //
-            //    let result = await ssh.execCommand('zen-cli stop && sleep 8 && zend -rescan');
-            //    console.log(result);
-            //    console.log(JSON.stringify(result));
-
-            // rpcCallResultSync("help", [])
-            // .then(function(result){
-            //     // Do stuff
-            //     console.log(result);
-            // })
-            // .catch(function(error){
-            //   // Handle error
-            //   console.log(error);
-            // });
 
             let res = await rpc.rpcCallResultSync("z_listaddresses",[]);
             console.log(res);

@@ -132,8 +132,7 @@ async function rpcCallResultSync(cmd, paramsUsed) {
     if (respCore.error) {
         console.log(respCore.error);
         console.log(JSON.stringify(respCore.error));
-        // FIXME: err is unresolved - should be like this? or?: outputLast = respCore.error;
-        outputLast = err;
+        outputLast = respCore.error;
         status = "error";
     } else {
         outputLast = (respCore.output.result);
@@ -232,8 +231,6 @@ async function getSecureNodeTaddressOrGenerate() {
 
 async function getOperationStatus(opid) {
     let resp = await rpcCallResultSync("z_getoperationstatus", [[opid]]);
-    // let statusTx = resp.output;
-    // console.log(JSON.stringify(statusTx[0]));
     return resp.output
 }
 
@@ -241,9 +238,7 @@ async function getZaddressBalance(pk, zAddress) {
     //let nullResp = await importPKinSN(pk, zAddress);
     let resp = await rpcCallResultSync("z_getbalance", [zAddress]);
     if (resp.status === "ok") {
-        // balance
-        // let balance = parseFloat(resp.output).toFixed(8);
-        return parseFloat(resp.output).toFixed(8)
+        return parseFloat(resp.output).toFixed(8) //balance
     } else {
         console.log(resp.status);
         return resp.status
@@ -329,16 +324,16 @@ async function sendFromOrToZaddress(fromAddressPK, fromAddress, toAddress, amoun
 module.exports = {
     cleanCommandString: cleanCommandString,
     splitCommandString: splitCommandString,
-    rpcCallCoreSync: rpcCallCoreSync,
+    //rpcCallCoreSync: rpcCallCoreSync,
     rpcCallResultSync: rpcCallResultSync,
     getNewZaddressPK: getNewZaddressPK,
-    getZaddressBalance: getZaddressBalance,
+    //getZaddressBalance: getZaddressBalance,
     sendFromOrToZaddress: sendFromOrToZaddress,
-    getOperationStatus: getOperationStatus,
+    //getOperationStatus: getOperationStatus,
     updateAllZBalances: updateAllZBalances,
     importAllZAddressesFromSNtoArizen: importAllZAddressesFromSNtoArizen,
     importAllZAddressesFromArizentoSN: importAllZAddressesFromArizentoSN,
-    importPKinSN: importPKinSN,
+    //importPKinSN: importPKinSN,
     pingSecureNodeRPC: pingSecureNodeRPC,
     getSecureNodeTaddressOrGenerate: getSecureNodeTaddressOrGenerate,
     getTaddressBalance: getTaddressBalance,

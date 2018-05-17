@@ -7,7 +7,7 @@ const {ipcRenderer} = require("electron");
 const Qrcode = require("qrcode");
 const jsPDF = require("jspdf");
 const {showPaperWalletDialog} = require("./paperwallet.js");
-//const {getNewZaddressPK, updateAllZBalances, getSecureNodeTaddressOrGenerate} = require("./rpc.js");
+
 
 // const {zenextra} = require("./zenextra.js");
 
@@ -592,13 +592,12 @@ function updateDepositQrcode(qrcodeDelay = 0) {
 }
 
 async function checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo) {
-    console.log("In set Timeout..----------");
-    let resp = await getTaddressBalance(tIntermediateAddress);
+    let resp = await rpc.getTaddressBalance(tIntermediateAddress);
     let balance = resp.balance;
     if (balance>= amount){
         // send from T to Z
         console.log("Sending.....");
-        sendFromOrToZaddress(undefined, tIntermediateAddress, toAddr, amount, feeTwo)
+        rpc.sendFromOrToZaddress(undefined, tIntermediateAddress, toAddr, amount, feeTwo)
 
     } else {
         // setTimeout() again
@@ -614,6 +613,7 @@ async function initWithdrawView() {
     withdrawFeeInput.addEventListener("input", validateWithdrawForm);
     withdrawButton.addEventListener("click", async function() {
         const msg = tr("wallet.tabWithdraw.withdrawConfirmQuestion", "Do you really want to send this transaction?");
+        const msgTTZ = tr("wallet.sendTTZ.doNotCloseArizen", "Arizen is Sending ZEN from your T address to an intermediate T and then to the Z address. Please do not close Arizen until the 2nd transaction is sent (opid appears below withdraw).");
         if (confirm(msg)) {
             let fromAddr = withdrawFromAddrInput.value;
             let toAddr = withdrawToAddrInput.value;
@@ -626,20 +626,21 @@ async function initWithdrawView() {
                     withdrawFeeInput.value,
                     withdrawAmountInput.value);
             } else if (zenextra.isTransaparentAddr(fromAddr) && zenextra.isZeroAddr(toAddr)) { // T - Z
-              // Get intermediate T address from SN or Create
-              let feeOne = fee/2;
-              let feeTwo = fee/2;
-              let amountOne = parseFloat(amount)+feeTwo;
-              console.log(amountOne);
-              let tIntermediateAddress = await rpc.getSecureNodeTaddressOrGenerate();
-                 // send from T-Arizen to T-SN, amount, fee/2
-              ipcRenderer.send("send",
-                  fromAddr,
-                  tIntermediateAddress,
-                  feeOne,
-                  amountOne);
-              checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo);
-              alert(tr("wallet.sendTTZ.doNotCloseArizen", "Arizen is Sending ZEN from yout T address to an intermediate T and then to the Z address. Please do not close Arizen until the 2nd transaction is sent (opid appears below withdraw)."));
+                if (confirm(msgTTZ)) {
+                    // Get intermediate T address from SN or Create
+                    let feeOne = fee/2;
+                    let feeTwo = fee/2;
+                    let amountOne = parseFloat(amount)+feeTwo;
+                    console.log(amountOne);
+                    let tIntermediateAddress = await rpc.getSecureNodeTaddressOrGenerate();
+                    // send from T-Arizen to T-SN, amount, fee/2
+                    ipcRenderer.send("send",
+                        fromAddr,
+                        tIntermediateAddress,
+                        feeOne,
+                        amountOne);
+                    checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo);
+                  }
 
 
             } else { // Z - Z or Z - T
@@ -647,7 +648,7 @@ async function initWithdrawView() {
                 let fromAddressPK = fromAddrObj.pk;
                 let myAmount = parseFloat(withdrawAmountInput.value).toFixed(8);
                 let myFees = parseFloat(withdrawFeeInput.value);
-                sendFromOrToZaddress(fromAddressPK, fromAddr, toAddr, myAmount, myFees);
+                rpc.sendFromOrToZaddress(fromAddressPK, fromAddr, toAddr, myAmount, myFees);
             }
         }
     });
