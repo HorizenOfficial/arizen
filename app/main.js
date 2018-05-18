@@ -23,6 +23,7 @@ const querystring = require("querystring");
 const {List} = require("immutable");
 const {translate} = require("./util.js");
 const {DateTime} = require("luxon");
+const {zenextra} = require("./zenextra.js");
 
 const userWarningImportFileWithPKs = "New address(es) and a private key(s) will be imported. Your previous back-ups do not include the newly imported addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
 const userWarningExportWalletUnencrypted = "You are going to export an UNENCRYPTED wallet ( ie your private keys) in plain text. That means that anyone with this file can control your ZENs. Store this file in a safe place. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
@@ -508,13 +509,17 @@ function exportPKs() {
             } else {
                 const keys = sqlSelectObjects("select pk, addr from wallet where length(addr)=35");
                 for (let k of keys) {
-                    const wif = zencashjs.address.privKeyToWIF(k.pk,true);
-                    fs.write(fd, wif + " " + k.addr + "\n");
+                    if (zenextra.isPK(k.pk)) {
+                        const wif = zencashjs.address.privKeyToWIF(k.pk,true);
+                        fs.write(fd, wif + " " + k.addr + "\n");
+                    }
                 }
                 const zkeys = sqlSelectObjects("select pk, addr from wallet where length(addr)=95");
                 for (let k of zkeys) {
-                    const spendingKey = zencashjs.zaddress.zSecretKeyToSpendingKey(k.pk);
-                    fs.write(fd, spendingKey + " " + k.addr + "\n");
+                    if (zenextra.isPK(k.pk)) {
+                        const spendingKey = zencashjs.zaddress.zSecretKeyToSpendingKey(k.pk);
+                        fs.write(fd, spendingKey + " " + k.addr + "\n");
+                    }
                 }
             }
         });
