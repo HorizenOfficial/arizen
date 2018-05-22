@@ -162,7 +162,22 @@
       "explorerUrl": "ZEN Explorer 주소",
       "apiUrl": "API 주소",
       "fiat": "동등한 명령",
-      "save": "저장"
+      "save": "저장",
+      "enableNotifications": "TODO Desktop notifications",
+      "enableDomainFronting": "TODO Domain fronting",
+      "secureNodeFQDN": "TODO Secure Node FQDN",
+      "sshUsername": "TODO SSH username",
+      "sshPassword": "TODO SSH password",
+      "sshPort": "TODO SSH port",
+      "secureNodePort": "TODO Secure Node Port (see zen.conf)",
+      "secureNodeUsername": "TODO Secure Node Username (see zen.conf)",
+      "secureNodePassword": "TODO Secure Node Password (see zen.conf)",
+      "readyTimeout": "TODO Ready Timeout (default: 10000)",
+      "forwardTimeout": "TODO Forward Timeout (default: 10000)",
+      "domainFrontingUrl": "TODO Domain fronting public base URL",
+      "domainFrontingHost": "TODO Domain fronting private host",
+      "autoLogOffEnable": "TODO Enable automatic log off",
+      "autoLogOffTimeout": "TODO Auto log off timeout in seconds"
     },
     "paperWallet": {
       "label": "종이 지갑",
@@ -179,6 +194,14 @@
       "label": "일괄 철회",
       "keepAmount": "유지할 금액",
       "txFee": "거래 수수료"
+    },
+    "importSinglePrivateKey": {
+      "openButtonLabel": "TODO Import Private Key",
+      "titleLabel": "TODO Import Single Private Key",
+      "privateKeyLabel": "TODO Private Key",
+      "importButtonLabel": "TODO Import",
+      "warningNotValidAddress": "TODO Address exist in your wallet",
+      "warningNotValidPK": "TODO This is not a valid Private Key or you try to import a Spending Key (only for Z addresses) as T address Private key."
     }
   },
   "menu": {
@@ -198,6 +221,12 @@
       "copy": "복사하기",
       "paste": "붙여넣기",
       "selectAll": "전체 선택"
+    },
+    "help": "TODO Help",
+    "helpSubmenu": {
+      "arizenManual": "TODO User Manual",
+      "support": "TODO Support",
+      "zencash": "TODO ZenCash"
     }
   },
   "warmingMessages": {
@@ -205,7 +234,7 @@
     "userWarningExportWalletUnencrypted": "You are going to export an UNENCRYPTED wallet ( ie your private keys) in plain text. That means that anyone with this file can control your ZENs. Store this file in a safe place. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
     "userWarningExportWalletEncrypted": "You are going to export an ENCRYPTED wallet and your private keys will be encrypted. That means that in order to access your private keys you need to know the corresponding username and password. In case you don't know them you cannot control the ZENs that are controled by these private keys. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
     "userWarningImportPK": "A new address and a private key will be imported. Your previous back-ups do not include the newly imported address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
-    "userWarningCreateNewAddress":"A new address and a private key will be created. Your previous back-ups do not include this newly generated address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
+    "userWarningCreateNewAddress": "A new address and a private key will be created. Your previous back-ups do not include this newly generated address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
     "userWarningIUnderstand": "I understand",
     "cancel": "Cancel"
   }

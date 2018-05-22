@@ -128,7 +128,8 @@
     "transactionHistory": {
       "label": "Historie transakcí",
       "unconfirmed": "Čeká na potvrzení",
-      "transactionReplaceAttempt": "Pokus o nahrazení transakce v bloku"
+      "transactionReplaceAttempt": "Pokus o nahrazení transakce v bloku",
+      "replaceAttempt": "TODO Attempting to replace transaction in block"
     },
     "transactionDetail": {
       "label": "Detail transakce",
@@ -164,7 +165,20 @@
       "fiat": "Zůstatek ve FIAT měně",
       "save": "Uložit",
       "enableNotifications": "Notifikace",
-      "enableDomainFronting": "Domain fronting"
+      "enableDomainFronting": "Domain fronting",
+      "secureNodeFQDN": "TODO Secure Node FQDN",
+      "sshUsername": "TODO SSH username",
+      "sshPassword": "TODO SSH password",
+      "sshPort": "TODO SSH port",
+      "secureNodePort": "TODO Secure Node Port (see zen.conf)",
+      "secureNodeUsername": "TODO Secure Node Username (see zen.conf)",
+      "secureNodePassword": "TODO Secure Node Password (see zen.conf)",
+      "readyTimeout": "TODO Ready Timeout (default: 10000)",
+      "forwardTimeout": "TODO Forward Timeout (default: 10000)",
+      "domainFrontingUrl": "TODO Domain fronting public base URL",
+      "domainFrontingHost": "TODO Domain fronting private host",
+      "autoLogOffEnable": "TODO Enable automatic log off",
+      "autoLogOffTimeout": "TODO Auto log off timeout in seconds"
     },
     "paperWallet": {
       "label": "Papírová peněženka",
@@ -213,7 +227,8 @@
       "zencash": "ZenCash",
       "support": "Podpora",
       "arizenManual": "Uživatelská Příručka"
-    }
+    },
+    "help": "TODO Help"
   },
   "warmingMessages": {
     "userWarningImportFileWithPKs": "New address(es) and a private key(s) will be imported. Your previous back-ups do not include the newly imported addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
