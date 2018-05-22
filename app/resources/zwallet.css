@@ -382,6 +382,23 @@ header button {
     margin: 10px 0 20px 0;
 }
 
+
+.dotSNstatus {
+    height: 14px;
+    width: 14px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.dotSNstatusRPC {
+    height: 14px;
+    width: 14px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+}
+
 .changeWalletPasswordDialogContent {
     width: 600px;
 }

@@ -81,6 +81,8 @@ ipcRenderer.on("get-wallets-response", (event, msgStr) => {
     addTransactions(msg.transactions);
     setTotalBalance(msg.total);
     scheduleRefresh();
+    pingSecureNode();
+    pingSecureNodeRPCResult();
 });
 
 ipcRenderer.on("update-wallet-balance", (event, msgStr) => {
@@ -222,12 +224,21 @@ function setAddressNodeName(addrObj, addrNode) {
     }
 }
 
+function formatAddressInList(addr) {
+    // T - address
+    if (addr.length === 35) {
+        return addr;
+    } else {
+        return addr.substring(0, 17) + "..." + addr.substring(80);
+    }
+}
+
 function createAddrItem(addrObj) {
     const addrItem = cloneTemplate("addrItemTemplate");
     addrItem.dataset.addr = addrObj.addr;
 
     setAddressNodeName(addrObj, addrItem.getElementsByClassName("addrName")[0]);
-    addrItem.getElementsByClassName("addrText")[0].textContent = addrObj.addr;
+    addrItem.getElementsByClassName("addrText")[0].textContent = formatAddressInList(addrObj.addr);
     addrItem.getElementsByClassName("addrNameLine")[0]
         .addEventListener("click", () => showAddrDetail(addrObj.addr));
     addrItem.getElementsByClassName("addrDepositButton")[0]
@@ -417,12 +428,19 @@ function setAddressName(addr, name) {
 function showNewAddrDialog() {
     let response = -1;
     response = ipcRenderer.sendSync("renderer-show-message-box", tr("warmingMessages.userWarningCreateNewAddress", userWarningCreateNewAddress), [tr("warmingMessages.userWarningIUnderstand", "I understand")]);
-    console.log(response);
     if (response === 0) {
         showDialogFromTemplate("newAddrDialogTemplate", dialog => {
             const createButton = dialog.querySelector(".newAddrDialogCreate");
             createButton.addEventListener("click", () => {
-                ipcRenderer.send("generate-wallet", dialog.querySelector(".newAddrDialogName").value);
+                var getT = dialog.querySelector(".TorZgetT").checked;
+                var getZ = dialog.querySelector(".TorZgetZ").checked;
+                var nameAddress = dialog.querySelector(".newAddrDialogName").value;
+                if (getT) {
+                    ipcRenderer.send("generate-wallet", nameAddress);
+                }
+                if (getZ) {
+                    rpc.getNewZaddressPK(nameAddress)
+                }
                 dialog.close();
             });
             dialog.addEventListener("keypress", ev => {
@@ -482,6 +500,8 @@ function scheduleRefresh() {
 }
 
 function refresh() {
+    syncZaddrIfSettingsExist();
+    rpc.updateAllZBalances();
     ipcRenderer.send("refresh-wallet");
     scheduleRefresh();
 }
@@ -490,6 +510,11 @@ function showAddrSelectDialog(zeroBalanceAddrs, onSelected) {
     showDialogFromTemplate("addrSelectDialogTemplate", dialog => {
         const listNode = dialog.querySelector(".addrSelectList");
         for (const addrObj of addrObjList) {
+            if (addrObj.addr.length !== 35){
+                // it is Z address
+                continue;
+            }
+
             if (!zeroBalanceAddrs && !addrObj.lastbalance) {
                 continue;
             }
@@ -568,19 +593,65 @@ function updateDepositQrcode(qrcodeDelay = 0) {
     }, qrcodeDelay);
 }
 
-function initWithdrawView() {
+async function checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo) {
+    let resp = await rpc.getTaddressBalance(tIntermediateAddress);
+    let balance = resp.balance;
+    if (balance>= amount){
+        // send from T to Z
+        console.log("Sending ...");
+        rpc.sendFromOrToZaddress(undefined, tIntermediateAddress, toAddr, amount, feeTwo)
+
+    } else {
+        // setTimeout() again
+        console.log("Will check again in 2 minutes.");
+        setTimeout( () => checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo), 30000) // 2 mins
+    }
+}
+
+async function initWithdrawView() {
     withdrawFromAddrInput.addEventListener("input", validateWithdrawForm);
     withdrawToAddrInput.addEventListener("input", validateWithdrawForm);
     withdrawAmountInput.addEventListener("input", validateWithdrawForm);
     withdrawFeeInput.addEventListener("input", validateWithdrawForm);
-    withdrawButton.addEventListener("click", () => {
+    withdrawButton.addEventListener("click", async function() {
         const msg = tr("wallet.tabWithdraw.withdrawConfirmQuestion", "Do you really want to send this transaction?");
+        const msgTTZ = tr("wallet.sendTTZ.doNotCloseArizen", "Arizen is Sending ZEN from your T address to an intermediate T and then to the Z address. Please do not close Arizen until the 2nd transaction is sent (opid appears below withdraw).");
         if (confirm(msg)) {
-            ipcRenderer.send("send",
-                withdrawFromAddrInput.value,
-                withdrawToAddrInput.value,
-                withdrawFeeInput.value,
-                withdrawAmountInput.value);
+            let fromAddr = withdrawFromAddrInput.value;
+            let toAddr = withdrawToAddrInput.value;
+            let fee = withdrawFeeInput.value;
+            let amount = withdrawAmountInput.value;
+            if (zenextra.isTransaparentAddr(fromAddr) && zenextra.isTransaparentAddr(toAddr)) { // T-T
+                ipcRenderer.send("send",
+                    withdrawFromAddrInput.value,
+                    withdrawToAddrInput.value,
+                    withdrawFeeInput.value,
+                    withdrawAmountInput.value);
+            } else if (zenextra.isTransaparentAddr(fromAddr) && zenextra.isZeroAddr(toAddr)) { // T - Z
+                if (confirm(msgTTZ)) {
+                    // Get intermediate T address from SN or Create
+                    let feeOne = fee/2;
+                    let feeTwo = fee/2;
+                    let amountOne = parseFloat(amount)+feeTwo;
+                    console.log(amountOne);
+                    let tIntermediateAddress = await rpc.getSecureNodeTaddressOrGenerate();
+                    // send from T-Arizen to T-SN, amount, fee/2
+                    ipcRenderer.send("send",
+                        fromAddr,
+                        tIntermediateAddress,
+                        feeOne,
+                        amountOne);
+                    checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo);
+                  }
+
+
+            } else { // Z - Z or Z - T
+                let fromAddrObj = ipcRenderer.sendSync("get-address-object", fromAddr);
+                let fromAddressPK = fromAddrObj.pk;
+                let myAmount = parseFloat(withdrawAmountInput.value).toFixed(8);
+                let myFees = parseFloat(withdrawFeeInput.value);
+                rpc.sendFromOrToZaddress(fromAddressPK, fromAddr, toAddr, myAmount, myFees);
+            }
         }
     });
     withdrawFromButton.addEventListener("click", () => showAddrSelectDialog(false, addr => {
@@ -619,6 +690,11 @@ function validateWithdrawForm() {
         return;
     }
     setBalanceText(withdrawAvailBalance, fromAddrObj.lastbalance);
+
+    if (fromAddrObj.pk === "watchOnlyAddrr"){
+        setNodeTrText(withdrawMsg, "wallet.tabWithdraw.messages.watchOnlyAddrr", "The from address is a watch only address and you cannot spend its balance.");
+        return;
+    }
 
     if (!toAddr) {
         setNodeTrText(withdrawMsg, "wallet.tabWithdraw.messages.emptyToAddr", "The to address is empty");
@@ -661,6 +737,11 @@ function showBatchWithdrawDialog() {
         const listNode = dialog.querySelector(".addrSelectList");
 
         for (const addrObj of addrObjList) {
+            if (addrObj.addr.length !== 35) {
+                // it is Z address
+                continue;
+            }
+
             if (addrObj.lastbalance === 0) {
                 continue;
             }

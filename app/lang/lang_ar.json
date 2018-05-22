@@ -8,7 +8,7 @@
     "password": "كلمه السر",
     "loginButton": "تسجيل الدخول",
     "createWalletLink": "إنشاء محفظة",
-    "warningWrongUsernameOrPassword":"اسم المستخدم أو كلمة المرور خاطئة",
+    "warningWrongUsernameOrPassword": "اسم المستخدم أو كلمة المرور خاطئة",
     "dataImportFailed": "فشل استيراد البيانات، هل بيانات الاعتماد صحيحة؟",
     "fileReplace": "هل تريد استبدال الملف؟",
     "walletReplace": "استبدال المحفظة؟",
@@ -22,7 +22,7 @@
     "label": "أريزين: إنشاء محفظة",
     "username": "اسم المستخدم",
     "password": "كلمه السر",
-    "passwordAgain": "أدخل كلمة المرور مرة أخرى" ,
+    "passwordAgain": "أدخل كلمة المرور مرة أخرى",
     "oldUsername": "أدخل اسم المستخدم القديم: ",
     "oldPassword": "أدخل كلمة المرور القديمة: ",
     "selectWallet": "حدد محفظة",
@@ -48,22 +48,22 @@
     "newTransactions": "معاملة جديدة"
   },
   "importExportPks": {
-    "chooseFileExport" : "اختر ملفا للمفاتيح الخاصة",
-    "chooseFileImport" : "اختيار ملف مع مفاتيح خاصة",
+    "chooseFileExport": "اختر ملفا للمفاتيح الخاصة",
+    "chooseFileImport": "اختيار ملف مع مفاتيح خاصة",
     "InvalidLinePk": "${0} سطر غير صالح ",
     "InvalidPk": "${0} مفتاح خاص غير صالح على الخط"
   },
   "wallet": {
-    "showSettingsDialogButton" : "إعدادات",
-    "showAboutDialogButton" : "حول",
-    "refreshWallet" : "تحديث",
-    "logout" : "الخروج",
-    "exit" : "ىخرج",
-    "date" : "تاريخ",
+    "showSettingsDialogButton": "إعدادات",
+    "showAboutDialogButton": "حول",
+    "refreshWallet": "تحديث",
+    "logout": "الخروج",
+    "exit": "ىخرج",
+    "date": "تاريخ",
     "from": "من عند",
     "to": "إلى",
-    "amount" : "كمية",
-    "balance" : "توازن",
+    "amount": "كمية",
+    "balance": "توازن",
     "totalBalance": "إجمالي الرصيد",
     "lastUpdate": "اخر تحديث",
     "showExplorer": "شين زين اكسبلورر",
@@ -78,7 +78,7 @@
     "pdfExported": "بدف تصديرها",
     "tabOverview": {
       "label": "نظرة عامة",
-      "showZeroBalances" : "إظهار أرصدة صفر",
+      "showZeroBalances": "إظهار أرصدة صفر",
       "newAddress": "الحصول على عنوان جديد",
       "unnamedAddress": "عنوان لم يذكر اسمه",
       "newAddressExists": " هو بالفعل في القائمة ${0} عنوان"
@@ -98,13 +98,13 @@
       "help": "انقر على الزر الأحمر بجوار العنوان المطلوب للسحب",
       "availableBalance": "الرصيد المتوفر",
       "fee": "رسوم التحويل",
-      "txStatus" : "حالة عملية",
+      "txStatus": "حالة عملية",
       "withdrawConfirmQuestion": "هل تريد حقا إرسال هذه المعاملة؟",
       "messages": {
         "emptyFromAddr": "العنوان من حقل فارغ",
         "unknownFromAddr": "من عنوان لا تنتمي إلى هذه المحفظة",
-        "insufficientFirstSource" : "عدم كفاية الأموال على المصدر الأول. الحد الأدنى هو عتبة بالإضافة إلى رسوم.",
-        "insufficientNextSource" : "عدم كفاية الأموال على المصدر الثاني أو التالي. الحد الأدنى هو الحد الأدنى بالإضافة إلى الرسم.",
+        "insufficientFirstSource": "عدم كفاية الأموال على المصدر الأول. الحد الأدنى هو عتبة بالإضافة إلى رسوم.",
+        "insufficientNextSource": "عدم كفاية الأموال على المصدر الثاني أو التالي. الحد الأدنى هو الحد الأدنى بالإضافة إلى الرسم.",
         "numberOfKeys": " العناوين ليست متساوية # مفاتيح خاصة و #",
         "sumLowerThanFee": "رصيدك الإجمالي أقل من الرسم",
         "zenApi": "لم يتم تعيين زين أبي في الإعدادات",
@@ -113,8 +113,8 @@
         "emptyToAddr": "عنوان الهدف فارغ",
         "zeroAmount": "المبلغ غير إيجابي",
         "insufficientFunds": "عدم كفاية الأموال من العنوان",
-        "fromAddressBadLength" : "طول عنوان المصدر غير صحيح",
-        "fromAddressBadPrefix" : "بادئة عنوان المصدر سيئة، يجب أن تبدأ مع 'زن'",
+        "fromAddressBadLength": "طول عنوان المصدر غير صحيح",
+        "fromAddressBadPrefix": "بادئة عنوان المصدر سيئة، يجب أن تبدأ مع 'زن'",
         "toAddressBadLength": "طول عنوان الوجهة غير صحيح",
         "toAddressBadPrefix": "يجب أن تبدأ بادئة عنوان الوجهة غير صحيحة ب 'زن'",
         "amounNotNumber": "يجب أن تبدأ بادئة عنوان الوجهة غير صحيحة ب 'زن'",
@@ -162,15 +162,30 @@
       "explorerUrl": "زن مستكشف ورل",
       "apiUrl": "عناوين ورل لواجهة برمجة التطبيقات",
       "fiat": "فيات ما يعادلها",
-      "save": "حفظ"
+      "save": "حفظ",
+      "enableNotifications": "TODO Desktop notifications",
+      "enableDomainFronting": "TODO Domain fronting",
+      "secureNodeFQDN": "TODO Secure Node FQDN",
+      "sshUsername": "TODO SSH username",
+      "sshPassword": "TODO SSH password",
+      "sshPort": "TODO SSH port",
+      "secureNodePort": "TODO Secure Node Port (see zen.conf)",
+      "secureNodeUsername": "TODO Secure Node Username (see zen.conf)",
+      "secureNodePassword": "TODO Secure Node Password (see zen.conf)",
+      "readyTimeout": "TODO Ready Timeout (default: 10000)",
+      "forwardTimeout": "TODO Forward Timeout (default: 10000)",
+      "domainFrontingUrl": "TODO Domain fronting public base URL",
+      "domainFrontingHost": "TODO Domain fronting private host",
+      "autoLogOffEnable": "TODO Enable automatic log off",
+      "autoLogOffTimeout": "TODO Auto log off timeout in seconds"
     },
     "paperWallet": {
       "label": "ورقة المحفظة",
       "generateNewWallet": "إنشاء محفظة جديدة",
       "name": "الاسم اختياري",
       "addWalletToArizen": "إضافة هذه المحفظة إلى أريزين",
-      "zenCashWalletLabel" : "محفظة زنكاش",
-      "tAddrLabel" : "مفتاح عام - عنوان شفاف",
+      "zenCashWalletLabel": "محفظة زنكاش",
+      "tAddrLabel": "مفتاح عام - عنوان شفاف",
       "privateKeyLabel": "مفتاح سري",
       "namePrint": "اسم",
       "exportPDFLabel": "تصدير بدف"
@@ -179,11 +194,19 @@
       "label": "انسحاب متعددة",
       "keepAmount": "المبلغ للحفاظ على",
       "txFee": "رسوم التحويل"
+    },
+    "importSinglePrivateKey": {
+      "openButtonLabel": "TODO Import Private Key",
+      "titleLabel": "TODO Import Single Private Key",
+      "privateKeyLabel": "TODO Private Key",
+      "importButtonLabel": "TODO Import",
+      "warningNotValidAddress": "TODO Address exist in your wallet",
+      "warningNotValidPK": "TODO This is not a valid Private Key or you try to import a Spending Key (only for Z addresses) as T address Private key."
     }
   },
   "menu": {
-    "file" : "ملف",
-    "backupEncrypted":  "النسخ الاحتياطي المحفظة المشفرة",
+    "file": "ملف",
+    "backupEncrypted": "النسخ الاحتياطي المحفظة المشفرة",
     "backupUnencrypted": "النسخ الاحتياطي المحفظة المشفرة",
     "importEncrypted": "استيراد مشفرة أريزين المحفظة",
     "importUnencrypted": "استيراد غير مشفرة أريزين المحفظة",
@@ -198,6 +221,12 @@
       "copy": "نسخ",
       "paste": "معجون",
       "selectAll": "اختر الكل"
+    },
+    "help": "TODO Help",
+    "helpSubmenu": {
+      "arizenManual": "TODO User Manual",
+      "support": "TODO Support",
+      "zencash": "TODO ZenCash"
     }
   },
   "warmingMessages": {
@@ -205,7 +234,7 @@
     "userWarningExportWalletUnencrypted": "You are going to export an UNENCRYPTED wallet ( ie your private keys) in plain text. That means that anyone with this file can control your ZENs. Store this file in a safe place. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
     "userWarningExportWalletEncrypted": "You are going to export an ENCRYPTED wallet and your private keys will be encrypted. That means that in order to access your private keys you need to know the corresponding username and password. In case you don't know them you cannot control the ZENs that are controled by these private keys. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
     "userWarningImportPK": "A new address and a private key will be imported. Your previous back-ups do not include the newly imported address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
-    "userWarningCreateNewAddress":"A new address and a private key will be created. Your previous back-ups do not include this newly generated address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
+    "userWarningCreateNewAddress": "A new address and a private key will be created. Your previous back-ups do not include this newly generated address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
     "userWarningIUnderstand": "I understand",
     "cancel": "Cancel"
   }

@@ -47,6 +47,12 @@
     "balanceUpdated": "Balance Updated",
     "newTransactions": "New transaction"
   },
+  "common": {
+    "selectAll": "Select all",
+    "clearAll": "Clear all",
+    "okButtonText": "OK",
+    "cancelButtonText": "Cancel"
+  },
   "importExportPks": {
     "chooseFileExport": "Choose file for private keys",
     "chooseFileImport": "Choose file with private keys",
@@ -76,6 +82,7 @@
     "fetchBlockchainFailed": "Failed to fetch blockchain changes:",
     "save": "Save",
     "pdfExported": "PDF exported",
+    "autoLogOffLabel": "Log off in ",
     "tabOverview": {
       "label": "Overview",
       "showZeroBalances": "Show zero balances",
@@ -164,7 +171,20 @@
       "fiat": "Fiat Equivalent",
       "save": "Save",
       "enableNotifications": "Desktop notifications",
-      "enableDomainFronting": "Domain fronting"
+      "enableDomainFronting": "Domain fronting",
+      "secureNodeFQDN": "Secure Node FQDN",
+      "sshUsername" : "SSH username",
+      "sshPassword" : "SSH password",
+      "sshPort" : "SSH port",
+      "secureNodePort" : "Secure Node Port (see zen.conf)",
+      "secureNodeUsername" : "Secure Node Username (see zen.conf)",
+      "secureNodePassword" : "Secure Node Password (see zen.conf)",
+      "readyTimeout" : "Ready Timeout (default: 10000)",
+      "forwardTimeout" : "Forward Timeout (default: 10000)",
+      "domainFrontingUrl" : "Domain fronting public base URL",
+      "domainFrontingHost" : "Domain fronting private host",
+      "autoLogOffEnable" : "Enable automatic log off",
+      "autoLogOffTimeout" : "Auto log off timeout in seconds"
     },
     "paperWallet": {
       "label": "Paper Wallet",
@@ -187,8 +207,23 @@
       "titleLabel": "Import Single Private Key",
       "privateKeyLabel": "Private Key",
       "importButtonLabel": "Import",
-      "warningNotValidAddress": "Z address exist in your wallet",
-      "warningNotValidPK": "This is not a valid Private Key."
+      "warningNotValidAddress": "Address exist in your wallet",
+      "warningNotValidPK": "This is not a valid Private Key or you try to import a Spending Key (only for Z addresses) as T address Private key."
+    },
+    "changePassword": {
+      "title": "Change Wallet Password",
+      "warningText": "WARNING: Wallet backups won't be re-encrypted! If you need to use them, you will have to use current password.",
+      "currentPassword": "Current Password",
+      "newPassword1": "New Password",
+      "newPassword2": "New Password (Retype)"
+    },
+    "rpcConsole": {
+      "title": "RPC",
+      "command": "Command",
+      "test": "Test Me",
+      "results": "RPC Results ...",
+      "status": "Status: ",
+      "testFunctionButton": "Test Function"
     }
   },
   "menu": {
@@ -199,6 +234,7 @@
     "importUnencrypted": "Import UNENCRYPTED Arizen wallet",
     "importPrivateKeys": "Import private keys",
     "exportPrivateKeys": "Export private keys",
+    "changeWalletPassword": "Change wallet password",
     "exit": "Exit",
     "edit": "Edit",
     "editSubmenu": {
@@ -223,6 +259,7 @@
     "userWarningImportPK": "A new address and a private key will be imported. Your previous back-ups do not include the newly imported address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
     "userWarningCreateNewAddress": "A new address and a private key will be created. Your previous back-ups do not include this newly generated address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
     "userWarningIUnderstand": "I understand",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "userWarningImportPkUserZendRescan" : "The balance of the Z address you imported will be visible after you rescan the blockchain. Please run 'zen-cli stop && sleep 8 && zend -rescan' in your secure node (linux)."
   }
 }

@@ -104,7 +104,7 @@ function checkPasswd() {
     }
 
     // validate special character
-    spec = pswd_val.match(/[\-!$%\^&*()_+\|~=`{}\[\]:";<>?,.\/@#]/);
+    spec = pswd_val.match(/[\-!$%^&*()_+|~=`{}\[\]:";<>?,.\/@#]/);
     if (spec) {
         changeClass("special_info", "valid", "invalid");
     } else {
