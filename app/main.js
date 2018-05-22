@@ -84,6 +84,7 @@ const defaultSettings = {
 let settings = defaultSettings;
 let langDict;
 let axiosApi;
+let internalInfo = {};
 
 const dbStructWallet = "CREATE TABLE wallet (id INTEGER PRIMARY KEY AUTOINCREMENT, pk TEXT, addr TEXT UNIQUE, lastbalance REAL, name TEXT);";
 const dbStructSettings = "CREATE TABLE settings (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE, value TEXT);";
@@ -410,9 +411,23 @@ function loadSettings() {
     return JSON.parse(Buffer.from(b64settings[0][0], "base64").toString("ascii"));
 }
 
+function loadInternalInfo() {
+    const b64internalInfo = sqlSelectColumns("select value from new_settings where name = 'internalInfo'");
+    if (b64internalInfo.length === 0) {
+        return {};
+    }
+    return JSON.parse(Buffer.from(b64internalInfo[0][0], "base64").toString("ascii"));
+}
+
 function saveSettings(settings) {
     const b64settings = Buffer.from(JSON.stringify(settings)).toString("base64");
     sqlRun("insert or replace into new_settings (name, value) values ('settings', ?)", b64settings);
+    saveWallet();
+}
+
+function saveInternalInfo(internalInfo) {
+    const b64internalInfo = Buffer.from(JSON.stringify(internalInfo)).toString("base64");
+    sqlRun("insert or replace into new_settings (name, value) values ('internalInfo', ?)", b64internalInfo);
     saveWallet();
 }
 
@@ -434,6 +449,10 @@ function setSettings(newSettings) {
             timeout: 10000,
         });
     }
+}
+
+function setInternalInfo(newInternalInfo){
+    internalInfo = newInternalInfo;
 }
 
 function upgradeDb() {
@@ -1147,6 +1166,7 @@ ipcMain.on("verify-login-info", function (event, login, pass) {
             userInfo.walletDb = new sql.Database(walletBytes);
             upgradeDb();
             setSettings(loadSettings());
+            setInternalInfo(loadInternalInfo());
             updateMenuAtLogin();
             resp = {
                 response: "OK",
@@ -1285,6 +1305,17 @@ ipcMain.on("save-settings", function (event, newSettingsStr) {
     setSettings(newSettings);
     event.sender.send("save-settings-response", JSON.stringify({response: "OK"}));
     event.sender.send("settings", newSettingsStr);
+});
+
+ipcMain.on("save-internal-info", function (event, newInternalInfoStr) {
+    if (!userInfo.loggedIn) {
+        return;
+    }
+    const newInternalInfo = JSON.parse(newInternalInfoStr);
+    saveInternalInfo(newInternalInfo);
+    setInternalInfo(newInternalInfo);
+    //event.sender.send("save-settings-response", JSON.stringify({response: "OK"}));
+    event.sender.send("internalInfo", newInternalInfoStr);
 });
 
 ipcMain.on("show-notification", function (event, title, message, duration) {
