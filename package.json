@@ -119,6 +119,7 @@
     "luxon": "^1.2.1",
     "node-json-rpc2": "^1.1.0",
     "node-ssh": "^5.1.1",
+    "npm": "^6.0.1",
     "open-ssh-tunnel": "^0.3.1",
     "password-hash": "^1.2.2",
     "ping": "^0.2.2",
