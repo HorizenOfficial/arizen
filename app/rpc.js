@@ -11,6 +11,8 @@ const zencashjs = require("zencashjs");
 let sshServer;
 let howManyUseSSH;
 
+const maxTries = 3;
+
 function clientCallSync(methodUsed, paramsUsed) {
     const rpc = require("node-json-rpc2");
     let options = {
@@ -79,7 +81,8 @@ async function rpcCallCoreSync(methodUsed, paramsUsed) {
         status = "error";
         console.log(outputCore);
         colorRpcLEDs(false); // false = Red
-        //new Error('Error :  using method ' + methodUsed);
+        //rpcCallCoreSync(methodUsed, paramsUsed)
+        throw new Error('Error using method ' + methodUsed);
     }
 
     howManyUseSSH = howManyUseSSH - 1;
@@ -119,15 +122,15 @@ function splitCommandString(stringCommand) {
 
 //=====================================================
 async function rpcCallResultSync(cmd, paramsUsed) {
-    let status = "ok";
+    let status = "error";
     let respCore;
     let outputLast;
 
-    try {
+//    try {
         respCore = await rpcCallCoreSync(cmd, paramsUsed);
-    } catch (error) {
-        return {output: error, status: "error"}
-    }
+    // } catch (error) {
+    //     return {output: error, status: "error"}
+    // }
 
     if (respCore.error) {
         console.log(respCore.error);
@@ -136,6 +139,7 @@ async function rpcCallResultSync(cmd, paramsUsed) {
         status = "error";
     } else {
         outputLast = (respCore.output.result);
+        status = "ok";
     }
 
     return {output: outputLast, status: status}
@@ -234,32 +238,35 @@ async function getOperationStatus(opid) {
     return resp.output
 }
 
-async function getZaddressBalance(pk, zAddress) {
-    // let nullResp = await importPKinSN(pk, zAddress);
-    let resp = await rpcCallResultSync("z_getbalance", [zAddress]);
-    if (resp.status === "ok") {
-        return parseFloat(resp.output).toFixed(8) //balance
-    } else {
-        console.log(resp.status);
-        return resp.status
-    }
+async function getZaddressBalance(pk, address) {
+  let balance = -1.0;
+  let resp = await rpcCallResultSync("z_getbalance", [address]);
+  if (resp.status === "ok") {
+      balance = parseFloat(resp.output); //.toFixed(8)
+      return {balance: balance, status: resp.status}
+  } else {
+      console.log(resp.status);
+      return {balance: balance, status: resp.status}
+  }
 }
 
 async function getTaddressBalance(address) {
+    let balance = -1.0;
     let resp = await rpcCallResultSync("z_getbalance", [address]);
     if (resp.status === "ok") {
-        let balance = parseFloat(resp.output).toFixed(8);
+        balance = parseFloat(resp.output).toFixed(8);
         return {balance: balance, status: resp.status}
     } else {
         console.log(resp.status);
-        return {balance: -1.0, status: resp.status}
+        return {balance: balance, status: resp.status}
     }
 }
 
 async function updateAllZBalances() {
     const zAddrObjs = ipcRenderer.sendSync("get-all-Z-addresses");
     for (const addrObj of zAddrObjs) {
-        let newBalance = await getZaddressBalance(addrObj.pk, addrObj.addr);
+        let newBalanceResp = await getZaddressBalance(addrObj.pk, addrObj.addr);
+        let newBalance = newBalanceResp.balance;
         if (newBalance >= 0.0) {
             addrObj.lastbalance = newBalance;
             let respZ = ipcRenderer.sendSync("update-addr-in-db", addrObj);
@@ -286,16 +293,18 @@ async function getPKofZAddress(zAddr) {
 }
 
 async function importAllZAddressesFromSNtoArizen() {
+    let addrList = [];
     let resp = await listAllZAddresses();
     // console.log(resp);
-    let addrList = resp.output;
-    // console.log(addrList);
-    for (const addr of addrList) {
-        let resp = await getPKofZAddress(addr);
-        //let spendingKey = resp.output;
-        let pk = zenextra.spendingKeyToSecretKey(resp.output); //spendingKey
-        let isT = false;
-        ipcRenderer.send("import-single-key", "My SN Z addr", pk, isT);
+    addrList = resp.output;
+    if ( !(addrList.length === 0) ) {
+        for (const addr of addrList) {
+            let resp = await getPKofZAddress(addr);
+            //let spendingKey = resp.output;
+            let pk = zenextra.spendingKeyToSecretKey(resp.output); //spendingKey
+            let isT = false;
+            ipcRenderer.send("import-single-key", "My SN Z addr", pk, isT);
+        }
     }
 }
 
@@ -315,6 +324,7 @@ async function sendFromOrToZaddress(fromAddressPK, fromAddress, toAddress, amoun
     let paramsUsed = [fromAddress, amounts, minconf, fee];
     let resp = await rpcCallResultSync(cmd, paramsUsed);
     console.log("opid: " + resp.output);
+    console.log(resp.status);
     // FIXME: updateWithdrawalStatus - element is not exported
     updateWithdrawalStatus(resp.status, resp.output);
     return resp

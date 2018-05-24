@@ -81,10 +81,12 @@ const defaultSettings = {
     autoLogOffEnable: 0
 };
 
+const defaultInternalInfo = {pendingTxs: [] };
+
 let settings = defaultSettings;
 let langDict;
 let axiosApi;
-let internalInfo = {};
+let internalInfo = defaultInternalInfo;
 
 const dbStructWallet = "CREATE TABLE wallet (id INTEGER PRIMARY KEY AUTOINCREMENT, pk TEXT, addr TEXT UNIQUE, lastbalance REAL, name TEXT);";
 const dbStructSettings = "CREATE TABLE settings (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE, value TEXT);";
@@ -414,7 +416,7 @@ function loadSettings() {
 function loadInternalInfo() {
     const b64internalInfo = sqlSelectColumns("select value from new_settings where name = 'internalInfo'");
     if (b64internalInfo.length === 0) {
-        return {};
+        return defaultInternalInfo;
     }
     return JSON.parse(Buffer.from(b64internalInfo[0][0], "base64").toString("ascii"));
 }
@@ -1223,6 +1225,7 @@ ipcMain.on("import-single-key-Sync", function(event, name, pk, isT) {
 
 ipcMain.on("get-wallets", () => {
     mainWindow.webContents.send("settings", JSON.stringify(settings));
+    mainWindow.webContents.send("internal-info", JSON.stringify(internalInfo));
     sendWallet();
 });
 

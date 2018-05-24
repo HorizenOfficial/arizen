@@ -279,7 +279,7 @@ function showAboutDialog() {
         settings = newSettings;
     });
 
-    ipcRenderer.on("internalInfo", (sender, internalInfoStr) => {
+    ipcRenderer.on("internal-info", (sender, internalInfoStr) => {
         const newInternalInfo = JSON.parse(internalInfoStr);
         internalInfo = newInternalInfo;
     });
@@ -502,9 +502,11 @@ function showRpcDialog() {
             //console.log(res);
 
             console.log(internalInfo);
-            internalInfo.newTx = [];
-            internalInfo.newTx.push({1:{from: "a", to: "b", amount:1, fee:2}});
-            console.log(internalInfo);
+            //internalInfo.pendingTxs = [];
+            //internalInfo.pendingTxs.push({type:"snT-Z",from: "a", to: "b", amount:1, fee:2});
+            //console.log(internalInfo);
+            //console.log(internalInfo.pendingTxs[0]);
+
         });
 
         testRpcButton.addEventListener("click", async function () {

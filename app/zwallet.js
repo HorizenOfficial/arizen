@@ -504,6 +504,7 @@ function refresh() {
     rpc.updateAllZBalances();
     ipcRenderer.send("refresh-wallet");
     scheduleRefresh();
+    sendPendingTxs();
 }
 
 function showAddrSelectDialog(zeroBalanceAddrs, onSelected) {
@@ -594,18 +595,49 @@ function updateDepositQrcode(qrcodeDelay = 0) {
 }
 
 async function checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo) {
+    let balance = -1.0;
+    amount = parseFloat(amount).toFixed(8);
     let resp = await rpc.getTaddressBalance(tIntermediateAddress);
-    let balance = resp.balance;
-    if (balance>= amount){
+    balance = resp.balance;
+    console.log(balance);
+    console.log(amount);
+    if (balance >= amount) {
         // send from T to Z
-        console.log("Sending ...");
-        rpc.sendFromOrToZaddress(undefined, tIntermediateAddress, toAddr, amount, feeTwo)
+        console.log("Sending...");
+        let sendResp = await rpc.sendFromOrToZaddress(undefined, tIntermediateAddress, toAddr, amount, feeTwo)
+        console.log(sendResp.status);
+        if (sendResp.status === "ok"){
+            return true
+        } else {
+            return false
+        }
 
     } else {
-        // setTimeout() again
-        console.log("Will check again in 2 minutes.");
-        setTimeout( () => checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo), 30000) // 2 mins
+        console.log("Will check again later...");
+        //setTimeout( () => checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo), 30000) // 2 mins
+        return false
     }
+}
+
+async function sendPendingTxs() {
+    let newPendingTxs = [];
+    let oldPendingTxs = internalInfo.pendingTxs; //[{type:"snT-Z",fromAddress: "zn", toAddress: "zn2", amount:1, fee:0.1}]; //internalInfo.pendingTxs;
+    console.log("Preious Txs:");
+    console.log(internalInfo);
+
+    for (let pendTx of oldPendingTxs) {
+      console.log(pendTx);
+      if (pendTx.type === "snT-Z") {
+          let sentTx = await checkIntermediateSend(pendTx.fromAddress, pendTx.toAddress, pendTx.amount, pendTx.fee);
+          console.log("Transaction sent: ");
+          console.log(sentTx);
+          if (!sentTx) {
+              newPendingTxs.push(pendTx);
+          }
+      }
+    }
+    internalInfo.pendingTxs = newPendingTxs;
+    saveInternalInfo()
 }
 
 async function initWithdrawView() {
@@ -641,7 +673,10 @@ async function initWithdrawView() {
                         tIntermediateAddress,
                         feeOne,
                         amountOne);
-                    checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo);
+                    //checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo);
+                    internalInfo.pendingTxs.push({type:"snT-Z",fromAddress: tIntermediateAddress, toAddress: toAddr, amount:amount, fee:feeTwo});
+                    saveInternalInfo()
+                    sendPendingTxs()
                   }
 
 
