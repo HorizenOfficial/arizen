@@ -297,7 +297,7 @@ async function importAllZAddressesFromSNtoArizen() {
     let resp = await listAllZAddresses();
     // console.log(resp);
     addrList = resp.output;
-    if ( !(addrList.length === 0) ) {
+    if ( !(addrList.length === 0 || addrList.length === undefined ) ) {
         for (const addr of addrList) {
             let resp = await getPKofZAddress(addr);
             //let spendingKey = resp.output;
