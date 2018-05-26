@@ -258,15 +258,10 @@
         <h2 slot=headerText data-tr=wallet.settings.label>Settings</h2>
         <div slot=content class=settingsDialogContent>
             <div class=form>
-                <label for=settingsTxHistory data-tr=wallet.settings.limit>Transaction limit</label>
-                <span class=formInput><input type=number name=settingsTxHistory class=settingsTxHistory min=0 /><span data-tr=wallet.settings.items>items</span></span>
                 <label for=settingsLanguage data-tr=wallet.settings.language>Language</label>
                 <select name=settingsLanguage class=settingsLanguage size=1>
                 </select>
-                <label for=settingsExplorerUrl data-tr=wallet.settings.explorerUrl>ZEN Explorer URL</label>
-                <input type=text name=settingsExplorerUrl class=settingsExplorerUrl />
-                <label for=settingsApiUrls title="Place one URL per line" data-tr=wallet.settings.apiUrl>API URLs</label>
-                <textarea type=text name=settingsApiUrls class=settingsApiUrls rows=5></textarea>
+
                 <label for=settingsFiatCurrency title="Select the desired fiat to display your balance."  data-tr=wallet.settings.fiat>Fiat Equivalent</label>
                 <select name=settingsFiatCurrency class=settingsFiatCurrency >
                     <option value="USD">(USD) US Dollar</option>
@@ -302,17 +297,39 @@
                     <option value="TWD">(TWD) Taiwan Dollar</option>
                     <option value="ZAR">(ZAR) South Africa Rand</option>
                 </select>
+
                 <label for=enableNotifications data-tr=wallet.settings.enableNotifications>Desktop notifications</label>
                 <label class=container>
                     <input type=checkbox class=enableNotifications name=enableNotifications />
                     <span class=checkmark></span>
                 </label>
 
-                <label for=enableDomainFronting data-tr=wallet.settings.enableDomainFronting>Enable domain fronting</label>
+                <label for=settingsTxHistory data-tr=wallet.settings.limit>Transaction limit</label>
+                <span class=formInput><input type=number name=settingsTxHistory class=settingsTxHistory min=0 /><span data-tr=wallet.settings.items>items</span></span>
+
+                <hr class=formDivider />
+
+                <label for=settingAutoLogOffEnable data-tr=wallet.settings.autoLogOffEnable>Enable automatic log off</label>
                 <label class=container>
-                    <input type=checkbox class=enableDomainFronting name=enableDomainFronting />
+                    <input type=checkbox class=settingAutoLogOffEnable name=settingAutoLogOffEnable />
                     <span class=checkmark></span>
                 </label>
+
+                <label for=settingAutoLogOffTimeout data-tr=wallet.settings.autoLogOffTimeout>Auto log off timeout in seconds</label>
+                <span class=formInput>
+                    <input type=number name=settingAutoLogOffTimeout class=settingAutoLogOffTimeout min=60 step=1/>
+                    <span>s</span>
+                </span>
+
+                <hr class=formDivider />
+
+                <label for=settingsExplorerUrl data-tr=wallet.settings.explorerUrl>ZEN Explorer URL</label>
+                <input type=text name=settingsExplorerUrl class=settingsExplorerUrl />
+
+                <label for=settingsApiUrls title="Place one URL per line" data-tr=wallet.settings.apiUrl>API URLs</label>
+                <textarea type=text name=settingsApiUrls class=settingsApiUrls rows=5></textarea>
+
+                <hr class=formDivider />
 
                 <label for=secureNodeFQDN data-tr=wallet.settings.secureNodeFQDN>Secure Node FQDN</label>
                 <input type=text name=settingsSecureNodeFQDN class=settingsSecureNodeFQDN />
@@ -333,21 +350,19 @@
                 <label for=forwardTimeout data-tr=wallet.settings.forwardTimeout>Forward Timeout (default: 10000)</label>
                 <input type=text name=settingsForwardTimeout class=settingsForwardTimeout />
 
+                <hr class=formDivider />
+
+                <label for=enableDomainFronting data-tr=wallet.settings.enableDomainFronting>Enable domain fronting</label>
+                <label class=container>
+                    <input type=checkbox class=enableDomainFronting name=enableDomainFronting />
+                    <span class=checkmark></span>
+                </label>
                 <label for=settingDomainFrontingUrl data-tr=wallet.settings.domainFrontingUrl>Domain fronting public base URL</label>
                 <input type=text name=settingDomainFrontingUrl class=settingDomainFrontingUrl />
                 <label for=settingDomainFrontingHost data-tr=wallet.settings.domainFrontingHost>Domain fronting private host</label>
                 <input type=text name=settingDomainFrontingHost class=settingDomainFrontingHost />
 
-                <label for=settingAutoLogOffEnable data-tr=wallet.settings.autoLogOffEnable>Enable automatic log off</label>
-                <label class=container>
-                    <input type=checkbox class=settingAutoLogOffEnable name=settingAutoLogOffEnable />
-                    <span class=checkmark></span>
-                </label>
-                <label for=settingAutoLogOffTimeout data-tr=wallet.settings.autoLogOffTimeout>Auto log off timeout in seconds</label>
-                <span class=formInput>
-                    <input type=number name=settingAutoLogOffTimeout class=settingAutoLogOffTimeout min=60 step=1/>
-                    <span>s</span>
-                </span>
+                <hr class=formDivider />
             </div>
             <div class=formButtons>
                 <button class=settingsSave data-tr=wallet.settings.save>Save</button>

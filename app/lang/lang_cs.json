@@ -4,7 +4,7 @@
   "langFileVersion": "1",
   "login": {
     "label": "Arizen: Přihlášení",
-    "username": "Jméno",
+    "username": "Jméno peněženky",
     "password": "Heslo",
     "loginButton": "Přihlásit",
     "createWalletLink": "Vytvořit novou peněženku",
@@ -22,7 +22,7 @@
     "label": "Arizen: Vytvoření peněženky",
     "username": "Jméno",
     "password": "Heslo",
-    "oldUsername": "Staré jméno: ",
+    "oldUsername": "Staré jméno peněženky: ",
     "oldPassword": "Staré heslo: ",
     "passwordAgain": "Heslo znovu",
     "selectWallet": "Vybrat soubor s peněženkou",
@@ -203,6 +203,22 @@
       "importButtonLabel": "Import",
       "warningNotValidAddress": "Z adresa již existuje v tvé peněžence.",
       "warningNotValidPK": "Není validní privátní klíč!"
+    },
+    "autoLogOffLabel": "Odhlášení za ",
+    "changePassword": {
+      "title": "Změna hesla",
+      "warningText": "VAROVÁNÍ: Heslo u záloh nebude změněno! Pokud budete zálohy potřebovat, použijte aktuální heslo!",
+      "currentPassword": "Aktuální heslo",
+      "newPassword1": "Nové heslo",
+      "newPassword2": "Heslo znovu"
+    },
+    "rpcConsole": {
+      "title": "RPC",
+      "command": "Příkaz",
+      "test": "Vyzkoušej",
+      "results": "RPC odpověď ...",
+      "status": "Status: ",
+      "testFunctionButton": "Otestuj funkci"
     }
   },
   "menu": {
@@ -228,15 +244,23 @@
       "support": "Podpora",
       "arizenManual": "Uživatelská Příručka"
     },
-    "help": "TODO Help"
+    "help": "Nápověda",
+    "changeWalletPassword": "Změna hesla"
   },
   "warmingMessages": {
-    "userWarningImportFileWithPKs": "New address(es) and a private key(s) will be imported. Your previous back-ups do not include the newly imported addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
-    "userWarningExportWalletUnencrypted": "You are going to export an UNENCRYPTED wallet ( ie your private keys) in plain text. That means that anyone with this file can control your ZENs. Store this file in a safe place. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
-    "userWarningExportWalletEncrypted": "You are going to export an ENCRYPTED wallet and your private keys will be encrypted. That means that in order to access your private keys you need to know the corresponding username and password. In case you don't know them you cannot control the ZENs that are controled by these private keys. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
-    "userWarningImportPK": "A new address and a private key will be imported. Your previous back-ups do not include the newly imported address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
-    "userWarningCreateNewAddress": "A new address and a private key will be created. Your previous back-ups do not include this newly generated address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
+    "userWarningImportFileWithPKs": "Nová adresa(y) a nový privátní klíč(e) budou nyní importovány. Vaše předchozí záloha(y) nebude obsahovat nově importované adresy nebo odpovídající privátní klíče. Prosíme, použijte Arizen funkci pro zálohování a nahraďte stávající zálohu pro Vaši Arizen peněženku. Kliknutím na 'Rozumím' vyjadřujete, že vše plně chápete. Pro další informace prostudujte menu Nápověda Arizen peněženky.",
+    "userWarningExportWalletUnencrypted": "Právě se chystáte exportovat UNENCRYPTED (tj. nezašifrovanou) peněženku (např. Vaše privátní klíče) ve formátu prostého textu. To znamená, že každý, kdo od Vás získá tento text, může kontrolovat Vaše ZENy. Uchovávejte proto tento soubor na bezpečném místě. Kliknutím na 'Rozumím' vyjadřujete, že vše plně chápete. Pro další informace prostudujte menu Nápověda Arizen peněženky.",
+    "userWarningExportWalletEncrypted": "Právě se chystáte exportovat ENCRYPTED (tj. zašifrovanou) peněženku a zároveň budou zašifrovány Váše privátní klíče. To znamená, že pokud chcete mít přístup k Vašim privátním klíčům, musíte znát odpovídající jméno peněženky a heslo. V případě, že je neznáte, nebudete moci kontrolvat své ZENy pomocí privátních klíčů. Kliknutím na 'Rozumím' vyjadřujete, že vše plně chápete. Pro další informace prostudujte menu Nápověda.",
+    "userWarningImportPK": "Bude importována nová adresa s privátním klíčem. Vaše předchozí zálohy nebudou obsahovat nově importovanou adresu nebo odpovídající privátní klíč. Prosíme, použijte Arizen funkci pro zálohování a nahraďte stávající zálohu pro Vaši Arizen peněženku. Kliknutím na 'Rozumím' vyjadřujete, že vše plně chápete. Pro další informace prostudujte menu Nápověda.",
+    "userWarningCreateNewAddress": "Bude vytvořena nová adresa a nový privátní klíč. Vaše předchozí zálohy nebudou obsahovat nově vygenerovanou adresu nebo odpovídající privátní klíč. Prosíme, použijte Arizen funkci pro zálohování a nahraďte stávající zálohu pro Vaši Arizen peněženku. Kliknutím na 'Rozumím' vyjadřujete, že vše plně chápete. Pro další informace prostudujte menu Nápověda.",
     "userWarningIUnderstand": "Souhlasím",
-    "cancel": "Zrušit"
+    "cancel": "Zrušit",
+    "userWarningImportPkUserZendRescan": "Zůstatek ZENů na Z adrese, kterou jste importovali, bude viditelný po znovuprohledání blockchainu. Prosíme, spusťte 'zen-cli stop && sleep 10 && zend -rescan' na Vašem secure nodu (linux)."
+  },
+  "common": {
+    "selectAll": "Vybrat vše",
+    "clearAll": "Zrušit všechny výběry",
+    "okButtonText": "OK",
+    "cancelButtonText": "Zrušit"
   }
 }

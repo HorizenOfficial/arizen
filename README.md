@@ -4,6 +4,7 @@
 [![Code Climate][codeclimate-img]][codeclimate-url]
 
 # User Manuals
+- v1.1.7: [Arizen v1.1.7 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.7/Arizen.v1.1.7.Wallet.User.Manual.pdf)
 - v1.1.6: [Arizen v1.1.6 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.6/Arizen.v1.1.6.Wallet.User.Manual.pdf)
 - v1.1.5: [Arizen v1.1.5 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.5/Arizen.v1.1.5.Wallet.User.Manual.pdf)
 - v1.1.4: [Arizen v1.1.4 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.4/Arizen.v1.1.4.Wallet.User.Manual.pdf)
@@ -12,6 +13,22 @@
 - v1.0.0: [Arizen v1.0.0 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.0.0/Arizen.Wallet.User.Manual.pdf)
 
 # Version History
+
+## v1.1.7
+- [x] Support for sending Z transactions and addresses (available only for Security Node (SN) operators).
+- [x] Added items in Settings menu for configuring the connection to SN.
+- [x] All Private Keys for T addresses are held ONLY in Arizen wallet.
+- [x] All Private Keys for Z addresses are synchronized from your SN into Arizen and vice versa.
+- [x] Send T-Z tx, here is used T-T-Z schema 2 transactions (fee is divided, use fee for 2 txs), the middle T address is address in your SN for security reason).
+- [x] "watch only/intermediate" T address has been introduced - it is used for T-Z tx (there are 2 txs and fee is divided 2 = schema is: T(Arizen)-T(on your SN)-Z(on your SN or anywhere), from this intermediate T address you will have PK stored ONLY in your SN.
+- [x] Send Z-Z with your SN.
+- [x] Send Z-T with your SN.
+- [x] Send T-T is unchanged - API is still used.
+- [x] Import Private Keys of your Z addresses.
+- [x] Export Private Keys of your Z addresses.
+- [x] Updated translations keys.
+- [x] Renamed: from "Username" to "Wallet Name" -> less confusion, Arizen is NOT client-server application.
+- [x] Reformatted Settings menu and fix overflow.
 
 ## v1.1.6
 - [x] Automatic logoff timeout can be now enabled and set in Settings (minimum 60s of inactivity).
