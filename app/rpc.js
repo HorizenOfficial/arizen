@@ -7,11 +7,10 @@ const {ipcRenderer} = require("electron");
 const {openTunnel} = require("./ssh_tunneling.js");
 const {zenextra} = require("./zenextra.js");
 const zencashjs = require("zencashjs");
+const delay = require('delay');
 
 let sshServer;
 let howManyUseSSH;
-
-const maxTries = 3;
 
 function clientCallSync(methodUsed, paramsUsed) {
     const rpc = require("node-json-rpc2");
@@ -45,10 +44,21 @@ function clientCallSync(methodUsed, paramsUsed) {
     });
 }
 
+const clientCallSyncRetry = async (methodUsed, paramsUsed, n, delayMiliSecs) => {
+    for (let i = 0; i < n; i++) {
+        if (i>0) {
+            await delay(delayMiliSecs);
+        }
+        try {
+            return await clientCallSync(methodUsed, paramsUsed);
+        } catch (err) {
+            const isLastAttempt = i + 1 === n;
+            if (isLastAttempt) throw err;
+        }
+    }
+};
+
 async function rpcCallCoreSync(methodUsed, paramsUsed) {
-    // console.log("==============================================================");
-    // console.log(howManyUseSSH);
-    // console.log(sshServer);
     let status = "ok";
     let outputCore;
 
@@ -57,12 +67,10 @@ async function rpcCallCoreSync(methodUsed, paramsUsed) {
     } else {
         howManyUseSSH = howManyUseSSH + 1;
     }
-    // console.log(howManyUseSSH);
 
     let tunnelToLocalHost = (settings.secureNodeFQDN === "127.0.0.1" || settings.secureNodeFQDN.toLowerCase() === "localhost");
 
     if (sshServer === undefined && howManyUseSSH <= 1 && !tunnelToLocalHost) {
-        // console.log(sshServer);
         try {
             sshServer = await openTunnel();
             console.log("SSH Tunnel to Server: Opened");
@@ -74,7 +82,7 @@ async function rpcCallCoreSync(methodUsed, paramsUsed) {
 
     // FIXME: colorRpcLEDs - element is not exported
     try {
-        outputCore = await clientCallSync(methodUsed, paramsUsed);
+        outputCore = await clientCallSyncRetry(methodUsed, paramsUsed, 3, 1000); // 3 is retries, 1000 is 1 sec delay
         colorRpcLEDs(true); // false = Red // true = Green
     } catch (error) {
         outputCore = "rpcCallCoreSync error in method : " + methodUsed + " ";
@@ -148,7 +156,7 @@ async function rpcCallResultSync(cmd, paramsUsed) {
 async function helpSync() {
     let cmd;
     cmd = "help";
-    const result = await rpcCallResultSync(cmd, []);
+    let result = await rpcCallResultSync(cmd, []);
     console.log(result);
 }
 
@@ -169,7 +177,6 @@ async function importPKinSN(pk, address) {
                 pk = zencashjs.address.privKeyToWIF(pk);
             }
         }
-        // let resp = await rpcCallResultSync(cmd, [pk, "no"]);
         return await rpcCallResultSync(cmd, [pk, "no"]);
     }
 }
@@ -187,7 +194,7 @@ async function getNewZaddressPK(nameAddress) {
     let resp = await rpcCallResultSync("z_getnewaddress", []);
     let zAddress = resp.output;
     let newResp = await rpcCallResultSync("z_exportkey", [zAddress]);
-    // let spendingKey = output;
+    // let spendingKey = newResp.output;
     let pkZaddress = zenextra.spendingKeyToSecretKey(newResp.output);
     ipcRenderer.send("DB-insert-address", nameAddress, pkZaddress, zAddress);
     return {pk: pkZaddress, addr: zAddress, name: nameAddress}
