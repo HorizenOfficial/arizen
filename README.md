@@ -15,7 +15,7 @@
 # Version History
 
 ## v1.1.7
-- [x] Support for sending Z transactions and addresses (available only for Security Node (SN) operators).
+- [x] Support for sending Z transactions and addresses (available only for Secure Node (SN) operators).
 - [x] Added items in Settings menu for configuring the connection to SN.
 - [x] All Private Keys for T addresses are held ONLY in Arizen wallet.
 - [x] All Private Keys for Z addresses are synchronized from your SN into Arizen and vice versa.
@@ -70,7 +70,7 @@ printed. This created address can by included to your Arizen or not.
 - [x] Feature: Arizen has been translated into 14 languages see Settings.
 - [x] Feature: Your total balance is shown in selected fiat currency with the actual exchange rate (see Settings).
 - [x] Feature: Import and export your private keys.
-- [x] Feature: Sweeping (batch withdrawal) functionality for security node operators - you can now withdraw only ZENs above a selected threshold (e.g. 42 ZENs or 0 ZENs when you want to consolidate your ZEN to one address) from multiple addresses at once only with one fee!
+- [x] Feature: Sweeping (batch withdrawal) functionality for Secure Node operators - you can now withdraw only ZENs above a selected threshold (e.g. 42 ZENs or 0 ZENs when you want to consolidate your ZEN to one address) from multiple addresses at once only with one fee!
 - [x] Feature: Rebranding - new logo and colors.
 - [x] Fix: Notifications has been enabled again.
 - [x] Fix: Problem with antiviruses have been solved (false positive detection with AVG, Avast, etc.).
