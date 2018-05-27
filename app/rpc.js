@@ -7,6 +7,7 @@ const {ipcRenderer} = require("electron");
 const {openTunnel} = require("./ssh_tunneling.js");
 const {zenextra} = require("./zenextra.js");
 const zencashjs = require("zencashjs");
+const delay = require('delay');
 
 let sshServer;
 let howManyUseSSH;
@@ -43,10 +44,21 @@ function clientCallSync(methodUsed, paramsUsed) {
     });
 }
 
+const clientCallSyncRetry = async (methodUsed, paramsUsed, n, delayMiliSecs) => {
+    for (let i = 0; i < n; i++) {
+        if (i>0) {
+            await delay(delayMiliSecs);
+        }
+        try {
+            return await clientCallSync(methodUsed, paramsUsed);
+        } catch (err) {
+            const isLastAttempt = i + 1 === n;
+            if (isLastAttempt) throw err;
+        }
+    }
+};
+
 async function rpcCallCoreSync(methodUsed, paramsUsed) {
-    // console.log("==============================================================");
-    // console.log(howManyUseSSH);
-    // console.log(sshServer);
     let status = "ok";
     let outputCore;
 
@@ -55,12 +67,10 @@ async function rpcCallCoreSync(methodUsed, paramsUsed) {
     } else {
         howManyUseSSH = howManyUseSSH + 1;
     }
-    // console.log(howManyUseSSH);
 
     let tunnelToLocalHost = (settings.secureNodeFQDN === "127.0.0.1" || settings.secureNodeFQDN.toLowerCase() === "localhost");
 
     if (sshServer === undefined && howManyUseSSH <= 1 && !tunnelToLocalHost) {
-        // console.log(sshServer);
         try {
             sshServer = await openTunnel();
             console.log("SSH Tunnel to Server: Opened");
@@ -72,21 +82,19 @@ async function rpcCallCoreSync(methodUsed, paramsUsed) {
 
     // FIXME: colorRpcLEDs - element is not exported
     try {
-        outputCore = await clientCallSync(methodUsed, paramsUsed);
+        outputCore = await clientCallSyncRetry(methodUsed, paramsUsed, 3, 1000); // 3 is retries, 1000 is 1 sec delay
         colorRpcLEDs(true); // false = Red // true = Green
     } catch (error) {
         outputCore = "rpcCallCoreSync error in method : " + methodUsed + " ";
         status = "error";
         console.log(outputCore);
         colorRpcLEDs(false); // false = Red
-        //new Error('Error :  using method ' + methodUsed);
+        //throw new Error('Error using method ' + methodUsed);
     }
 
     howManyUseSSH = howManyUseSSH - 1;
-    // console.log(howManyUseSSH);
-    // console.log(sshServer);
     if (howManyUseSSH === 0 || howManyUseSSH < 0) {
-        if (!tunnelToLocalHost) {
+        if (!tunnelToLocalHost  && !(sshServer === undefined)) { //
             sshServer.close();
             sshServer = undefined;
             console.log("SSH Tunnel to Server: Closed");
@@ -118,33 +126,31 @@ function splitCommandString(stringCommand) {
 }
 
 //=====================================================
+// rpcCallResultSync and rpcCallCoreSync can be combined, but it is more clear to keep them like this
 async function rpcCallResultSync(cmd, paramsUsed) {
-    let status = "ok";
+    let status = "error";
+    let isOK = false;
     let respCore;
     let outputLast;
 
-    try {
-        respCore = await rpcCallCoreSync(cmd, paramsUsed);
-    } catch (error) {
-        return {output: error, status: "error"}
-    }
+    respCore = await rpcCallCoreSync(cmd, paramsUsed);
 
-    if (respCore.error) {
-        console.log(respCore.error);
-        console.log(JSON.stringify(respCore.error));
-        outputLast = respCore.error;
+    if (respCore.status === "error") {
+        outputLast = respCore.output;
         status = "error";
     } else {
         outputLast = (respCore.output.result);
+        status = "ok";
+        isOK = true;
     }
 
-    return {output: outputLast, status: status}
+    return {output: outputLast, status: status, isOK:isOK}
 }
 
 async function helpSync() {
     let cmd;
     cmd = "help";
-    const result = await rpcCallResultSync(cmd, []);
+    let result = await rpcCallResultSync(cmd, []);
     console.log(result);
 }
 
@@ -165,47 +171,46 @@ async function importPKinSN(pk, address) {
                 pk = zencashjs.address.privKeyToWIF(pk);
             }
         }
-        // let resp = await rpcCallResultSync(cmd, [pk, "no"]);
         return await rpcCallResultSync(cmd, [pk, "no"]);
     }
 }
 
 async function pingSecureNodeRPC() {
     let resp = await rpcCallResultSync("help", []);
-    let isAlive = false;
-    if (resp.status === "ok") {
-        isAlive = true;
-    }
-    return isAlive
+    return resp.isOK  // if resp.isOK = isAlive
 }
 
 async function getNewZaddressPK(nameAddress) {
     let resp = await rpcCallResultSync("z_getnewaddress", []);
     let zAddress = resp.output;
-    let newResp = await rpcCallResultSync("z_exportkey", [zAddress]);
-    // let spendingKey = output;
-    let pkZaddress = zenextra.spendingKeyToSecretKey(newResp.output);
-    ipcRenderer.send("DB-insert-address", nameAddress, pkZaddress, zAddress);
-    return {pk: pkZaddress, addr: zAddress, name: nameAddress}
+    let newResp = await rpcCallResultSync("z_exportkey", [zAddress]);  // let spendingKey = newResp.output;
+    if (newResp.isOK) {
+        let pkZaddress = zenextra.spendingKeyToSecretKey(newResp.output);
+        ipcRenderer.send("DB-insert-address", nameAddress, pkZaddress, zAddress);
+        return {pk: pkZaddress, addr: zAddress, name: nameAddress}
+    }
 }
 
 // Unused for now but can be used in the future
 async function getNewTaddressPK(nameAddress) {
     let resp = await rpcCallResultSync("getnewaddress", []);
     let tAddress = resp.output;
-    let newResp = await rpcCallResultSync("dumpprivkey", [tAddress]);
-    // let wif = newResp.output;
-    let pkTaddress = zencashjs.address.WIFToPrivKey(newResp.output);
-    ipcRenderer.send("DB-insert-address", nameAddress, pkTaddress, tAddress);
-    return tAddress
+    let newResp = await rpcCallResultSync("dumpprivkey", [tAddress]); // let wif = newResp.output;
+    if (newResp.isOK) {
+        let pkTaddress = zencashjs.address.WIFToPrivKey(newResp.output);
+        ipcRenderer.send("DB-insert-address", nameAddress, pkTaddress, tAddress);
+        return tAddress
+    }
 }
 
 async function getNewTaddressWatchOnly(nameAddress) {
     let resp = await rpcCallResultSync("getnewaddress", []);
-    let tAddress = resp.output;
-    let pkTaddress = "watchOnlyAddrr";
-    ipcRenderer.send("DB-insert-address", nameAddress, pkTaddress, tAddress);
-    return tAddress
+    if (resp.isOK) {
+        let tAddress = resp.output;
+        let pkTaddress = "watchOnlyAddrr";
+        ipcRenderer.send("DB-insert-address", nameAddress, pkTaddress, tAddress);
+        return tAddress
+    }
 }
 
 async function getSecureNodeTaddressOrGenerate() {
@@ -215,18 +220,23 @@ async function getSecureNodeTaddressOrGenerate() {
     let nameAddress = "My Watch Only Secure Node addr";
     let pkTaddress = "watchOnlyAddrr";
 
-    if (resp.output.length === 0) {
-        theT = await getNewTaddressWatchOnly(nameAddress)
-    } else {
-        theT = resp.output[0];
-        let respNew = ipcRenderer.sendSync("check-if-address-in-wallet", theT);
-        let addrExists = respNew.exist;
+    if (resp.isOK) {
+        if (resp.output.length === 0) {
+            theT = await getNewTaddressWatchOnly(nameAddress)
+        } else {
+            theT = resp.output[0];
+            let respNew = ipcRenderer.sendSync("check-if-address-in-wallet", theT);
+            let addrExists = respNew.exist;
 
-        if (!addrExists) {
-            ipcRenderer.send("DB-insert-address", nameAddress, pkTaddress, theT);
+            if (!addrExists) {
+                ipcRenderer.send("DB-insert-address", nameAddress, pkTaddress, theT);
+            }
         }
+        return theT
+    } else {
+        return false
     }
-    return theT
+
 }
 
 async function getOperationStatus(opid) {
@@ -234,32 +244,35 @@ async function getOperationStatus(opid) {
     return resp.output
 }
 
-async function getZaddressBalance(pk, zAddress) {
-    // let nullResp = await importPKinSN(pk, zAddress);
-    let resp = await rpcCallResultSync("z_getbalance", [zAddress]);
-    if (resp.status === "ok") {
-        return parseFloat(resp.output).toFixed(8) //balance
-    } else {
-        console.log(resp.status);
-        return resp.status
-    }
+async function getZaddressBalance(pk, address) {
+  let balance = -1.0;
+  let resp = await rpcCallResultSync("z_getbalance", [address]);
+  if (resp.isOK) {
+      balance = parseFloat(resp.output); //.toFixed(8)
+      return {balance: balance, status: resp.status}
+  } else {
+      console.log(resp.status);
+      return {balance: balance, status: resp.status}
+  }
 }
 
 async function getTaddressBalance(address) {
+    let balance = -1.0;
     let resp = await rpcCallResultSync("z_getbalance", [address]);
-    if (resp.status === "ok") {
-        let balance = parseFloat(resp.output).toFixed(8);
+    if (resp.isOK) {
+        balance = parseFloat(resp.output).toFixed(8);
         return {balance: balance, status: resp.status}
     } else {
         console.log(resp.status);
-        return {balance: -1.0, status: resp.status}
+        return {balance: balance, status: resp.status}
     }
 }
 
 async function updateAllZBalances() {
     const zAddrObjs = ipcRenderer.sendSync("get-all-Z-addresses");
     for (const addrObj of zAddrObjs) {
-        let newBalance = await getZaddressBalance(addrObj.pk, addrObj.addr);
+        let newBalanceResp = await getZaddressBalance(addrObj.pk, addrObj.addr);
+        let newBalance = newBalanceResp.balance;
         if (newBalance >= 0.0) {
             addrObj.lastbalance = newBalance;
             let respZ = ipcRenderer.sendSync("update-addr-in-db", addrObj);
@@ -286,17 +299,21 @@ async function getPKofZAddress(zAddr) {
 }
 
 async function importAllZAddressesFromSNtoArizen() {
+    let addrList = [];
     let resp = await listAllZAddresses();
     // console.log(resp);
-    let addrList = resp.output;
-    // console.log(addrList);
-    for (const addr of addrList) {
-        let resp = await getPKofZAddress(addr);
-        //let spendingKey = resp.output;
-        let pk = zenextra.spendingKeyToSecretKey(resp.output); //spendingKey
-        let isT = false;
-        ipcRenderer.send("import-single-key", "My SN Z addr", pk, isT);
-    }
+    addrList = resp.output;
+    if (resp.isOK) {
+        if (  !(addrList === undefined || addrList.length === 0 )) {
+            for (const addr of addrList) {
+                let resp = await getPKofZAddress(addr);
+                //let spendingKey = resp.output;
+                let pk = zenextra.spendingKeyToSecretKey(resp.output); //spendingKey
+                let isT = false;
+                ipcRenderer.send("import-single-key", "My SN Z addr", pk, isT);
+            }
+        }
+   }
 }
 
 async function importAllZAddressesFromArizentoSN() {
@@ -315,6 +332,7 @@ async function sendFromOrToZaddress(fromAddressPK, fromAddress, toAddress, amoun
     let paramsUsed = [fromAddress, amounts, minconf, fee];
     let resp = await rpcCallResultSync(cmd, paramsUsed);
     console.log("opid: " + resp.output);
+    console.log(resp.status);
     // FIXME: updateWithdrawalStatus - element is not exported
     updateWithdrawalStatus(resp.status, resp.output);
     return resp
