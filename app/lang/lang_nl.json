@@ -164,20 +164,20 @@
       "fiat": "Saldo in FIAT-valuta",
       "save": "Opslaan",
       "enableNotifications": "Bureaublad notificaties",
-      "enableDomainFronting": "Domain-fronting"
+      "enableDomainFronting": "Domain-fronting",
       "secureNodeFQDN": "Secure Node FQDN",
-      "sshUsername": "SSH username",
-      "sshPassword": "SSH password",
-      "sshPort": "SSH port",
-      "secureNodePort": "Secure Node Port (see zen.conf)",
-      "secureNodeUsername": "Secure Node Username (see zen.conf)",
-      "secureNodePassword": "Secure Node Password (see zen.conf)",
-      "readyTimeout": "Ready Timeout (default: 10000)",
-      "forwardTimeout": "Forward Timeout (default: 10000)",
-      "domainFrontingUrl": "Domain fronting public base URL",
-      "domainFrontingHost": "Domain fronting private host",
-      "autoLogOffEnable": "Enable automatic log off",
-      "autoLogOffTimeout": "Auto log off timeout in seconds"
+      "sshUsername": "SSH gebruikersnaam",
+      "sshPassword": "SSH wachtwoord",
+      "sshPort": "SSH poort",
+      "secureNodePort": "Secure Node Poort (zie zen.conf)",
+      "secureNodeUsername": "Secure Node Gebruikersnaam (zie zen.conf)",
+      "secureNodePassword": "Secure Node Wachtwoord (zie zen.conf)",
+      "readyTimeout": "Ready Timeout (standaard: 10000)",
+      "forwardTimeout": "Forward Timeout (standaard: 10000)",
+      "domainFrontingUrl": "Domain fronting publieke basis-URL",
+      "domainFrontingHost": "Domain fronting prive host",
+      "autoLogOffEnable": "Schakel uitomatisch uitloggen in",
+      "autoLogOffTimeout": "Time-out voor automatisch uitloggen in seconden"
     },
     "paperWallet": {
       "label": "Papieren Portefeuille",
@@ -196,28 +196,28 @@
       "txFee": "Transactiekosten"
     },
     "importSinglePrivateKey": {
-      "openButtonLabel": "Import Private Key",
-      "titleLabel": "Import Single Private Key",
-      "privateKeyLabel": "Private Key",
-      "importButtonLabel": "Import",
-      "warningNotValidAddress": "Z address exist in your wallet",
-      "warningNotValidPK": "This is not a valid Private Key."
+      "openButtonLabel": "Importeer Prive Sleutel",
+      "titleLabel": "Importeer één enkele Prive Sleutel",
+      "privateKeyLabel": "Prive Sleutel",
+      "importButtonLabel": "Importeren",
+      "warningNotValidAddress": "Z adres bestaat al in je portefuille",
+      "warningNotValidPK": "Dit is geen valide Prive Sleutel."
     },
-    "autoLogOffLabel": "Log off in ",
+    "autoLogOffLabel": "Afmelden in ",
     "changePassword": {
-      "title": "Change Wallet Password",
-      "warningText": "WARNING: Wallet backups won't be re-encrypted! If you need to use them, you will have to use current password.",
-      "currentPassword": "Current Password",
-      "newPassword1": "New Password",
-      "newPassword2": "New Password (Retype)"
+      "title": "Portefuille wachtwoord aanpassen",
+      "warningText": "WAARSCHUWING: Portefuille back-ups worden niet opnieuw versleuteld! Als u deze wilt gebruiken, moet u het huidige wachtwoord gebruiken.",
+      "currentPassword": "Huidig wachtwoord",
+      "newPassword1": "Nieuw wachtwoord",
+      "newPassword2": "Nieuw wachtwoord (bevestigen)"
     },
     "rpcConsole": {
       "title": "RPC",
-      "command": "Command",
-      "test": "Test Me",
-      "results": "RPC Results ...",
+      "command": "Commando",
+      "test": "Test Mij",
+      "results": "RPC Resultaten ...",
       "status": "Status: ",
-      "testFunctionButton": "Test Function"
+      "testFunctionButton": "Test Functie"
     }
   },
   "menu": {
@@ -244,7 +244,7 @@
       "support": "Ondersteuning",
       "zencash": "ZenCash"
     },
-    "changeWalletPassword": "Change wallet password"
+    "changeWalletPassword": "Portefuille wachtwoord aanpassen"
   },
   "warmingMessages": {
     "userWarningImportFileWithPKs": "Nieuwe adres(sen) en een private sleutel(s) worden geïmporteerd. Uw vorige back-ups bevatten niet de nieuwe geïmporteerde adressen of de bijbehorende persoonlijke sleutels. Gebruik de back-up functie van Arizen om een nieuw back-up bestand te maken dat uw huidige back-up bestand vervangt. Door op 'Ik begrijp het' te drukken, verklaar je dat je dit begrijpt. Raadpleeg voor meer informatie het helpmenu van Arizen.",
@@ -254,12 +254,12 @@
     "userWarningCreateNewAddress":"Een nieuw adres en een privésleutel worden aangemaakt. Uw vorige back-ups bevatten niet dit nieuw gegenereerde adres of de bijbehorende privésleutel. Gebruik de back-up functie van Arizen om een nieuw back-up bestand te maken en vervang uw bestaande Arizen portefuille back-up. Door op 'Ik begrijp het' te drukken, verklaar je dat je dit begrijpt. Raadpleeg voor meer informatie het helpmenu van Arizen.",
     "userWarningIUnderstand": "Ik begrijp het",
     "cancel": "Annuleren",
-    "userWarningImportPkUserZendRescan": "The balance of the Z address you imported will be visible after you rescan the blockchain. Please run 'zen-cli stop && sleep 8 && zend -rescan' in your secure node (linux)."
+    "userWarningImportPkUserZendRescan": "Het saldo van het Z-adres dat u hebt geïmporteerd, is zichtbaar nadat u de blockchain opnieuw hebt geïndexeerd. Voer alstublieft het commando 'zen-cli stop && sleep 8 && zend -rescan' uit op uw secure node (linux)."
   },
   "common": {
-    "selectAll": "Select all",
-    "clearAll": "Clear all",
+    "selectAll": "Alles selecteren",
+    "clearAll": "Wis alles",
     "okButtonText": "OK",
-    "cancelButtonText": "Cancel"
+    "cancelButtonText": "Annuleren"
   }
 }
