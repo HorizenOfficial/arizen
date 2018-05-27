@@ -27,19 +27,20 @@
 
 .marginLeft5p {
     margin-left: 5%;
-    color: #888888;
+    color: #1B2F59;
 }
 
 #btWalletFilename {
     margin-left: 5%;
     margin-right: 5%;
-    color: #f88900;
+    color: #1B2F59;
     font-size: 0.8em;
-    border-bottom: 1px solid #888888;
+    border-bottom: 1px solid #69FFBD;
 }
 
 #old_username_area {
     display: none;
+    font-size: 0.8em;
 }
 
 #old_pswd_area {
@@ -49,14 +50,21 @@
 .inputs_small {
     padding: 3px 3px;
     border: none;
-    border-bottom: 1px solid #888888;
+    background: #f3f3f3;
+    border-bottom: 1px solid #1B2F59;
     width: 338px; /* 400 (#container) - 40 (li margins) -  10 (span paddings) - 20 (input paddings) - 2 (input borders) */
     font-size: 1em;
     outline: 0; /* remove webkit focus styles */
     transition: all 0.4s;
-    color: #888888;
+    color: #1B2F59;
 }
 
 .inputs_small:focus {
-    border-bottom: 1px solid #f88900;
+    border-bottom: 1px solid #69FFBD;
+}
+
+.input_smaller {
+    width: 200px;
+    display: inline;
+    margin: none;
 }

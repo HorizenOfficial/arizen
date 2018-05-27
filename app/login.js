@@ -7,7 +7,7 @@ const electron = require("electron");
 const {ipcRenderer} = electron;
 
 function doLogin() {
-        ipcRenderer.send("verify-login-info", document.getElementById("username").value, document.getElementById("pswd").value);
+    ipcRenderer.send("verify-login-info", document.getElementById("username").value, document.getElementById("pswd").value);
 }
 
 ipcRenderer.on("verify-login-response", function (event, resp) {

@@ -13,22 +13,22 @@
 
 <template id=txDialogTemplate>
     <arizen-dialog class=txDialog>
-        <h2 slot=headerText>Transaction Detail</h2>
+        <h2 slot=headerText data-tr=wallet.transactionDetail.label>Transaction Detail</h2>
         <div class=form slot=content>
-            <div>Transaction ID</div>
+            <div data-tr=wallet.transactionDetail.txid>Transaction ID</div>
             <div>
                 <div class='txDetailTxId monospace'></div>
-                <a class=txInfoLink href=#>Show in ZEN Explorer</a>
+                <a class=txInfoLink href=# data-tr=wallet.showExplorer>Show in ZEN Explorer</a>
             </div>
-            <div>Date</div>
+            <div data-tr=wallet.date>Date</div>
             <div class=txDetailDate></div>
-            <div>Block Height</div>
+            <div data-tr=wallet.transactionDetail.blockHeight>Block Height</div>
             <div class=txDetailBlock></div>
-            <div>Amount</div>
+            <div data-tr=wallet.amount>Amount</div>
             <div class=txDetailAmount><span></span> ZEN</div>
-            <div>From</div>
+            <div data-tr=wallet.from>From</div>
             <div class='txDetailFrom monospace'></div>
-            <div>To</div>
+            <div data-tr=wallet.to>To</div>
             <div class='txDetailTo monospace'></div>
         </div>
     </arizen-dialog>
@@ -36,20 +36,20 @@
 
 <template id=mempoolTxDialogTemplate>
     <arizen-dialog class=txDialog>
-        <h2 slot=headerText>Transaction Detail</h2>
+        <h2 slot=headerText data-tr=wallet.transactionDetail.label>Transaction Detail</h2>
         <div slot=content>
             <div class=form>
-                <div>Transaction ID</div>
+                <div data-tr=wallet.transactionDetail.txid>Transaction ID</div>
                 <div>
                     <div class='txDetailTxId monospace'></div>
-                    <div class=warning>UNCONFIRMED TRANSACTION</div>
-                    <a class=txInfoLink href=#>Show in ZEN Explorer</a>
+                    <div class=warning data-tr=wallet.transactionDetail.unconfirmedTx>UNCONFIRMED TRANSACTION</div>
+                    <a class=txInfoLink href=# data-tr=wallet.showExplorer>Show in ZEN Explorer</a>
                 </div>
-                <div>Amount</div>
+                <div data-tr=wallet.amount>Amount</div>
                 <div class=txDetailAmount><span></span> ZEN</div>
-                <div>From</div>
+                <div data-tr=wallet.from>From</div>
                 <div class='txDetailFrom monospace'></div>
-                <div>To</div>
+                <div data-tr=wallet.to>To</div>
                 <div class='txDetailTo monospace'></div>
             </div>
         </div>
@@ -58,21 +58,21 @@
 
 <template id=addrDialogTemplate>
     <arizen-dialog>
-        <h2 slot=headerText>Address Detail</h2>
+        <h2 slot=headerText data-tr=wallet.addressDetail.label>Address Detail</h2>
         <div slot=content>
             <div class=form>
-                <div>Name</div>
+                <div data-tr=wallet.addressDetail.name>Name</div>
                 <input type=text class=addrDetailName />
-                <div>Address</div>
+                <div data-tr=wallet.addressDetail.address>Address</div>
                 <div>
                     <div class="addrDetailAddr monospace"></div>
-                    <a class=addrInfoLink href=#>Show in ZEN Explorer</a>
+                    <a class=addrInfoLink href=# data-tr=wallet.showExplorer>Show in ZEN Explorer</a>
                 </div>
-                <div>Balance</div>
+                <div data-tr=wallet.balance>Balance</div>
                 <div class=addrDetailBalance><span></span> ZEN</div>
             </div>
             <div class=formButtons>
-                <button class=addrDetailSave>Save changes</button>
+                <button class=addrDetailSave data-tr=wallet.addressDetail.saveButton>Save changes</button>
             </div>
         </div>
     </arizen-dialog>
@@ -80,50 +80,139 @@
 
 <template id=newAddrDialogTemplate>
     <arizen-dialog>
-        <h2 slot=headerText>Create a New Address</h2>
+        <h2 slot=headerText data-tr=wallet.newAddress.label>Create a New Address</h2>
         <div slot=content>
             <div class=form>
-                <div>Name (optional)</div>
+                <div data-tr=wallet.newAddress.name>Name (optional)</div>
                 <input type=text class=newAddrDialogName />
             </div>
             <div class=formButtons>
-                <button class=newAddrDialogCreate>Create</button>
+                <button class=newAddrDialogCreate data-tr=wallet.newAddress.createButton>Create</button>
+            </div>
+        </div>
+    </arizen-dialog>
+</template>
+
+<template id=importSinglePrivateKeyDialogTemplate>
+    <arizen-dialog>
+        <h2 slot=headerText data-tr=wallet.importSinglePrivateKey.titleLabel>Import Single Private Key</h2>
+        <div slot=content>
+            <div class=form>
+                <div data-tr=wallet.newAddress.name>Name (optional)</div>
+                <input type=text class=newPrivateKeyDialogName />
+                <div data-tr=wallet.importSinglePrivateKey.privateKeyLabel>Private Key</div>
+                <input type=text class=newPrivateKeyDialogKey />
+            </div>
+            <div class=formButtons>
+                <button class=newPrivateKeyImportButton data-tr=wallet.importSinglePrivateKey.importButtonLabel>Import</button>
             </div>
         </div>
     </arizen-dialog>
 </template>
 
 <template id=addrSelectRowTemplate>
-    <div class=addrSelectRow>
-        <div class=addrSelectRowName></div>
-        <div class="addrSelectRowAddr monospace"></div>
-        <div class=addrSelectRowBalance><span></span> ZEN</div>
-    </div>
+    <tr class=addrSelectRow>
+        <td class=addrSelectRowName></td>
+        <td class="addrSelectRowAddr monospace"></td>
+        <td class=addrSelectRowBalance><span></span> ZEN</td>
+    </tr>
 </template>
+
+<template id=addrMultiselectRowTemplate>
+    <tr class=addrSelectRow>
+        <td>
+          <label class=container>
+              <input class=addrSelectCheckbox type=checkbox />
+              <span class=checkmark></span>
+          </label>
+        </td>
+        <td class=addrSelectRowName></td>
+        <td class="addrSelectRowAddr monospace"></td>
+        <td class=addrSelectRowBalance><span></span> ZEN</td>
+    </tr>
+</template>
+
 <template id=addrSelectDialogTemplate>
     <arizen-dialog>
-        <h2 slot=headerText>List of Addresses</h2>
-        <div slot=content class=addrSelectList>
-       </div>
+        <h2 slot=headerText data-tr=wallet.listOfAddresses>List of Addresses</h2>
+        <table slot=content class=addrSelectList>
+        </table>
+    </arizen-dialog>
+</template>
+
+<template id=batchWithdrawDialogTemplate>
+    <arizen-dialog>
+        <h2 slot=headerText data-tr=wallet.batchWithdraw.label>Batch Withdraw</h2>
+        <div slot=content class=batchWithdrawContent>
+            <div class='hToolbar batchWithdrawToolbar'>
+                <button id=batchWithdrawSelectAll data-tr=common.selectAll>Select all</button>
+                <button id=batchWithdrawClearAll data-tr=common.clearAll>Clear all</button>
+            </div>
+            <table class=addrSelectList></table>
+            <div class=form>
+                <button id=batchWithdrawToAddrSelect data-tr=wallet.to>To</button>
+                <input type=text id=batchWithdrawToAddr name=batchWithdrawToAddr class=monospace />
+
+                <label for=batchWithdrawKeepAmount data-tr=wallet.batchWithdraw.keepAmount>Amount to keep</label>
+                <input type=number id=batchWithdrawKeepAmount name=batchWithdrawKeepAmount
+                    class=amountInput value=42.00000000 min=0 step=0.1 />
+
+                <label for=batchWithdrawFee data-tr=wallet.batchWithdraw.txFee>Transaction fee</label>
+                <input type=number id=batchWithdrawFee name=batchWithdrawFee
+                    class=amountInput value=0.00000000 min=0 step=0.1 />
+            </div>
+            <div class=formButtons>
+                <button id=batchWithdrawButton data-tr=wallet.tabWithdraw.label>Withdraw</button>
+            </div>
+        </div>
+    </arizen-dialog>
+</template>
+
+<template id=txSendStatusDialogTemplate>
+    <arizen-dialog>
+        <h2 slot=headerText data-tr=wallet.tabWithdraw.txStatus>Transaction Status</h2>
+        <div slot=content id=txStatusText>
+            Sending transaction. Please wait...
+        </div>
+    </arizen-dialog>
+</template>
+
+<template id=paperWalletDialogTemplate>
+    <arizen-dialog>
+        <h2 slot=headerText data-tr=wallet.paperWallet.generateNewWallet>Generate New Wallet</h2>
+        <div slot=content>
+            <div class=form>
+                <label for=paperWalletName data-tr=wallet.paperWallet.name>Name (optional)</label>
+                <input type=text class=paperWalletName name=paperWalletName />
+                <label for=paperWalletAdd data-tr=wallet.paperWallet.addWalletToArizen>Also add to Arizen</label>
+				<label class=container>
+					<input type=checkbox class=paperWalletAdd name=paperWalletAdd />
+					<span class=checkmark></span>
+				</label>
+            </div>
+            <div class=formButtons>
+                <button class=paperWalletCreateButton data-tr=wallet.paperWallet.exportPDFLabel>Export PDF</button>
+            </div>
+        </div>
     </arizen-dialog>
 </template>
 
 <!-- TODO this doesn't belong here -->
 <template id=aboutDialogTemplate>
     <arizen-dialog>
-        <h2 slot=headerText>About Arizen</h2>
+        <h2 slot=headerText data-tr=wallet.about.label>About Arizen</h2>
         <div slot=content class=aboutDialogContent>
             <div class=form>
-                <div>Homepage</div>
+                <div data-tr=wallet.about.homepage>Homepage</div>
                 <div class=aboutHomepage></div>
-                <div>Version</div>
+                <div data-tr=wallet.about.version>Version</div>
                 <div class=aboutVersion></div>
-                <div>License</div>
+                <div data-tr=wallet.about.license>License</div>
                 <div class=aboutLicense></div>
-                <div>Authors</div>
-                <div class=aboutAuthors></div>
+                <!-- <div data-tr=wallet.about.authors>Authors</div>
+                <div class=aboutAuthors></div> -->
             </div>
-            <a class=zenLogo href='https://zensystem.io'><img src='resources/zen_icon.png' /></a>
+            <a class=zenLogo><img src='resources/zen_icon.png' /></a>
         </div>
     </arizen-dialog>
 </template>
@@ -131,18 +220,109 @@
 <!-- TODO this doesn't belong here -->
 <template id=settingsDialogTemplate>
     <arizen-dialog>
-        <h2 slot=headerText>Settings</h2>
+        <h2 slot=headerText data-tr=wallet.settings.label>Settings</h2>
         <div slot=content class=settingsDialogContent>
             <div class=form>
-                <label for=settingsTxHistory>Transaction limit</label>
-                <span class=formInput><input type=number name=settingsTxHistory class=settingsTxHistory min=0 /> items</span>
-                <label for=settingsExplorerUrl>ZEN Explorer URL</label>
+                <label for=settingsTxHistory data-tr=wallet.settings.limit>Transaction limit</label>
+                <span class=formInput><input type=number name=settingsTxHistory class=settingsTxHistory min=0 /><span data-tr=wallet.settings.items>items</span></span>
+                <label for=settingsLanguage data-tr=wallet.settings.language>Language</label>
+                <select name=settingsLanguage class=settingsLanguage size=1>
+                </select>
+                <label for=settingsExplorerUrl data-tr=wallet.settings.explorerUrl>ZEN Explorer URL</label>
                 <input type=text name=settingsExplorerUrl class=settingsExplorerUrl />
-                <label for=settingsApiUrls title="Place one URL per line">API URLs</label>
+                <label for=settingsApiUrls title="Place one URL per line" data-tr=wallet.settings.apiUrl>API URLs</label>
                 <textarea type=text name=settingsApiUrls class=settingsApiUrls rows=5></textarea>
+                <label for=settingsFiatCurrency title="Select the desired fiat to display your balance."  data-tr=wallet.settings.fiat>Fiat Equivalent</label>
+                <select name=settingsFiatCurrency class=settingsFiatCurrency >
+                    <option value="USD">(USD) US Dollar</option>
+                    <option value="EUR">(EUR) Euro</option>
+                    <option value="RUB">(RUB) Russian Ruble</option>
+                    <option value="JPY">(JPY) Japan Yen</option>
+                    <option value="GBP">(GBP) British Pound</option>
+                    <option value="AUD">(AUD) Australian Dollar</option>
+                    <option value="USD">-------------------</option>
+                    <option value="BRL">(BRL) Brazilian Real</option>
+                    <option value="CAD">(CAD) Canadian Dollar</option>
+                    <option value="CHF">(CHF) Swiss Franc</option>
+                    <option value="CLP">(CLP) Chili Peso</option>
+                    <option value="CNY">(CNY) China Yuan/Renminbi</option>
+                    <option value="CZK">(CZK) Czech Koruna</option>
+                    <option value="DKK">(DKK) Denmark Krone</option>
+                    <option value="HKD">(HKD) Hong Kong Dollar</option>
+                    <option value="IDR">(IDR) Indonesia Rupiah</option>
+                    <option value="ILS">(ILS) Israel New Shekel</option>
+                    <option value="INR">(INR) India Rupee</option>
+                    <option value="KRW">(KRW) South Korea Won</option>
+                    <option value="MXN">(MXN) Mexico Peso</option>
+                    <option value="MYR">(MYR) Malaysia Ringgit</option>
+                    <option value="NOK">(NOK) Norway Kroner</option>
+                    <option value="NZD">(NZD) New Zealand Dollar</option>
+                    <option value="PHP">(PHP) Philippines Peso</option>
+                    <option value="PKR">(PKR) Pakistan Rupee</option>
+                    <option value="PLN">(PLN) Poland Zloty</option>
+                    <option value="SEK">(SEK) Sweden Krona</option>
+                    <option value="SGD">(SGD) Singapore Dollar</option>
+                    <option value="THB">(THB) Thailand Baht</option>
+                    <option value="TRY">(TRY) Turkish New Lira</option>
+                    <option value="TWD">(TWD) Taiwan Dollar</option>
+                    <option value="ZAR">(ZAR) South Africa Rand</option>
+                </select>
+                <label for=enableNotifications data-tr=wallet.settings.enableNotifications>Desktop notifications</label>
+                <label class=container>
+                    <input type=checkbox class=enableNotifications name=enableNotifications />
+                    <span class=checkmark></span>
+                </label>
+
+                <label for=enableDomainFronting data-tr=wallet.settings.enableDomainFronting>Enable domain fronting</label>
+                <label class=container>
+                    <input type=checkbox class=enableDomainFronting name=enableDomainFronting />
+                    <span class=checkmark></span>
+                </label>
+                <label for=settingDomainFrontingUrl data-tr=wallet.settings.domainFrontingUrl>Domain fronting public base URL</label>
+                <input type=text name=settingDomainFrontingUrl class=settingDomainFrontingUrl />
+                <label for=settingDomainFrontingHost data-tr=wallet.settings.domainFrontingHost>Domain fronting private host</label>
+                <input type=text name=settingDomainFrontingHost class=settingDomainFrontingHost />
+
+                <label for=settingAutoLogOffEnable data-tr=wallet.settings.autoLogOffEnable>Enable automatic log off</label>
+                <label class=container>
+                    <input type=checkbox class=settingAutoLogOffEnable name=settingAutoLogOffEnable />
+                    <span class=checkmark></span>
+                </label>
+                <label for=settingAutoLogOffTimeout data-tr=wallet.settings.autoLogOffTimeout>Auto log off timeout in seconds</label>
+                <span class=formInput>
+                    <input type=number name=settingAutoLogOffTimeout class=settingAutoLogOffTimeout min=60 step=1/>
+                    <span>s</span>
+                </span>
             </div>
             <div class=formButtons>
-                <button class=settingsSave>Save</button>
+                <button class=settingsSave data-tr=wallet.settings.save>Save</button>
+            </div>
+        </div>
+    </arizen-dialog>
+</template>
+
+<template id=changeWalletPasswordDialog>
+    <arizen-dialog>
+        <h2 slot=headerText data-tr=wallet.changePassword.title>Change Wallet Password</h2>
+        <div slot=content class=changeWalletPasswordDialogContent>
+            <div class=changeWalletPasswordWarning data-tr="wallet.changePassword.warningText">
+                WARNING: Wallet backups won't be re-encrypted! If you need to
+                use them, you will have to use current password.
+            </div>
+            <div class=form>
+                <label for=currentPassword data-tr=wallet.changePassword.currentPassword>Current Password</label>
+                <input type=password name=currentPasswordText class=currentPasswordText />
+                <label for=newPassword1 data-tr=wallet.changePassword.newPassword1>New Password</label>
+                <input type=password name=newPasswordText1 class=newPasswordText1 />
+                <label for=newPassword2 data-tr=wallet.changePassword.newPassword2>New Password (Retype)</label>
+                <input type=password name=newPasswordText2 class=newPasswordText2 />
+            </div>
+            <div class=changeWalletPasswordErrors data-tr="wallet.changePassword.errorMessages">
+            </div>
+            <div class=formButtons>
+                <button class=changePasswordOK data-tr=common.okButtonText>OK</button>
+                &nbsp;
+                <button class=changePasswordCancel data-tr=common.cancelButtonText>Cancel</button>
             </div>
         </div>
     </arizen-dialog>
@@ -152,32 +332,38 @@
 
 <header class='panel'>
     <div class=headerLeft>
-        <span><button onclick=showSettingsDialog()>Settings</button></span>
-        <span><button onclick=showAboutDialog()>About</button></span>
+        <span><button onclick="showSettingsDialog()" data-tr=wallet.showSettingsDialogButton>Settings</button></span>
+        <span><button onclick="showPaperWalletDialog()" data-tr=wallet.paperWallet.label>Paper Wallet</button></span>
+        <span><button onclick="showBatchWithdrawDialog()" data-tr=wallet.showBatchWithdrawDialog>Batch Withdraw</button></span>
+        <span><button onclick="showImportSinglePKDialog()" data-tr=wallet.importSinglePrivateKey.openButtonLabel>Import Private Key</button></span>
     </div>
     <div class=headerCenter>
         <a class=arizenTitle href='https://github.com/ZencashOfficial/arizen'>Arizen</a>
-        <a class=zenLogo href='https://zensystem.io'><img id=zenImg src='resources/zen_icon.png' /></a>
+        <a class=zenLogo><img id=zenImg src='resources/zen_icon.png' /></a>
     </div>
     <div class=headerRight>
-        <span><button id=refreshButton>Refresh</button></span>
-        <span><button onclick='logout()'>Logout</button></span>
-        <span><button onclick='exitApp()'>Exit</button></span>
+        <span><button id=refreshButton data-tr=wallet.refreshWallet>Refresh</button></span>
+        <span><button onclick='logout()' data-tr=wallet.logout>Logout</button></span>
+        <span><button onclick="showAboutDialog()" data-tr=wallet.showAboutDialogButton>About</button></span>
+        <span><button onclick='exitApp()' data-tr=wallet.exit>Exit</button></span>
     </div>
 </header>
 
 <x-tabs class='walletOps panel'>
     <div class=walletOpsTabs>
-        <button data-tab-button=overview selected>Overview</button>
-        <button id=depositTabButton data-tab-button=deposit>Deposit</button>
-        <button id=withdrawTabButton data-tab-button=withdraw>Withdraw</button>
+        <button data-tab-button="overview" data-tr=wallet.tabOverview.label selected>Overview</button>
+        <button id="depositTabButton" data-tab-button="deposit" data-tr=wallet.tabDeposit.label>Deposit</button>
+        <button id="withdrawTabButton" data-tab-button="withdraw" data-tr=wallet.tabWithdraw.label>Withdraw</button>
     </div>
     <div data-tab-content=overview class='walletOverview tabContent'>
         <div class='tabContentHeader walletOverviewControl'>
-            <span class=tabContentHeaderLabel>List of Addresses</span>
-            <input type=checkbox id=actionShowZeroBalances name=actionShowZeroBalances>
-            <label for=actionShowZeroBalances>Show zero balances</label>
-            <button id=createNewAddrButton class=smallButton>Get a new address</button>
+            <span class=tabContentHeaderLabel data-tr=wallet.listOfAddresses>List of Addresses</span>
+            <label class=container>
+                <input type=checkbox id=actionShowZeroBalances name=actionShowZeroBalances checked=checked>
+                <label for=actionShowZeroBalances data-tr=wallet.tabOverview.showZeroBalances>Show zero balances</label>
+                <span class=checkmark></span>
+            </label>
+            <button id=createNewAddrButton class=smallButton data-tr=wallet.tabOverview.newAddress>Get a new address</button>
         </div>
         <template id=addrItemTemplate>
             <div class=addrItem>
@@ -185,7 +371,7 @@
                     <div class=addrBalance><span class=addrBalanceAmount></span> ZEN</div>
                     <div class=addrNameLine>
                         <img class=addrDetailButton src="resources/About_icon_(The_Noun_Project).svg" />
-                        <span class=addrName>Unnamed address</span>
+                        <span class=addrName></span>
                     </div>
                     <span class="addrText monospace"></span>
                 </div>
@@ -201,47 +387,42 @@
         </div>
     </div>
     <div data-tab-content=deposit class='walletDeposit tabContent'>
-        <div class='tabContentHeader tabContentHeaderLabel'>
+        <div class='tabContentHeader tabContentHeaderLabel' data-tr=wallet.tabDeposit.label>
             Deposit
         </div>
         <div class='tabContentBody depositBody'>
-            <div class=depositHelp>
-                Click the green button next to the desired address for deposit.
-            </div>
             <div class=form id=depositForm>
-                <button id=depositToButton>To</button>
+                <button id=depositToButton data-tr=wallet.to>To</button>
                 <input id=depositToAddr name=depositToAddr class=monospace type=text />
-                <div>Amount</div>
+                <div data-tr=wallet.amount>Amount</div>
                 <input class=amountInput id=depositAmount name=depositAmount type=number value=0.00000000 min=0 step=0.1 />
             </div>
             <span id=depositMsg>&nbsp;</span>
             <div>
-            <img id=depositQrcodeImg  src=""/>
-        </div>
+                <img id=depositQrcodeImg  class=hidden src=""/>
+            </div>
+            <button id=depositSaveQrcodeButton data-tr=wallet.tabDeposit.saveQrcode disabled>Save QR code</button>
         </div>
     </div>
     <div data-tab-content=withdraw class='walletWithdraw tabContent'>
-        <div class='tabContentHeader tabContentHeaderLabel'>
+        <div class='tabContentHeader tabContentHeaderLabel' data-tr=wallet.tabWithdraw.label>
             Withdraw
         </div>
         <div class='tabContentBody withdrawBody'>
-            <div class=withdrawHelp>
-                Click the red button next to the desired address for withdrawal.
-            </div>
             <div class=form id=withdrawForm>
-                <div>Available balance</div>
+                <div data-tr=wallet.tabWithdraw.availableBalance>Available balance</div>
                 <div id=withdrawAvailBalance><span></span> ZEN</div>
-                <button id=withdrawFromButton>From</button>
+                <button id=withdrawFromButton data-tr=wallet.from>From</button>
                 <input id=withdrawFromAddr name=withdrawFromAddr class=monospace type=text />
-                <button id=withdrawToButton>To</button>
+                <button id=withdrawToButton data-tr=wallet.to>To</button>
                 <input id=withdrawToAddr name=withdrawToAddr class=monospace type=text />
-                <div>Amount</div>
+                <div data-tr=wallet.amount>Amount</div>
                 <input class=amountInput id=withdrawAmount name=withdrawAmount type=number value=0.00000000 min=0 step=0.1 />
-                <div>Transaction fee</div>
+                <div data-tr=wallet.tabWithdraw.fee>Transaction fee</div>
                 <input class=amountInput id=withdrawFee name=withdrawFee type=number value=0.00010000 min=0 step=0.10000000 />
             </div>
             <span id=withdrawMsg>&nbsp;</span>
-            <button id=withdrawButton>Withdraw</button>
+            <button id=withdrawButton data-tr=wallet.tabWithdraw.label>Withdraw</button>
             <div class='withdrawStatusMessage'>
                 <div id=withdrawStatusTitle class=withdrawStatusBad></div>
                 <div id=withdrawStatusBody></div>
@@ -252,7 +433,7 @@
 
 <div class='txPanel panel'>
     <div class=txPanelHeader>
-        <span>Transaction History</span>
+        <span data-tr=wallet.transactionHistory.label>Transaction History</span>
     </div>
     <template id=txItemTemplate>
         <div class=txItem>
@@ -263,7 +444,7 @@
     </template>
     <template id=txMempoolItemTemplate>
         <div class='txItem txMempoolItem'>
-            <span class="warning txMempoolItemTitle">UNCONFIRMED</span>
+            <span class="warning txMempoolItemTitle" data-tr=wallet.transactionHistory.unconfirmed>UNCONFIRMED</span>
             <div class=filler></div>
             <span class=txBalance><span class=txBalanceAmount></span> ZEN</span>
         </div>
@@ -273,7 +454,17 @@
 </div>
 
 <footer class='statusLine panel'>
-Total balance: <span id=totalBalance><span id=totalBalanceAmount>0.00000000</span> ZEN</span>
+    <span data-tr=wallet.totalBalance>Total balance</span>: <span id=totalBalance><span id=totalBalanceAmount>0.00000000</span> ZEN </span>
+    <span> / </span>
+    <span id=totalBalanceFiat><span id=totalFiatBalanceAmount>0.00</span></span>
+    <span id=lastUpdateTimeText> / <span data-tr=wallet.lastUpdate>Last update</span>: <span id=lastUpdateTime></span></span>
+    <span><a id=loadingImage class=loading></a></span>
+    <span id=autoLogOffTimer class=hidden>
+        <span> / </span>
+        <span data-tr=wallet.autoLogOffLabel>Log off in </span>
+        <span id=autoLogOffTimerTime></span>
+        s
+    </span>
 </footer>
 
 </div>
