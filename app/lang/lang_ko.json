@@ -1,0 +1,265 @@
+{
+  "languageName": "한국어",
+  "languageValue": "ko",
+  "langFileVersion": "1",
+  "login": {
+    "label": "Arizen: 로그인",
+    "username": "사용자 이름",
+    "password": "비밀번호",
+    "loginButton": "로그인",
+    "createWalletLink": "지갑 생성",
+    "warningWrongUsernameOrPassword": "<strong>아이디</strong> 나 <strong>비밀번호</strong>가 다릅니다.",
+    "dataImportFailed": "데이터를 가져오는 데 실패하였습니다. 잘못된 자격증명일 수 있습니다.",
+    "fileReplace": "파일을 교체하시겠습니까?",
+    "walletReplace": "지갑을 교체하시겠습니까?",
+    "walletReplaceMsg": "당신의 실제 지갑을 대체하게 됩니다.. 확실하십니까?",
+    "walletImported": "지갑을 가져오는데 성공하였습니다.",
+    "walletImportFailed": "지갑을 가져오는데 실패하였습니다.",
+    "yes": "네",
+    "no": "아니오"
+  },
+  "createWallet": {
+    "label": "Arizen: 지갑 생성",
+    "username": "사용자 이름",
+    "password": "비밀번호",
+    "passwordAgain": "비밀번호 확인",
+    "oldUsername": "이전 사용자 이름: ",
+    "oldPassword": "이전 사용자 이름: ",
+    "selectWallet": "지갑 선택",
+    "selectWalletButton": "검색",
+    "createWalletButton": "지갑 생성",
+    "loginLink": "로그인",
+    "warningUsername": "사용자 이름은 다음 요구사항을 따라야합니다 :",
+    "warningUsernameLength": "최소한 <strong>4글자</strong> 이상이어야 합니다.",
+    "warningPassword": "비밀번호는 다음 요구사항을 따라야 합니다 :",
+    "warningPasswordLetter": "최소한 <strong>한개의 문자를</strong> 포함해야합니다.",
+    "warningPasswordCapitalLetter": "최소한 <strong>하나의 대문자를</strong> 포함해야합니다.",
+    "warningPasswordNumber": "최소한 <strong>하나의 숫자를</strong> 포함해야합니다.",
+    "warningPasswordSpecial": "최소한 <strong>하나의 특수문자를</strong> 포함”야합니다.",
+    "warningPasswordLength": "최소한 <strong>8자</strong> 이상이어야 합니다",
+    "warningPasswordAgain": "비밀번호는 다음 요구사항을 따라야 합니다 :",
+    "warningPasswordAgainIdentical": "<strong>같습니다.</strong>",
+    "errorCreationFailed": "지갑 생성에 실패하였습니다.",
+    "errorFailedResponse": "응답에 실패하였습니다."
+  },
+  "notification": {
+    "settingsUpdated": "설정이 업데이트 되었습니다.",
+    "balanceUpdated": "잔고가 업데이트 되었습니다.",
+    "newTransactions": "새로운 거래가 확인되었습니다."
+  },
+  "importExportPks": {
+    "chooseFileExport": "개인 키 파일을 선택하세요.",
+    "chooseFileImport": "개인 키가 있는 파일을 선택하세요.",
+    "InvalidLinePk": " ${0} 행에 잘못된 개인 키 값이 있습니다.",
+    "InvalidPk": "개인 비공개 키 파일의 ${0} 행에 잘못된 개인 키 값 있습니다."
+  },
+  "wallet": {
+    "showSettingsDialogButton": "설정",
+    "showAboutDialogButton": "대하여",
+    "refreshWallet": "새로고침",
+    "logout": "로그아웃",
+    "exit": "나가기",
+    "date": "날짜",
+    "from": "발신자",
+    "to": "수신자",
+    "amount": "양",
+    "balance": "잔액",
+    "totalBalance": "전체 잔액",
+    "lastUpdate": "마지막 업데이트",
+    "showExplorer": "ZEN Explorer에서 보기",
+    "listOfAddresses": "주소목록",
+    "showBatchWithdrawDialog": "일괄 철회",
+    "notLoggedIn": "로그인 하지 않았습니다.",
+    "addressNotFound": "주소를 찾을 수 없습니다.",
+    "nameNotFound": "이름을 찾을 수 없습니다.",
+    "renameWalletSetTo": "${0} 주소가 ${1}로 설정되었습니다.",
+    "fetchBlockchainFailed": "블록체인의 변경사항을 가져오는 데 실패하였습니다 :",
+    "save": "저장",
+    "pdfExported": "PDF 로 내보내기",
+    "tabOverview": {
+      "label": "개요",
+      "showZeroBalances": "0인 잔액 표시",
+      "newAddress": "새 주소 얻기",
+      "unnamedAddress": "이름없는 주소",
+      "newAddressExists": "주소 ${0} 는 이미 목록에 있습니다."
+    },
+    "tabDeposit": {
+      "label": "예금",
+      "help": "예금을 바라는 주소의 오른쪽에 초록색 버튼을 클릭해주세요",
+      "saveQrcode": "QR코드 저장",
+      "messages": {
+        "emptyToAddr": "받는 사람의 주소가 비어있습니다.",
+        "unknownToAddr": "받는 사람의 주소가 이 지갑에서 지원하지 않는 주소입니다.",
+        "zeroAmount": "양이 적절치 않습니다."
+      }
+    },
+    "tabWithdraw": {
+      "label": "출금하기",
+      "help": "출금을 바라는 주소의 오른쪽에 빨간색 버튼을 클릭해주세요.",
+      "availableBalance": "이용가능한 잔액",
+      "fee": "거래 수수료",
+      "txStatus": "전송 상태",
+      "withdrawConfirmQuestion": "이 거래를 진행하기를 정말 원하십니까?",
+      "messages": {
+        "emptyFromAddr": "보내는 사람의 주소가 비어있습니다.",
+        "unknownFromAddr": "보내는 사람의 주소가 이 지갑에서 지원하지 않는 주소입니다.",
+        "insufficientFirstSource": "1번째 소스에서 불충분한 금액이 있습니다. (최소금액: 한도액 + 수수료)!",
+        "insufficientNextSource": "2번째 소스나 그 이후의 소스에서 불충분한 금액이 있습니다. (최소금액: 한도액)!",
+        "numberOfKeys": "# 개인키와 # 주소가 일치하지 않습니다!",
+        "sumLowerThanFee": "모든 소스 주소의 합계 잔액이 수수료보다 낮습니다.",
+        "zenApi": "Zen API 가 설정되어 있지 않습니다!",
+        "unknownAddress": "당신의 지갑에 있는 주소가 아닙니다!",
+        "insufficientFundsSourceAddr": "소스 주소에 잔액이 부족합니다.",
+        "emptyToAddr": "보내는 사람의 주소가 비어있습니다.",
+        "zeroAmount": "양이 적절치 않습니다.",
+        "insufficientFunds": "보내는 사람의 주소에 잔액이 부족합니다.",
+        "fromAddressBadLength": "주소 길이가 알맞지않습니다!",
+        "fromAddressBadPrefix": "주소의 시작문자 ‘zn’이어야 합니다. 잘못된 주소입니다.!",
+        "toAddressBadLength": "보낼 주소의 길이가 알맞지 않습니다.!",
+        "toAddressBadPrefix": "보낼 주소의 시작문자는 ‘zn’이어야 합니다. 잘못된 주소입니다!",
+        "amounNotNumber": "양은 숫자만 입력할 수 있습니다.",
+        "amountIsZero": "양은 0보다 커야합니다!",
+        "feeNotNumber": "수수료가 숫자가 아닙니다!",
+        "feeIsNegative": "수수료는 0이거나 그보다 커야합니다!",
+        "error": "오류",
+        "success": "거래가 성공적으로 완료되었습니다."
+      }
+    },
+    "transactionHistory": {
+      "label": "거래기록",
+      "unconfirmed": "확인되지 않음",
+      "replaceAttempt": "블록에서 거래 시도중입니다."
+    },
+    "transactionDetail": {
+      "label": "전송 세부사항",
+      "txid": "전송 ID",
+      "blockHeight": "블록 높이",
+      "unconfirmedTx": "확인되지 않은 거래"
+    },
+    "addressDetail": {
+      "label": "주소 세부사항",
+      "name": "이름",
+      "address": "주소",
+      "saveButton": "변경사항 저장하기"
+    },
+    "newAddress": {
+      "label": "새로운 주소 생성",
+      "name": "이름 (선택사항)",
+      "createButton": "생성하기"
+    },
+    "about": {
+      "label": "Arizen 에 대하여",
+      "homepage": "홈페이지",
+      "version": "버전",
+      "license": "라이센스",
+      "authors": "만든사람"
+    },
+    "settings": {
+      "label": "설정",
+      "limit": "거래 제한",
+      "items": "도구",
+      "language": "언어",
+      "explorerUrl": "ZEN Explorer 주소",
+      "apiUrl": "API 주소",
+      "fiat": "동등한 명령",
+      "save": "저장",
+      "enableNotifications": "Desktop notifications",
+      "enableDomainFronting": "Domain fronting",
+      "secureNodeFQDN": "Secure Node FQDN",
+      "sshUsername": "SSH username",
+      "sshPassword": "SSH password",
+      "sshPort": "SSH port",
+      "secureNodePort": "Secure Node Port (see zen.conf)",
+      "secureNodeUsername": "Secure Node Username (see zen.conf)",
+      "secureNodePassword": "Secure Node Password (see zen.conf)",
+      "readyTimeout": "Ready Timeout (default: 10000)",
+      "forwardTimeout": "Forward Timeout (default: 10000)",
+      "domainFrontingUrl": "Domain fronting public base URL",
+      "domainFrontingHost": "Domain fronting private host",
+      "autoLogOffEnable": "Enable automatic log off",
+      "autoLogOffTimeout": "Auto log off timeout in seconds"
+    },
+    "paperWallet": {
+      "label": "종이 지갑",
+      "generateNewWallet": "새 지갑 생성",
+      "name": "이름 (선택사항)",
+      "addWalletToArizen": "이 지갑을 Arizen 에 보내기",
+      "zenCashWalletLabel": "ZenCash 지갑",
+      "tAddrLabel": "공용키 - T 주소",
+      "privateKeyLabel": "개인 키",
+      "namePrint": "이름",
+      "exportPDFLabel": "PDF 파일로 내보내기"
+    },
+    "batchWithdraw": {
+      "label": "일괄 철회",
+      "keepAmount": "유지할 금액",
+      "txFee": "거래 수수료"
+    },
+    "importSinglePrivateKey": {
+      "openButtonLabel": "Import Private Key",
+      "titleLabel": "Import Single Private Key",
+      "privateKeyLabel": "Private Key",
+      "importButtonLabel": "Import",
+      "warningNotValidAddress": "Address exist in your wallet",
+      "warningNotValidPK": "This is not a valid Private Key or you try to import a Spending Key (only for Z addresses) as T address Private key."
+    },
+    "autoLogOffLabel": "Log off in ",
+    "changePassword": {
+      "title": "Change Wallet Password",
+      "warningText": "WARNING: Wallet backups won't be re-encrypted! If you need to use them, you will have to use current password.",
+      "currentPassword": "Current Password",
+      "newPassword1": "New Password",
+      "newPassword2": "New Password (Retype)"
+    },
+    "rpcConsole": {
+      "title": "RPC",
+      "command": "Command",
+      "test": "Test Me",
+      "results": "RPC Results ...",
+      "status": "Status: ",
+      "testFunctionButton": "Test Function"
+    }
+  },
+  "menu": {
+    "file": "파일",
+    "backupEncrypted": "암호화 된 지갑 백업하기",
+    "backupUnencrypted": "암호화 되지 않은 지갑 백업하기",
+    "importEncrypted": "암호화 된 Arizen 지갑 가져오기",
+    "importUnencrypted": "암호화 되지 않은 Arizen 지갑 가져오기",
+    "importPrivateKeys": "개인 키 가져오기",
+    "exportPrivateKeys": "개인 키 내보내기",
+    "exit": "나가기",
+    "edit": "편집",
+    "editSubmenu": {
+      "undo": "되돌리기",
+      "redo": "되돌리기 취소",
+      "cut": "잘라내기",
+      "copy": "복사하기",
+      "paste": "붙여넣기",
+      "selectAll": "전체 선택"
+    },
+    "help": "Help",
+    "helpSubmenu": {
+      "arizenManual": "User Manual",
+      "support": "Support",
+      "zencash": "ZenCash"
+    },
+    "changeWalletPassword": "Change wallet password"
+  },
+  "warmingMessages": {
+    "userWarningImportFileWithPKs": "New address(es) and a private key(s) will be imported. Your previous back-ups do not include the newly imported addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
+    "userWarningExportWalletUnencrypted": "You are going to export an UNENCRYPTED wallet ( ie your private keys) in plain text. That means that anyone with this file can control your ZENs. Store this file in a safe place. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
+    "userWarningExportWalletEncrypted": "You are going to export an ENCRYPTED wallet and your private keys will be encrypted. That means that in order to access your private keys you need to know the corresponding wallet name and password. In case you don't know them you cannot control the ZENs that are controled by these private keys. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
+    "userWarningImportPK": "A new address and a private key will be imported. Your previous back-ups do not include the newly imported address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
+    "userWarningCreateNewAddress": "A new address and a private key will be created. Your previous back-ups do not include this newly generated address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
+    "userWarningIUnderstand": "I understand",
+    "cancel": "Cancel",
+    "userWarningImportPkUserZendRescan": "The balance of the Z address you imported will be visible after you rescan the blockchain. Please run 'zen-cli stop && sleep 8 && zend -rescan' in your secure node (linux)."
+  },
+  "common": {
+    "selectAll": "Select all",
+    "clearAll": "Clear all",
+    "okButtonText": "OK",
+    "cancelButtonText": "Cancel"
+  }
+}

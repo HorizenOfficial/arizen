@@ -4,11 +4,11 @@
   "langFileVersion": "1",
   "login": {
     "label": "Arizen: Σύνδεση",
-    "username": "Όνομα Χρήστη",
+    "username": "Όνομα Πορτοφολιού",
     "password": "Κωδικός",
     "loginButton": "Σύνδεση",
     "createWalletLink": "Δημιουργία Πορτοφολιού",
-    "warningWrongUsernameOrPassword": "Λάθος <strong>όνομα χρήστη</strong> ή <strong>κωδικός</strong>",
+    "warningWrongUsernameOrPassword": "Λάθος <strong>όνομα πορτοφολιού</strong> ή <strong>κωδικός</strong>",
     "dataImportFailed": "Αποτυχημένη εισαγωγή δεδομένων, πιθανώς λόγω εσφαλμένων πιστοποιητικών",
     "fileReplace": "Να γίνει αντικατάσταση αρχείου;",
     "walletReplace": "Να γίνει αντικατάσταση πορτοφολιού;",
@@ -20,16 +20,16 @@
   },
   "createWallet": {
     "label": "Arizen: Δημιουργία Πορτοφολιού",
-    "username": "Όνομα Χρήστη",
+    "username": "Όνομα Πορτοφολιού",
     "password": "Κωδικός",
-    "passwordAgain": "Κωδικός ξανά" ,
-    "oldUsername": "Παλιό Όνομα Χρήστη: ",
+    "passwordAgain": "Κωδικός ξανά",
+    "oldUsername": "Παλιό Όνομα Πορτοφολιού: ",
     "oldPassword": "Παλιός Κωδικός: ",
     "selectWallet": "Επιλογή Πορτοφολιού",
     "selectWalletButton": "Περιήγηση",
     "createWalletButton": "Δημιουργία Πορτοφολιού",
     "loginLink": "Σύνδεση",
-    "warningUsername": "Το όνομα χρήστη πρέπει να πληροί τις ακόλουθες απαιτήσεις:",
+    "warningUsername": "Το όνομα πορτοφολιού πρέπει να πληροί τις ακόλουθες απαιτήσεις:",
     "warningUsernameLength": "Τουλάχιστον <strong>τέσσερα γράμματα</strong>",
     "warningPassword": "Ο κωδικός πρέπει να πληροί τις ακόλουθες απαιτήσεις:",
     "warningPasswordLetter": "Τουλάχιστον <strong>ένα γράμμα</strong>",
@@ -48,22 +48,22 @@
     "newTransactions": "Νέα συναλλαγή"
   },
   "importExportPks": {
-    "chooseFileExport" : "Επιλέξτε το αρχείο για τα ιδιωτικά κλειδιά",
-    "chooseFileImport" : "Επιλέξτε το αρχείο με τα ιδιωτικά κλειδιά",
+    "chooseFileExport": "Επιλέξτε το αρχείο για τα ιδιωτικά κλειδιά",
+    "chooseFileImport": "Επιλέξτε το αρχείο με τα ιδιωτικά κλειδιά",
     "InvalidLinePk": "Μη έγκυρη γραμμή ${0} στο αρχείο ιδιωτικών κλειδιών",
     "InvalidPk": "Μη έγκυρο ιδιωτικό κλειδί στη γραμμή ${0} στο αρχείο ιδιωτικών κλειδιών"
   },
   "wallet": {
-    "showSettingsDialogButton" : "Ρυθμίσεις",
-    "showAboutDialogButton" : "Σχετικά",
-    "refreshWallet" : "Ανανέωση",
-    "logout" : "Αποσύνδεση",
-    "exit" : "Έξοδος",
-    "date" : "Ημερομηνία",
+    "showSettingsDialogButton": "Ρυθμίσεις",
+    "showAboutDialogButton": "Σχετικά",
+    "refreshWallet": "Ανανέωση",
+    "logout": "Αποσύνδεση",
+    "exit": "Έξοδος",
+    "date": "Ημερομηνία",
     "from": "Από",
     "to": "Σε",
-    "amount" : "Ποσό",
-    "balance" : "Υπόλοιπο",
+    "amount": "Ποσό",
+    "balance": "Υπόλοιπο",
     "totalBalance": "Συνολικό υπόλοιπο",
     "lastUpdate": "Τελευταία ενημέρωση",
     "showExplorer": "Προβολή στον εξερευνητή ZEN",
@@ -78,7 +78,7 @@
     "pdfExported": "Το PDF εξήλθε",
     "tabOverview": {
       "label": "Επισκόπηση",
-      "showZeroBalances" : "Εμφάνιση μηδενικών υπολοίπων",
+      "showZeroBalances": "Εμφάνιση μηδενικών υπολοίπων",
       "newAddress": "Δημιουργία καινούριας διεύθυνσης",
       "unnamedAddress": "Ανώνυμη διεύθυνση",
       "newAddressExists": "Η διεύθυνση ${0} βρίσκεται ήδη στη λίστα"
@@ -98,13 +98,13 @@
       "help": "Κάντε κλικ στο κόκκινο κουμπί δίπλα στην επιθυμητή διεύθυνση για ανάληψη.",
       "availableBalance": "Διαθέσιμο υπόλοιπο",
       "fee": "Τέλος συναλλαγής (fee)",
-      "txStatus" : "Κατάσταση συναλλαγής",
+      "txStatus": "Κατάσταση συναλλαγής",
       "withdrawConfirmQuestion": "Θέλετε πραγματικά να στείλετε αυτήν τη συναλλαγή;",
       "messages": {
         "emptyFromAddr": "Η διεύθυνση από είναι κενή",
         "unknownFromAddr": "Η διεύθυνση από δεν ανήκει σε κανένα πορτοφόλι",
-        "insufficientFirstSource" : "Ανεπαρκής κεφάλαια στην 1η πηγή (Ελάχιστο όριο: όριο + τέλη)!",
-        "insufficientNextSource" : "Ανεπαρκής κεφάλαια στην 2η ή στην επόμενη πηγή (Ελάχιστο όριο: όριο + τέλη)!",
+        "insufficientFirstSource": "Ανεπαρκής κεφάλαια στην 1η πηγή (Ελάχιστο όριο: όριο + τέλη)!",
+        "insufficientNextSource": "Ανεπαρκής κεφάλαια στην 2η ή στην επόμενη πηγή (Ελάχιστο όριο: όριο)!",
         "numberOfKeys": "# ιδιωτικά κλειδιά και # διευθύνσεις δεν είναι ίσες!",
         "sumLowerThanFee": "Το συνολικό υπόλοιπό σας σε όλες τις διευθύνσεις πηγής είναι χαμηλότερο από τα τέλη!",
         "zenApi": "Το Zen API δεν έχει οριστεί στις ρυθμίσεις!",
@@ -113,8 +113,8 @@
         "emptyToAddr": "Η προς διεύθυνση είναι κενή",
         "zeroAmount": "Το ποσό δεν είναι θετικό",
         "insufficientFunds": "Ανεπαρκής κεφάλαια στην από διεύθυνση",
-        "fromAddressBadLength" : "Λάθος μήκος διεύθυνσης πηγής!",
-        "fromAddressBadPrefix" : "Λάθος αρχή διεύθυνση πηγής - πρέπει να είναι 'zn'!",
+        "fromAddressBadLength": "Λάθος μήκος διεύθυνσης πηγής!",
+        "fromAddressBadPrefix": "Λάθος αρχή διεύθυνση πηγής - πρέπει να είναι 'zn'!",
         "toAddressBadLength": "Κακό μήκος διεύθυνσης προορισμού!",
         "toAddressBadPrefix": "Λάθος αρχή διεύθυνσης προορισμού - πρέπει να είναι 'zn'!",
         "amounNotNumber": "Το ποσό δεν είναι αριθμός",
@@ -162,15 +162,30 @@
       "explorerUrl": "ZEN Εξερευνητής URL",
       "apiUrl": "API URLs",
       "fiat": "Ισοδύναμο πραγματικών χρημάτων",
-      "save": "Αποθήκευση"
+      "save": "Αποθήκευση",
+      "enableNotifications": "Ειδοποιήσεις Επιφάνειας Εργασίας",
+      "enableDomainFronting": "Domain fronting",
+      "secureNodeFQDN": "Secure Node FQDN",
+      "sshUsername": "SSH όνομα χρήστη",
+      "sshPassword": "SSH κωδικός",
+      "sshPort": "SSH port",
+      "secureNodePort": "Secure Node Port (δες zen.conf)",
+      "secureNodeUsername": "Secure Node όνομα χρήστη (δες zen.conf)",
+      "secureNodePassword": "Secure Node κωδικός (δες zen.conf)",
+      "readyTimeout": "Ready Timeout (default: 10000)",
+      "forwardTimeout": "Forward Timeout (default: 10000)",
+      "domainFrontingUrl": "Domain fronting δημόσιο base URL",
+      "domainFrontingHost": "Domain fronting ιδιωτικός διακομιστής",
+      "autoLogOffEnable": "Ενεργοποίηση αυτόματης αποσύνδεσης (log off)",
+      "autoLogOffTimeout": "Χρόνος αυτόματης αποσύνδεσης (log off) σε δευτερόλεπτα"
     },
     "paperWallet": {
       "label": "Χάρτινο Πορτοφόλι",
       "generateNewWallet": "Δημιουργία νέου πορτοφολιού",
       "name": "Όνομα (προαιρετικό)",
       "addWalletToArizen": "Προσθέστε αυτό το πορτοφόλι στο Arizen",
-      "zenCashWalletLabel" : "Πορτοφόλι ZenCash",
-      "tAddrLabel" : "Δημόσιο κλειδί - T Διεύθυνση",
+      "zenCashWalletLabel": "Πορτοφόλι ZenCash",
+      "tAddrLabel": "Δημόσιο κλειδί - T Διεύθυνση",
       "privateKeyLabel": "Ιδιωτικό κλειδί",
       "namePrint": "Όνομα",
       "exportPDFLabel": "Εξαγωγή PDF"
@@ -179,11 +194,35 @@
       "label": "Ομαδική ανάληψη",
       "keepAmount": "Ποσό να κρατηθεί",
       "txFee": "Τέλος συναλλαγής"
+    },
+    "importSinglePrivateKey": {
+      "openButtonLabel": "Εισαγωγή ιδιωτικού κλειδιού",
+      "titleLabel": "Εισαγωγή ενός ιδιωτικού κλειδιού",
+      "privateKeyLabel": "Ιδιωτικού κλειδί",
+      "importButtonLabel": "Εισαγωγή",
+      "warningNotValidAddress": "Η διεύθυνση υπάρχει στο πορτοφόλι σας",
+      "warningNotValidPK": "Μή έγκυρο κλειδί"
+    },
+    "autoLogOffLabel": "Αποσύνδεση σε (log off) ",
+    "changePassword": {
+      "title": "Αλλαγή Κωδικού Πορτοφολιού",
+      "warningText": "Ειδοποίηση: Τα υπάρχοντα αντίγράφα ασφαλείας δεν θα είναι ξανά κρυπτογραφηθούν ! Αν τα χρειαστείτε, πρέπει να χρησιμοποιήσετε τον υπάρχων κωδικό.",
+      "currentPassword": "Τρέχων κωδικός",
+      "newPassword1": "Νέος κωδικός",
+      "newPassword2": "Νέος κωδικός (επαλήθευση)"
+    },
+    "rpcConsole": {
+      "title": "RPC",
+      "command": "Εντολή",
+      "test": "Δοκιμή",
+      "results": "RPC αποτελέσματα ...",
+      "status": "Κατάσταση: ",
+      "testFunctionButton": "Δοκίμασε συνάρτηση"
     }
   },
   "menu": {
-    "file" : "Αρχείο",
-    "backupEncrypted":  "Δημιουργία αντιγράφων ασφαλείας κρυπτογραφημένου πορτοφολιού",
+    "file": "Αρχείο",
+    "backupEncrypted": "Δημιουργία αντιγράφων ασφαλείας κρυπτογραφημένου πορτοφολιού",
     "backupUnencrypted": "Δημιουργία αντιγράφων ασφαλείας μη-κρυπτογραφημένου πορτοφολιού",
     "importEncrypted": "Εισαγωγή κρυπτογραφημένου Arizen πορτοφολιού",
     "importUnencrypted": "Εισαγωγή μη-κρυπτογραφημένου Arizen πορτοφολιού",
@@ -198,6 +237,29 @@
       "copy": "Αντιγραφή",
       "paste": "Επικόλληση",
       "selectAll": "Επιλογή όλων"
-    }
+    },
+    "help": "Βοήθεια",
+    "helpSubmenu": {
+      "arizenManual": "Εγχειρίδιο χρήσης",
+      "support": "Υποστήριξη",
+      "zencash": "ZenCash"
+    },
+    "changeWalletPassword": "Αλλαγή κωδικού πορτοφολιού"
+  },
+  "warmingMessages": {
+    "userWarningImportFileWithPKs": "Θα εισαχθούν νέες διευθύνσεις και ιδιωτικά κλειδιά. Τα προηγούμενα αντίγραφα ασφαλείας δεν περιλαμβάνουν τις διευθύνσεις που θα εισαχθούν ή τα αντίστοιχα ιδιωτικά κλειδιά. Χρησιμοποιήστε τη λειτουργία δημιουργίας αντιγράφων ασφαλείας του Arizen για να δημιουργήσετε νέο αρχείο αντιγράφων ασφαλείας και να αντικαταστήσετε το υπάρχον αντίγραφο ασφαλείας του πορτοφολιού Arizen. Πατώντας το κουμπί 'Κατανοώ' δηλώνετε οτι κατανοείτε τα προηγούμενα. Για περισσότερες πληροφορίες παρακαλώ απευθυνθείτε στο μενού βοήθεια του Arizen.",
+    "userWarningExportWalletUnencrypted": "Θα εξαγάγετε ένα μη κρυπτογραφημένο πορτοφόλι (δηλ. Τα ιδιωτικά κλειδιά σας) σε απλό κείμενο. Αυτό σημαίνει ότι οποιοσδήποτε με αυτό το αρχείο μπορεί να ελέγξει τα ZEN σας. Αποθηκεύστε αυτό το αρχείο σε ασφαλές μέρος. Πατώντας το κουμπί 'Κατανοώ' δηλώνετε οτι κατανοείτε τα προηγούμενα. Για περισσότερες πληροφορίες παρακαλώ απευθυνθείτε στο μενού βοήθεια του Arizen.",
+    "userWarningExportWalletEncrypted": "Πρόκειται να εξαγάγετε ένα κρυπτογραφημένο πορτοφόλι και τα ιδιωτικά κλειδιά σας θα κρυπτογραφηθούν. Αυτό σημαίνει ότι για να αποκτήσετε πρόσβαση στα ιδιωτικά κλειδιά σας, πρέπει να γνωρίζετε το αντίστοιχο όνομα χρήστη και κωδικό πρόσβασης. Σε περίπτωση που δεν τα γνωρίζετε, δεν μπορείτε να ελέγξετε τα ZEN που ελέγχονται από αυτά τα ιδιωτικά κλειδιά. Πατώντας το κουμπί 'Κατανοώ' δηλώνετε οτι κατανοείτε τα προηγούμενα. Για περισσότερες πληροφορίες παρακαλώ απευθυνθείτε στο μενού βοήθεια του Arizen.",
+    "userWarningImportPK": "Θα εισαχθεί μια νέα διεύθυνση και ένα ιδιωτικό κλειδί. Τα προηγούμενα αντίγραφα ασφαλείας δεν περιλαμβάνουν τη νέα διεύθυνση ή το αντίστοιχο ιδιωτικό κλειδί. Χρησιμοποιήστε τη λειτουργία δημιουργίας αντιγράφων ασφαλείας του Arizen για να δημιουργήσετε ένα νέο αντίγραφο ασφαλείας και να αντικαταστήσετε το υπάρχον αντίγραφο ασφαλείας του πορτοφολιού Arizen. Πατώντας το κουμπί 'Κατανοώ' δηλώνετε οτι κατανοείτε τα προηγούμενα. Για περισσότερες πληροφορίες παρακαλώ απευθυνθείτε στο μενού βοήθεια του Arizen.",
+    "userWarningCreateNewAddress": "Μια νέα διεύθυνση και ένα ιδιωτικό κλειδί θα δημιουργηθεί. Τα προηγούμενα αντίγραφα ασφαλείας δεν περιλαμβάνουν τη νέα διεύθυνση και το νέο κλειδί. Χρησιμοποιήστε τη λειτουργία δημιουργίας αντιγράφων ασφαλείας του Arizen για να αντικαταστήσετε το υπάρχον αντίγραφο ασφαλείας. Πατώντας το κουμπί 'Κατανοώ' δηλώνετε οτι κατανοείτε τα προηγούμενα. Για περισσότερες πληροφορίες παρακαλώ απευθυνθείτε στο μενού βοήθεια του Arizen.",
+    "userWarningIUnderstand": "Κατανοώ",
+    "cancel": "Ακύρωση",
+    "userWarningImportPkUserZendRescan": "The balance of the Z address you imported will be visible after you rescan the blockchain. Please run 'zen-cli stop && sleep 8 && zend -rescan' in your secure node (linux)."
+  },
+  "common": {
+    "selectAll": "Επιλογή όλων",
+    "clearAll": "Καθαρισμός όλων",
+    "okButtonText": "Εωτάξει",
+    "cancelButtonText": "Ακύρωση"
   }
 }

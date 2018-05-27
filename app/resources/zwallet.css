@@ -12,11 +12,13 @@ header {
     grid-area: header;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
+    grid-column-gap: 10px;
     align-items: center;
 }
 
 header > *:nth-child(1) {
     justify-self: start;
+    white-space: nowrap;
 }
 
 header > *:nth-child(2) {
@@ -25,6 +27,7 @@ header > *:nth-child(2) {
 
 header > *:nth-child(3) {
     justify-self: end;
+    white-space: nowrap;
 }
 
 .headerCenter > :not(:first-child) {
@@ -52,7 +55,7 @@ header > *:nth-child(3) {
 }
 
 header button {
-	padding: 2px 6px;
+    padding: 2px 6px;
 }
 
 /* Wallet operations */
@@ -172,6 +175,7 @@ header button {
     align-items: center;
     cursor: pointer;
 }
+
 .addrNameLine > :not(:first-child) {
     margin-left: 5px;
 }
@@ -180,6 +184,7 @@ header button {
     height: 14px;
     opacity: 0.5;
 }
+
 .addrNameLine:hover > .addrDetailButton {
     opacity: 1;
 }
@@ -292,9 +297,11 @@ header button {
     padding: 5px 0 5px 0;
     cursor: pointer;
 }
+
 .txItem > :not(:first-child) {
     margin-left: 5px;
 }
+
 .txItem > :last-child {
     margin-right: 5px;
 }
@@ -318,6 +325,11 @@ header button {
     animation: txItemNew 2s;
 }
 
+.txDetailFrom, .txDetailTo {
+    max-height: 200px;
+    overflow: auto;
+}
+
 /* Status line */
 
 .statusLine {
@@ -328,17 +340,6 @@ header button {
     font-weight: bolder;
 }
 
-/* 
-.addrSelectList {
-    overflow: auto;
-    overflow-x: hidden;
-    display: grid;
-    grid-template-columns: auto auto auto;
-    grid-gap: 10px;
-    align-items: baseline;
-    height: 100%;
-}
-*/
 /*
  Make flexbox look like table.
  Wait for Electron to support Chromium that supports "display: contents" (62 partly does).
@@ -350,9 +351,11 @@ header button {
     border: none;
     border-collapse: collapse;
 }
+
 .addrSelectList > :nth-child(odd) {
     background: var(--odd-bg);
 }
+
 .addrSelectList > tr > td:not(:first-child) {
     padding-left: 10px;
 }
@@ -360,12 +363,15 @@ header button {
 .addrSelectRow {
     cursor: pointer;
 }
+
 .addrSelectRow:hover {
     background: var(--hover-bg);
 }
+
 .addrSelectRow > * {
     margin-right: 15px;
 }
+
 .addrSelectRowBalance {
     justify-self: flex-end;
     flex-grow: 2;
@@ -373,5 +379,40 @@ header button {
 
 .batchWithdrawContent .addrSelectList {
     max-height: 300px; /* cannot make table to not overflow in any otther way sadly */
-    margin-bottom: 20px;
+    margin: 10px 0 20px 0;
+}
+
+
+.dotSNstatus {
+    height: 14px;
+    width: 14px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.dotSNstatusRPC {
+    height: 14px;
+    width: 14px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.changeWalletPasswordDialogContent {
+    width: 600px;
+}
+
+.changeWalletPasswordDialogContent > :not(:first-child) {
+    margin-top: 10px;
+}
+
+.changeWalletPasswordWarning {
+    font-weight: bolder;
+    text-align: center;
+    color: red;
+}
+
+.changeWalletPasswordErrors {
+    color: red;
 }
