@@ -163,21 +163,21 @@
       "apiUrl": "API 地址",
       "fiat": "對應法幣",
       "save": "儲存",
-      "enableNotifications": "TODO Desktop notifications",
-      "enableDomainFronting": "TODO Domain fronting",
-      "secureNodeFQDN": "TODO Secure Node FQDN",
-      "sshUsername": "TODO SSH username",
-      "sshPassword": "TODO SSH password",
-      "sshPort": "TODO SSH port",
-      "secureNodePort": "TODO Secure Node Port (see zen.conf)",
-      "secureNodeUsername": "TODO Secure Node Username (see zen.conf)",
-      "secureNodePassword": "TODO Secure Node Password (see zen.conf)",
-      "readyTimeout": "TODO Ready Timeout (default: 10000)",
-      "forwardTimeout": "TODO Forward Timeout (default: 10000)",
-      "domainFrontingUrl": "TODO Domain fronting public base URL",
-      "domainFrontingHost": "TODO Domain fronting private host",
-      "autoLogOffEnable": "TODO Enable automatic log off",
-      "autoLogOffTimeout": "TODO Auto log off timeout in seconds"
+      "enableNotifications": "Desktop notifications",
+      "enableDomainFronting": "Domain fronting",
+      "secureNodeFQDN": "Secure Node FQDN",
+      "sshUsername": "SSH username",
+      "sshPassword": "SSH password",
+      "sshPort": "SSH port",
+      "secureNodePort": "Secure Node Port (see zen.conf)",
+      "secureNodeUsername": "Secure Node Username (see zen.conf)",
+      "secureNodePassword": "Secure Node Password (see zen.conf)",
+      "readyTimeout": "Ready Timeout (default: 10000)",
+      "forwardTimeout": "Forward Timeout (default: 10000)",
+      "domainFrontingUrl": "Domain fronting public base URL",
+      "domainFrontingHost": "Domain fronting private host",
+      "autoLogOffEnable": "Enable automatic log off",
+      "autoLogOffTimeout": "Auto log off timeout in seconds"
     },
     "paperWallet": {
       "label": "紙上錢包",
@@ -203,21 +203,21 @@
       "warningNotValidAddress": "Z address exist in your wallet",
       "warningNotValidPK": "This is not a valid Private Key."
     },
-    "autoLogOffLabel": "TODO Log off in ",
+    "autoLogOffLabel": "Log off in ",
     "changePassword": {
-      "title": "TODO Change Wallet Password",
-      "warningText": "TODO WARNING: Wallet backups won't be re-encrypted! If you need to use them, you will have to use current password.",
-      "currentPassword": "TODO Current Password",
-      "newPassword1": "TODO New Password",
-      "newPassword2": "TODO New Password (Retype)"
+      "title": "Change Wallet Password",
+      "warningText": "WARNING: Wallet backups won't be re-encrypted! If you need to use them, you will have to use current password.",
+      "currentPassword": "Current Password",
+      "newPassword1": "New Password",
+      "newPassword2": "New Password (Retype)"
     },
     "rpcConsole": {
-      "title": "TODO RPC",
-      "command": "TODO Command",
-      "test": "TODO Test Me",
-      "results": "TODO RPC Results ...",
-      "status": "TODO Status: ",
-      "testFunctionButton": "TODO Test Function"
+      "title": "RPC",
+      "command": "Command",
+      "test": "Test Me",
+      "results": "RPC Results ...",
+      "status": "Status: ",
+      "testFunctionButton": "Test Function"
     }
   },
   "menu": {
@@ -238,13 +238,13 @@
       "paste": "貼上",
       "selectAll": "選擇全部"
     },
-    "help": "TODO Help",
+    "help": "Help",
     "helpSubmenu": {
-      "arizenManual": "TODO User Manual",
-      "support": "TODO Support",
-      "zencash": "TODO ZenCash"
+      "arizenManual": "User Manual",
+      "support": "Support",
+      "zencash": "ZenCash"
     },
-    "changeWalletPassword": "TODO Change wallet password"
+    "changeWalletPassword": "Change wallet password"
   },
   "warmingMessages": {
     "userWarningImportFileWithPKs": "New address(es) and a private key(s) will be imported. Your previous back-ups do not include the newly imported addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
@@ -254,12 +254,12 @@
     "userWarningCreateNewAddress": "A new address and a private key will be created. Your previous back-ups do not include this newly generated address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
     "userWarningIUnderstand": "I understand",
     "cancel": "Cancel",
-    "userWarningImportPkUserZendRescan": "TODO The balance of the Z address you imported will be visible after you rescan the blockchain. Please run 'zen-cli stop && sleep 8 && zend -rescan' in your secure node (linux)."
+    "userWarningImportPkUserZendRescan": "The balance of the Z address you imported will be visible after you rescan the blockchain. Please run 'zen-cli stop && sleep 8 && zend -rescan' in your secure node (linux)."
   },
   "common": {
-    "selectAll": "TODO Select all",
-    "clearAll": "TODO Clear all",
-    "okButtonText": "TODO OK",
-    "cancelButtonText": "TODO Cancel"
+    "selectAll": "Select all",
+    "clearAll": "Clear all",
+    "okButtonText": "OK",
+    "cancelButtonText": "Cancel"
   }
 }

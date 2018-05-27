@@ -203,21 +203,21 @@
       "warningNotValidAddress": "Η διεύθυνση υπάρχει στο πορτοφόλι σας",
       "warningNotValidPK": "Μή έγκυρο κλειδί"
     },
-    "autoLogOffLabel": "TODO Log off in ",
+    "autoLogOffLabel": "Log off in ",
     "changePassword": {
-      "title": "TODO Change Wallet Password",
-      "warningText": "TODO WARNING: Wallet backups won't be re-encrypted! If you need to use them, you will have to use current password.",
-      "currentPassword": "TODO Current Password",
-      "newPassword1": "TODO New Password",
-      "newPassword2": "TODO New Password (Retype)"
+      "title": "Change Wallet Password",
+      "warningText": "WARNING: Wallet backups won't be re-encrypted! If you need to use them, you will have to use current password.",
+      "currentPassword": "Current Password",
+      "newPassword1": "New Password",
+      "newPassword2": "New Password (Retype)"
     },
     "rpcConsole": {
-      "title": "TODO RPC",
-      "command": "TODO Command",
-      "test": "TODO Test Me",
-      "results": "TODO RPC Results ...",
-      "status": "TODO Status: ",
-      "testFunctionButton": "TODO Test Function"
+      "title": "RPC",
+      "command": "Command",
+      "test": "Test Me",
+      "results": "RPC Results ...",
+      "status": "Status: ",
+      "testFunctionButton": "Test Function"
     }
   },
   "menu": {
@@ -244,7 +244,7 @@
       "support": "Υποστήριξη",
       "zencash": "ZenCash"
     },
-    "changeWalletPassword": "TODO Change wallet password"
+    "changeWalletPassword": "Change wallet password"
   },
   "warmingMessages": {
     "userWarningImportFileWithPKs": "Θα εισαχθούν νέες διευθύνσεις και ιδιωτικά κλειδιά. Τα προηγούμενα αντίγραφα ασφαλείας δεν περιλαμβάνουν τις διευθύνσεις που θα εισαχθούν ή τα αντίστοιχα ιδιωτικά κλειδιά. Χρησιμοποιήστε τη λειτουργία δημιουργίας αντιγράφων ασφαλείας του Arizen για να δημιουργήσετε νέο αρχείο αντιγράφων ασφαλείας και να αντικαταστήσετε το υπάρχον αντίγραφο ασφαλείας του πορτοφολιού Arizen. Πατώντας το κουμπί 'Κατανοώ' δηλώνετε οτι κατανοείτε τα προηγούμενα. Για περισσότερες πληροφορίες παρακαλώ απευθυνθείτε στο μενού βοήθεια του Arizen.",
@@ -254,12 +254,12 @@
     "userWarningCreateNewAddress": "Μια νέα διεύθυνση και ένα ιδιωτικό κλειδί θα δημιουργηθεί. Τα προηγούμενα αντίγραφα ασφαλείας δεν περιλαμβάνουν τη νέα διεύθυνση και το νέο κλειδί. Χρησιμοποιήστε τη λειτουργία δημιουργίας αντιγράφων ασφαλείας του Arizen για να αντικαταστήσετε το υπάρχον αντίγραφο ασφαλείας. Πατώντας το κουμπί 'Κατανοώ' δηλώνετε οτι κατανοείτε τα προηγούμενα. Για περισσότερες πληροφορίες παρακαλώ απευθυνθείτε στο μενού βοήθεια του Arizen.",
     "userWarningIUnderstand": "Κατανοώ",
     "cancel": "Ακύρωση",
-    "userWarningImportPkUserZendRescan": "TODO The balance of the Z address you imported will be visible after you rescan the blockchain. Please run 'zen-cli stop && sleep 8 && zend -rescan' in your secure node (linux)."
+    "userWarningImportPkUserZendRescan": "The balance of the Z address you imported will be visible after you rescan the blockchain. Please run 'zen-cli stop && sleep 8 && zend -rescan' in your secure node (linux)."
   },
   "common": {
-    "selectAll": "TODO Select all",
-    "clearAll": "TODO Clear all",
-    "okButtonText": "TODO OK",
-    "cancelButtonText": "TODO Cancel"
+    "selectAll": "Select all",
+    "clearAll": "Clear all",
+    "okButtonText": "OK",
+    "cancelButtonText": "Cancel"
   }
 }
