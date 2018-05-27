@@ -4,10 +4,9 @@
 "use strict";
 
 const {ipcRenderer} = require("electron");
-// FIXME: unused List
-const {List} = require("immutable");
 const Qrcode = require("qrcode");
 const jsPDF = require("jspdf");
+const {showPaperWalletDialog} = require("./paperwallet.js");
 
 function logIpc(msgType) {
     ipcRenderer.on(msgType, (...args) => {
@@ -25,9 +24,7 @@ logIpc("generate-wallet-response");
 logIpc("get-settings-response");
 logIpc("get-transaction-update");
 logIpc("get-wallet-by-name-response");
-//logIpc("get-wallets-response");
 logIpc("refresh-wallet-response");
-//logIpc("rename-wallet-response");
 logIpc("render-qr-code");
 logIpc("save-settings-response");
 logIpc("send-finish");
@@ -40,6 +37,7 @@ logIpc("zz-get-wallets");
 let addrListNode = document.getElementById("addrList");
 const txListNode = document.getElementById("txList");
 const totalBalanceNode = document.getElementById("totalBalance");
+const loadingImageNode = document.getElementById("loadingImage");
 const depositTabButton = document.getElementById("depositTabButton");
 const depositToButton = document.getElementById("depositToButton");
 const depositToAddrInput = document.getElementById("depositToAddr");
@@ -48,8 +46,6 @@ const depositMsg = document.getElementById("depositMsg");
 const depositQrcodeImage = document.getElementById("depositQrcodeImg");
 const depositSaveQrcodeButton = document.getElementById("depositSaveQrcodeButton");
 const withdrawTabButton = document.getElementById("withdrawTabButton");
-// FIXME: withdrawAvailBalanceNode unused
-const withdrawAvailBalanceNode = document.getElementById("withdrawAvailBalance");
 const withdrawFromButton = document.getElementById("withdrawFromButton");
 const withdrawFromAddrInput = document.getElementById("withdrawFromAddr");
 const withdrawToButton = document.getElementById("withdrawToButton");
@@ -61,12 +57,15 @@ const withdrawButton = document.getElementById("withdrawButton");
 const withdrawStatusTitleNode = document.getElementById("withdrawStatusTitle");
 const withdrawStatusBodyNode = document.getElementById("withdrawStatusBody");
 
+const userWarningCreateNewAddress = "A new address and a private key will be created. Your previous back-ups do not include this newly generated address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
+
 const refreshTimeout = 300;
 let refreshTimer;
-let showZeroBalances = false;
+let showZeroBalances = true;
 let depositQrcodeTimer;
 let addrObjList;
 let addrIdxByAddr;
+let refreshCounter = 0;
 
 // ---------------------------------------------------------------------------------------------------------------------
 // IPC
@@ -82,12 +81,14 @@ ipcRenderer.on("get-wallets-response", (event, msgStr) => {
     addTransactions(msg.transactions);
     setTotalBalance(msg.total);
     scheduleRefresh();
+    pingSecureNode();
+    pingSecureNodeRPCResult();
 });
 
 ipcRenderer.on("update-wallet-balance", (event, msgStr) => {
     const msg = JSON.parse(msgStr);
     checkResponse(msg);
-    setAddressBalance(msg.addrObj.addr, msg.addrObj.balance);
+    setAddressBalance(msg.addrObj.addr, msg.addrObj.lastbalance);
     setTotalBalance(msg.total);
     showNotification(`${tr("notification.balanceUpdated", "Balance updated")} (${formatBalanceDiff(msg.diff)})`);
 });
@@ -97,6 +98,18 @@ ipcRenderer.on("get-transaction-update", (event, msgStr) => {
     txObj.amount = parseFloat(txObj.amount);
     addTransactions([txObj], true);
     showNotification(tr("notification.newTransactions", "New transaction"));
+});
+
+ipcRenderer.on("add-loading-image", (event) => {
+    refreshCounter = refreshCounter + 1;
+    loadingImageNode.innerHTML = "<img src='resources/loading.gif' height='14' width='14' />"
+});
+
+ipcRenderer.on("remove-loading-image", (event) => {
+    refreshCounter = refreshCounter - 1;
+    if (refreshCounter <= 0) {
+        loadingImageNode.innerHTML = ""
+    }
 });
 
 ipcRenderer.on("refresh-wallet-response", (event, msgStr) => {
@@ -122,6 +135,20 @@ ipcRenderer.on("generate-wallet-response", (event, msgStr) => {
     const msg = JSON.parse(msgStr);
     checkResponse(msg);
     addNewAddress(msg.addr);
+    //alert(tr("warmingMessages.userWarningCreateNewAddress", userWarningCreateNewAddress))
+});
+
+ipcRenderer.on("main-sends-alert", (event, msgStr) => {
+    alert(msgStr)
+});
+
+ipcRenderer.on("change-wallet-password-begin", (event, currentPassword) => {
+    showChangeWalletPasswordDialog(currentPassword);
+});
+
+ipcRenderer.on("change-wallet-password-finish", (event, msgStr) => {
+    const msg = JSON.parse(msgStr);
+    showPasswordChangeNotice(msg);
 });
 
 window.addEventListener("load", initWallet);
@@ -136,8 +163,9 @@ function checkResponse(resp) {
 
 function warnTxSend(onOk) {
     const msg = tr("wallet.tabWithdraw.withdrawConfirmQuestion", "Do you really want to send this transaction?");
-    if (confirm(msg))
+    if (confirm(msg)) {
         onOk();
+    }
 }
 
 function getAddrData(addr) {
@@ -154,24 +182,24 @@ function getAddrData(addr) {
 function setBalanceText(balanceNode, balance) {
     const balanceAmountNode = balanceNode.firstElementChild;
     balanceAmountNode.textContent = formatBalance(balance);
-    if (balance > 0)
+    if (balance > 0) {
         balanceNode.classList.add("positive");
-    else
+    } else {
         balanceNode.classList.remove("positive");
+    }
 }
 
 function setFiatBalanceText(balanceZen, fiatCurrencySymbol = "") {
     const totalBalanceFiatNode = document.getElementById("totalBalanceFiat");
     const balanceFiatAmountNode = totalBalanceFiatNode.firstElementChild;
     const lastUpdateTimeNode = document.getElementById("lastUpdateTime");
-    let userSettings = ipcRenderer.sendSync("get-me-settings");
     if (fiatCurrencySymbol === "") {
-        fiatCurrencySymbol = userSettings.fiatCurrency;
-        if (fiatCurrencySymbol === undefined || fiatCurrencySymbol === null ){
+        fiatCurrencySymbol = settings.fiatCurrency;
+        if (fiatCurrencySymbol === undefined || fiatCurrencySymbol === null) {
             fiatCurrencySymbol = "USD";
         }
     }
-    
+
     const axios = require("axios");
     const BASE_API_URL = "https://api.coinmarketcap.com/v1/ticker";
     let API_URL = BASE_API_URL + "/zencash/?convert=" + fiatCurrencySymbol;
@@ -183,16 +211,26 @@ function setFiatBalanceText(balanceZen, fiatCurrencySymbol = "") {
         let balance = parseFloat(balanceZen) * zenPrice;
         balanceFiatAmountNode.textContent = formatFiatBalance(balance) + " " + fiatCurrencySymbol;
         lastUpdateTimeNode.textContent = now;
-      }).catch(error => {
-            console.log(error);
-      });
+    }).catch(error => {
+        console.log(error);
+    });
 }
 
 function setAddressNodeName(addrObj, addrNode) {
-    if (addrObj.name)
+    if (addrObj.name) {
         setNodeTrText(addrNode, null, addrObj.name);
-    else
+    } else {
         setNodeTrText(addrNode, "wallet.tabOverview.unnamedAddress", "Unnamed address");
+    }
+}
+
+function formatAddressInList(addr) {
+    // T - address
+    if (addr.length === 35) {
+        return addr;
+    } else {
+        return addr.substring(0, 17) + "..." + addr.substring(80);
+    }
 }
 
 function createAddrItem(addrObj) {
@@ -200,7 +238,7 @@ function createAddrItem(addrObj) {
     addrItem.dataset.addr = addrObj.addr;
 
     setAddressNodeName(addrObj, addrItem.getElementsByClassName("addrName")[0]);
-    addrItem.getElementsByClassName("addrText")[0].textContent = addrObj.addr;
+    addrItem.getElementsByClassName("addrText")[0].textContent = formatAddressInList(addrObj.addr);
     addrItem.getElementsByClassName("addrNameLine")[0]
         .addEventListener("click", () => showAddrDetail(addrObj.addr));
     addrItem.getElementsByClassName("addrDepositButton")[0]
@@ -243,8 +281,9 @@ function showAddrDetail(addr) {
             ipcRenderer.send("rename-wallet", addr, nameNode.value);
         });
         dialog.addEventListener("keypress", ev => {
-            if (event.keyCode === 13)
+            if (event.keyCode === 13) {
                 saveButton.click();
+            }
         });
     });
 }
@@ -268,11 +307,13 @@ function createTxItem(txObj, newTx = false) {
     const node = txObj.block >= 0 ? cloneTemplate("txItemTemplate") : cloneTemplate("txMempoolItemTemplate");
     node.dataset.txid = txObj.txid;
     node.dataset.blockheight = txObj.block;
-    if (txObj.block >= 0)
+    if (txObj.block >= 0) {
         node.querySelector(".txDate").textContent = formatEpochTime(txObj.time * 1000);
+    }
     setTxBalanceText(node.querySelector(".txBalance"), txObj.amount);
-    if (newTx)
+    if (newTx) {
         node.classList.add("txItemNew");
+    }
     node.addEventListener("click", () => showTxDetail(txObj));
     return node;
 }
@@ -287,16 +328,18 @@ function showTxDetail(txObj) {
         txObj.vins.split(",").sort().forEach(addr => {
             const node = document.createElement("div");
             node.textContent = addr;
-            if (addrIdxByAddr.has(addr))
+            if (addrIdxByAddr.has(addr)) {
                 node.classList.add("negative");
+            }
             vinListNode.append(node);
         });
         const voutListNode = dialog.querySelector(".txDetailTo");
         txObj.vouts.split(",").sort().forEach(addr => {
             const node = document.createElement("div");
             node.textContent = addr;
-            if (addrIdxByAddr.has(addr))
+            if (addrIdxByAddr.has(addr)) {
                 node.classList.add("positive");
+            }
             voutListNode.append(node);
         });
         if (txObj.block >= 0) {
@@ -338,15 +381,17 @@ function sortAddresses() {
                 const addrB = b.addr;
                 return addrA.localeCompare(addrB);
             } else {
-                if (nameA === '')
+                if (nameA === '') {
                     return 1;
-                else if (nameB === '')
+                } else if (nameB === '') {
                     return -1;
-                else
+                } else {
                     return nameA.localeCompare(nameB);
+                }
             }
-        } else
+        } else {
             return balB - balA;
+        }
     });
     addrObjList.forEach((addrObj, idx) => addrIdxByAddr.set(addrObj.addr, idx));
     recreateAddrList();
@@ -354,10 +399,11 @@ function sortAddresses() {
 
 function addAddresses(newAddrs) {
     newAddrs.forEach(addrObj => {
-        if (!addrIdxByAddr.has(addrObj.addr))
+        if (!addrIdxByAddr.has(addrObj.addr)) {
             addrObjList.push(addrObj);
-        else
+        } else {
             console.warn(`Address ${addrObj.addr} is already in the list`);
+        }
     });
     sortAddresses();
 }
@@ -380,17 +426,30 @@ function setAddressName(addr, name) {
 }
 
 function showNewAddrDialog() {
-    showDialogFromTemplate("newAddrDialogTemplate", dialog => {
-        const createButton = dialog.querySelector(".newAddrDialogCreate");
-        createButton.addEventListener("click", () => {
-            ipcRenderer.send("generate-wallet", dialog.querySelector(".newAddrDialogName").value);
-            dialog.close();
+    let response = -1;
+    response = ipcRenderer.sendSync("renderer-show-message-box", tr("warmingMessages.userWarningCreateNewAddress", userWarningCreateNewAddress), [tr("warmingMessages.userWarningIUnderstand", "I understand")]);
+    if (response === 0) {
+        showDialogFromTemplate("newAddrDialogTemplate", dialog => {
+            const createButton = dialog.querySelector(".newAddrDialogCreate");
+            createButton.addEventListener("click", () => {
+                var getT = dialog.querySelector(".TorZgetT").checked;
+                var getZ = dialog.querySelector(".TorZgetZ").checked;
+                var nameAddress = dialog.querySelector(".newAddrDialogName").value;
+                if (getT) {
+                    ipcRenderer.send("generate-wallet", nameAddress);
+                }
+                if (getZ) {
+                    rpc.getNewZaddressPK(nameAddress)
+                }
+                dialog.close();
+            });
+            dialog.addEventListener("keypress", ev => {
+                if (event.keyCode === 13) {
+                    createButton.click();
+                }
+            });
         });
-        dialog.addEventListener("keypress", ev => {
-            if (event.keyCode === 13)
-                createButton.click();
-        });
-    });
+    }
 }
 
 function addTransactions(txs, newTx = false) {
@@ -409,7 +468,7 @@ function addTransactions(txs, newTx = false) {
         const oldTxItem = txListNode.querySelector(`[data-txid='${txObj.txid}']`);
         if (oldTxItem) {
             if (oldTxItem.dataset.blockheight !== "-1") {
-                console.error(tr("wallet.transactionHistory.replaceAttempt","Attempting to replace transaction in block"));
+                console.error(tr("wallet.transactionHistory.replaceAttempt", "Attempting to replace transaction in block"));
             } else if (txObj.block >= 0) {
                 txListNode.replaceChild(createTxItem(txObj, newTx), oldTxItem);
             }
@@ -427,28 +486,39 @@ function setTotalBalance(balanceZen) {
 function toggleZeroBalanceAddrs() {
     showZeroBalances = !showZeroBalances;
     addrObjList.forEach((addrObj, idx) => {
-        if (!addrObj.lastbalance)
+        if (!addrObj.lastbalance) {
             hideElement(addrListNode.children[idx], !showZeroBalances);
+        }
     });
 }
 
 function scheduleRefresh() {
-    if (refreshTimer)
+    if (refreshTimer) {
         clearTimeout(refreshTimer);
+    }
     refreshTimer = setTimeout(() => refresh(), refreshTimeout * 1000);
 }
 
 function refresh() {
-    ipcRenderer.send("refresh-wallet");
     scheduleRefresh();
+    syncZaddrIfSettingsExist();
+    rpc.updateAllZBalances();
+    ipcRenderer.send("refresh-wallet");
+    sendPendingTxs();
 }
 
 function showAddrSelectDialog(zeroBalanceAddrs, onSelected) {
     showDialogFromTemplate("addrSelectDialogTemplate", dialog => {
         const listNode = dialog.querySelector(".addrSelectList");
         for (const addrObj of addrObjList) {
-            if (!zeroBalanceAddrs && !addrObj.lastbalance)
+            if (addrObj.addr.length !== 35){
+                // it is Z address
                 continue;
+            }
+
+            if (!zeroBalanceAddrs && !addrObj.lastbalance) {
+                continue;
+            }
             const row = cloneTemplate("addrSelectRowTemplate");
             row.querySelector(".addrSelectRowName").textContent = addrObj.name;
             row.querySelector(".addrSelectRowAddr").textContent = addrObj.addr;
@@ -471,7 +541,7 @@ function initDepositView() {
         updateDepositQrcode();
     }));
     depositSaveQrcodeButton.addEventListener("click", () => {
-        const pdf = new jsPDF({ unit: 'mm', format: [100, 100] });
+        const pdf = new jsPDF({unit: 'mm', format: [100, 100]});
         const w = pdf.internal.pageSize.width;
         const h = pdf.internal.pageSize.height;
         pdf.addImage(depositQrcodeImage.src, 'JPEG', 0, 0, w, h);
@@ -514,28 +584,111 @@ function updateDepositQrcode(qrcodeDelay = 0) {
     depositQrcodeTimer = setTimeout(() => {
         const json = {symbol: "zen", tAddr: toAddr, amount: amount};
         Qrcode.toDataURL(JSON.stringify(json), qrcodeOpts, (err, url) => {
-            if (err)
+            if (err) {
                 console.log(err);
-            else
+            } else {
                 depositQrcodeImage.src = url;
+            }
             depositQrcodeTimer = null;
         });
     }, qrcodeDelay);
 }
 
-function initWithdrawView() {
+async function checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo) {
+    let balance = -1.0;
+    amount = parseFloat(amount).toFixed(8);
+    let resp = await rpc.getTaddressBalance(tIntermediateAddress);
+    balance = resp.balance;
+    console.log(balance);
+    console.log(amount);
+    if (balance >= amount) {
+        // send from T to Z
+        console.log("Sending...");
+        let sendResp = await rpc.sendFromOrToZaddress(undefined, tIntermediateAddress, toAddr, amount, feeTwo)
+        console.log(sendResp.status);
+        if (sendResp.status === "ok"){
+            return true
+        } else {
+            return false
+        }
+
+    } else {
+        console.log("Will check again later...");
+        //setTimeout( () => checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo), 30000) // 2 mins
+        return false
+    }
+}
+
+async function sendPendingTxs() {
+    let newPendingTxs = [];
+    let oldPendingTxs = internalInfo.pendingTxs; //[{type:"snT-Z",fromAddress: "zn", toAddress: "zn2", amount:1, fee:0.1}]; //internalInfo.pendingTxs;
+    console.log("Preious Txs:");
+    console.log(internalInfo);
+
+    for (let pendTx of oldPendingTxs) {
+      console.log(pendTx);
+      if (pendTx.type === "snT-Z") {
+          let sentTx = await checkIntermediateSend(pendTx.fromAddress, pendTx.toAddress, pendTx.amount, pendTx.fee);
+          console.log("Transaction sent: ");
+          console.log(sentTx);
+          if (!sentTx) {
+              newPendingTxs.push(pendTx);
+          }
+      }
+    }
+    internalInfo.pendingTxs = newPendingTxs;
+    saveInternalInfo()
+}
+
+async function initWithdrawView() {
     withdrawFromAddrInput.addEventListener("input", validateWithdrawForm);
     withdrawToAddrInput.addEventListener("input", validateWithdrawForm);
     withdrawAmountInput.addEventListener("input", validateWithdrawForm);
     withdrawFeeInput.addEventListener("input", validateWithdrawForm);
-    withdrawButton.addEventListener("click", () => {
+    withdrawButton.addEventListener("click", async function() {
         const msg = tr("wallet.tabWithdraw.withdrawConfirmQuestion", "Do you really want to send this transaction?");
+        const msgTTZ = tr("wallet.sendTTZ.doNotCloseArizen", "Arizen is Sending ZEN from your T address to an intermediate T and then to the Z address. Please do not close Arizen until the 2nd transaction is sent (opid appears below withdraw).");
         if (confirm(msg)) {
-            ipcRenderer.send("send",
-                withdrawFromAddrInput.value,
-                withdrawToAddrInput.value,
-                withdrawFeeInput.value,
-                withdrawAmountInput.value);
+            let fromAddr = withdrawFromAddrInput.value;
+            let toAddr = withdrawToAddrInput.value;
+            let fee = withdrawFeeInput.value;
+            let amount = withdrawAmountInput.value;
+            if (zenextra.isTransaparentAddr(fromAddr) && zenextra.isTransaparentAddr(toAddr)) { // T-T
+                ipcRenderer.send("send",
+                    withdrawFromAddrInput.value,
+                    withdrawToAddrInput.value,
+                    withdrawFeeInput.value,
+                    withdrawAmountInput.value);
+            } else if (zenextra.isTransaparentAddr(fromAddr) && zenextra.isZeroAddr(toAddr)) { // T - Z
+                if (confirm(msgTTZ)) {
+                    // Get intermediate T address from SN or Create
+                    let feeOne = fee/2;
+                    let feeTwo = fee/2;
+                    let amountOne = parseFloat(amount)+feeTwo;
+                    console.log(amountOne);
+                    let tIntermediateAddress = await rpc.getSecureNodeTaddressOrGenerate();
+                    // send from T-Arizen to T-SN, amount, fee/2
+                    if (tIntermediateAddress) {
+                        ipcRenderer.send("send",
+                            fromAddr,
+                            tIntermediateAddress,
+                            feeOne,
+                            amountOne);
+                        //checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo);
+                        internalInfo.pendingTxs.push({type:"snT-Z",fromAddress: tIntermediateAddress, toAddress: toAddr, amount:amount, fee:feeTwo});
+                        saveInternalInfo();
+                        sendPendingTxs();
+                      }
+                  }
+
+
+            } else { // Z - Z or Z - T
+                let fromAddrObj = ipcRenderer.sendSync("get-address-object", fromAddr);
+                let fromAddressPK = fromAddrObj.pk;
+                let myAmount = parseFloat(withdrawAmountInput.value).toFixed(8);
+                let myFees = parseFloat(withdrawFeeInput.value);
+                rpc.sendFromOrToZaddress(fromAddressPK, fromAddr, toAddr, myAmount, myFees);
+            }
         }
     });
     withdrawFromButton.addEventListener("click", () => showAddrSelectDialog(false, addr => {
@@ -549,11 +702,17 @@ function initWithdrawView() {
     validateWithdrawForm();
 }
 
+function precisionRound(number, precision) {
+    let factor = Math.pow(10, precision);
+    return Math.round(number * factor) / factor;
+}
+
 function validateWithdrawForm() {
     const fromAddr = withdrawFromAddrInput.value;
     const toAddr = withdrawToAddrInput.value;
     const amount = parseFloat(withdrawAmountInput.value || 0);
     const fee = parseFloat(withdrawFeeInput.value || 0);
+    let precRoundDigit = 9;
 
     withdrawButton.disabled = true;
     setBalanceText(withdrawAvailBalance, 0);
@@ -569,6 +728,11 @@ function validateWithdrawForm() {
     }
     setBalanceText(withdrawAvailBalance, fromAddrObj.lastbalance);
 
+    if (fromAddrObj.pk === "watchOnlyAddrr"){
+        setNodeTrText(withdrawMsg, "wallet.tabWithdraw.messages.watchOnlyAddrr", "The from address is a watch only address and you cannot spend its balance.");
+        return;
+    }
+
     if (!toAddr) {
         setNodeTrText(withdrawMsg, "wallet.tabWithdraw.messages.emptyToAddr", "The to address is empty");
         return;
@@ -577,7 +741,7 @@ function validateWithdrawForm() {
         setNodeTrText(withdrawMsg, "wallet.tabWithdraw.messages.zeroAmount", "The amount is not positive");
         return;
     }
-    if (amount + fee > fromAddrObj.lastbalance) {
+    if (precisionRound(amount + fee, precRoundDigit) > precisionRound(fromAddrObj.lastbalance, precRoundDigit)) {
         setNodeTrText(withdrawMsg, "wallet.tabWithdraw.messages.insufficientFunds", "Insufficient funds on the from address");
         return;
     }
@@ -610,6 +774,15 @@ function showBatchWithdrawDialog() {
         const listNode = dialog.querySelector(".addrSelectList");
 
         for (const addrObj of addrObjList) {
+            if (addrObj.addr.length !== 35) {
+                // it is Z address
+                continue;
+            }
+
+            if (addrObj.lastbalance === 0) {
+                continue;
+            }
+
             const row = cloneTemplate("addrMultiselectRowTemplate");
             row.dataset.addr = addrObj.addr;
 
@@ -618,8 +791,9 @@ function showBatchWithdrawDialog() {
             const addrNode = row.querySelector(".addrSelectRowAddr");
             const balanceNode = row.querySelector(".addrSelectRowBalance");
 
-            if (fromAddrsSet.has(addrObj.addr))
+            if (fromAddrsSet.has(addrObj.addr)) {
                 selectCheckbox.checked = true;
+            }
             nameNode.textContent = addrObj.name;
             addrNode.textContent = addrObj.addr;
             setBalanceText(balanceNode, addrObj.lastbalance);
@@ -632,6 +806,8 @@ function showBatchWithdrawDialog() {
         const toAddrSelectButton = dialog.querySelector("#batchWithdrawToAddrSelect");
         const toAddrInput = dialog.querySelector("#batchWithdrawToAddr");
         const withdrawButton = dialog.querySelector("#batchWithdrawButton");
+        const selectAllButton = dialog.querySelector("#batchWithdrawSelectAll");
+        const clearAllButton = dialog.querySelector("#batchWithdrawClearAll");
 
         setInputNodeValue(toAddrInput, bwSettings.toAddr);
         setInputNodeValue(keepAmountInput, bwSettings.keepAmount);
@@ -643,9 +819,10 @@ function showBatchWithdrawDialog() {
 
         withdrawButton.addEventListener("click", () => {
             bwSettings.fromAddrs = [];
-            [... listNode.children].forEach(row => {
-                if (row.querySelector(".addrSelectCheckbox").checked)
+            [...listNode.children].forEach(row => {
+                if (row.querySelector(".addrSelectCheckbox").checked) {
                     bwSettings.fromAddrs.push(row.dataset.addr);
+                }
             });
             bwSettings.toAddr = toAddrInput.value;
             bwSettings.keepAmount = keepAmountInput.value;
@@ -665,11 +842,18 @@ function showBatchWithdrawDialog() {
                 statusDialog.showModal();
             });
         });
+
+        selectAllButton.addEventListener("click", () => {
+            [...listNode.children].forEach(row => {
+                row.querySelector(".addrSelectCheckbox").checked = true;
+            });
+        });
+        clearAllButton.addEventListener("click", () => {
+            [...listNode.children].forEach(row => {
+                row.querySelector(".addrSelectCheckbox").checked = false;
+            });
+        });
     });
-}
-
-function showTxStatusDialog() {
-
 }
 
 function initWallet() {
@@ -685,4 +869,50 @@ function initWallet() {
         });
     });
     ipcRenderer.send("get-wallets");
+}
+
+function showChangeWalletPasswordDialog(currentPassword) {
+    showDialogFromTemplate("changeWalletPasswordDialog", dialog => {
+        console.log(currentPassword);
+        const currentPasswordInput = dialog.querySelector(".currentPasswordText");
+        const newPassword1Input = dialog.querySelector(".newPasswordText1");
+        const newPassword2Input = dialog.querySelector(".newPasswordText2");
+        const okButton = dialog.querySelector(".changePasswordOK");
+        const cancelButton = dialog.querySelector(".changePasswordCancel");
+        const errorsText = dialog.querySelector(".changeWalletPasswordErrors");
+
+        cancelButton.addEventListener("click", () => dialog.close());
+
+        okButton.addEventListener("click", () => {
+            const typedCurrentPassword = currentPasswordInput.value;
+            const newPassword1 = newPassword1Input.value;
+            const newPassword2 = newPassword2Input.value;
+
+            if (currentPassword !== typedCurrentPassword) {
+                errorsText.textContent = tr("wallet.changePassword.error.wrongCurrentPassword", "Wrong current password");
+                return;
+            }
+
+            if (newPassword1 !== newPassword2) {
+                errorsText.textContent = tr("wallet.changePassword.error.newPasswordBadRetype", "New passwords do not match");
+                return;
+            }
+
+            if (newPassword1 === "") {
+                errorsText.textContent = tr("wallet.changePassword.error.emptyNewPassword", "New password cannot be empty");
+                return;
+            }
+
+            ipcRenderer.send("change-wallet-password-continue", newPassword1);
+            dialog.close();
+        });
+    });
+}
+
+function showPasswordChangeNotice(result) {
+    if (result.success) {
+        alert(tr("wallet.changePassword.noticeSuccess", "Wallet password successfully changed"));
+    } else {
+        alert(tr("wallet.changePassword.noticeError", "Failed to change wallet password"));
+    }
 }

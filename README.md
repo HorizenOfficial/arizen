@@ -3,22 +3,79 @@
 [![Build status][travis-img]][travis-url]
 [![Code Climate][codeclimate-img]][codeclimate-url]
 
-
-# Arizen
-Arizen is ZenCash wallet.
+# User Manuals
+- v1.1.7: [Arizen v1.1.7 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.7/Arizen.v1.1.7.Wallet.User.Manual.pdf)
+- v1.1.6: [Arizen v1.1.6 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.6/Arizen.v1.1.6.Wallet.User.Manual.pdf)
+- v1.1.5: [Arizen v1.1.5 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.5/Arizen.v1.1.5.Wallet.User.Manual.pdf)
+- v1.1.4: [Arizen v1.1.4 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.4/Arizen.v1.1.4.Wallet.User.Manual.pdf)
+- v1.1.3: [Arizen v1.1.3 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.3/Arizen.v1.1.3.Wallet.User.Manual.pdf)
+- v1.1.1: [Arizen v1.1.1 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.1/Arizen.v1.1.1.Wallet.User.Manual.pdf)
+- v1.0.0: [Arizen v1.0.0 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.0.0/Arizen.Wallet.User.Manual.pdf)
 
 # Version History
+
+## v1.1.7
+- [x] Support for sending Z transactions and addresses (available only for Secure Node (SN) operators).
+- [x] Added items in Settings menu for configuring the connection to SN.
+- [x] All Private Keys for T addresses are held ONLY in Arizen wallet.
+- [x] All Private Keys for Z addresses are synchronized from your SN into Arizen and vice versa.
+- [x] Send T-Z tx, here is used T-T-Z schema 2 transactions (fee is divided, use fee for 2 txs), the middle T address is address in your SN for security reason).
+- [x] "watch only/intermediate" T address has been introduced - it is used for T-Z tx (there are 2 txs and fee is divided 2 = schema is: T(Arizen)-T(on your SN)-Z(on your SN or anywhere), from this intermediate T address you will have PK stored ONLY in your SN.
+- [x] Send Z-Z with your SN.
+- [x] Send Z-T with your SN.
+- [x] Send T-T is unchanged - API is still used.
+- [x] Import Private Keys of your Z addresses.
+- [x] Export Private Keys of your Z addresses.
+- [x] Updated translations keys.
+- [x] Renamed: from "Username" to "Wallet Name" -> less confusion, Arizen is NOT client-server application.
+- [x] Reformatted Settings menu and fix overflow.
+
+## v1.1.6
+- [x] Automatic logoff timeout can be now enabled and set in Settings (minimum 60s of inactivity).
+- [x] Domain Fronting servers can be set in Settings.
+- [x] User now can change password - from File menu (this password doesn't need to meet any criteria). Password will be changed only in last `.awd` file.
+- [x] Fixed: rounding issue.
+- [x] Travis CI support enabled for the faster development cycle.
+
+## v1.1.5
+- [x] Domain fronting support.
+- [x] Fix bug when you want to send 1000ZENs and more.
+- [x] Small visual fixes.
+- [x] "Show zero balance" checkbox is checked by default for better UX.
+- [x] Async calls for API requests.
+
+## v1.1.4
+- [x] Fix: link from About section is not opened in Arizen
+- [x] Automatic pruning of old backups (maximum of 25 last backups)
+- [x] Settings for disabling notifications
+- [x] Import single PK via GUI
+- [x] animated image when data is loading
+- [x] reworked batch-withdraw logic
+- [x] Arabic and Portuguese translations
+- [x] Warning messages in critical steps 
+- [x] Introduce help menu
+- [x] Change text
+- [x] Tool for updating translations
+- [x] Fix: exported keys can be imported into Swing (finally)
+
+## v1.1.3
+- [x] FIX: Import Private Key in WIF and HEX format (Compatible with Swing wallet).
+- [x] FIX: Export Private Key in WIF and HEX format (Compatible with Swing wallet).
+- [x] FIX: About section.
+- [x] FIX: Sweeping (Batch withdrawal) ignore selected zero wallets. 
+
 ## v1.1.2
 - [x] Feature: Paper wallet - you can create QR codes (private key and address) which can be exported into PDF file and
 printed. This created address can by included to your Arizen or not.
-- [x] Feature: Arizen was translated in many languages (see Settings: Czech, ... ).
-- [x] Feature: Your total balance is shown in selected fiat currency with actual exchange rate (see Settings).
+- [x] Feature: Arizen has been translated into 14 languages see Settings.
+- [x] Feature: Your total balance is shown in selected fiat currency with the actual exchange rate (see Settings).
 - [x] Feature: Import and export your private keys.
-- [x] Feature: Sweeping (batch withdrawal) functionality for security node operators - you can now withdraw only ZENs
-above a selected threshold (e.g. 42 ZENs, or 0 ZENs when you want to consolidate your ZEN to one address) from multiple
-addresses at once only with one fee!
-- [x] Fix: Problem with antiviruses has been solved (false positive detection with AVG, Avast, etc.).
-- [x] Fix: Problem when user can't log in should be solved.
+- [x] Feature: Sweeping (batch withdrawal) functionality for Secure Node operators - you can now withdraw only ZENs above a selected threshold (e.g. 42 ZENs or 0 ZENs when you want to consolidate your ZEN to one address) from multiple addresses at once only with one fee!
+- [x] Feature: Rebranding - new logo and colors.
+- [x] Fix: Notifications has been enabled again.
+- [x] Fix: Problem with antiviruses have been solved (false positive detection with AVG, Avast, etc.).
+- [x] Fix: Problem, when a user can't log in, should be solved.
+- [x] Fix: Problem when a newly generated address can disappear has been solved.
 
 ## v1.1.1
 - [x] Fixed auto-updater issue
@@ -50,10 +107,18 @@ addresses at once only with one fee!
 - [x] Needs connection to the insight and API (you can change servers in settings)
 - [x] Arizen is API wallet
 
+## Arizen file locations
+- **Linux:** `~/.arizen/wallets/wallet_username.awd`
+- **Windows:** `C:\Users\username\AppData\Roaming\Arizen\wallets\wallet_username.awd`
+- **MacOS:** `/Users/username/Library/Application Support/Arizen/wallet_username.awd`
+
 ## Development
 
 ### How to create distribution
-npm run dist
+      git clone https://github.com/ZencashOfficial/arizen
+      git checkout master
+      npm install
+      npm run dist
 
 ### Coding rules
 
@@ -81,7 +146,7 @@ npm run dist
 - Prefer cloning HTML `<template>`s to constructing DOM trees manually.
 
 #### HTML
-- Do not quote _simple_ HTML attribute values. For example write
+- Do not quote _simple_ HTML attribute values, for example
 
       <span id=foo class=bar>
 
@@ -89,7 +154,7 @@ npm run dist
 
       <span id="foo" class="bar">
 
-  unless you have to, for example in
+  unless you have to, for example
 
       <span id=foo class="bar baz">
 
@@ -98,12 +163,17 @@ npm run dist
       <span id=totalBalance class=bigLabel>
 
 # Screenshots
-![Overview of walet](https://i.imgur.com/rQKZ3FL.png)
-![Overview of walet 2](https://i.imgur.com/wm4SXkY.png)
-![List of addresses](https://i.imgur.com/zCxibuz.png)
-![Transaction detail](https://i.imgur.com/4oFREfR.png)
-![Settings](https://i.imgur.com/TFfrQMD.png)
-![About](https://i.imgur.com/Vb3ao6m.png)
+![Login](https://i.imgur.com/XHrnuPW.png)
+![Create wallet](https://i.imgur.com/lz5MqmT.png)
+![Batch withdraw](https://i.imgur.com/BupAdvT.png)
+![Paper wallet](https://i.imgur.com/4xv5CJ7.png)
+![Send function](https://i.imgur.com/Et9brcA.png)
+![Send function 2](https://i.imgur.com/8vGUBm7.png)
+![Deposit](https://i.imgur.com/vlDC6ZT.png)
+![Settings](https://i.imgur.com/BvefqHy.png)
+![About](https://i.imgur.com/66z29EY.png)
+![Notification](https://i.imgur.com/WdW0WMK.png)
+
 
 [david-img]: https://david-dm.org/ZencashOfficial/arizen.svg?style=flat-square
 [david-url]: https://david-dm.org/ZencashOfficial/arizen

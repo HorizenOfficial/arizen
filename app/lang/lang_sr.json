@@ -1,0 +1,265 @@
+{
+  "languageName": "Srpski",
+  "languageValue": "sr",
+  "langFileVersion": "1",
+  "login": {
+    "label": "Arizen: prijava",
+    "username": "Korisničko ime",
+    "password": "Lozinka",
+    "loginButton": "Prijava",
+    "createWalletLink": "Napravi novčanik",
+    "warningWrongUsernameOrPassword": "Pogrešno <strong>korisničko ime</strong> ili <strong>lozinka</strong>",
+    "dataImportFailed": "Unos podataka nije uspeo, moguć razlog unos pogrešnih podataka",
+    "fileReplace": "Želite li da zamenite datoteku?",
+    "walletReplace": "Zamena novčanika?",
+    "walletReplaceMsg": "Ovo će zameniti vaš postojeći novčanik. Da li ste sigurni?",
+    "walletImported": "Novčanik je uspešno importovan",
+    "walletImportFailed": "Importovanje nije uspelo",
+    "yes": "Da",
+    "no": "Ne"
+  },
+  "createWallet": {
+    "label": "Arizen: Napravi Novčanik",
+    "username": "Korisničko ime",
+    "password": "Lozinka",
+    "passwordAgain": "Lozinka ponovo",
+    "oldUsername": "Staro korisničko ime: ",
+    "oldPassword": "Stara lozinka: ",
+    "selectWallet": "Odaberi novčanik",
+    "selectWalletButton": "Pretraži",
+    "createWalletButton": "Napravi novčanik",
+    "loginLink": "Prijava",
+    "warningUsername": "Korisničko ime mora ispuniti sledeće uslove:",
+    "warningUsernameLength": "Barem <strong>četiri slova</strong>",
+    "warningPassword": "Lozinka mora ispuniti sledeće uslove:",
+    "warningPasswordLetter": "Barem <strong>Jedno malo slovo</strong>",
+    "warningPasswordCapitalLetter": "Barem <strong>Jedno veliko slovo</strong>",
+    "warningPasswordNumber": "Barem <strong>jedan broj</strong>",
+    "warningPasswordSpecial": "Barem <strong>jedan specialan karakter</strong>",
+    "warningPasswordLength": "Mora biti barem <strong>8 - karaktera</strong>",
+    "warningPasswordAgain": "Lozinka more ispuniti sledeće uslove:",
+    "warningPasswordAgainIdentical": "<strong>Identična</strong>",
+    "errorCreationFailed": "Pravljenje novčanika nije uspelo",
+    "errorFailedResponse": "Neuspeli odgovor"
+  },
+  "notification": {
+    "settingsUpdated": "Podešavanja su ažurirana",
+    "balanceUpdated": "Balans je ažuriran",
+    "newTransactions": "Nova transakcija"
+  },
+  "importExportPks": {
+    "chooseFileExport": "Izaberite fajl za privatne ključeve",
+    "chooseFileImport": "Izaberite fajl sa privatnim ključevima",
+    "InvalidLinePk": "Neispravna linija ${0} u fajlu sa privatnim ključevima",
+    "InvalidPk": "Neispravan privatni ključ na liniji ${0} u fajlu sa privatnim ključevima"
+  },
+  "wallet": {
+    "showSettingsDialogButton": "Podešavanja",
+    "showAboutDialogButton": "O tome",
+    "refreshWallet": "Osveži",
+    "logout": "Odjava",
+    "exit": "Izlaz",
+    "date": "Datum",
+    "from": "Od",
+    "to": "Prema",
+    "amount": "Iznos",
+    "balance": "Balans",
+    "totalBalance": "Totalni Balans",
+    "lastUpdate": "Poslednje Ažuriranje",
+    "showExplorer": "Pokaži u Zen Blok-Pretraživaču",
+    "listOfAddresses": "Lista adresa",
+    "showBatchWithdrawDialog": "Batch Povlačenje",
+    "notLoggedIn": "Niste prijavljeni",
+    "addressNotFound": "Adresa nije pronađena",
+    "nameNotFound": "Ime nije pronađeno",
+    "renameWalletSetTo": "Adresu ${0} podesi na ${1}",
+    "fetchBlockchainFailed": "Neuspelo sinhronizovanje Blokčejn promena:",
+    "save": "Sačuvaj",
+    "pdfExported": "PDF exportovan",
+    "tabOverview": {
+      "label": "Pregled",
+      "showZeroBalances": "Pokaži nulti balans",
+      "newAddress": "Nova adresa",
+      "unnamedAddress": "Bezimena adresa",
+      "newAddressExists": "Adresa ${0} je već u listi"
+    },
+    "tabDeposit": {
+      "label": "Deponovanje",
+      "help": "Pritisnite zeleno dugme pored željene adrese za deponovanje.",
+      "saveQrcode": "Sačuvaj QR kod",
+      "messages": {
+        "emptyToAddr": "Polje za unos adrese Prema je prazno",
+        "unknownToAddr": "Adresa Prema ne pripada ovom novčaniku",
+        "zeroAmount": "Iznos nije pozitivan"
+      }
+    },
+    "tabWithdraw": {
+      "label": "Povlačenje",
+      "help": "Kliknina crveno dugme pored željene adrese za povlačenje.",
+      "availableBalance": "Dostupno na stanju",
+      "fee": "Nadoknada za transakciju",
+      "txStatus": "Status transakcije",
+      "withdrawConfirmQuestion": "Da li stvarno želite da posaljete ovu transakciju?",
+      "messages": {
+        "emptyFromAddr": "Polje za unos adrese Od je prazno",
+        "unknownFromAddr": "Adresa od ne pripada ovom novčaniku",
+        "insufficientFirstSource": "Nedovoljno sredstva na prvoj adresi (Minimum: ograničen prag + fee)!",
+        "insufficientNextSource": "Nedovoljno sredstava na drugoj ili na sledećoj izvornoj adresi (Minimum: ograničen prag)!",
+        "numberOfKeys": "# privatni ključevi i # adrese nisu jednaki!",
+        "sumLowerThanFee": "Suma svih stanja na izvornim adresama manja je od nadoknade!",
+        "zenApi": "Zen API nije podešen u podešavanjima!",
+        "unknownAddress": "Izvorna adresa ne nalazi se u novčaniku!",
+        "insufficientFundsSourceAddr": "Nedovoljno sredstava na izvornoj adresi",
+        "emptyToAddr": "Adresa Prema je prazna",
+        "zeroAmount": "Iznos nije pozitivan",
+        "insufficientFunds": "Nedovoljno sredstava na OD adresi",
+        "fromAddressBadLength": "Pogrešna dužina izvorne adrese!",
+        "fromAddressBadPrefix": "Loš prefiks izvorne adrese - mora počinjati sa 'zn'!",
+        "toAddressBadLength": "Loša dužina odredišne adrese!",
+        "toAddressBadPrefix": "Loš prefiks odredišne adrese - mora počinjati sa 'zn'!",
+        "amounNotNumber": "Iznos NIJE broj",
+        "amountIsZero": "Iznos mora biti veći od nule!",
+        "feeNotNumber": "Naknada NIJE broj!",
+        "feeIsNegative": "Naknada mora biti veći ili jednak sa nulom!",
+        "error": "Greška",
+        "success": "Transakcija je uspešno poslata"
+      }
+    },
+    "transactionHistory": {
+      "label": "Istorija Transakcija",
+      "unconfirmed": "NEPOTVRĐENO",
+      "replaceAttempt": "Pokušaj zamene transakcije u bloku"
+    },
+    "transactionDetail": {
+      "label": "Detalji Transakcije",
+      "txid": "ID Transakcije",
+      "blockHeight": "Pozicija na BlockChain-u",
+      "unconfirmedTx": "NEPOTVRĐENA TRANSAKCIJA"
+    },
+    "addressDetail": {
+      "label": "Detalji adrese",
+      "name": "Ime",
+      "address": "Adresa",
+      "saveButton": "Sačuvaj promene"
+    },
+    "newAddress": {
+      "label": "Napravi Novu Adresu",
+      "name": "Ime (opciono)",
+      "createButton": "Napravi"
+    },
+    "about": {
+      "label": "O Arizen-u",
+      "homepage": "Werb Destinacija",
+      "version": "Verzija",
+      "license": "Licenca",
+      "authors": "Autori"
+    },
+    "settings": {
+      "label": "Podešavanja",
+      "limit": "Transakcioni limit",
+      "items": "Stavke",
+      "language": "Jezik",
+      "explorerUrl": "ZEN Pretraživač link",
+      "apiUrl": "API Linkovi",
+      "fiat": "Ekvivalentno u fiat novcu",
+      "save": "Sačuvaj",
+      "enableNotifications": "Desktop notifications",
+      "enableDomainFronting": "Domain fronting",
+      "secureNodeFQDN": "Secure Node FQDN",
+      "sshUsername": "SSH username",
+      "sshPassword": "SSH password",
+      "sshPort": "SSH port",
+      "secureNodePort": "Secure Node Port (see zen.conf)",
+      "secureNodeUsername": "Secure Node Username (see zen.conf)",
+      "secureNodePassword": "Secure Node Password (see zen.conf)",
+      "readyTimeout": "Ready Timeout (default: 10000)",
+      "forwardTimeout": "Forward Timeout (default: 10000)",
+      "domainFrontingUrl": "Domain fronting public base URL",
+      "domainFrontingHost": "Domain fronting private host",
+      "autoLogOffEnable": "Enable automatic log off",
+      "autoLogOffTimeout": "Auto log off timeout in seconds"
+    },
+    "paperWallet": {
+      "label": "Papirni novčanik",
+      "generateNewWallet": "Naprai novi novčanik",
+      "name": "Ime (Opciono)",
+      "addWalletToArizen": "Dodaj novčanik u Arizen",
+      "zenCashWalletLabel": "ZenCash novčanik",
+      "tAddrLabel": "Javni ključ - T Adresa",
+      "privateKeyLabel": "Privatni ključ",
+      "namePrint": "Ime",
+      "exportPDFLabel": "Export PDF-a"
+    },
+    "batchWithdraw": {
+      "label": "Batch povlačenje",
+      "keepAmount": "Iznos za čuvanje",
+      "txFee": "Transakciona nadoknada"
+    },
+    "importSinglePrivateKey": {
+      "openButtonLabel": "Import Private Key",
+      "titleLabel": "Import Single Private Key",
+      "privateKeyLabel": "Private Key",
+      "importButtonLabel": "Import",
+      "warningNotValidAddress": "Z address exist in your wallet",
+      "warningNotValidPK": "This is not a valid Private Key."
+    },
+    "autoLogOffLabel": "Log off in ",
+    "changePassword": {
+      "title": "Change Wallet Password",
+      "warningText": "WARNING: Wallet backups won't be re-encrypted! If you need to use them, you will have to use current password.",
+      "currentPassword": "Current Password",
+      "newPassword1": "New Password",
+      "newPassword2": "New Password (Retype)"
+    },
+    "rpcConsole": {
+      "title": "RPC",
+      "command": "Command",
+      "test": "Test Me",
+      "results": "RPC Results ...",
+      "status": "Status: ",
+      "testFunctionButton": "Test Function"
+    }
+  },
+  "menu": {
+    "file": "Datoteka",
+    "backupEncrypted": "Bekapuj ŠIFROVAN novčanik",
+    "backupUnencrypted": "Bekapuj NEŠIFROVAN novčanik",
+    "importEncrypted": "Importuj ŠIFROVAN Arizen novčanik",
+    "importUnencrypted": "Importuj NEŠIFROVAN Arizen novčanik",
+    "importPrivateKeys": "Importuj privatne ključeve",
+    "exportPrivateKeys": "Exportuj privatne ključeve",
+    "exit": "Izlaz",
+    "edit": "Editovanje",
+    "editSubmenu": {
+      "undo": "Korak unazad",
+      "redo": "Korak unapred",
+      "cut": "Iseci",
+      "copy": "Kopiraj",
+      "paste": "Nalepi",
+      "selectAll": "Izaberi Sve"
+    },
+    "help": "Help",
+    "helpSubmenu": {
+      "arizenManual": "User Manual",
+      "support": "Support",
+      "zencash": "ZenCash"
+    },
+    "changeWalletPassword": "Change wallet password"
+  },
+  "warmingMessages": {
+    "userWarningImportFileWithPKs": "New address(es) and a private key(s) will be imported. Your previous back-ups do not include the newly imported addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
+    "userWarningExportWalletUnencrypted": "You are going to export an UNENCRYPTED wallet ( ie your private keys) in plain text. That means that anyone with this file can control your ZENs. Store this file in a safe place. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
+    "userWarningExportWalletEncrypted": "You are going to export an ENCRYPTED wallet and your private keys will be encrypted. That means that in order to access your private keys you need to know the corresponding wallet name and password. In case you don't know them you cannot control the ZENs that are controled by these private keys. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
+    "userWarningImportPK": "A new address and a private key will be imported. Your previous back-ups do not include the newly imported address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
+    "userWarningCreateNewAddress": "A new address and a private key will be created. Your previous back-ups do not include this newly generated address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
+    "userWarningIUnderstand": "I understand",
+    "cancel": "Cancel",
+    "userWarningImportPkUserZendRescan": "The balance of the Z address you imported will be visible after you rescan the blockchain. Please run 'zen-cli stop && sleep 8 && zend -rescan' in your secure node (linux)."
+  },
+  "common": {
+    "selectAll": "Select all",
+    "clearAll": "Clear all",
+    "okButtonText": "OK",
+    "cancelButtonText": "Cancel"
+  }
+}

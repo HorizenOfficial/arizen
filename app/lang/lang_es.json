@@ -1,0 +1,265 @@
+{
+  "languageName": "Español",
+  "languageValue": "es",
+  "langFileVersion": "1",
+  "login": {
+    "label": "Arizen: Acceder",
+    "username": "Nombre de usuario",
+    "password": "Contraseña",
+    "loginButton": "Iniciar sesión",
+    "createWalletLink": "Crear Cartera",
+    "warningWrongUsernameOrPassword": "<strong>Nombre de usuario</strong> o <strong>contraseña</strong> incorrectos",
+    "dataImportFailed": "Error en la importación de datos. Es probable que su nombre de usuario o contraseña sean incorrectos",
+    "fileReplace": "¿Deseas reemplazar el archivo?",
+    "walletReplace": "¿Deseas reemplazar esta cartera?",
+    "walletReplaceMsg": "Esto reemplazará tu cartera actual. ¿Estás seguro?",
+    "walletImported": "Su cartera ha sido importada exitosamente",
+    "walletImportFailed": "La importación de la cartera ha fallado",
+    "yes": "Sí",
+    "no": "No"
+  },
+  "createWallet": {
+    "label": "Arizen: Crear cartera",
+    "username": "Nombre de usuario",
+    "password": "Contraseña",
+    "passwordAgain": "Ingresa tu contraseña nuevamente",
+    "oldUsername": "Nombre de usuario anterior: ",
+    "oldPassword": "Contraseña anterior: ",
+    "selectWallet": "Seleccione una cartera",
+    "selectWalletButton": "Seleccionar cartera",
+    "createWalletButton": "Crear cartera",
+    "loginLink": "Iniciar sesión",
+    "warningUsername": "Su nombre de usuario debe cumplir con los siguientes requisitos:",
+    "warningUsernameLength": "Al menos <strong>cuatro letras</strong>",
+    "warningPassword": "Su contraseña debe cumplir los siguientes requisitos:",
+    "warningPasswordLetter": "Al menos <strong>una letra</strong>",
+    "warningPasswordCapitalLetter": "Al menos <strong>una letra mayúscula</strong>",
+    "warningPasswordNumber": "Al menos <strong>un número</strong>",
+    "warningPasswordSpecial": "Al menos <strong>un carácter especial</strong>",
+    "warningPasswordLength": "Tener al menos <strong>8 caracteres</strong>",
+    "warningPasswordAgain": "Su contraseña debe cumplir los siguientes requisitos:",
+    "warningPasswordAgainIdentical": "<strong>Contraseña idéntica a la anterior</strong>",
+    "errorCreationFailed": "La creación de la cartera ha fallado",
+    "errorFailedResponse": "Respuesta fallida"
+  },
+  "notification": {
+    "settingsUpdated": "La configuración ha sido actualizada",
+    "balanceUpdated": "El saldo ha sido actualizado",
+    "newTransactions": "Nueva transacción"
+  },
+  "importExportPks": {
+    "chooseFileExport": "Elija un archivo para guardar las claves privadas",
+    "chooseFileImport": "Elija un archivo con las claves privadas",
+    "InvalidLinePk": "Línea no válida ${0} en el archivo de claves privadas",
+    "InvalidPk": "Clave privada no válida en la línea ${0} en el archivo de claves privadas"
+  },
+  "wallet": {
+    "showSettingsDialogButton": "Configuración",
+    "showAboutDialogButton": "Acerca de",
+    "refreshWallet": "Actualizar",
+    "logout": "Cerrar sesión",
+    "exit": "Salir",
+    "date": "Fecha",
+    "from": "Desde",
+    "to": "Destino",
+    "amount": "Cantidad",
+    "balance": "Saldo",
+    "totalBalance": "Saldo total",
+    "lastUpdate": "Última actualización",
+    "showExplorer": "Mostrar en el explorador ZEN",
+    "listOfAddresses": "Lista de direcciones",
+    "showBatchWithdrawDialog": "Retiro Multiple",
+    "notLoggedIn": "Sin iniciar sesión",
+    "addressNotFound": "dirección no encontrada",
+    "nameNotFound": "nombre no encontrado",
+    "renameWalletSetTo": "dirección ${0} cambiada a ${1}",
+    "fetchBlockchainFailed": "Se ha fallado al obtener los cambios en la cadena de bloques:",
+    "save": "Guardar",
+    "pdfExported": "PDF exportado",
+    "tabOverview": {
+      "label": "Vista General",
+      "showZeroBalances": "Mostrar saldos en cero",
+      "newAddress": "Obtener una nueva dirección",
+      "unnamedAddress": "Dirección sin nombre",
+      "newAddressExists": "Dirección ${0} ya está en la lista"
+    },
+    "tabDeposit": {
+      "label": "Recibir",
+      "help": "Haga clic en el botón verde al lado de la dirección en la que desea recibir.",
+      "saveQrcode": "Guardar código QR",
+      "messages": {
+        "emptyToAddr": "El campo de dirección está vacío",
+        "unknownToAddr": "La dirección ingresada no pertenece a esta cartera",
+        "zeroAmount": "La cantidad no es positiva"
+      }
+    },
+    "tabWithdraw": {
+      "label": "Enviar",
+      "help": "Haga clic en el botón rojo al lado de la dirección desde donde desea enviar.",
+      "availableBalance": "Saldo disponible",
+      "fee": "Comisión de la transacción",
+      "txStatus": "Estado de la transacción",
+      "withdrawConfirmQuestion": "¿Esta seguro que quiere enviar esta transacción?",
+      "messages": {
+        "emptyFromAddr": "La dirección de origen está vacía",
+        "unknownFromAddr": "La dirección de origen no pertenece a esta cartera",
+        "insufficientFirstSource": "¡Fondos insuficientes en la primera fuente (mínimo: saldo mínimo + comisión)!",
+        "insufficientNextSource": "¡Fondos insuficientes en la segunda o la próxima fuente (mínimo: saldo mínimo)!",
+        "numberOfKeys": "# las claves privadas y # las direcciones no son iguales!",
+        "sumLowerThanFee": "¡Su saldo total entre las direcciones de origen es inferior a la comisión!",
+        "zenApi": "¡El parámetro API URLs no está configurado. Revise la configuración!",
+        "unknownAddress": "¡La dirección de origen no esta en su cartera!",
+        "insufficientFundsSourceAddr": "Fondos insuficientes en la dirección de origen",
+        "emptyToAddr": "La dirección de destino está vacía",
+        "zeroAmount": "La cantidad no es positiva",
+        "insufficientFunds": "La dirección de origen no tiene fondos suficientes",
+        "fromAddressBadLength": "¡Longitud incorrecta en la dirección de origen!",
+        "fromAddressBadPrefix": "El prefijo de la dirección de origen esta incorrecto - ¡debe ser 'zn'!",
+        "toAddressBadLength": "¡Longitud incorrecta en la dirección de destino!",
+        "toAddressBadPrefix": "El prefijo de la dirección de destino esta incorrecto - ¡debe ser 'zn'!",
+        "amounNotNumber": "La cantidad no es un número",
+        "amountIsZero": "¡La cantidad tiene que ser un valor mayor que cero!",
+        "feeNotNumber": "¡La comisión no es un número!",
+        "feeIsNegative": "¡La comisión tiene que ser mayor o igual a cero!",
+        "error": "Error",
+        "success": "La transacción fue enviada exitosamente"
+      }
+    },
+    "transactionHistory": {
+      "label": "Historial de transacciones",
+      "unconfirmed": "SIN CONFIRMAR",
+      "replaceAttempt": "Intentando reemplazar la transacción en el bloque"
+    },
+    "transactionDetail": {
+      "label": "Detalle de la transacción",
+      "txid": "ID de la transacción",
+      "blockHeight": "Numero de bloque",
+      "unconfirmedTx": "TRANSACCIÓN SIN CONFIRMAR"
+    },
+    "addressDetail": {
+      "label": "Detalle de la dirección",
+      "name": "Nombre",
+      "address": "Dirección",
+      "saveButton": "Guardar los cambios"
+    },
+    "newAddress": {
+      "label": "Crear una nueva dirección",
+      "name": "Nombre (Opcional)",
+      "createButton": "Crear"
+    },
+    "about": {
+      "label": "Sobre Arizen",
+      "homepage": "Página principal",
+      "version": "Versión",
+      "license": "Licencia",
+      "authors": "Autores"
+    },
+    "settings": {
+      "label": "Configuración",
+      "limit": "Límite de transacciones",
+      "items": "registros",
+      "language": "Idioma",
+      "explorerUrl": "URL del explorador ZEN",
+      "apiUrl": "API URLs",
+      "fiat": "Equivalente en dinero FIAT",
+      "save": "Guardar",
+      "enableNotifications": "Desktop notifications",
+      "enableDomainFronting": "Domain fronting",
+      "secureNodeFQDN": "Secure Node FQDN",
+      "sshUsername": "SSH username",
+      "sshPassword": "SSH password",
+      "sshPort": "SSH port",
+      "secureNodePort": "Secure Node Port (see zen.conf)",
+      "secureNodeUsername": "Secure Node Username (see zen.conf)",
+      "secureNodePassword": "Secure Node Password (see zen.conf)",
+      "readyTimeout": "Ready Timeout (default: 10000)",
+      "forwardTimeout": "Forward Timeout (default: 10000)",
+      "domainFrontingUrl": "Domain fronting public base URL",
+      "domainFrontingHost": "Domain fronting private host",
+      "autoLogOffEnable": "Enable automatic log off",
+      "autoLogOffTimeout": "Auto log off timeout in seconds"
+    },
+    "paperWallet": {
+      "label": "Cartera de papel",
+      "generateNewWallet": "Generar nueva cartera de papel",
+      "name": "Nombre: (Opcional)",
+      "addWalletToArizen": "Agrega esta cartera a Arizen",
+      "zenCashWalletLabel": "Cartera ZenCash",
+      "tAddrLabel": "Clave pública - Dirección transparente",
+      "privateKeyLabel": "Clave privada",
+      "namePrint": "Nombre",
+      "exportPDFLabel": "Exportar a PDF"
+    },
+    "batchWithdraw": {
+      "label": "Retiro Multiple",
+      "keepAmount": "Cantidad a conservar",
+      "txFee": "Comisión de la transacción"
+    },
+    "importSinglePrivateKey": {
+      "openButtonLabel": "Import Private Key",
+      "titleLabel": "Import Single Private Key",
+      "privateKeyLabel": "Private Key",
+      "importButtonLabel": "Import",
+      "warningNotValidAddress": "Z address exist in your wallet",
+      "warningNotValidPK": "This is not a valid Private Key."
+    },
+    "autoLogOffLabel": "Log off in ",
+    "changePassword": {
+      "title": "Change Wallet Password",
+      "warningText": "WARNING: Wallet backups won't be re-encrypted! If you need to use them, you will have to use current password.",
+      "currentPassword": "Current Password",
+      "newPassword1": "New Password",
+      "newPassword2": "New Password (Retype)"
+    },
+    "rpcConsole": {
+      "title": "RPC",
+      "command": "Command",
+      "test": "Test Me",
+      "results": "RPC Results ...",
+      "status": "Status: ",
+      "testFunctionButton": "Test Function"
+    }
+  },
+  "menu": {
+    "file": "Archivo",
+    "backupEncrypted": "Crear respaldo de la cartera (ENCRIPTADA)",
+    "backupUnencrypted": "Crear respaldo de la cartera (SIN ENCRIPTAR)",
+    "importEncrypted": "Importar cartera de Arizen (ENCRIPTADA)",
+    "importUnencrypted": "Importar cartera de Arizen (SIN ENCRIPTAR)",
+    "importPrivateKeys": "Importar claves privadas",
+    "exportPrivateKeys": "Exportar claves privadas",
+    "exit": "Salir",
+    "edit": "Editar",
+    "editSubmenu": {
+      "undo": "Deshacer",
+      "redo": "Rehacer",
+      "cut": "Cortar",
+      "copy": "Copiar",
+      "paste": "Pegar",
+      "selectAll": "Seleccionar todo"
+    },
+    "help": "Help",
+    "helpSubmenu": {
+      "arizenManual": "User Manual",
+      "support": "Support",
+      "zencash": "ZenCash"
+    },
+    "changeWalletPassword": "Change wallet password"
+  },
+  "warmingMessages": {
+    "userWarningImportFileWithPKs": "New address(es) and a private key(s) will be imported. Your previous back-ups do not include the newly imported addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
+    "userWarningExportWalletUnencrypted": "You are going to export an UNENCRYPTED wallet ( ie your private keys) in plain text. That means that anyone with this file can control your ZENs. Store this file in a safe place. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
+    "userWarningExportWalletEncrypted": "You are going to export an ENCRYPTED wallet and your private keys will be encrypted. That means that in order to access your private keys you need to know the corresponding wallet name and password. In case you don't know them you cannot control the ZENs that are controled by these private keys. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
+    "userWarningImportPK": "A new address and a private key will be imported. Your previous back-ups do not include the newly imported address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
+    "userWarningCreateNewAddress": "A new address and a private key will be created. Your previous back-ups do not include this newly generated address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
+    "userWarningIUnderstand": "I understand",
+    "cancel": "Cancel",
+    "userWarningImportPkUserZendRescan": "The balance of the Z address you imported will be visible after you rescan the blockchain. Please run 'zen-cli stop && sleep 8 && zend -rescan' in your secure node (linux)."
+  },
+  "common": {
+    "selectAll": "Select all",
+    "clearAll": "Clear all",
+    "okButtonText": "OK",
+    "cancelButtonText": "Cancel"
+  }
+}

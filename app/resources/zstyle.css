@@ -32,21 +32,22 @@ body, .body {
 
 :root {
     --arizen-fg: #115D95;
-    --panel-bg:  #ffffff;
+    --panel-bg: #ffffff;
     --button-bg: #f3f3f3;
     --button-fg: #115D95;
-    --border-color:  #c4cddb;
+    --border-color: #c4cddb;
     --money-negative: #942824;
     --money-positive: #61b884;
     --odd-bg: #f3f3f3;
-    --hover-bg:  #69FFBD;
+    --hover-bg: #69FFBD;
     --hover-fg: #69FFBD;
 }
+
 /* #1B2F59; */
 
 body {
     color: #115D95;;
-    background:  #f3f3f3;
+    background: #f3f3f3;
     font-family: 'Raleway', 'Lato', sans-serif;
 }
 
@@ -55,6 +56,7 @@ div {
 }
 
 button {
+    cursor: pointer;
     font: inherit;
     outline: none;
     color: var(--button-fg);
@@ -71,6 +73,7 @@ button:not(:disabled):focus {
 }
 
 button:disabled {
+    cursor: default;
     background: lightgray;
 }
 
@@ -84,15 +87,14 @@ select,
 textarea {
     font: inherit;
     background: var(--panel-bg);
-    color:  var(--arizen-fg);
+    color: var(--arizen-fg);
     outline: none;
     transition: all 0.2s;
 }
 
 input[type="text"],
 input[type="number"],
-select
-{
+select {
     border: none;
     border-bottom: 1px solid var(--arizen-fg);
     margin-bottom: 2px;
@@ -100,7 +102,7 @@ select
 
 input[type="text"]:focus,
 input[type="number"]:focus,
-select:focus{
+select:focus {
     border-bottom: 1px solid var(--hover-fg);
 }
 
@@ -157,6 +159,7 @@ h2 {
 .formInput {
     display: flex;
 }
+
 .formInput > input {
     flex-grow: 2;
     margin-right: 5px;
@@ -166,6 +169,12 @@ h2 {
     margin-top: 10px;
     display: flex;
     justify-content: flex-end;
+}
+
+.formDivider {
+    grid-column: span 2;
+    margin: 10px 0;
+    background: var(--arizen-fg);
 }
 
 dialog {
@@ -202,18 +211,125 @@ arizen-dialog > [slot="content"] {
     flex-direction: column;
     align-items: center;
 }
+
 .aboutDialogContent .form > :nth-child(odd) {
     font-weight: bolder;
 }
+
 .aboutAuthors {
     display: flex;
     flex-direction: column;
 }
+
 .aboutDialogContent .zenLogo {
     margin-top: 20px;
 }
 
 /* TODO this doesn't belong here */
 .settingsDialogContent {
-    min-width: 600px;
+    min-width: 800px;
+}
+
+.container {
+    display: block;
+    position: relative;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-bottom: 12px;
+    cursor: pointer;
+}
+
+.container input {
+    opacity: 0;
+    cursor: pointer;
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 19px;
+    width: 19px;
+    background-color: #bbb;
+}
+
+.container input:checked ~ .checkmark {
+    background-color: var(--arizen-fg);
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.container .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.createButtonCheck {
+    align-items: center;
+}
+
+.createWalletContainer {
+    text-align: center;
+}
+
+.newAddressPrintArea {
+    text-align: center;
+    margin: auto;
+    display: none;
+}
+
+.zenLogo {
+    text-align: center;
+}
+
+.namePrivateKey {
+    color: red;
+    display: block;
+}
+
+.qrPrivate {
+    display: block;
+}
+
+.keyPrivate {
+    font-size: 75%;
+    color: red;
+}
+
+.nametAddr {
+    color: green;
+    display: block;
+}
+
+.qrtAddr {
+    display: block;
+}
+
+.tAddr {
+    font-size: 75%;
+    color: green;
+}
+
+.hToolbar {
+    display: flex;
+    flex-direction: horizontal;
+}
+
+.hToolbar > *:not(:first-child) {
+    margin-left: 10px;
 }
