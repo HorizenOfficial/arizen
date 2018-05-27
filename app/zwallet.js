@@ -500,10 +500,10 @@ function scheduleRefresh() {
 }
 
 function refresh() {
+    scheduleRefresh();
     syncZaddrIfSettingsExist();
     rpc.updateAllZBalances();
     ipcRenderer.send("refresh-wallet");
-    scheduleRefresh();
     sendPendingTxs();
 }
 
@@ -668,15 +668,17 @@ async function initWithdrawView() {
                     console.log(amountOne);
                     let tIntermediateAddress = await rpc.getSecureNodeTaddressOrGenerate();
                     // send from T-Arizen to T-SN, amount, fee/2
-                    ipcRenderer.send("send",
-                        fromAddr,
-                        tIntermediateAddress,
-                        feeOne,
-                        amountOne);
-                    //checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo);
-                    internalInfo.pendingTxs.push({type:"snT-Z",fromAddress: tIntermediateAddress, toAddress: toAddr, amount:amount, fee:feeTwo});
-                    saveInternalInfo()
-                    sendPendingTxs()
+                    if (tIntermediateAddress) {
+                        ipcRenderer.send("send",
+                            fromAddr,
+                            tIntermediateAddress,
+                            feeOne,
+                            amountOne);
+                        //checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo);
+                        internalInfo.pendingTxs.push({type:"snT-Z",fromAddress: tIntermediateAddress, toAddress: toAddr, amount:amount, fee:feeTwo});
+                        saveInternalInfo();
+                        sendPendingTxs();
+                      }
                   }
 
 
