@@ -203,21 +203,21 @@
       "warningNotValidAddress": "Η διεύθυνση υπάρχει στο πορτοφόλι σας",
       "warningNotValidPK": "Μή έγκυρο κλειδί"
     },
-    "autoLogOffLabel": "Log off in ",
+    "autoLogOffLabel": "Αποσύνδεση σε (log off) ",
     "changePassword": {
-      "title": "Change Wallet Password",
-      "warningText": "WARNING: Wallet backups won't be re-encrypted! If you need to use them, you will have to use current password.",
-      "currentPassword": "Current Password",
-      "newPassword1": "New Password",
-      "newPassword2": "New Password (Retype)"
+      "title": "Αλλαγή Κωδικού Πορτοφολιού",
+      "warningText": "Ειδοποίηση: Τα υπάρχοντα αντίγράφα ασφαλείας δεν θα είναι ξανά κρυπτογραφηθούν ! Αν τα χρειαστείτε, πρέπει να χρησιμοποιήσετε τον υπάρχων κωδικό.",
+      "currentPassword": "Τρέχων κωδικός",
+      "newPassword1": "Νέος κωδικός",
+      "newPassword2": "Νέος κωδικός (επαλήθευση)"
     },
     "rpcConsole": {
       "title": "RPC",
-      "command": "Command",
-      "test": "Test Me",
-      "results": "RPC Results ...",
-      "status": "Status: ",
-      "testFunctionButton": "Test Function"
+      "command": "Εντολή",
+      "test": "Δοκιμή",
+      "results": "RPC αποτελέσματα ...",
+      "status": "Κατάσταση: ",
+      "testFunctionButton": "Δοκίμασε συνάρτηση"
     }
   },
   "menu": {
@@ -244,7 +244,7 @@
       "support": "Υποστήριξη",
       "zencash": "ZenCash"
     },
-    "changeWalletPassword": "Change wallet password"
+    "changeWalletPassword": "Αλλαγή κωδικού πορτοφολιού"
   },
   "warmingMessages": {
     "userWarningImportFileWithPKs": "Θα εισαχθούν νέες διευθύνσεις και ιδιωτικά κλειδιά. Τα προηγούμενα αντίγραφα ασφαλείας δεν περιλαμβάνουν τις διευθύνσεις που θα εισαχθούν ή τα αντίστοιχα ιδιωτικά κλειδιά. Χρησιμοποιήστε τη λειτουργία δημιουργίας αντιγράφων ασφαλείας του Arizen για να δημιουργήσετε νέο αρχείο αντιγράφων ασφαλείας και να αντικαταστήσετε το υπάρχον αντίγραφο ασφαλείας του πορτοφολιού Arizen. Πατώντας το κουμπί 'Κατανοώ' δηλώνετε οτι κατανοείτε τα προηγούμενα. Για περισσότερες πληροφορίες παρακαλώ απευθυνθείτε στο μενού βοήθεια του Arizen.",
@@ -257,9 +257,9 @@
     "userWarningImportPkUserZendRescan": "The balance of the Z address you imported will be visible after you rescan the blockchain. Please run 'zen-cli stop && sleep 8 && zend -rescan' in your secure node (linux)."
   },
   "common": {
-    "selectAll": "Select all",
-    "clearAll": "Clear all",
-    "okButtonText": "OK",
-    "cancelButtonText": "Cancel"
+    "selectAll": "Επιλογή όλων",
+    "clearAll": "Καθαρισμός όλων",
+    "okButtonText": "Εωτάξει",
+    "cancelButtonText": "Ακύρωση"
   }
 }
