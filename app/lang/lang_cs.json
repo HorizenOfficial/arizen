@@ -129,7 +129,7 @@
       "label": "Historie transakcí",
       "unconfirmed": "Čeká na potvrzení",
       "transactionReplaceAttempt": "Pokus o nahrazení transakce v bloku",
-      "replaceAttempt": "TODO Attempting to replace transaction in block"
+      "replaceAttempt": "Pokus o nahrazení transakce v bloku"
     },
     "transactionDetail": {
       "label": "Detail transakce",
@@ -166,19 +166,19 @@
       "save": "Uložit",
       "enableNotifications": "Notifikace",
       "enableDomainFronting": "Domain fronting",
-      "secureNodeFQDN": "TODO Secure Node FQDN",
-      "sshUsername": "TODO SSH username",
-      "sshPassword": "TODO SSH password",
-      "sshPort": "TODO SSH port",
-      "secureNodePort": "TODO Secure Node Port (see zen.conf)",
-      "secureNodeUsername": "TODO Secure Node Username (see zen.conf)",
-      "secureNodePassword": "TODO Secure Node Password (see zen.conf)",
-      "readyTimeout": "TODO Ready Timeout (default: 10000)",
-      "forwardTimeout": "TODO Forward Timeout (default: 10000)",
-      "domainFrontingUrl": "TODO Domain fronting public base URL",
-      "domainFrontingHost": "TODO Domain fronting private host",
-      "autoLogOffEnable": "TODO Enable automatic log off",
-      "autoLogOffTimeout": "TODO Auto log off timeout in seconds"
+      "secureNodeFQDN": "Secure Node FQDN",
+      "sshUsername": "SSH jméno",
+      "sshPassword": "SSH heslo",
+      "sshPort": "SSH port",
+      "secureNodePort": "Secure Node port (viz zen.conf)",
+      "secureNodeUsername": "Secure Node jméno (viz zen.conf)",
+      "secureNodePassword": "Secure Node heslo (viz zen.conf)",
+      "readyTimeout": "Ready Timeout (výchozí hodnota: 10000 ms)",
+      "forwardTimeout": "Forward Timeout (výchozí hodnota: 10000 ms)",
+      "domainFrontingUrl": "Domain fronting veřejná URL",
+      "domainFrontingHost": "Domain fronting privátní host",
+      "autoLogOffEnable": "Zapnout automatické odhlášení",
+      "autoLogOffTimeout": "Časový limit automatického odhlášení v sekundách"
     },
     "paperWallet": {
       "label": "Papírová peněženka",
