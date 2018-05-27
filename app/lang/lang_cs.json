@@ -178,7 +178,7 @@
       "domainFrontingUrl": "Domain fronting veřejná URL",
       "domainFrontingHost": "Domain fronting privátní host",
       "autoLogOffEnable": "Zapnout automatické odhlášení",
-      "autoLogOffTimeout": "Časový limit automatického odhlášení v sekundách"
+      "autoLogOffTimeout": "Časový limit automatického odhlášení"
     },
     "paperWallet": {
       "label": "Papírová peněženka",
