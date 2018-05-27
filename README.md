@@ -115,6 +115,9 @@ printed. This created address can by included to your Arizen or not.
 ## Development
 
 ### How to create distribution
+      git clone https://github.com/ZencashOfficial/arizen
+      git checkout master
+      npm install
       npm run dist
 
 ### Coding rules
