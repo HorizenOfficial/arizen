@@ -238,13 +238,13 @@
       "paste": "Einfügen",
       "selectAll": "Alles auswählen"
     },
-    "help": "Help",
+    "help": "Hilfe",
     "helpSubmenu": {
-      "arizenManual": "User Manual",
+      "arizenManual": "Benutzerhandbuch",
       "support": "Support",
       "zencash": "ZenCash"
     },
-    "changeWalletPassword": "Change wallet password"
+    "changeWalletPassword": "Wallet-Passwort ändern"
   },
   "warmingMessages": {
     "userWarningImportFileWithPKs": "Neue Adresse(n) und private(r) Schlüssel werden importiert. Die bisher durchgeführten Backups enthalten weder die neu importierte(n) Adresse(n), noch den/die private(n) Schlüssel. Bitte nutze das Backup-Feature von Arizen um ein neues Backup anzulegen und ersetze dein bisheriges Backup durch das Neue. Durch klicken auf 'Verstanden' bestätigst du, diesen Hinweis verstanden zu haben. Für weitere Informationen sieh dir das Hilfe-Menü von Arizen an."
