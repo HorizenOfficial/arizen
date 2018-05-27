@@ -227,7 +227,7 @@ arizen-dialog > [slot="content"] {
 
 /* TODO this doesn't belong here */
 .settingsDialogContent {
-    min-width: 600px;
+    min-width: 800px;
 }
 
 .container {
