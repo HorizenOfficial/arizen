@@ -71,6 +71,7 @@ const defaultSettings = {
     explorerUrl: "https://explorer.zensystem.io",
     apiUrls: [
         "https://explorer.zensystem.io/insight-api-zen",
+        "https://explorer.zen-solutions.io/api",
         "http://explorer.zenmine.pro/insight-api-zen"
     ],
     fiatCurrency: "USD",
