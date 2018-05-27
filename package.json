@@ -134,7 +134,7 @@
     "coveralls": "^3.0.1",
     "deepmerge": "^2.0.1",
     "devtron": "^1.4.0",
-    "electron": "^2.0.1",
+    "electron": "^2.0.2",
     "electron-builder": "20.15.1",
     "electron-builder-squirrel-windows": "20.15.0",
     "flow-bin": "^0.73.0",
