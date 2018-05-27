@@ -107,6 +107,7 @@
     "bip32-utils": "^0.11.0",
     "bitcoinjs-lib": "^3.3.1",
     "bs58check": "2.1.1",
+    "delay": "^3.0.0",
     "electron-debug": "^1.5.0",
     "electron-download": "^4.1.0",
     "electron-packager": "^12.1.0",

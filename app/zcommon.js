@@ -13,6 +13,7 @@ const userWarningImportPK = "A new address and a private key will be imported. Y
 const userWarningImportPkUserZendRescan = "The balance of the Z address you imported will be visible after you rescan the blockchain. Please run 'zen-cli stop && sleep 8 && zend -rescan' in your secure node (linux).";
 
 let settings = {};
+let internalInfo = {};
 let langDict;
 
 function assert(condition, message) {
@@ -277,10 +278,20 @@ function showAboutDialog() {
         }
         settings = newSettings;
     });
+
+    ipcRenderer.on("internal-info", (sender, internalInfoStr) => {
+        const newInternalInfo = JSON.parse(internalInfoStr);
+        internalInfo = newInternalInfo;
+    });
+
 })();
 
 function saveModifiedSettings() {
     ipcRenderer.send("save-settings", JSON.stringify(settings));
+}
+
+function saveInternalInfo() {
+    ipcRenderer.send("save-internal-info", JSON.stringify(internalInfo));
 }
 
 function syncZaddrIfSettingsExist() {
@@ -487,8 +498,15 @@ function showRpcDialog() {
 
         testFunctionButton.addEventListener("click", async function () {
             // Put here what you want to test ...
-            let res = await rpc.rpcCallResultSync("z_listaddresses",[]);
-            console.log(res);
+            //let res = await rpc.rpcCallResultSync("z_listaddresses",[]);
+            //console.log(res);
+
+            console.log(internalInfo);
+            //internalInfo.pendingTxs = [];
+            //internalInfo.pendingTxs.push({type:"snT-Z",from: "a", to: "b", amount:1, fee:2});
+            //console.log(internalInfo);
+            //console.log(internalInfo.pendingTxs[0]);
+
         });
 
         testRpcButton.addEventListener("click", async function () {
