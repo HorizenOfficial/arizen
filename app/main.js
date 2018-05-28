@@ -1428,7 +1428,6 @@ ipcMain.on("send", async function (event, fromAddress, toAddress, fee, amount) {
         // TODO: Come up with better message. For now, just make a HTML out of it.
         const errString = paramErrors.join("<br/>\n\n");
         event.sender.send("send-finish", "error", errString);
-
         return;
     }
 
@@ -1436,17 +1435,18 @@ ipcMain.on("send", async function (event, fromAddress, toAddress, fee, amount) {
         // Convert to satoshi
         let amountInSatoshi = Math.round(amount * 100000000);
         let feeInSatoshi = Math.round(fee * 100000000);
+        let err = "";
         let walletAddr = sqlSelectObjects("SELECT * FROM wallet WHERE addr = ?", fromAddress)[0];
 
         if (!walletAddr) {
-            event.sender.send("send-finish", "error", tr("wallet.tabWithdraw.messages.unknownAddress", "Source address is not in your wallet!"));
-
+            err = tr("wallet.tabWithdraw.messages.unknownAddress", "Source address is not in your wallet!");
+            event.sender.send("send-finish", "error", err);
             return;
         }
 
         if (walletAddr.lastbalance < (parseFloat(amount) + parseFloat(fee))) {
-            event.sender.send("send-finish", "error", tr("wallet.tabWithdraw.messages.insufficientFundsSourceAddr", "Insufficient funds on source address!"));
-
+            err = tr("wallet.tabWithdraw.messages.insufficientFundsSourceAddr", "Insufficient funds on source address!");
+            event.sender.send("send-finish", "error", err);
             return;
         }
 
@@ -1476,6 +1476,12 @@ ipcMain.on("send", async function (event, fromAddress, toAddress, fee, amount) {
                 continue;
             }
 
+            if (txData[i].isCoinbase) {
+                err = tr("wallet.tabWithdraw.messages.isCoinbaseUTXO", "Your address contains newly mined coins, also called coinbase unspent transaction outputs (coinbase UTXO). These need to be shielded and unshielded first before they can be spent, please import the private key of this address into a full wallet like Swing and then send all your coins from this address to a Z-address and then back to this T-address. You will be then able to spend them in Arizen as well.");
+                event.sender.send("send-finish", "error", err);
+                return;
+            }
+
             history = history.concat({
                 txid: txData[i].txid,
                 vout: txData[i].vout,
@@ -1491,9 +1497,8 @@ ipcMain.on("send", async function (event, fromAddress, toAddress, fee, amount) {
 
         // If we don't have enough address - fail and tell it to the user
         if (satoshisSoFar < amountInSatoshi + feeInSatoshi) {
-            let errStr = tr("wallet.tabWithdraw.messages.insufficientFundsSourceAddr", "Insufficient funds on source address!");
-            event.sender.send("send-finish", "error", errStr);
-
+            err = tr("wallet.tabWithdraw.messages.insufficientFundsSourceAddr", "Insufficient funds on source address!");
+            event.sender.send("send-finish", "error", err);
             return;
         }
 
@@ -1538,7 +1543,6 @@ ipcMain.on("send-many", async function (event, fromAddressesAll, toAddress, fee,
         // TODO: Come up with better message. For now, just make a HTML out of it.
         const errString = paramErrors.join("<br/>\n\n");
         event.sender.send("send-finish", "error", errString);
-
         return;
     }
 
@@ -1572,7 +1576,7 @@ ipcMain.on("send-many", async function (event, fromAddressesAll, toAddress, fee,
             let err = "";
             const satoshi = 100000000;
 
-            // CONVERT TO SATOSHI ------------------------------------------------------------------------------------------
+            // CONVERT TO SATOSHI --------------------------------------------------------------------------------------
             let feeInSatoshi = Math.round(fee * satoshi);
             let thresholdLimitInSatoshi = Math.round(thresholdLimit * satoshi);
             let balanceInSatoshi = 0;
@@ -1583,7 +1587,6 @@ ipcMain.on("send-many", async function (event, fromAddressesAll, toAddress, fee,
                 if (!walletAddr) {
                     err = tr("wallet.tabWithdraw.messages.unknownAddress", "Source address is not in your wallet!");
                     event.sender.send("send-finish", "error", err);
-
                     return;
                 }
 
@@ -1593,7 +1596,6 @@ ipcMain.on("send-many", async function (event, fromAddressesAll, toAddress, fee,
                     if (balanceInSatoshi < (parseFloat(thresholdLimit) + parseFloat(fee))) {
                         err = tr("wallet.tabWithdraw.messages.insufficientFirstSource", "Insufficient funds on 1st source (Minimum: threshold limit + fee)!");
                         event.sender.send("send-finish", "error", err);
-
                         return;
                     }
 
@@ -1602,20 +1604,16 @@ ipcMain.on("send-many", async function (event, fromAddressesAll, toAddress, fee,
                     if (balanceInSatoshi < (parseFloat(thresholdLimit))) {
                         err = tr("wallet.tabWithdraw.messages.insufficientNextSource", "Insufficient funds on 2nd or next source (Minimum: threshold limit)!");
                         event.sender.send("send-finish", "error", err);
-
                         return;
                     }
-
                     amountsInSatoshi[i] = Math.round(balanceInSatoshi * satoshi);
                 }
-
                 privateKeys[i] = walletAddr.pk;
             }
 
             if (privateKeys.length !== nFromAddresses) {
                 err = tr("wallet.tabWithdraw.messages.numberOfKeys", "# private keys and # addresses are not equal!");
                 event.sender.send("send-finish", "error", err);
-
                 return;
             }
 
@@ -1650,6 +1648,12 @@ ipcMain.on("send-many", async function (event, fromAddressesAll, toAddress, fee,
                     continue;
                 }
 
+                if (txData[i].isCoinbase) {
+                    err = tr("wallet.tabWithdraw.messages.isCoinbaseUTXO", "Your address contains newly mined coins, also called coinbase unspent transaction outputs (coinbase UTXO). These need to be shielded and unshielded first before they can be spent, please import the private key of this address into a full wallet like Swing and then send all your coins from this address to a Z-address and then back to this T-address. You will be then able to spend them in Arizen as well.");
+                    event.sender.send("send-finish", "error", err);
+                    return;
+                }
+
                 history = history.concat({
                     txid: txData[i].txid,
                     vout: txData[i].vout,
@@ -1666,7 +1670,6 @@ ipcMain.on("send-many", async function (event, fromAddressesAll, toAddress, fee,
             if ((satoshisSoFar - (nFromAddresses * thresholdLimitInSatoshi)) < feeInSatoshi) {
                 err = tr("wallet.tabWithdraw.messages.sumLowerThanFee", "Your summed balance over all source addresses is lower than the fee!");
                 event.sender.send("send-finish", "error", err);
-
                 return;
             }
 

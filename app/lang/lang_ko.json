@@ -122,7 +122,8 @@
         "feeNotNumber": "수수료가 숫자가 아닙니다!",
         "feeIsNegative": "수수료는 0이거나 그보다 커야합니다!",
         "error": "오류",
-        "success": "거래가 성공적으로 완료되었습니다."
+        "success": "거래가 성공적으로 완료되었습니다.",
+        "isCoinbaseUTXO": "Your address contains newly mined coins, also called coinbase unspent transaction outputs (coinbase UTXO). These need to be shielded and unshielded first before they can be spent, please import the private key of this address into a full wallet like Swing and then send all your coins from this address to a Z-address and then back to this T-address. You will be then able to spend them in Arizen as well."
       }
     },
     "transactionHistory": {
