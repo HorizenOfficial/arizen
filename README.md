@@ -121,6 +121,19 @@ printed. This created address can by included to your Arizen or not.
       npm install
       npm run dist
 
+# GIFs
+## Arizen Settings
+https://i.imgur.com/rOTSKQf.gif
+
+## T-T-Z transaction via Secure Node
+https://i.imgur.com/V1IWIzQ.gif
+
+## Z-Z transaction via Secure Node
+https://i.imgur.com/MbZYPra.gif
+
+## Z-T transaction via Secure Node
+https://i.imgur.com/0JZQ0R0.gif
+
 # Screenshots
 ![Login](https://i.imgur.com/XHrnuPW.png)
 ![Create wallet](https://i.imgur.com/lz5MqmT.png)
