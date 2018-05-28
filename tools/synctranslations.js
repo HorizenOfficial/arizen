@@ -3,7 +3,7 @@
 /*jslint node: true */
 "use strict";
 
-const MARK_PREFIX = "TODO ";
+const MARK_PREFIX = "";
 const LANGDIR = __dirname + "/../app/lang";
 
 const fs = require("fs");
