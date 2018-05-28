@@ -29,6 +29,7 @@
 - [x] Updated translations keys.
 - [x] Renamed: from "Username" to "Wallet Name" -> less confusion, Arizen is NOT client-server application.
 - [x] Reformatted Settings menu and fix overflow.
+- [x] Prevent spending Coinbase unspent transaction outputs (Coinbase UTXO).
 
 ## v1.1.6
 - [x] Automatic logoff timeout can be now enabled and set in Settings (minimum 60s of inactivity).
