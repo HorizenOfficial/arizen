@@ -123,16 +123,16 @@ printed. This created address can by included to your Arizen or not.
 
 # GIFs
 ## Arizen Settings
-https://i.imgur.com/rOTSKQf.gif
+![](https://i.imgur.com/rOTSKQf.gif)
 
 ## T-T-Z transaction via Secure Node
-https://i.imgur.com/V1IWIzQ.gif
+![](https://i.imgur.com/V1IWIzQ.gif)
 
 ## Z-Z transaction via Secure Node
-https://i.imgur.com/MbZYPra.gif
+![](https://i.imgur.com/MbZYPra.gif)
 
 ## Z-T transaction via Secure Node
-https://i.imgur.com/0JZQ0R0.gif
+![](https://i.imgur.com/0JZQ0R0.gif)
 
 # Screenshots
 ![Login](https://i.imgur.com/XHrnuPW.png)
