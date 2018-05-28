@@ -280,8 +280,8 @@ function showAboutDialog() {
     });
 
     ipcRenderer.on("internal-info", (sender, internalInfoStr) => {
-        const newInternalInfo = JSON.parse(internalInfoStr);
-        internalInfo = newInternalInfo;
+        // const newInternalInfo = JSON.parse(internalInfoStr);
+        internalInfo = JSON.parse(internalInfoStr);
     });
 
 })();
@@ -302,8 +302,8 @@ function syncZaddrIfSettingsExist() {
     }
 }
 
-function isValidDomainName(domainOrIP){
-   return (domainOrIP!="" && domainOrIP!=undefined) // more to be added
+function isValidDomainName(domainOrIP) {
+    return (domainOrIP != "" && domainOrIP != undefined) // more to be added
 }
 
 function pingSecureNode() {
@@ -323,7 +323,7 @@ function pingSecureNode() {
     }
 }
 
-function colorRpcLEDs(isAlive){
+function colorRpcLEDs(isAlive) {
     if (isAlive) {
         document.getElementById("dotSNstatusRPC").style.backgroundColor = "#34A853"; // green "#34A853"
     } else {
@@ -608,6 +608,7 @@ function translateCurrentPage() {
 
 let autoLogOffTimerId;
 let autoLogOffEventHandler;
+
 function autoLogOffEnable(timeout) {
     autoLogOffDisable();
 
@@ -659,7 +660,6 @@ function autoLogOffUpdateUI(currentTime) {
 }
 
 //------------------------------------------------
-
 module.exports = {
     syncZaddrIfSettingsExist: syncZaddrIfSettingsExist
 };
