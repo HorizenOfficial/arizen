@@ -196,28 +196,28 @@
       "txFee": "Transakltionsgebühr"
     },
     "importSinglePrivateKey": {
-      "openButtonLabel": "Import Private Key",
-      "titleLabel": "Import Single Private Key",
-      "privateKeyLabel": "Private Key",
-      "importButtonLabel": "Import",
-      "warningNotValidAddress": "Z address exist in your wallet",
-      "warningNotValidPK": "This is not a valid Private Key."
+      "openButtonLabel": "Privaten Schlüssel importieren",
+      "titleLabel": "Einzelnen privaten Schlüssel importieren",
+      "privateKeyLabel": "Privater Schlüssel",
+      "importButtonLabel": "Importieren",
+      "warningNotValidAddress": "Z Adresse bereits in Wallet vorhanden.",
+      "warningNotValidPK": "Dies ist kein gültiger privater Schlüssel."
     },
-    "autoLogOffLabel": "Log off in ",
+    "autoLogOffLabel": "Abmeldung in ",
     "changePassword": {
-      "title": "Change Wallet Password",
-      "warningText": "WARNING: Wallet backups won't be re-encrypted! If you need to use them, you will have to use current password.",
-      "currentPassword": "Current Password",
-      "newPassword1": "New Password",
-      "newPassword2": "New Password (Retype)"
+      "title": "Wallet Passwort ändern",
+      "warningText": "WARNUNG: Wallet Backups werden nicht neu verschlüsselt! Wenn Sie sie nutzen wollen, müssen Sie das alte Passwort verwenden.",
+      "currentPassword": "Aktuelles Passwort",
+      "newPassword1": "Neues Passwort",
+      "newPassword2": "Neues Passwort (erneut eingeben)"
     },
     "rpcConsole": {
       "title": "RPC",
-      "command": "Command",
-      "test": "Test Me",
-      "results": "RPC Results ...",
+      "command": "Befehl",
+      "test": "Teste mich",
+      "results": "RPC Ausgabe ...",
       "status": "Status: ",
-      "testFunctionButton": "Test Function"
+      "testFunctionButton": "Funktion testen"
     }
   },
   "menu": {
@@ -247,14 +247,14 @@
     "changeWalletPassword": "Wallet-Passwort ändern"
   },
   "warmingMessages": {
-    "userWarningImportFileWithPKs": "Neue Adresse(n) und private(r) Schlüssel werden importiert. Die bisher durchgeführten Backups enthalten weder die neu importierte(n) Adresse(n), noch den/die private(n) Schlüssel. Bitte nutze das Backup-Feature von Arizen um ein neues Backup anzulegen und ersetze dein bisheriges Backup durch das Neue. Durch klicken auf 'Verstanden' bestätigst du, diesen Hinweis verstanden zu haben. Für weitere Informationen sieh dir das Hilfe-Menü von Arizen an.",
-    "userWarningExportWalletUnencrypted": "You are going to export an UNENCRYPTED wallet ( ie your private keys) in plain text. That means that anyone with this file can control your ZENs. Store this file in a safe place. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
-    "userWarningExportWalletEncrypted": "You are going to export an ENCRYPTED wallet and your private keys will be encrypted. That means that in order to access your private keys you need to know the corresponding wallet name and password. In case you don't know them you cannot control the ZENs that are controled by these private keys. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
-    "userWarningImportPK": "A new address and a private key will be imported. Your previous back-ups do not include the newly imported address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
-    "userWarningCreateNewAddress": "A new address and a private key will be created. Your previous back-ups do not include this newly generated address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
+    "userWarningImportFileWithPKs": "Neue Adresse(n) und private(r) Schlüssel werden importiert. Die bisher durchgeführten Backups enthalten weder die neu importierte(n) Adresse(n), noch den/die private(n) Schlüssel. Bitte nutzen Sie das Backup-Feature von Arizen um ein neues Backup anzulegen und ersetzen Sie Ihr bisheriges Backup durch das Neue. Durch Klicken auf 'Verstanden' bestätigen Sie, diesen Hinweis verstanden zu haben. Für weitere Informationen sehen Sie sich das Hilfe-Menü von Arizen an.",
+    "userWarningExportWalletUnencrypted": "Sie sind dabei, eine UNVERSCHLÜSSELTE Wallet (sprich: private Schlüssel) als Text zu exportieren. Das bedeutet, dass jeder, der diese Datei besitzt, Ihre ZEN kontrollieren kann. Legen Sie diese Datei an einem sicheres Ort ab. Durch Klicken auf 'Verstanden' bestätigen Sie, diesen Hinweis verstanden zu haben. Für weitere Informationen sehen Sie sich das Hilfe-Menü von Arizen an.",
+    "userWarningExportWalletEncrypted": "Sie sind dabei, eine VERSCHLÜSSELTE Wallet zu exportieren, und Ihre privaten Schlüssel werden verschlüsselt sein. Das bedeutet, dass Sie den Namen der Wallet und das Passwort kennen müssen, um auf Ihre privaten Schlüssel zugreifen zu können. Falls Sie diese nicht kennen sollten, können Sie auf die ZEN, die durch diese privaten Schlüssel kontrolliert werden, nicht kontrollieren können. Durch Klicken auf 'Verstanden' bestätigen Sie, diesen Hinweis verstanden zu haben. Für weitere Informationen sehen Sie sich das Hilfe-Menü von Arizen an.",
+    "userWarningImportPK": "Eine neue Adresse und ein privater Schlüssel werden importiert. Ihre vorherigen Backups beinhalten weder diese neu importierte Adresse, noch den entsprechenden privaten Schlüssel. Bitte nutzen Sie die Backup-Funktion von Arizen, um ein neues Backup anzulegen und ersetzen Sie Ihr altes Backup. Durch Klicken auf 'Verstanden' bestätigen Sie, diesen Hinweis verstanden zu haben. Für weitere Informationen sehen Sie sich das Hilfe-Menü von Arizen an.",
+    "userWarningCreateNewAddress": "Eine neue Adresse und ein privater Schlüssel werden erstellt. Ihre vorherigen Backups beinhalten weder diese neu erstellte Adresse, noch den entsprechenden privaten Schlüssel. Bitte nutzen Sie die Backup-Funktion von Arizen, um ein neues Backup anzulegen und ersetzen Sie Ihr altes Backup. Durch Klicken auf 'Verstanden' bestätigen Sie, diesen Hinweis verstanden zu haben. Für weitere Informationen sehen Sie sich das Hilfe-Menü von Arizen an.",
     "userWarningIUnderstand": "Verstanden",
     "cancel": "Abbrechen",
-    "userWarningImportPkUserZendRescan": "Das Guthaben der importieren Z-Adresse wird nach einem erneuten Scan der Blockchain sichtbar. Bitte führe 'zen-cli stop && sleep 8 && zend -rescan' auf der Secure Node (linux) aus."
+    "userWarningImportPkUserZendRescan": "Das Guthaben der importieren Z-Adresse wird nach einem erneuten Scan der Blockchain sichtbar. Bitte führen Sie 'zen-cli stop && sleep 8 && zend -rescan' auf der Secure Node (linux) aus."
   },
   "common": {
     "selectAll": "Alles auswählen",
