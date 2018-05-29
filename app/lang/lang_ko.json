@@ -44,7 +44,7 @@
   },
   "notification": {
     "settingsUpdated": "설정이 업데이트 되었습니다.",
-    "balanceUpdated": "잔고가 업데이트 되었습니다.",
+    "balanceUpdated": "잔고가 업데이트 되었습니다."
     "newTransactions": "새로운 거래가 확인되었습니다."
   },
   "importExportPks": {
@@ -123,7 +123,7 @@
         "feeIsNegative": "수수료는 0이거나 그보다 커야합니다!",
         "error": "오류",
         "success": "거래가 성공적으로 완료되었습니다.",
-        "isCoinbaseUTXO": "Your address contains newly mined coins, also called coinbase unspent transaction outputs (coinbase UTXO). These need to be shielded and unshielded first before they can be spent, please import the private key of this address into a full wallet like Swing and then send all your coins from this address to a Z-address and then back to this T-address. You will be then able to spend them in Arizen as well."
+        "isCoinbaseUTXO": "귀하의 주소에는 coinbase 미사용 거래 출력 (coinbase UTXO)이라고도하는 새로 채굴 된 동전이 있습니다. 이것들은 보호 받기 전에 차폐가 필요합니다. 스윙과 같은 전체 지갑에 이 주소의 비공개 키를 가져온 다음, 이 주소에서 Z 주소로 모든 동전을 보내고 T 주소로 되돌려주십시오. 그러면 Arizen에서 그들을 보낼 수 있습니다."
       }
     },
     "transactionHistory": {
@@ -164,24 +164,24 @@
       "apiUrl": "API 주소",
       "fiat": "동등한 명령",
       "save": "저장",
-      "enableNotifications": "Desktop notifications",
-      "enableDomainFronting": "Domain fronting",
-      "secureNodeFQDN": "Secure Node FQDN",
-      "sshUsername": "SSH username",
-      "sshPassword": "SSH password",
-      "sshPort": "SSH port",
-      "secureNodePort": "Secure Node Port (see zen.conf)",
-      "secureNodeUsername": "Secure Node Username (see zen.conf)",
-      "secureNodePassword": "Secure Node Password (see zen.conf)",
-      "readyTimeout": "Ready Timeout (default: 10000)",
-      "forwardTimeout": "Forward Timeout (default: 10000)",
-      "domainFrontingUrl": "Domain fronting public base URL",
-      "domainFrontingHost": "Domain fronting private host",
-      "autoLogOffEnable": "Enable automatic log off",
-      "autoLogOffTimeout": "Auto log off timeout in seconds"
+      "enableNotifications": "데스크탑 알림",
+      "enableDomainFronting": "도메인 프론팅",
+      "secureNodeFQDN": "보안 노드 FQDN",
+      "sshUsername": "SSH 사용자 이름",
+      "sshPassword": "SSH 비밀번호",
+      "sshPort": "SSH 포트",
+      "secureNodePort": "보안 노드 포트 (zen.conf 파일을 확인해보세요)",
+      "secureNodeUsername": "보안 노드 사용자 이름 (zen.conf 파일을 확인해보세요)",
+      "secureNodePassword": "보안 노드 비밀번호 (zen.conf 파일을 확인해보세요)",
+      "readyTimeout": "준비 시간 제한 (기본 값: 10000)",
+      "forwardTimeout": "전달 시간 초과 (기본 값: 10000)",
+      "domainFrontingUrl": "도메인 프론팅 공용 URL",
+      "domainFrontingHost": "도메인 프론팅 개인 호스트",
+      "autoLogOffEnable": "자동 로그 오프 사용",
+      "autoLogOffTimeout": "자동 로그 오프 시간 제한(초)"
     },
     "paperWallet": {
-      "label": "종이 지갑",
+      "label": "페이퍼지갑",
       "generateNewWallet": "새 지갑 생성",
       "name": "이름 (선택사항)",
       "addWalletToArizen": "이 지갑을 Arizen 에 보내기",
@@ -197,28 +197,28 @@
       "txFee": "거래 수수료"
     },
     "importSinglePrivateKey": {
-      "openButtonLabel": "Import Private Key",
-      "titleLabel": "Import Single Private Key",
-      "privateKeyLabel": "Private Key",
-      "importButtonLabel": "Import",
-      "warningNotValidAddress": "Address exist in your wallet",
-      "warningNotValidPK": "This is not a valid Private Key or you try to import a Spending Key (only for Z addresses) as T address Private key."
+      "openButtonLabel": "개인 키 가져오기",
+      "titleLabel": "하나의 개인 키 가져오기",
+      "privateKeyLabel": "개인 키",
+      "importButtonLabel": "가져오기",
+      "warningNotValidAddress": "주소가 당신의 지갑에 존재합니다.",
+      "warningNotValidPK": "유효한 개인 키가 아니거나 T 주소에 Z 주소로 가져오려고 합니다."
     },
-    "autoLogOffLabel": "Log off in ",
+    "autoLogOffLabel": "로그오프를 다음 시간 이내에 ",
     "changePassword": {
-      "title": "Change Wallet Password",
-      "warningText": "WARNING: Wallet backups won't be re-encrypted! If you need to use them, you will have to use current password.",
-      "currentPassword": "Current Password",
-      "newPassword1": "New Password",
-      "newPassword2": "New Password (Retype)"
+      "title": "지갑 비밀번호 변경",
+      "warningText": "경고: 지갑의 백업이 다시 암호화되지 않습니다! 기존 것을 사용하려면 현재의 비밀번호를 입력해야합니다",
+      "currentPassword": "현재 비밀번호",
+      "newPassword1": "새로운 비밀번호",
+      "newPassword2": "새로운 비밀번호 (확인)"
     },
     "rpcConsole": {
       "title": "RPC",
-      "command": "Command",
-      "test": "Test Me",
-      "results": "RPC Results ...",
-      "status": "Status: ",
-      "testFunctionButton": "Test Function"
+      "command": "명령",
+      "test": "테스트 하기",
+      "results": "RPC 결과 ...",
+      "status": "상태: ",
+      "testFunctionButton": "테스트 기능"
     }
   },
   "menu": {
@@ -239,28 +239,28 @@
       "paste": "붙여넣기",
       "selectAll": "전체 선택"
     },
-    "help": "Help",
+    "help": "도움",
     "helpSubmenu": {
-      "arizenManual": "User Manual",
-      "support": "Support",
+      "arizenManual": "사용자 매뉴얼",
+      "support": "지원",
       "zencash": "ZenCash"
     },
-    "changeWalletPassword": "Change wallet password"
+    "changeWalletPassword": "지갑 비밀번호 변경"
   },
   "warmingMessages": {
-    "userWarningImportFileWithPKs": "New address(es) and a private key(s) will be imported. Your previous back-ups do not include the newly imported addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
-    "userWarningExportWalletUnencrypted": "You are going to export an UNENCRYPTED wallet ( ie your private keys) in plain text. That means that anyone with this file can control your ZENs. Store this file in a safe place. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
-    "userWarningExportWalletEncrypted": "You are going to export an ENCRYPTED wallet and your private keys will be encrypted. That means that in order to access your private keys you need to know the corresponding wallet name and password. In case you don't know them you cannot control the ZENs that are controled by these private keys. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
-    "userWarningImportPK": "A new address and a private key will be imported. Your previous back-ups do not include the newly imported address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
-    "userWarningCreateNewAddress": "A new address and a private key will be created. Your previous back-ups do not include this newly generated address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
-    "userWarningIUnderstand": "I understand",
-    "cancel": "Cancel",
-    "userWarningImportPkUserZendRescan": "The balance of the Z address you imported will be visible after you rescan the blockchain. Please run 'zen-cli stop && sleep 8 && zend -rescan' in your secure node (linux)."
+    "userWarningImportFileWithPKs": "새 주소와 개인 키를 가져옵니다. 이전 백업에는 새로 가져온 주소나 해당 개인 키가 포함되어 있지 않습니다. Arizen의 백업 기능을 사용하여 새 백업 파일을 만들고 기존 Arizen지갑 백업을 교체하십시오. '이해하고 있습니다'를 누름으로써 당신은 이것을 이해한다는 것을 확인합니다. 자세한 내용은 Arizen의 도움말 메뉴를 참조하십시오.",
+    "userWarningExportWalletUnencrypted": "암호화 되지 않은 지갑(개인 키)을 일반 텍스트로 내보냅니다. 이것은 이 파일을 가진 사람이라면 누구나 당신의 ZEN을 제어 할 수 있다는 것을 의미한다. 이 파일을 안전한 곳에 보관하십시오. '이해하고 있습니다'를 누름으로써 당신은 이것을 이해한다는 것을 확인합니다. 자세한 내용은 Arizen의 도움말 메뉴를 참조하십시오.",
+    "userWarningExportWalletEncrypted": "암호화 된 지갑을 내보내면 개인 키가 암호화됩니다. 즉, 개인 키에 액세스 하려면 해당 지갑 이름과 암호를 알아야 합니다. 당신이 그 것을 모르는 경우에, 여러분은 이 개인 키들에 의해 제어되는 ZEN을 제어할 수 없습니다. '이해하고 있습니다'를 누름으로써 당신은 이것을 이해한는 것을 확인합니다. 자세한 내용은 Arizen의 도움말 메뉴를 참조하십시오.",
+    "userWarningImportPK": "새 주소와 개인 키를 가져옵니다. 이전 백업에는 새로 가져온 주소나 해당 개인 키가 포함되어 있지 않습니다. Arizen의 백업 기능을 사용하여 새 백업 파일을 만들고 기존 Arizen지갑 백업을 교체하십시오. '이해하고 있습니다'를 누름으로써 당신은 이것을 이해한다는 것을 확인합니다. 자세한 내용은 Arizen의 도움말 메뉴를 참조하십시오.",
+    "userWarningCreateNewAddress": "새 주소와 개인 키가 생성됩니다. 이전 백업에는 이 새로 생성된 주소나 해당 개인 키가 포함되어 있지 않습니다. Arizen의 백업 기능을 사용하여 새 백업 파일을 만들고 기존 Arizen지갑 백업을 교체하십시오. '이해하고 있습니다'를 누름으로써 당신은 이것을 이해한것을 확인합니다. 자세한 내용은 Arizen의 도움말 메뉴를 참조하십시오.",
+    "userWarningIUnderstand": "이해하고 있습니다.",
+    "cancel": "취소",
+    "userWarningImportPkUserZendRescan": "블록 체인을 다시 검색하면 가져온 Z주소의 잔고가 표시됩니다. 보안노드에서(리눅스) 다음 명령어를 실행하세요 'zen-cli stop && sleep 8 && zend -rescan'."
   },
   "common": {
-    "selectAll": "Select all",
-    "clearAll": "Clear all",
-    "okButtonText": "OK",
-    "cancelButtonText": "Cancel"
+    "selectAll": "전체 선택",
+    "clearAll": "전체 초기화",
+    "okButtonText": "확인",
+    "cancelButtonText": "취소"
   }
 }
