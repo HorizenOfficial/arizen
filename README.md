@@ -29,6 +29,7 @@
 - [x] Updated translations keys.
 - [x] Renamed: from "Username" to "Wallet Name" -> less confusion, Arizen is NOT client-server application.
 - [x] Reformatted Settings menu and fix overflow.
+- [x] Prevent spending Coinbase unspent transaction outputs (Coinbase UTXO).
 
 ## v1.1.6
 - [x] Automatic logoff timeout can be now enabled and set in Settings (minimum 60s of inactivity).
@@ -120,47 +121,18 @@ printed. This created address can by included to your Arizen or not.
       npm install
       npm run dist
 
-### Coding rules
+# GIFs
+## Arizen Settings
+![](https://i.imgur.com/rOTSKQf.gif)
 
-#### Mostly everything
-- Indent with 4 spaces (JS/CSS/HTML)
-- Quote with double quotes (JS/CSS/HTML)
-- Do not comment unfinished/not working/old code. Use the Git Luke.
+## T-T-Z transaction via Secure Node
+![](https://i.imgur.com/V1IWIzQ.gif)
 
-#### JavaScript
-- Place opening brace on the same line.
-- Write names of variables and functions in _lower camel case_, for example
+## Z-Z transaction via Secure Node
+![](https://i.imgur.com/MbZYPra.gif)
 
-      const totalZenBalance = totalBalance + getTxBalance(tx);
-
-- Write names of classes in _upper camel case_, for example
-
-      class AddressDialog {
-	      /* ... */
-	  }
-
-- Write constant names in _constant case_, for example
-
-      const UPDATE_INTERVAL = 60; // seconds
-
-- Prefer cloning HTML `<template>`s to constructing DOM trees manually.
-
-#### HTML
-- Do not quote _simple_ HTML attribute values, for example
-
-      <span id=foo class=bar>
-
-  instead of
-
-      <span id="foo" class="bar">
-
-  unless you have to, for example
-
-      <span id=foo class="bar baz">
-
-- Write identifiers (values of `id`, `class`, `name`, `data-tr`, etc.) in _lower camel case_, for example
-
-      <span id=totalBalance class=bigLabel>
+## Z-T transaction via Secure Node
+![](https://i.imgur.com/0JZQ0R0.gif)
 
 # Screenshots
 ![Login](https://i.imgur.com/XHrnuPW.png)

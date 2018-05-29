@@ -122,7 +122,8 @@
         "feeNotNumber": "Poplatek není číslo!",
         "feeIsNegative": "Poplatek nesmí být záporný!",
         "error": "Chyba",
-        "success": "Transakce úspěšně odeslána"
+        "success": "Transakce úspěšně odeslána",
+        "isCoinbaseUTXO": "Vaše adresa obsahuje nově vytěžené ZENy, které jsou také nazývány coinbase unspent transaction outputs (coinbase UTXO). Tyto ZENy musí být nejdříve anonymizovány a deanonimizovány, než je bude možné poslat dále. Prosím importujte privátní klíč zdrojové adresy do plné peněženky, např. Swing. Následně pošlete všechny ZENy z této T adresy na Z adresu a opět zpět na tuto T adresu. Následně budete schopni odeslat vaše ZENy i v Arizen."
       }
     },
     "transactionHistory": {

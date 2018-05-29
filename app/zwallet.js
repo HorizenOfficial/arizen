@@ -432,9 +432,9 @@ function showNewAddrDialog() {
         showDialogFromTemplate("newAddrDialogTemplate", dialog => {
             const createButton = dialog.querySelector(".newAddrDialogCreate");
             createButton.addEventListener("click", () => {
-                var getT = dialog.querySelector(".TorZgetT").checked;
-                var getZ = dialog.querySelector(".TorZgetZ").checked;
-                var nameAddress = dialog.querySelector(".newAddrDialogName").value;
+                let getT = dialog.querySelector(".TorZgetT").checked;
+                let getZ = dialog.querySelector(".TorZgetZ").checked;
+                let nameAddress = dialog.querySelector(".newAddrDialogName").value;
                 if (getT) {
                     ipcRenderer.send("generate-wallet", nameAddress);
                 }
@@ -511,7 +511,7 @@ function showAddrSelectDialog(zeroBalanceAddrs, onSelected) {
     showDialogFromTemplate("addrSelectDialogTemplate", dialog => {
         const listNode = dialog.querySelector(".addrSelectList");
         for (const addrObj of addrObjList) {
-            if (addrObj.addr.length !== 35){
+            if (addrObj.addr.length !== 35) {
                 // it is Z address
                 continue;
             }
@@ -594,7 +594,7 @@ function updateDepositQrcode(qrcodeDelay = 0) {
     }, qrcodeDelay);
 }
 
-async function checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo) {
+async function checkIntermediateSend(tIntermediateAddress, toAddr, amount, feeTwo) {
     let balance = -1.0;
     amount = parseFloat(amount).toFixed(8);
     let resp = await rpc.getTaddressBalance(tIntermediateAddress);
@@ -606,7 +606,7 @@ async function checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo) 
         console.log("Sending...");
         let sendResp = await rpc.sendFromOrToZaddress(undefined, tIntermediateAddress, toAddr, amount, feeTwo)
         console.log(sendResp.status);
-        if (sendResp.status === "ok"){
+        if (sendResp.status === "ok") {
             return true
         } else {
             return false
@@ -626,15 +626,15 @@ async function sendPendingTxs() {
     console.log(internalInfo);
 
     for (let pendTx of oldPendingTxs) {
-      console.log(pendTx);
-      if (pendTx.type === "snT-Z") {
-          let sentTx = await checkIntermediateSend(pendTx.fromAddress, pendTx.toAddress, pendTx.amount, pendTx.fee);
-          console.log("Transaction sent: ");
-          console.log(sentTx);
-          if (!sentTx) {
-              newPendingTxs.push(pendTx);
-          }
-      }
+        console.log(pendTx);
+        if (pendTx.type === "snT-Z") {
+            let sentTx = await checkIntermediateSend(pendTx.fromAddress, pendTx.toAddress, pendTx.amount, pendTx.fee);
+            console.log("Transaction sent: ");
+            console.log(sentTx);
+            if (!sentTx) {
+                newPendingTxs.push(pendTx);
+            }
+        }
     }
     internalInfo.pendingTxs = newPendingTxs;
     saveInternalInfo()
@@ -645,7 +645,7 @@ async function initWithdrawView() {
     withdrawToAddrInput.addEventListener("input", validateWithdrawForm);
     withdrawAmountInput.addEventListener("input", validateWithdrawForm);
     withdrawFeeInput.addEventListener("input", validateWithdrawForm);
-    withdrawButton.addEventListener("click", async function() {
+    withdrawButton.addEventListener("click", async function () {
         const msg = tr("wallet.tabWithdraw.withdrawConfirmQuestion", "Do you really want to send this transaction?");
         const msgTTZ = tr("wallet.sendTTZ.doNotCloseArizen", "Arizen is Sending ZEN from your T address to an intermediate T and then to the Z address. Please do not close Arizen until the 2nd transaction is sent (opid appears below withdraw).");
         if (confirm(msg)) {
@@ -662,9 +662,9 @@ async function initWithdrawView() {
             } else if (zenextra.isTransaparentAddr(fromAddr) && zenextra.isZeroAddr(toAddr)) { // T - Z
                 if (confirm(msgTTZ)) {
                     // Get intermediate T address from SN or Create
-                    let feeOne = fee/2;
-                    let feeTwo = fee/2;
-                    let amountOne = parseFloat(amount)+feeTwo;
+                    let feeOne = fee / 2;
+                    let feeTwo = fee / 2;
+                    let amountOne = parseFloat(amount) + feeTwo;
                     console.log(amountOne);
                     let tIntermediateAddress = await rpc.getSecureNodeTaddressOrGenerate();
                     // send from T-Arizen to T-SN, amount, fee/2
@@ -675,11 +675,17 @@ async function initWithdrawView() {
                             feeOne,
                             amountOne);
                         //checkIntermediateSend(tIntermediateAddress,toAddr,amount,feeTwo);
-                        internalInfo.pendingTxs.push({type:"snT-Z",fromAddress: tIntermediateAddress, toAddress: toAddr, amount:amount, fee:feeTwo});
+                        internalInfo.pendingTxs.push({
+                            type: "snT-Z",
+                            fromAddress: tIntermediateAddress,
+                            toAddress: toAddr,
+                            amount: amount,
+                            fee: feeTwo
+                        });
                         saveInternalInfo();
                         sendPendingTxs();
-                      }
-                  }
+                    }
+                }
 
 
             } else { // Z - Z or Z - T
@@ -728,7 +734,7 @@ function validateWithdrawForm() {
     }
     setBalanceText(withdrawAvailBalance, fromAddrObj.lastbalance);
 
-    if (fromAddrObj.pk === "watchOnlyAddrr"){
+    if (fromAddrObj.pk === "watchOnlyAddrr") {
         setNodeTrText(withdrawMsg, "wallet.tabWithdraw.messages.watchOnlyAddrr", "The from address is a watch only address and you cannot spend its balance.");
         return;
     }
