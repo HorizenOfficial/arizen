@@ -44,7 +44,7 @@
   },
   "notification": {
     "settingsUpdated": "설정이 업데이트 되었습니다.",
-    "balanceUpdated": "잔고가 업데이트 되었습니다."
+    "balanceUpdated": "잔고가 업데이트 되었습니다.",
     "newTransactions": "새로운 거래가 확인되었습니다."
   },
   "importExportPks": {
