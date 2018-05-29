@@ -122,7 +122,8 @@
         "feeNotNumber": "Gebühr ist keine Zahl!",
         "feeIsNegative": "Gebühr muss größer oder gleich Null sein!",
         "error": "Error",
-        "success": "Die Transaktion wurde erfolgreich gesendet"
+        "success": "Die Transaktion wurde erfolgreich gesendet",
+        "isCoinbaseUTXO": "Ihre Adresse enthält neu geschürfte Coins, auch Coinbase unverbrauchte Transaktionsausgabe (coinbase unspent transaction outputs/coinbase UTXO) genannt. Diese müssen anonymisiert und de-anonymisiert werden, bevor sie ausgegeben werden können. Bitte importieren Sie den privaten Schlüssel in eine Full Wallet wie Swing und senden Sie alle Coins von dieser Adresse zu einer Z-Adresse und zurück zu dieser T-Adresse. Danach werden Sie die Coins auch in Arizen ausgeben können."
       }
     },
     "transactionHistory": {
@@ -185,7 +186,7 @@
       "name": "Name (optional)",
       "addWalletToArizen": "Diese Wallet zu Arizen hinzufügen",
       "zenCashWalletLabel": "ZenCash Wallet",
-      "tAddrLabel": "Öffentlicher Schlüssel - T Adresse",
+      "tAddrLabel": "Öffentlicher Schlüssel - T-Adresse",
       "privateKeyLabel": "Privater Schlüssel",
       "namePrint": "Name",
       "exportPDFLabel": "PDF exportieren"
@@ -200,7 +201,7 @@
       "titleLabel": "Einzelnen privaten Schlüssel importieren",
       "privateKeyLabel": "Privater Schlüssel",
       "importButtonLabel": "Importieren",
-      "warningNotValidAddress": "Z Adresse bereits in Wallet vorhanden.",
+      "warningNotValidAddress": "Z-Adresse bereits in Wallet vorhanden.",
       "warningNotValidPK": "Dies ist kein gültiger privater Schlüssel."
     },
     "autoLogOffLabel": "Abmeldung in ",
