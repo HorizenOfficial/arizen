@@ -1,0 +1,266 @@
+{
+  "languageName": "한국어",
+  "languageValue": "ko",
+  "langFileVersion": "1",
+  "login": {
+    "label": "Arizen: 로그인",
+    "username": "사용자 이름",
+    "password": "비밀번호",
+    "loginButton": "로그인",
+    "createWalletLink": "지갑 생성",
+    "warningWrongUsernameOrPassword": "<strong>아이디</strong> 나 <strong>비밀번호</strong>가 다릅니다.",
+    "dataImportFailed": "데이터를 가져오는 데 실패하였습니다. 잘못된 자격증명일 수 있습니다.",
+    "fileReplace": "파일을 교체하시겠습니까?",
+    "walletReplace": "지갑을 교체하시겠습니까?",
+    "walletReplaceMsg": "당신의 실제 지갑을 대체하게 됩니다.. 확실하십니까?",
+    "walletImported": "지갑을 가져오는데 성공하였습니다.",
+    "walletImportFailed": "지갑을 가져오는데 실패하였습니다.",
+    "yes": "네",
+    "no": "아니오"
+  },
+  "createWallet": {
+    "label": "Arizen: 지갑 생성",
+    "username": "사용자 이름",
+    "password": "비밀번호",
+    "passwordAgain": "비밀번호 확인",
+    "oldUsername": "이전 사용자 이름: ",
+    "oldPassword": "이전 사용자 이름: ",
+    "selectWallet": "지갑 선택",
+    "selectWalletButton": "검색",
+    "createWalletButton": "지갑 생성",
+    "loginLink": "로그인",
+    "warningUsername": "사용자 이름은 다음 요구사항을 따라야합니다 :",
+    "warningUsernameLength": "최소한 <strong>4글자</strong> 이상이어야 합니다.",
+    "warningPassword": "비밀번호는 다음 요구사항을 따라야 합니다 :",
+    "warningPasswordLetter": "최소한 <strong>한개의 문자를</strong> 포함해야합니다.",
+    "warningPasswordCapitalLetter": "최소한 <strong>하나의 대문자를</strong> 포함해야합니다.",
+    "warningPasswordNumber": "최소한 <strong>하나의 숫자를</strong> 포함해야합니다.",
+    "warningPasswordSpecial": "최소한 <strong>하나의 특수문자를</strong> 포함”야합니다.",
+    "warningPasswordLength": "최소한 <strong>8자</strong> 이상이어야 합니다",
+    "warningPasswordAgain": "비밀번호는 다음 요구사항을 따라야 합니다 :",
+    "warningPasswordAgainIdentical": "<strong>같습니다.</strong>",
+    "errorCreationFailed": "지갑 생성에 실패하였습니다.",
+    "errorFailedResponse": "응답에 실패하였습니다."
+  },
+  "notification": {
+    "settingsUpdated": "설정이 업데이트 되었습니다.",
+    "balanceUpdated": "잔고가 업데이트 되었습니다.",
+    "newTransactions": "새로운 거래가 확인되었습니다."
+  },
+  "importExportPks": {
+    "chooseFileExport": "개인 키 파일을 선택하세요.",
+    "chooseFileImport": "개인 키가 있는 파일을 선택하세요.",
+    "InvalidLinePk": " ${0} 행에 잘못된 개인 키 값이 있습니다.",
+    "InvalidPk": "개인 비공개 키 파일의 ${0} 행에 잘못된 개인 키 값 있습니다."
+  },
+  "wallet": {
+    "showSettingsDialogButton": "설정",
+    "showAboutDialogButton": "대하여",
+    "refreshWallet": "새로고침",
+    "logout": "로그아웃",
+    "exit": "나가기",
+    "date": "날짜",
+    "from": "발신자",
+    "to": "수신자",
+    "amount": "양",
+    "balance": "잔액",
+    "totalBalance": "전체 잔액",
+    "lastUpdate": "마지막 업데이트",
+    "showExplorer": "ZEN Explorer에서 보기",
+    "listOfAddresses": "주소목록",
+    "showBatchWithdrawDialog": "일괄 철회",
+    "notLoggedIn": "로그인 하지 않았습니다.",
+    "addressNotFound": "주소를 찾을 수 없습니다.",
+    "nameNotFound": "이름을 찾을 수 없습니다.",
+    "renameWalletSetTo": "${0} 주소가 ${1}로 설정되었습니다.",
+    "fetchBlockchainFailed": "블록체인의 변경사항을 가져오는 데 실패하였습니다 :",
+    "save": "저장",
+    "pdfExported": "PDF 로 내보내기",
+    "tabOverview": {
+      "label": "개요",
+      "showZeroBalances": "0인 잔액 표시",
+      "newAddress": "새 주소 얻기",
+      "unnamedAddress": "이름없는 주소",
+      "newAddressExists": "주소 ${0} 는 이미 목록에 있습니다."
+    },
+    "tabDeposit": {
+      "label": "예금",
+      "help": "예금을 바라는 주소의 오른쪽에 초록색 버튼을 클릭해주세요",
+      "saveQrcode": "QR코드 저장",
+      "messages": {
+        "emptyToAddr": "받는 사람의 주소가 비어있습니다.",
+        "unknownToAddr": "받는 사람의 주소가 이 지갑에서 지원하지 않는 주소입니다.",
+        "zeroAmount": "양이 적절치 않습니다."
+      }
+    },
+    "tabWithdraw": {
+      "label": "출금하기",
+      "help": "출금을 바라는 주소의 오른쪽에 빨간색 버튼을 클릭해주세요.",
+      "availableBalance": "이용가능한 잔액",
+      "fee": "거래 수수료",
+      "txStatus": "전송 상태",
+      "withdrawConfirmQuestion": "이 거래를 진행하기를 정말 원하십니까?",
+      "messages": {
+        "emptyFromAddr": "보내는 사람의 주소가 비어있습니다.",
+        "unknownFromAddr": "보내는 사람의 주소가 이 지갑에서 지원하지 않는 주소입니다.",
+        "insufficientFirstSource": "1번째 소스에서 불충분한 금액이 있습니다. (최소금액: 한도액 + 수수료)!",
+        "insufficientNextSource": "2번째 소스나 그 이후의 소스에서 불충분한 금액이 있습니다. (최소금액: 한도액)!",
+        "numberOfKeys": "# 개인키와 # 주소가 일치하지 않습니다!",
+        "sumLowerThanFee": "모든 소스 주소의 합계 잔액이 수수료보다 낮습니다.",
+        "zenApi": "Zen API 가 설정되어 있지 않습니다!",
+        "unknownAddress": "당신의 지갑에 있는 주소가 아닙니다!",
+        "insufficientFundsSourceAddr": "소스 주소에 잔액이 부족합니다.",
+        "emptyToAddr": "보내는 사람의 주소가 비어있습니다.",
+        "zeroAmount": "양이 적절치 않습니다.",
+        "insufficientFunds": "보내는 사람의 주소에 잔액이 부족합니다.",
+        "fromAddressBadLength": "주소 길이가 알맞지않습니다!",
+        "fromAddressBadPrefix": "주소의 시작문자 ‘zn’이어야 합니다. 잘못된 주소입니다.!",
+        "toAddressBadLength": "보낼 주소의 길이가 알맞지 않습니다.!",
+        "toAddressBadPrefix": "보낼 주소의 시작문자는 ‘zn’이어야 합니다. 잘못된 주소입니다!",
+        "amounNotNumber": "양은 숫자만 입력할 수 있습니다.",
+        "amountIsZero": "양은 0보다 커야합니다!",
+        "feeNotNumber": "수수료가 숫자가 아닙니다!",
+        "feeIsNegative": "수수료는 0이거나 그보다 커야합니다!",
+        "error": "오류",
+        "success": "거래가 성공적으로 완료되었습니다.",
+        "isCoinbaseUTXO": "귀하의 주소에는 coinbase 미사용 거래 출력 (coinbase UTXO)이라고도하는 새로 채굴 된 동전이 있습니다. 이것들은 보호 받기 전에 차폐가 필요합니다. 스윙과 같은 전체 지갑에 이 주소의 비공개 키를 가져온 다음, 이 주소에서 Z 주소로 모든 동전을 보내고 T 주소로 되돌려주십시오. 그러면 Arizen에서 그들을 보낼 수 있습니다."
+      }
+    },
+    "transactionHistory": {
+      "label": "거래기록",
+      "unconfirmed": "확인되지 않음",
+      "replaceAttempt": "블록에서 거래 시도중입니다."
+    },
+    "transactionDetail": {
+      "label": "전송 세부사항",
+      "txid": "전송 ID",
+      "blockHeight": "블록 높이",
+      "unconfirmedTx": "확인되지 않은 거래"
+    },
+    "addressDetail": {
+      "label": "주소 세부사항",
+      "name": "이름",
+      "address": "주소",
+      "saveButton": "변경사항 저장하기"
+    },
+    "newAddress": {
+      "label": "새로운 주소 생성",
+      "name": "이름 (선택사항)",
+      "createButton": "생성하기"
+    },
+    "about": {
+      "label": "Arizen 에 대하여",
+      "homepage": "홈페이지",
+      "version": "버전",
+      "license": "라이센스",
+      "authors": "만든사람"
+    },
+    "settings": {
+      "label": "설정",
+      "limit": "거래 제한",
+      "items": "도구",
+      "language": "언어",
+      "explorerUrl": "ZEN Explorer 주소",
+      "apiUrl": "API 주소",
+      "fiat": "동등한 명령",
+      "save": "저장",
+      "enableNotifications": "데스크탑 알림",
+      "enableDomainFronting": "도메인 프론팅",
+      "secureNodeFQDN": "보안 노드 FQDN",
+      "sshUsername": "SSH 사용자 이름",
+      "sshPassword": "SSH 비밀번호",
+      "sshPort": "SSH 포트",
+      "secureNodePort": "보안 노드 포트 (zen.conf 파일을 확인해보세요)",
+      "secureNodeUsername": "보안 노드 사용자 이름 (zen.conf 파일을 확인해보세요)",
+      "secureNodePassword": "보안 노드 비밀번호 (zen.conf 파일을 확인해보세요)",
+      "readyTimeout": "준비 시간 제한 (기본 값: 10000)",
+      "forwardTimeout": "전달 시간 초과 (기본 값: 10000)",
+      "domainFrontingUrl": "도메인 프론팅 공용 URL",
+      "domainFrontingHost": "도메인 프론팅 개인 호스트",
+      "autoLogOffEnable": "자동 로그 오프 사용",
+      "autoLogOffTimeout": "자동 로그 오프 시간 제한(초)"
+    },
+    "paperWallet": {
+      "label": "페이퍼지갑",
+      "generateNewWallet": "새 지갑 생성",
+      "name": "이름 (선택사항)",
+      "addWalletToArizen": "이 지갑을 Arizen 에 보내기",
+      "zenCashWalletLabel": "ZenCash 지갑",
+      "tAddrLabel": "공용키 - T 주소",
+      "privateKeyLabel": "개인 키",
+      "namePrint": "이름",
+      "exportPDFLabel": "PDF 파일로 내보내기"
+    },
+    "batchWithdraw": {
+      "label": "일괄 철회",
+      "keepAmount": "유지할 금액",
+      "txFee": "거래 수수료"
+    },
+    "importSinglePrivateKey": {
+      "openButtonLabel": "개인 키 가져오기",
+      "titleLabel": "하나의 개인 키 가져오기",
+      "privateKeyLabel": "개인 키",
+      "importButtonLabel": "가져오기",
+      "warningNotValidAddress": "주소가 당신의 지갑에 존재합니다.",
+      "warningNotValidPK": "유효한 개인 키가 아니거나 T 주소에 Z 주소로 가져오려고 합니다."
+    },
+    "autoLogOffLabel": "로그오프를 다음 시간 이내에 ",
+    "changePassword": {
+      "title": "지갑 비밀번호 변경",
+      "warningText": "경고: 지갑의 백업이 다시 암호화되지 않습니다! 기존 것을 사용하려면 현재의 비밀번호를 입력해야합니다",
+      "currentPassword": "현재 비밀번호",
+      "newPassword1": "새로운 비밀번호",
+      "newPassword2": "새로운 비밀번호 (확인)"
+    },
+    "rpcConsole": {
+      "title": "RPC",
+      "command": "명령",
+      "test": "테스트 하기",
+      "results": "RPC 결과 ...",
+      "status": "상태: ",
+      "testFunctionButton": "테스트 기능"
+    }
+  },
+  "menu": {
+    "file": "파일",
+    "backupEncrypted": "암호화 된 지갑 백업하기",
+    "backupUnencrypted": "암호화 되지 않은 지갑 백업하기",
+    "importEncrypted": "암호화 된 Arizen 지갑 가져오기",
+    "importUnencrypted": "암호화 되지 않은 Arizen 지갑 가져오기",
+    "importPrivateKeys": "개인 키 가져오기",
+    "exportPrivateKeys": "개인 키 내보내기",
+    "exit": "나가기",
+    "edit": "편집",
+    "editSubmenu": {
+      "undo": "되돌리기",
+      "redo": "되돌리기 취소",
+      "cut": "잘라내기",
+      "copy": "복사하기",
+      "paste": "붙여넣기",
+      "selectAll": "전체 선택"
+    },
+    "help": "도움",
+    "helpSubmenu": {
+      "arizenManual": "사용자 매뉴얼",
+      "support": "지원",
+      "zencash": "ZenCash"
+    },
+    "changeWalletPassword": "지갑 비밀번호 변경"
+  },
+  "warmingMessages": {
+    "userWarningImportFileWithPKs": "새 주소와 개인 키를 가져옵니다. 이전 백업에는 새로 가져온 주소나 해당 개인 키가 포함되어 있지 않습니다. Arizen의 백업 기능을 사용하여 새 백업 파일을 만들고 기존 Arizen지갑 백업을 교체하십시오. '이해하고 있습니다'를 누름으로써 당신은 이것을 이해한다는 것을 확인합니다. 자세한 내용은 Arizen의 도움말 메뉴를 참조하십시오.",
+    "userWarningExportWalletUnencrypted": "암호화 되지 않은 지갑(개인 키)을 일반 텍스트로 내보냅니다. 이것은 이 파일을 가진 사람이라면 누구나 당신의 ZEN을 제어 할 수 있다는 것을 의미한다. 이 파일을 안전한 곳에 보관하십시오. '이해하고 있습니다'를 누름으로써 당신은 이것을 이해한다는 것을 확인합니다. 자세한 내용은 Arizen의 도움말 메뉴를 참조하십시오.",
+    "userWarningExportWalletEncrypted": "암호화 된 지갑을 내보내면 개인 키가 암호화됩니다. 즉, 개인 키에 액세스 하려면 해당 지갑 이름과 암호를 알아야 합니다. 당신이 그 것을 모르는 경우에, 여러분은 이 개인 키들에 의해 제어되는 ZEN을 제어할 수 없습니다. '이해하고 있습니다'를 누름으로써 당신은 이것을 이해한는 것을 확인합니다. 자세한 내용은 Arizen의 도움말 메뉴를 참조하십시오.",
+    "userWarningImportPK": "새 주소와 개인 키를 가져옵니다. 이전 백업에는 새로 가져온 주소나 해당 개인 키가 포함되어 있지 않습니다. Arizen의 백업 기능을 사용하여 새 백업 파일을 만들고 기존 Arizen지갑 백업을 교체하십시오. '이해하고 있습니다'를 누름으로써 당신은 이것을 이해한다는 것을 확인합니다. 자세한 내용은 Arizen의 도움말 메뉴를 참조하십시오.",
+    "userWarningCreateNewAddress": "새 주소와 개인 키가 생성됩니다. 이전 백업에는 이 새로 생성된 주소나 해당 개인 키가 포함되어 있지 않습니다. Arizen의 백업 기능을 사용하여 새 백업 파일을 만들고 기존 Arizen지갑 백업을 교체하십시오. '이해하고 있습니다'를 누름으로써 당신은 이것을 이해한것을 확인합니다. 자세한 내용은 Arizen의 도움말 메뉴를 참조하십시오.",
+    "userWarningIUnderstand": "이해하고 있습니다.",
+    "cancel": "취소",
+    "userWarningImportPkUserZendRescan": "블록 체인을 다시 검색하면 가져온 Z주소의 잔고가 표시됩니다. 보안노드에서(리눅스) 다음 명령어를 실행하세요 'zen-cli stop && sleep 8 && zend -rescan'."
+  },
+  "common": {
+    "selectAll": "전체 선택",
+    "clearAll": "전체 초기화",
+    "okButtonText": "확인",
+    "cancelButtonText": "취소"
+  }
+}

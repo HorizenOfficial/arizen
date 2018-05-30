@@ -21,7 +21,7 @@
     <form>
         <ul>
             <li>
-                <span style="text-align:center;"><label id="username_label" for="username" data-tr=createWallet.username>Username</label></span>
+                <span style="text-align:center;"><label id="username_label" for="username" data-tr=createWallet.username>Wallet Name</label></span>
                 <span><input id="username" class="inputs" name="username" tabindex="1" onkeyup="checkLogin();" onfocus="selectColumn(true, false, false);"/></span>
             </li>
             <li>
@@ -43,7 +43,7 @@
             <li>
                 <div id="old_username_area">
                     <span>
-                      <label data-tr=createWallet.oldUsername>Old username: </label>
+                      <label data-tr=createWallet.oldUsername>Old Wallet Name: </label>
                       <input id="old_username" class="inputs_small input_smaller" name="old_username" onfocus="" />
                     </span>
                     <span>
@@ -62,7 +62,7 @@
     </form>
 
     <div id="username_info">
-        <h4 data-tr=createWallet.warningUsername>Username must meet the following requirements:</h4>
+        <h4 data-tr=createWallet.warningUsername>Wallet name has to meet the following requirements:</h4>
         <ul>
             <li id="usrnm_length_info" class="invalid" data-tr=createWallet.warningUsernameLength>At least <strong>four letters</strong></li>
         </ul>
@@ -87,7 +87,7 @@
     <div id="wallet_creation_info_area">
         <h4 data-tr=createWallet.errorCreationFailed>Wallet creation failed</h4>
         <ul>
-            <li id="wallet_creation_info" class="invalid"></li>
+            <li id="wallet_creation_info" class="invalid"/>
         </ul>
     </div>
 </div>
