@@ -29,7 +29,6 @@ body, .body {
 }
 
 /* main look and feel */
-
 :root {
     --arizen-fg: #115D95;
     --panel-bg: #ffffff;
@@ -327,7 +326,7 @@ arizen-dialog > [slot="content"] {
 
 .hToolbar {
     display: flex;
-    flex-direction: horizontal;
+    flex-direction: row;
 }
 
 .hToolbar > *:not(:first-child) {

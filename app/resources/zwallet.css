@@ -266,7 +266,6 @@ header button {
     grid-area: transactions;
     display: grid;
     grid-template-rows: max-content auto;
-
     margin-right: 5px;
 }
 
@@ -287,11 +286,9 @@ header button {
 
 .txItem {
     flex-shrink: 0;
-
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-
     border: 1px none var(--arizen-fg);
     border-top-style: solid;
     padding: 5px 0 5px 0;
@@ -381,7 +378,6 @@ header button {
     max-height: 300px; /* cannot make table to not overflow in any otther way sadly */
     margin: 10px 0 20px 0;
 }
-
 
 .dotSNstatus {
     height: 14px;
