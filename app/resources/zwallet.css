@@ -266,7 +266,6 @@ header button {
     grid-area: transactions;
     display: grid;
     grid-template-rows: max-content auto;
-
     margin-right: 5px;
 }
 
@@ -287,11 +286,9 @@ header button {
 
 .txItem {
     flex-shrink: 0;
-
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-
     border: 1px none var(--arizen-fg);
     border-top-style: solid;
     padding: 5px 0 5px 0;
@@ -380,6 +377,22 @@ header button {
 .batchWithdrawContent .addrSelectList {
     max-height: 300px; /* cannot make table to not overflow in any otther way sadly */
     margin: 10px 0 20px 0;
+}
+
+.dotSNstatus {
+    height: 14px;
+    width: 14px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.dotSNstatusRPC {
+    height: 14px;
+    width: 14px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
 }
 
 .changeWalletPasswordDialogContent {

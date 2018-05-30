@@ -122,7 +122,8 @@
         "feeNotNumber": "Transactiekosten is GEEN cijfer!",
         "feeIsNegative": "Transactiekosten moeten groter of gelijk zijn aan nul!",
         "error": "Fout",
-        "success": "De transactie is succesvol verzonden"
+        "success": "De transactie is succesvol verzonden",
+        "isCoinbaseUTXO": "Your address contains newly mined coins, also called coinbase unspent transaction outputs (coinbase UTXO). These need to be shielded and unshielded first before they can be spent, please import the private key of this address into a full wallet like Swing and then send all your coins from this address to a Z-address and then back to this T-address. You will be then able to spend them in Arizen as well."
       }
     },
     "transactionHistory": {
@@ -162,7 +163,22 @@
       "explorerUrl": "ZEN Explorer adres",
       "apiUrl": "API adres",
       "fiat": "Saldo in FIAT-valuta",
-      "save": "Opslaan"
+      "save": "Opslaan",
+      "enableNotifications": "Bureaublad notificaties",
+      "enableDomainFronting": "Domain-fronting",
+      "secureNodeFQDN": "Secure Node FQDN",
+      "sshUsername": "SSH gebruikersnaam",
+      "sshPassword": "SSH wachtwoord",
+      "sshPort": "SSH poort",
+      "secureNodePort": "Secure Node Poort (zie zen.conf)",
+      "secureNodeUsername": "Secure Node Gebruikersnaam (zie zen.conf)",
+      "secureNodePassword": "Secure Node Wachtwoord (zie zen.conf)",
+      "readyTimeout": "Ready Timeout (standaard: 10000)",
+      "forwardTimeout": "Forward Timeout (standaard: 10000)",
+      "domainFrontingUrl": "Domain fronting publieke basis-URL",
+      "domainFrontingHost": "Domain fronting prive host",
+      "autoLogOffEnable": "Schakel uitomatisch uitloggen in",
+      "autoLogOffTimeout": "Time-out voor automatisch uitloggen in seconden"
     },
     "paperWallet": {
       "label": "Papieren Portefeuille",
@@ -180,13 +196,29 @@
       "keepAmount": "Te behouden bedrag",
       "txFee": "Transactiekosten"
     },
-    "importSinglePrivateKey":{
-      "openButtonLabel":"Import Private Key",
-      "titleLabel":"Import Single Private Key",
-      "privateKeyLabel":"Private Key",
-      "importButtonLabel":"Import",
-      "warningNotValidAddress":"Z address exist in your wallet",
-      "warningNotValidPK": "This is not a valid Private Key."
+    "importSinglePrivateKey": {
+      "openButtonLabel": "Importeer Prive Sleutel",
+      "titleLabel": "Importeer één enkele Prive Sleutel",
+      "privateKeyLabel": "Prive Sleutel",
+      "importButtonLabel": "Importeren",
+      "warningNotValidAddress": "Z adres bestaat al in je portefuille",
+      "warningNotValidPK": "Dit is geen valide Prive Sleutel."
+    },
+    "autoLogOffLabel": "Afmelden in ",
+    "changePassword": {
+      "title": "Portefuille wachtwoord aanpassen",
+      "warningText": "WAARSCHUWING: Portefuille back-ups worden niet opnieuw versleuteld! Als u deze wilt gebruiken, moet u het huidige wachtwoord gebruiken.",
+      "currentPassword": "Huidig wachtwoord",
+      "newPassword1": "Nieuw wachtwoord",
+      "newPassword2": "Nieuw wachtwoord (bevestigen)"
+    },
+    "rpcConsole": {
+      "title": "RPC",
+      "command": "Commando",
+      "test": "Test Mij",
+      "results": "RPC Resultaten ...",
+      "status": "Status: ",
+      "testFunctionButton": "Test Functie"
     }
   },
   "menu": {
@@ -206,15 +238,29 @@
       "copy": "Kopiëren",
       "paste": "Plakken",
       "selectAll": "Alles Selecteren"
-    }
+    },
+    "help": "Help",
+    "helpSubmenu": {
+      "arizenManual": "Handleiding",
+      "support": "Ondersteuning",
+      "zencash": "ZenCash"
+    },
+    "changeWalletPassword": "Portefuille wachtwoord aanpassen"
   },
   "warmingMessages": {
-    "userWarningImportFileWithPKs": "New address(es) and a private key(s) will be imported. Your previous back-ups do not include the newly imported addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
-    "userWarningExportWalletUnencrypted": "You are going to export an UNENCRYPTED wallet ( ie your private keys) in plain text. That means that anyone with this file can control your ZENs. Store this file in a safe place. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
-    "userWarningExportWalletEncrypted": "You are going to export an ENCRYPTED wallet and your private keys will be encrypted. That means that in order to access your private keys you need to know the corresponding username and password. In case you don't know them you cannot control the ZENs that are controled by these private keys. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
-    "userWarningImportPK": "A new address and a private key will be imported. Your previous back-ups do not include the newly imported address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
-    "userWarningCreateNewAddress":"A new address and a private key will be created. Your previous back-ups do not include this newly generated address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
-    "userWarningIUnderstand": "I understand",
-    "cancel": "Cancel"
+    "userWarningImportFileWithPKs": "Nieuwe adres(sen) en een private sleutel(s) worden geïmporteerd. Uw vorige back-ups bevatten niet de nieuwe geïmporteerde adressen of de bijbehorende persoonlijke sleutels. Gebruik de back-up functie van Arizen om een nieuw back-up bestand te maken dat uw huidige back-up bestand vervangt. Door op 'Ik begrijp het' te drukken, verklaar je dat je dit begrijpt. Raadpleeg voor meer informatie het helpmenu van Arizen.",
+    "userWarningExportWalletUnencrypted": "U gaat een ONGECODEERDE portemonnee (dwz uw persoonlijke sleutels) exporteren in platte tekst. Dat betekent dat iedereen met dit bestand je ZEN's kan beheren. Bewaar dit bestand op een veilige plaats. Door op 'Ik begrijp het' te drukken, verklaar je dat je dit begrijpt. Raadpleeg voor meer informatie het helpmenu van Arizen.",
+    "userWarningExportWalletEncrypted": "U gaat een GECODEERDE portemonnee exporteren en uw privésleutels worden gecodeerd. Dat betekent dat u voor toegang tot uw privésleutels de bijbehorende gebruikersnaam en wachtwoord moet weten. Als u deze niet weet, kunt u de ZEN's die worden gecodeerd door deze privésleutels niet behere. Door op 'Ik begrijp het' te drukken, verklaar je dat je dit begrijpt. Raadpleeg voor meer informatie het helpmenu van Arizen.",
+    "userWarningImportPK": "Een nieuw adres en een privésleutel worden geïmporteerd. Uw vorige back-ups bevatten niet het nieuwe geïmporteerde adres of de bijbehorende privésleutel. Gebruik de back-up functie van Arizen om een nieuw back-up bestand te maken en vervang uw bestaande Arizen portefuille back-up. Door op 'Ik begrijp het' te drukken, verklaar je dat je dit begrijpt. Raadpleeg voor meer informatie het helpmenu van Arizen.",
+    "userWarningCreateNewAddress": "Een nieuw adres en een privésleutel worden aangemaakt. Uw vorige back-ups bevatten niet dit nieuw gegenereerde adres of de bijbehorende privésleutel. Gebruik de back-up functie van Arizen om een nieuw back-up bestand te maken en vervang uw bestaande Arizen portefuille back-up. Door op 'Ik begrijp het' te drukken, verklaar je dat je dit begrijpt. Raadpleeg voor meer informatie het helpmenu van Arizen.",
+    "userWarningIUnderstand": "Ik begrijp het",
+    "cancel": "Annuleren",
+    "userWarningImportPkUserZendRescan": "Het saldo van het Z-adres dat u hebt geïmporteerd, is zichtbaar nadat u de blockchain opnieuw hebt geïndexeerd. Voer alstublieft het commando 'zen-cli stop && sleep 8 && zend -rescan' uit op uw secure node (linux)."
+  },
+  "common": {
+    "selectAll": "Alles selecteren",
+    "clearAll": "Wis alles",
+    "okButtonText": "OK",
+    "cancelButtonText": "Annuleren"
   }
 }

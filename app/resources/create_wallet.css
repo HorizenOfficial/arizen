@@ -66,5 +66,5 @@
 .input_smaller {
     width: 200px;
     display: inline;
-    margin: none;
+    margin: 0;
 }

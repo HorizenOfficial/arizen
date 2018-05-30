@@ -1,8 +1,13 @@
-const MARK_PREFIX = "TODO ";
+// @flow
+/*jshint esversion: 6 */
+/*jslint node: true */
+"use strict";
+
+const MARK_PREFIX = "";
 const LANGDIR = __dirname + "/../app/lang";
 
 const fs = require("fs");
-const deepmerge = require("deepmerge")
+const deepmerge = require("deepmerge");
 const jsonfileplus = require("json-file-plus");
 
 function mark(node) {
@@ -10,8 +15,9 @@ function mark(node) {
         case "string": return MARK_PREFIX + node;
         case "object":
             const newnode = {};
-            for (const key of Object.keys(node))
+            for (const key of Object.keys(node)) {
                 newnode[key] = mark(node[key]);
+            }
             return newnode;
         default:
             throw new Error();

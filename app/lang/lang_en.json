@@ -4,39 +4,39 @@
   "langFileVersion": "1",
   "login": {
     "label": "Arizen: Login",
-    "username": "Username",
+    "username": "Wallet Name",
     "password": "Password",
     "loginButton": "Login",
     "createWalletLink": "Create Wallet",
-    "warningWrongUsernameOrPassword": "Wrong <strong>username</strong> or <strong>password</strong>",
+    "warningWrongUsernameOrPassword": "Wrong <strong>wallet name</strong> or <strong>password</strong>",
     "dataImportFailed": "Data import failed, possible reason is wrong credentials",
     "fileReplace": "Do you want to replace file?",
     "walletReplace": "Replace wallet?",
     "walletReplaceMsg": "This will replace your actual wallet. Are you sure?",
-    "walletImported": "Wallet imported succesfully",
+    "walletImported": "Wallet imported successfully",
     "walletImportFailed": "Import failed",
     "yes": "Yes",
     "no": "No"
   },
   "createWallet": {
     "label": "Arizen: Create Wallet",
-    "username": "Username",
+    "username": "Wallet Name",
     "password": "Password",
     "passwordAgain": "Password again",
-    "oldUsername": "Old username: ",
+    "oldUsername": "Old wallet name: ",
     "oldPassword": "Old password: ",
     "selectWallet": "Select Wallet",
     "selectWalletButton": "Browse",
     "createWalletButton": "Create Wallet",
     "loginLink": "Login",
-    "warningUsername": "Username must meet the following requirements:",
+    "warningUsername": "Wallet name has to meet the following requirements:",
     "warningUsernameLength": "At least <strong>four letters</strong>",
     "warningPassword": "Password must meet the following requirements:",
     "warningPasswordLetter": "At least <strong>one letter</strong>",
     "warningPasswordCapitalLetter": "At least <strong>one capital letter</strong>",
     "warningPasswordNumber": "At least <strong>one number</strong>",
     "warningPasswordSpecial": "At least <strong>one special character</strong>",
-    "warningPasswordLength": "Be at least <strong>8 characters</strong>",
+    "warningPasswordLength": "At least <strong>8 characters</strong>",
     "warningPasswordAgain": "Password must meet the following requirements:",
     "warningPasswordAgainIdentical": "<strong>Identical</strong>",
     "errorCreationFailed": "Wallet creation failed",
@@ -46,6 +46,12 @@
     "settingsUpdated": "Settings updated",
     "balanceUpdated": "Balance Updated",
     "newTransactions": "New transaction"
+  },
+  "common": {
+    "selectAll": "Select all",
+    "clearAll": "Clear all",
+    "okButtonText": "OK",
+    "cancelButtonText": "Cancel"
   },
   "importExportPks": {
     "chooseFileExport": "Choose file for private keys",
@@ -76,6 +82,7 @@
     "fetchBlockchainFailed": "Failed to fetch blockchain changes:",
     "save": "Save",
     "pdfExported": "PDF exported",
+    "autoLogOffLabel": "Log off in ",
     "tabOverview": {
       "label": "Overview",
       "showZeroBalances": "Show zero balances",
@@ -106,7 +113,7 @@
         "insufficientFirstSource": "Insufficient funds on 1st source (Minimum: threshold limit + fee)!",
         "insufficientNextSource": "Insufficient funds on 2nd or next source (Minimum: threshold limit)!",
         "numberOfKeys": "# private keys and # addresses are not equal!",
-        "sumLowerThanFee": "Your summed balance over all source addresses is lower than the fee!",
+        "sumLowerThanFee": "Your total balance from all source addresses is lower than the fee!",
         "zenApi": "Zen API is not set in settings!",
         "unknownAddress": "Source address is not in your wallet!",
         "insufficientFundsSourceAddr": "Insufficient funds on the source address or no available UTXO!",
@@ -122,7 +129,8 @@
         "feeNotNumber": "Fee is NOT number!",
         "feeIsNegative": "Fee has to be greater or equal zero!",
         "error": "Error",
-        "success": "The transaction has been successfully sent"
+        "success": "The transaction has been successfully sent",
+        "isCoinbaseUTXO": "Your address contains newly mined coins, also called coinbase unspent transaction outputs (coinbase UTXO). These need to be shielded and unshielded first before they can be spent, please import the private key of this address into a full wallet like Swing and then send all your coins from this address to a Z-address and then back to this T-address. You will be then able to spend them in Arizen as well."
       }
     },
     "transactionHistory": {
@@ -164,7 +172,20 @@
       "fiat": "Fiat Equivalent",
       "save": "Save",
       "enableNotifications": "Desktop notifications",
-      "enableDomainFronting": "Domain fronting"
+      "enableDomainFronting": "Domain fronting",
+      "secureNodeFQDN": "Secure Node FQDN",
+      "sshUsername" : "SSH username",
+      "sshPassword" : "SSH password",
+      "sshPort" : "SSH port",
+      "secureNodePort" : "Secure Node Port (see zen.conf)",
+      "secureNodeUsername" : "Secure Node Username (see zen.conf)",
+      "secureNodePassword" : "Secure Node Password (see zen.conf)",
+      "readyTimeout" : "Ready Timeout (default: 10000)",
+      "forwardTimeout" : "Forward Timeout (default: 10000)",
+      "domainFrontingUrl" : "Domain fronting public base URL",
+      "domainFrontingHost" : "Domain fronting private host",
+      "autoLogOffEnable" : "Enable automatic log off",
+      "autoLogOffTimeout" : "Auto log off timeout in seconds"
     },
     "paperWallet": {
       "label": "Paper Wallet",
@@ -187,8 +208,23 @@
       "titleLabel": "Import Single Private Key",
       "privateKeyLabel": "Private Key",
       "importButtonLabel": "Import",
-      "warningNotValidAddress": "Z address exist in your wallet",
-      "warningNotValidPK": "This is not a valid Private Key."
+      "warningNotValidAddress": "Address exist in your wallet",
+      "warningNotValidPK": "This is not a valid Private Key or you try to import a Spending Key (only for Z addresses) as T address Private key."
+    },
+    "changePassword": {
+      "title": "Change Wallet Password",
+      "warningText": "WARNING: Previous wallet backups won't be re-encrypted! If you need to use them, you will have to use current password.",
+      "currentPassword": "Current Password",
+      "newPassword1": "New Password",
+      "newPassword2": "New Password (Retype)"
+    },
+    "rpcConsole": {
+      "title": "RPC",
+      "command": "Command",
+      "test": "Test Me",
+      "results": "RPC Results ...",
+      "status": "Status: ",
+      "testFunctionButton": "Test Function"
     }
   },
   "menu": {
@@ -199,6 +235,7 @@
     "importUnencrypted": "Import UNENCRYPTED Arizen wallet",
     "importPrivateKeys": "Import private keys",
     "exportPrivateKeys": "Export private keys",
+    "changeWalletPassword": "Change wallet password",
     "exit": "Exit",
     "edit": "Edit",
     "editSubmenu": {
@@ -218,11 +255,12 @@
   },
   "warmingMessages": {
     "userWarningImportFileWithPKs": "New address(es) and a private key(s) will be imported. Your previous back-ups do not include the newly imported addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
-    "userWarningExportWalletUnencrypted": "You are going to export an UNENCRYPTED wallet ( ie your private keys) in plain text. That means that anyone with this file can control your ZENs. Store this file in a safe place. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
-    "userWarningExportWalletEncrypted": "You are going to export an ENCRYPTED wallet and your private keys will be encrypted. That means that in order to access your private keys you need to know the corresponding username and password. In case you don't know them you cannot control the ZENs that are controled by these private keys. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
+    "userWarningExportWalletUnencrypted": "You are going to export an UNENCRYPTED wallet (ie your private keys) in plain text. That means that anyone with this file can control your ZEN. Store this file in a safe place. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
+    "userWarningExportWalletEncrypted": "You are going to export an ENCRYPTED wallet and your private keys will be encrypted. That means that in order to access your private keys you need to know the corresponding wallet name and password. In case you don't know them you cannot control the ZEN that are controlled by these private keys. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
     "userWarningImportPK": "A new address and a private key will be imported. Your previous back-ups do not include the newly imported address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
     "userWarningCreateNewAddress": "A new address and a private key will be created. Your previous back-ups do not include this newly generated address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
     "userWarningIUnderstand": "I understand",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "userWarningImportPkUserZendRescan" : "The balance of the Z address you imported will be visible after you rescan the blockchain. Please run 'zen-cli stop && sleep 8 && zend -rescan' in your secure node (linux)."
   }
 }

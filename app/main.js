@@ -23,6 +23,7 @@ const querystring = require("querystring");
 const {List} = require("immutable");
 const {translate} = require("./util.js");
 const {DateTime} = require("luxon");
+const {zenextra} = require("./zenextra.js");
 
 const userWarningImportFileWithPKs = "New address(es) and a private key(s) will be imported. Your previous back-ups do not include the newly imported addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
 const userWarningExportWalletUnencrypted = "You are going to export an UNENCRYPTED wallet ( ie your private keys) in plain text. That means that anyone with this file can control your ZENs. Store this file in a safe place. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
@@ -32,7 +33,8 @@ const userWarningExportWalletEncrypted = "You are going to export an ENCRYPTED w
 require("electron-debug")();
 
 // Uncomment if you want to run in production
-// process.env.NODE_ENV !== "production"
+// Show/Hide Development menu
+process.env.NODE_ENV = "production";
 
 function attachUpdaterHandlers() {
     function onUpdateDownloaded() {
@@ -65,25 +67,31 @@ let userInfo = {
 };
 
 const defaultSettings = {
-    txHistory: 50,
     lang: "en",
+    fiatCurrency: "USD",
+    notifications: 1,
+    txHistory: 50,
+    autoLogOffEnable: 0,
+    autoLogOffTimeout: 60,
     explorerUrl: "https://explorer.zensystem.io",
     apiUrls: [
         "https://explorer.zensystem.io/insight-api-zen",
+        "https://explorer.zen-solutions.io/api",
         "http://explorer.zenmine.pro/insight-api-zen"
     ],
-    fiatCurrency: "USD",
-    notifications: 1,
+    secureNodeFQDN: "",
+    secureNodePort: 18231,
     domainFronting: false,
     domainFrontingUrl: "https://www.google.com",
-    domainFrontingHost: "zendhide.appspot.com",
-    autoLogOffEnable: 0
+    domainFrontingHost: "zendhide.appspot.com"
 };
+
+const defaultInternalInfo = {pendingTxs: []};
 
 let settings = defaultSettings;
 let langDict;
-
 let axiosApi;
+let internalInfo = defaultInternalInfo;
 
 const dbStructWallet = "CREATE TABLE wallet (id INTEGER PRIMARY KEY AUTOINCREMENT, pk TEXT, addr TEXT UNIQUE, lastbalance REAL, name TEXT);";
 const dbStructSettings = "CREATE TABLE settings (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT UNIQUE, value TEXT);";
@@ -189,8 +197,7 @@ function importWallet(filename, encrypt) {
         data = fs.readFileSync(filename);
     }
 
-    if (data.length > 0)
-    {
+    if (data.length > 0) {
         if (encrypt) {
             fs.copy(filename, getWalletPath() + userInfo.login + ".awd");
         }
@@ -259,7 +266,7 @@ function pruneBackups(backupDir, walletName) {
             if (period !== last) {
                 last = period;
                 keep.push(f);
-                if (keep.length === n){
+                if (keep.length === n) {
                     break;
                 }
             }
@@ -355,7 +362,7 @@ function getNewAddress(name) {
     userInfo.walletDb.run("INSERT INTO wallet VALUES (?,?,?,?,?)", [null, pk, addr, 0, name]);
     saveWallet();
 
-    return { addr: addr, name: name, lastbalance: 0, pk: pk, wif: privateKeys[0]};
+    return {addr: addr, name: name, lastbalance: 0, pk: pk, wif: privateKeys[0]};
 }
 
 function sqlSelect(asObjects, sql, ...args) {
@@ -410,9 +417,23 @@ function loadSettings() {
     return JSON.parse(Buffer.from(b64settings[0][0], "base64").toString("ascii"));
 }
 
+function loadInternalInfo() {
+    const b64internalInfo = sqlSelectColumns("select value from new_settings where name = 'internalInfo'");
+    if (b64internalInfo.length === 0) {
+        return defaultInternalInfo;
+    }
+    return JSON.parse(Buffer.from(b64internalInfo[0][0], "base64").toString("ascii"));
+}
+
 function saveSettings(settings) {
     const b64settings = Buffer.from(JSON.stringify(settings)).toString("base64");
     sqlRun("insert or replace into new_settings (name, value) values ('settings', ?)", b64settings);
+    saveWallet();
+}
+
+function saveInternalInfo(internalInfo) {
+    const b64internalInfo = Buffer.from(JSON.stringify(internalInfo)).toString("base64");
+    sqlRun("insert or replace into new_settings (name, value) values ('internalInfo', ?)", b64internalInfo);
     saveWallet();
 }
 
@@ -436,6 +457,10 @@ function setSettings(newSettings) {
     }
 }
 
+function setInternalInfo(newInternalInfo) {
+    internalInfo = newInternalInfo;
+}
+
 function upgradeDb() {
     // expects DB to be prefilled with addresses
     let addr = sqlSelectObjects("select * from wallet limit 1")[0];
@@ -446,17 +471,23 @@ function upgradeDb() {
 
 function exportWalletArizen(ext, encrypt) {
     let showMessage = "";
-    if(encrypt){
+    if (encrypt) {
         showMessage = tr("warmingMessages.userWarningExportWalletEncrypted", userWarningExportWalletEncrypted);
     } else {
         showMessage = tr("warmingMessages.userWarningExportWalletUnencrypted", userWarningExportWalletUnencrypted);
     }
-    dialog.showMessageBox({type: "warning", title: "Important Information", message: showMessage, buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand"),tr("warmingMessages.cancel","Cancel")],  cancelId: -1 }, function(response) {
-        if(response === 0){
+    dialog.showMessageBox({
+        type: "warning",
+        title: "Important Information",
+        message: showMessage,
+        buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand"), tr("warmingMessages.cancel", "Cancel")],
+        cancelId: -1
+    }, function (response) {
+        if (response === 0) {
             dialog.showSaveDialog({
                 title: "Save wallet." + ext,
                 filters: [{name: "Wallet", extensions: [ext]}]
-            }, function(filename) {
+            }, function (filename) {
                 if (typeof filename !== "undefined" && filename !== "") {
                     if (!fs.exists(filename)) {
                         dialog.showMessageBox({
@@ -483,7 +514,7 @@ function importWalletArizen(ext, encrypted) {
         dialog.showOpenDialog({
             title: "Import wallet." + ext,
             filters: [{name: "Wallet", extensions: [ext]}]
-        }, function(filePaths) {
+        }, function (filePaths) {
             if (filePaths) {
                 dialog.showMessageBox({
                     type: "warning",
@@ -507,16 +538,32 @@ function exportPKs() {
             if (err) {
                 console.error(`Couldn't open "${filename}" for writing: `, err);
             } else {
-                const keys = sqlSelectObjects("select pk, addr from wallet");
+                const keys = sqlSelectObjects("select pk, addr from wallet where length(addr)=35");
                 for (let k of keys) {
-                    const wif = zencashjs.address.privKeyToWIF(k.pk,true);
-                    fs.write(fd, wif + " " + k.addr + "\n");
+                    if (zenextra.isPK(k.pk)) {
+                        const wif = zencashjs.address.privKeyToWIF(k.pk, true);
+                        fs.write(fd, wif + " " + k.addr + "\n");
+                    }
+                }
+                const zkeys = sqlSelectObjects("select pk, addr from wallet where length(addr)=95");
+                for (let k of zkeys) {
+                    if (zenextra.isPK(k.pk)) {
+                        const spendingKey = zencashjs.zaddress.zSecretKeyToSpendingKey(k.pk);
+                        fs.write(fd, spendingKey + " " + k.addr + "\n");
+                    }
                 }
             }
         });
     }
-    dialog.showMessageBox({type: "warning", title: "Important Information", message: tr("warmingMessages.userWarningExportWalletUnencrypted", userWarningExportWalletUnencrypted), buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand"),tr("warmingMessages.cancel","Cancel")],  cancelId: -1 }, function(response) {
-        if(response===0){
+
+    dialog.showMessageBox({
+        type: "warning",
+        title: "Important Information",
+        message: tr("warmingMessages.userWarningExportWalletUnencrypted", userWarningExportWalletUnencrypted),
+        buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand"), tr("warmingMessages.cancel", "Cancel")],
+        cancelId: -1
+    }, function (response) {
+        if (response === 0) {
             dialog.showSaveDialog({
                 type: "warning",
                 title: "Choose file for private keys",
@@ -530,13 +577,25 @@ function exportPKs() {
     });
 }
 
-function importOnePK(pk, name = "") {
+// input is PK not wif, not spending key
+function importOnePK(pk, name = "", isT = true) {
     try {
-        if (pk.length !== 64) {
-            pk = zencashjs.address.WIFToPrivKey(pk);
+        let addr;
+        if (isT) {
+            if (pk.length !== 64) {
+                pk = zencashjs.address.WIFToPrivKey(pk);
+            }
+            const pub = zencashjs.address.privKeyToPubKey(pk, true);
+            addr = zencashjs.address.pubKeyToAddr(pub);
+        } else {
+            if (pk.length !== 64) {
+                pk = zenextra.spendingKeyToSecretKey(pk); // pk = spendingKey
+            }
+            let secretKey = pk;
+            let aPk = zencashjs.zaddress.zSecretKeyToPayingKey(secretKey);
+            let encPk = zencashjs.zaddress.zSecretKeyToTransmissionKey(secretKey);
+            addr = zencashjs.zaddress.mkZAddress(aPk, encPk);
         }
-        const pub = zencashjs.address.privKeyToPubKey(pk, true);
-        const addr = zencashjs.address.pubKeyToAddr(pub);
         sqlRun("insert or ignore into wallet (pk, addr, lastbalance, name) values (?, ?, 0, ?)", pk, addr, name);
     } catch (err) {
         console.log(`Invalid private key on line in private keys file : `, err);
@@ -643,7 +702,7 @@ async function fetchBlockchainChanges(addrObjs, knownTxIds) {
 
 async function updateBlockchainView(webContents) {
     webContents.send("add-loading-image");
-    const addrObjs = sqlSelectObjects("SELECT addr, name, lastbalance FROM wallet");
+    const addrObjs = sqlSelectObjects("SELECT addr, name, lastbalance FROM wallet where length(addr)=35");
     const knownTxIds = sqlSelectColumns("SELECT DISTINCT txid FROM transactions").map(row => row[0]);
     let totalBalance = addrObjs.filter(obj => obj.lastbalance).reduce((sum, a) => sum + a.lastbalance, 0);
 
@@ -662,6 +721,28 @@ async function updateBlockchainView(webContents) {
             response: "OK",
             addrObj: addrObj,
             diff: addrObj.balanceDiff,
+            total: totalBalance
+        }));
+    }
+
+    const zAddrObjs = sqlSelectObjects("SELECT addr, name, lastbalance,pk FROM wallet where length(addr)=95");
+
+    for (const addrObj of zAddrObjs) {
+        let previousBalance = 0.0; // TODO: Should do something with this
+        let balance;
+        if (addrObj.lastbalance === "NaN" || addrObj.lastbalance === undefined) {
+            balance = 0.0;
+        } else {
+            balance = addrObj.lastbalance;
+        }
+        let balanceDiff = balance - previousBalance;
+        addrObj.lastbalance = balance;
+        sqlRun("UPDATE wallet SET lastbalance = ? WHERE addr = ?", balance, addrObj.addr);
+        totalBalance += balance; //not balanceDiff here
+        webContents.send("update-wallet-balance", JSON.stringify({
+            response: "OK",
+            addrObj: addrObj,
+            diff: balanceDiff,
             total: totalBalance
         }));
     }
@@ -707,8 +788,14 @@ function importPKs() {
         });
     }
 
-    dialog.showMessageBox({ type: "warning", title: "Important Information", message: tr("warmingMessages.userWarningImportFileWithPKs", userWarningImportFileWithPKs), buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand"),tr("warmingMessages.cancel","Cancel")],  cancelId: -1 }, function(response) {
-        if(response===0){
+    dialog.showMessageBox({
+        type: "warning",
+        title: "Important Information",
+        message: tr("warmingMessages.userWarningImportFileWithPKs", userWarningImportFileWithPKs),
+        buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand"), tr("warmingMessages.cancel", "Cancel")],
+        cancelId: -1
+    }, function (response) {
+        if (response === 0) {
             dialog.showOpenDialog({
                 title: "Choose file with private keys"
             }, filenames => {
@@ -793,7 +880,7 @@ function createEditSubmenu() {
             accelerator: "Shift+CmdOrCtrl+Z",
             selector: "redo:"
         },
-        { type: "separator" },
+        {type: "separator"},
         {
             label: tr("menu.editSubmenu.cut", "Cut"),
             accelerator: "CmdOrCtrl+X",
@@ -833,7 +920,7 @@ function createHelpSubmenu() {
                 require("electron").shell.openExternal("https://support.zencash.com");
             }
         },
-        { type: "separator" },
+        {type: "separator"},
         {
             label: tr("menu.helpSubmenu.zencash", "ZenCash"),
             click: () => {
@@ -841,6 +928,38 @@ function createHelpSubmenu() {
             }
         }
     ];
+}
+
+function includeDeveloperMenu(template) {
+    if (process.env.NODE_ENV !== "production") {
+        template.push({
+            label: "Developer Tools",
+            submenu: [
+                {
+                    label: "Toggle DevTools",
+                    accelerator: process.platform === "darwin" ? "Command+I" : "Ctrl+I",
+                    click(item, focusedWindow) {
+                        focusedWindow.toggleDevTools();
+                    }
+                },
+                {role: "reload"},
+                {type: "separator"},
+                {
+                    label: tr("menu.backupUnencrypted", "Backup UNENCRYPTED wallet"),
+                    click() {
+                        exportWalletArizen("uawd", false);
+                    }
+                },
+                {type: "separator"},
+                {
+                    label: "RPC console",
+                    click() {
+                        mainWindow.webContents.send("open-rpc-console");
+                    }
+                }
+            ]
+        })
+    }
 }
 
 function updateMenuAtLogin() {
@@ -860,7 +979,7 @@ function updateMenuAtLogin() {
                         exportWalletArizen("uawd", false);
                     }
                 },
-                { type: "separator" },
+                {type: "separator"},
                 {
                     label: tr("menu.importEncrypted", "Import ENCRYPTED Arizen wallet"),
                     click() {
@@ -873,7 +992,7 @@ function updateMenuAtLogin() {
                         importWalletArizen("uawd", false);
                     }
                 },
-                { type: "separator" },
+                {type: "separator"},
                 {
                     label: tr("menu.exportPrivateKeys", "Export private keys"),
                     click: function () {
@@ -886,14 +1005,14 @@ function updateMenuAtLogin() {
                         importPKs();
                     }
                 },
-                { type: "separator" },
+                {type: "separator"},
                 {
                     label: tr("menu.changeWalletPassword", "Change wallet password"),
                     click() {
                         changeWalletPasswordBegin();
                     }
                 },
-                { type: "separator" },
+                {type: "separator"},
                 {
                     label: tr("menu.exit", "Exit"),
                     click() {
@@ -913,6 +1032,8 @@ function updateMenuAtLogin() {
     ];
 
     updateMenuForDarwin(template);
+    includeDeveloperMenu(template);
+
     Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 
@@ -944,7 +1065,9 @@ function updateMenuAtLogout() {
 
 function createWindow() {
     updateMenuAtLogout();
-    mainWindow = new BrowserWindow({width: 1000, height: 730, resizable: true, icon: "resources/zen_icon.png"});
+    mainWindow = new BrowserWindow({width: 1010, height: 730, resizable: true, icon: "resources/zen_icon.png"});
+
+    mainWindow.webContents.openDevTools();
 
 
     if (fs.existsSync(getWalletPath())) {
@@ -1021,8 +1144,7 @@ ipcMain.on("write-login-info", function (event, data) {
 
     path += inputs.username + ".awd";
     /* check if user exists */
-    if (!fs.existsSync(path))
-    {
+    if (!fs.existsSync(path)) {
         if (inputs.walletPath !== "") {
             if (fs.existsSync(inputs.walletPath)) {
                 let walletBytes = [];
@@ -1068,6 +1190,7 @@ ipcMain.on("verify-login-info", function (event, login, pass) {
             userInfo.walletDb = new sql.Database(walletBytes);
             upgradeDb();
             setSettings(loadSettings());
+            setInternalInfo(loadInternalInfo());
             updateMenuAtLogin();
             resp = {
                 response: "OK",
@@ -1086,7 +1209,7 @@ ipcMain.on("check-login-info", function (event) {
     };
 
     if (userInfo.loggedIn) {
-        resp.response= "OK";
+        resp.response = "OK";
         resp.user = userInfo.login;
     }
     event.sender.send("check-login-response", JSON.stringify(resp));
@@ -1107,17 +1230,24 @@ ipcMain.on("exit-from-menu", function () {
     app.quit();
 });
 
-ipcMain.on("import-single-key", function(event, name, pk) {
-    console.log(name);
-    console.log(pk);
-
-    importOnePK(pk, name);
+function importSingleKey(name, pk, isT) {
+    importOnePK(pk, name, isT);
     saveWallet();
     sendWallet();
+}
+
+ipcMain.on("import-single-key", function (event, name, pk, isT) {
+    importSingleKey(name, pk, isT);
+});
+
+ipcMain.on("import-single-key-Sync", function (event, name, pk, isT) {
+    importSingleKey(name, pk, isT);
+    event.returnValue = true;
 });
 
 ipcMain.on("get-wallets", () => {
     mainWindow.webContents.send("settings", JSON.stringify(settings));
+    mainWindow.webContents.send("internal-info", JSON.stringify(internalInfo));
     sendWallet();
 });
 
@@ -1202,6 +1332,17 @@ ipcMain.on("save-settings", function (event, newSettingsStr) {
     event.sender.send("settings", newSettingsStr);
 });
 
+ipcMain.on("save-internal-info", function (event, newInternalInfoStr) {
+    if (!userInfo.loggedIn) {
+        return;
+    }
+    const newInternalInfo = JSON.parse(newInternalInfoStr);
+    saveInternalInfo(newInternalInfo);
+    setInternalInfo(newInternalInfo);
+    //event.sender.send("save-settings-response", JSON.stringify({response: "OK"}));
+    event.sender.send("internalInfo", newInternalInfoStr);
+});
+
 ipcMain.on("show-notification", function (event, title, message, duration) {
     if (settings.notifications === 1) {
         event.sender.send("show-notification-response", title, message, duration);
@@ -1210,11 +1351,14 @@ ipcMain.on("show-notification", function (event, title, message, duration) {
     }
 });
 
-ipcMain.on("check-if-z-address-in-wallet", function(event,zAddress){
+ipcMain.on("check-if-address-in-wallet", function (event, address) {
     let exist = false;
-    let result = sqlSelectObjects("Select * from wallet"); // or ("Select * from wallet where addr = ?", [zAddress]);
-    for (let k of result){
-      if (k.addr === zAddress) {exist = true ; break;}
+    let result = sqlSelectObjects("Select * from wallet"); // where length(addr)=35 //take only T addresses // or ("Select * from wallet where addr = ?", [zAddress]);
+    for (let k of result) {
+        if (k.addr === address) {
+            exist = true;
+            break;
+        }
     }
     event.returnValue = {exist: exist, result: result};
 });
@@ -1282,13 +1426,12 @@ function checkSweepSendParameters(fromAddresses, toAddress, fee, thresholdLimit)
     return errors;
 }
 
-ipcMain.on("send", async function (event, fromAddress, toAddress, fee, amount){
+ipcMain.on("send", async function (event, fromAddress, toAddress, fee, amount) {
     let paramErrors = checkStandardSendParameters(fromAddress, toAddress, fee, amount);
     if (paramErrors.length) {
         // TODO: Come up with better message. For now, just make a HTML out of it.
         const errString = paramErrors.join("<br/>\n\n");
         event.sender.send("send-finish", "error", errString);
-
         return;
     }
 
@@ -1296,17 +1439,18 @@ ipcMain.on("send", async function (event, fromAddress, toAddress, fee, amount){
         // Convert to satoshi
         let amountInSatoshi = Math.round(amount * 100000000);
         let feeInSatoshi = Math.round(fee * 100000000);
+        let err = "";
         let walletAddr = sqlSelectObjects("SELECT * FROM wallet WHERE addr = ?", fromAddress)[0];
 
         if (!walletAddr) {
-            event.sender.send("send-finish", "error",  tr("wallet.tabWithdraw.messages.unknownAddress","Source address is not in your wallet!"));
-
+            err = tr("wallet.tabWithdraw.messages.unknownAddress", "Source address is not in your wallet!");
+            event.sender.send("send-finish", "error", err);
             return;
         }
 
         if (walletAddr.lastbalance < (parseFloat(amount) + parseFloat(fee))) {
-            event.sender.send("send-finish", "error", tr("wallet.tabWithdraw.messages.insufficientFundsSourceAddr", "Insufficient funds on source address!"));
-
+            err = tr("wallet.tabWithdraw.messages.insufficientFundsSourceAddr", "Insufficient funds on source address!");
+            event.sender.send("send-finish", "error", err);
             return;
         }
 
@@ -1336,7 +1480,13 @@ ipcMain.on("send", async function (event, fromAddress, toAddress, fee, amount){
                 continue;
             }
 
-            history = history.concat( {
+            if (txData[i].isCoinbase) {
+                err = tr("wallet.tabWithdraw.messages.isCoinbaseUTXO", "Your address contains newly mined coins, also called coinbase unspent transaction outputs (coinbase UTXO). These need to be shielded and unshielded first before they can be spent, please import the private key of this address into a full wallet like Swing and then send all your coins from this address to a Z-address and then back to this T-address. You will be then able to spend them in Arizen as well.");
+                event.sender.send("send-finish", "error", err);
+                return;
+            }
+
+            history = history.concat({
                 txid: txData[i].txid,
                 vout: txData[i].vout,
                 scriptPubKey: txData[i].scriptPubKey
@@ -1351,9 +1501,8 @@ ipcMain.on("send", async function (event, fromAddress, toAddress, fee, amount){
 
         // If we don't have enough address - fail and tell it to the user
         if (satoshisSoFar < amountInSatoshi + feeInSatoshi) {
-            let errStr = tr("wallet.tabWithdraw.messages.insufficientFundsSourceAddr", "Insufficient funds on source address!");
-            event.sender.send("send-finish", "error", errStr);
-
+            err = tr("wallet.tabWithdraw.messages.insufficientFundsSourceAddr", "Insufficient funds on source address!");
+            event.sender.send("send-finish", "error", err);
             return;
         }
 
@@ -1367,7 +1516,7 @@ ipcMain.on("send", async function (event, fromAddress, toAddress, fee, amount){
         let txObj = zencashjs.transaction.createRawTx(history, recipients, blockHeight, blockHash);
 
         // Sign each history transcation
-        for (let i = 0; i < history.length; i ++) {
+        for (let i = 0; i < history.length; i++) {
             txObj = zencashjs.transaction.signTx(txObj, i, privateKey, true);
         }
 
@@ -1376,7 +1525,7 @@ ipcMain.on("send", async function (event, fromAddress, toAddress, fee, amount){
         const txRespData = await apiPost(sendRawTxURL, {rawtx: txHexString});
 
         // TODO redo this into garbage
-        let message = "TXid:\n\n<small>" + txRespData.txid + "</small><br /><a href=\"javascript:void(0)\" onclick=\"openUrl('" + settings.explorerUrl + "/tx/" + txRespData.txid +"')\" class=\"walletListItemDetails transactionExplorer\" target=\"_blank\">Show Transaction in Explorer</a>";
+        let message = "TXid:\n\n<small>" + txRespData.txid + "</small><br /><a href=\"javascript:void(0)\" onclick=\"openUrl('" + settings.explorerUrl + "/tx/" + txRespData.txid + "')\" class=\"walletListItemDetails transactionExplorer\" target=\"_blank\">Show Transaction in Explorer</a>";
         event.sender.send("send-finish", "ok", message);
     }
     catch (e) {
@@ -1398,7 +1547,6 @@ ipcMain.on("send-many", async function (event, fromAddressesAll, toAddress, fee,
         // TODO: Come up with better message. For now, just make a HTML out of it.
         const errString = paramErrors.join("<br/>\n\n");
         event.sender.send("send-finish", "error", errString);
-
         return;
     }
 
@@ -1432,7 +1580,7 @@ ipcMain.on("send-many", async function (event, fromAddressesAll, toAddress, fee,
             let err = "";
             const satoshi = 100000000;
 
-            // CONVERT TO SATOSHI ------------------------------------------------------------------------------------------
+            // CONVERT TO SATOSHI --------------------------------------------------------------------------------------
             let feeInSatoshi = Math.round(fee * satoshi);
             let thresholdLimitInSatoshi = Math.round(thresholdLimit * satoshi);
             let balanceInSatoshi = 0;
@@ -1443,7 +1591,6 @@ ipcMain.on("send-many", async function (event, fromAddressesAll, toAddress, fee,
                 if (!walletAddr) {
                     err = tr("wallet.tabWithdraw.messages.unknownAddress", "Source address is not in your wallet!");
                     event.sender.send("send-finish", "error", err);
-
                     return;
                 }
 
@@ -1453,7 +1600,6 @@ ipcMain.on("send-many", async function (event, fromAddressesAll, toAddress, fee,
                     if (balanceInSatoshi < (parseFloat(thresholdLimit) + parseFloat(fee))) {
                         err = tr("wallet.tabWithdraw.messages.insufficientFirstSource", "Insufficient funds on 1st source (Minimum: threshold limit + fee)!");
                         event.sender.send("send-finish", "error", err);
-
                         return;
                     }
 
@@ -1462,20 +1608,16 @@ ipcMain.on("send-many", async function (event, fromAddressesAll, toAddress, fee,
                     if (balanceInSatoshi < (parseFloat(thresholdLimit))) {
                         err = tr("wallet.tabWithdraw.messages.insufficientNextSource", "Insufficient funds on 2nd or next source (Minimum: threshold limit)!");
                         event.sender.send("send-finish", "error", err);
-
                         return;
                     }
-
                     amountsInSatoshi[i] = Math.round(balanceInSatoshi * satoshi);
                 }
-
                 privateKeys[i] = walletAddr.pk;
             }
 
             if (privateKeys.length !== nFromAddresses) {
                 err = tr("wallet.tabWithdraw.messages.numberOfKeys", "# private keys and # addresses are not equal!");
                 event.sender.send("send-finish", "error", err);
-
                 return;
             }
 
@@ -1510,6 +1652,12 @@ ipcMain.on("send-many", async function (event, fromAddressesAll, toAddress, fee,
                     continue;
                 }
 
+                if (txData[i].isCoinbase) {
+                    err = tr("wallet.tabWithdraw.messages.isCoinbaseUTXO", "Your address contains newly mined coins, also called coinbase unspent transaction outputs (coinbase UTXO). These need to be shielded and unshielded first before they can be spent, please import the private key of this address into a full wallet like Swing and then send all your coins from this address to a Z-address and then back to this T-address. You will be then able to spend them in Arizen as well.");
+                    event.sender.send("send-finish", "error", err);
+                    return;
+                }
+
                 history = history.concat({
                     txid: txData[i].txid,
                     vout: txData[i].vout,
@@ -1526,7 +1674,6 @@ ipcMain.on("send-many", async function (event, fromAddressesAll, toAddress, fee,
             if ((satoshisSoFar - (nFromAddresses * thresholdLimitInSatoshi)) < feeInSatoshi) {
                 err = tr("wallet.tabWithdraw.messages.sumLowerThanFee", "Your summed balance over all source addresses is lower than the fee!");
                 event.sender.send("send-finish", "error", err);
-
                 return;
             }
 
@@ -1566,7 +1713,7 @@ ipcMain.on("send-many", async function (event, fromAddressesAll, toAddress, fee,
             }
         }
     }
-    catch(e) {
+    catch (e) {
         event.sender.send("send-finish", "error", e.message);
         console.log(e);
     }
@@ -1586,48 +1733,47 @@ ipcMain.on("create-paper-wallet", (event, name, addToWallet) => {
 });
 
 ipcMain.on("renderer-show-message-box", (event, msgStr, buttons) => {
-    buttons = buttons.concat([tr("warmingMessages.cancel","Cancel")]);
-    dialog.showMessageBox({type: "warning", title: "Important Information", message: msgStr, buttons: buttons, cancelId: -1 }, function(response) {
-      event.returnValue = response;
+    buttons = buttons.concat([tr("warmingMessages.cancel", "Cancel")]);
+    dialog.showMessageBox({
+        type: "warning",
+        title: "Important Information",
+        message: msgStr,
+        buttons: buttons,
+        cancelId: -1
+    }, function (response) {
+        event.returnValue = response;
     });
 });
 
-// Unused
 
-// function importWalletDat(login, pass, wallet) {
-//     let walletBytes = fs.readFileSync(wallet, "binary");
-//     let re = /\x30\x81\xD3\x02\x01\x01\x04\x20(.{32})/gm;
-//     let privateKeys = walletBytes.match(re);
-//     privateKeys = privateKeys.map(function (x) {
-//         x = x.replace("\x30\x81\xD3\x02\x01\x01\x04\x20", "");
-//         x = Buffer.from(x, "latin1").toString("hex");
-//         return x;
-//     });
-//
-//     let pk;
-//     let pubKey;
-//     //Create the database
-//     let db = new sql.Database();
-//     // Run a query without reading the results
-//     db.run(dbStructWallet);
-//
-//     for (let i = 0; i < privateKeys.length; i += 1) {
-//         // If not 64 length, probs WIF format
-//         if (privateKeys[i].length !== 64) {
-//             pk = zencashjs.address.WIFToPrivKey(privateKeys[i]);
-//         } else {
-//             pk = privateKeys[i];
-//         }
-//         pubKey = zencashjs.address.privKeyToPubKey(pk, true);
-//         db.run("INSERT OR IGNORE INTO wallet VALUES (?,?,?,?,?)", [null, pk, zencashjs.address.pubKeyToAddr(pubKey), 0, ""]);
-//     }
-//
-//     let data = db.export();
-//     let walletEncrypted = encryptWallet(login, pass, data);
-//     storeFile(getWalletPath() + login + ".awd", walletEncrypted);
-//
-//     userInfo.walletDb = db;
-//     loadSettings();
-//     // mainWindow.webContents.send("zz-get-wallets");
-//     // loadTransactions(mainWindow.webContents);
-// }
+ipcMain.on("get-all-Z-addresses", (event) => {
+    // zAddrObjs
+    event.returnValue = sqlSelectObjects("SELECT addr, name, lastbalance,pk FROM wallet where length(addr)=95");
+});
+
+ipcMain.on("update-addr-in-db", (event, addrObj) => {
+    sqlRun("UPDATE wallet SET lastbalance = ? WHERE addr = ?", addrObj.lastbalance, addrObj.addr);
+    event.returnValue = true;
+});
+
+
+ipcMain.on("get-address-object", (event, fromAddress) => {
+    // addrObjs
+    event.returnValue = sqlSelectObjects("SELECT * FROM wallet WHERE addr = ?", fromAddress)[0];
+});
+
+ipcMain.on("DB-insert-address", function (event, nameAddress, pkZaddress, zAddress) {
+    let resp = {
+        response: "ERR",
+        msg: "not logged in"
+    };
+
+    if (userInfo.loggedIn) {
+        resp.response = "OK";
+        resp.addr = {addr: zAddress, name: nameAddress, lastbalance: 0, pk: pkZaddress};
+        userInfo.walletDb.run("INSERT INTO wallet VALUES (?,?,?,?,?)", [null, pkZaddress, zAddress, 0, nameAddress]);
+        saveWallet();
+    }
+
+    event.sender.send("generate-wallet-response", JSON.stringify(resp));
+});

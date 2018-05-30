@@ -22,7 +22,7 @@
     "label": "Arizen: Tạo mới ví",
     "username": "Tên tài khoản",
     "password": "Mật khẩu",
-    "passwordAgain": "Xác nhận mật khẩu" ,
+    "passwordAgain": "Xác nhận mật khẩu",
     "oldUsername": "Tên tài khoản cũ: ",
     "oldPassword": "Mật khẩu cũ: ",
     "selectWallet": "Chọn ví",
@@ -48,22 +48,22 @@
     "newTransactions": "Giao dịch mới"
   },
   "importExportPks": {
-    "chooseFileExport" : "Chọn tệp tin khoá riêng tư muốn export",
-    "chooseFileImport" : "Chọn tệp tin khoá riêng tư muốn import",
+    "chooseFileExport": "Chọn tệp tin khoá riêng tư muốn export",
+    "chooseFileImport": "Chọn tệp tin khoá riêng tư muốn import",
     "InvalidLinePk": "Dòng ${0} khoá riêng tư không hợp lệ",
     "InvalidPk": "Khoá riêng tư không hợp lệ tại dòng số ${0}"
   },
   "wallet": {
-    "showSettingsDialogButton" : "Cài đặt",
-    "showAboutDialogButton" : "Thông tin",
-    "refreshWallet" : "Làm mới",
-    "logout" : "Đăng xuất",
-    "exit" : "Thoát",
-    "date" : "Ngày tháng",
+    "showSettingsDialogButton": "Cài đặt",
+    "showAboutDialogButton": "Thông tin",
+    "refreshWallet": "Làm mới",
+    "logout": "Đăng xuất",
+    "exit": "Thoát",
+    "date": "Ngày tháng",
     "from": "Từ",
     "to": "Đến",
-    "amount" : "Số lượng",
-    "balance" : "Số dư",
+    "amount": "Số lượng",
+    "balance": "Số dư",
     "totalBalance": "Tổng số dư",
     "lastUpdate": "Lần cập nhật cuối",
     "showExplorer": "Xem trên ZEN Explorer",
@@ -78,7 +78,7 @@
     "pdfExported": "Đã kết xuất ra tệp PDF",
     "tabOverview": {
       "label": "Tổng quan",
-      "showZeroBalances" : "Hiển thị số dư trống",
+      "showZeroBalances": "Hiển thị số dư trống",
       "newAddress": "Tạo mới một địa chỉ",
       "unnamedAddress": "Địa chỉ chưa được đặt tên",
       "newAddressExists": "Địa chỉ ${0} đã có sẵn trong danh sách"
@@ -98,13 +98,13 @@
       "help": "Bấm vào nút màu đỏ bên cạnh địa chỉ muốn gửi tiền.",
       "availableBalance": "Số dư khả dụng",
       "fee": "Phí giao dịch",
-      "txStatus" : "Trạng thái giao dịch",
+      "txStatus": "Trạng thái giao dịch",
       "withdrawConfirmQuestion": "Bạn chắc chắn muốn thực hiện giao dịch này?",
       "messages": {
         "emptyFromAddr": "Địa chỉ gửi trống",
         "unknownFromAddr": "Đại chỉ gửi không có trong ví",
-        "insufficientFirstSource" : "Không đủ tiền ở nguồn thứ nhất (Tối thiểu: Ngưỡng giới hạn + phí giao dịch)!",
-        "insufficientNextSource" : "Không đủ tiền ở nguồn thứ hai hoặc nguồn kế tiếp (Tối thiểu: Ngưỡng giới hạn)!",
+        "insufficientFirstSource": "Không đủ tiền ở nguồn thứ nhất (Tối thiểu: Ngưỡng giới hạn + phí giao dịch)!",
+        "insufficientNextSource": "Không đủ tiền ở nguồn thứ hai hoặc nguồn kế tiếp (Tối thiểu: Ngưỡng giới hạn)!",
         "numberOfKeys": "# khoá riêng tư và # địa chỉ không khớp!",
         "sumLowerThanFee": "Tổng số dư của tất cả các nguồn nhỏ hơn phí giao dịch!",
         "zenApi": "Zen API chưa được cài đặt!",
@@ -113,8 +113,8 @@
         "emptyToAddr": "Địa chỉ nhận trống",
         "zeroAmount": "Số lượng không khả dụng",
         "insufficientFunds": "Không đủ tiền trong địa chỉ gửi",
-        "fromAddressBadLength" : "Địa chỉ nguồn có vẻ không đúng!",
-        "fromAddressBadPrefix" : "Sai tiền tố của địa chỉ nguồn - địa chỉ luôn bắt đầu bằng 'zn'!",
+        "fromAddressBadLength": "Địa chỉ nguồn có vẻ không đúng!",
+        "fromAddressBadPrefix": "Sai tiền tố của địa chỉ nguồn - địa chỉ luôn bắt đầu bằng 'zn'!",
         "toAddressBadLength": "Địa chỉ đích có vẻ không đúng!",
         "toAddressBadPrefix": "Sai tiền tố của địa chỉ đích - địa chỉ luôn bắt đầu bằng 'zn'!",
         "amounNotNumber": "Số lượng phải là ký tự số",
@@ -122,7 +122,8 @@
         "feeNotNumber": "Phí giao dịch phải là ký tự số!",
         "feeIsNegative": "Phí giao dịch phải lớn hoặc hoặc bằng 0!",
         "error": "Lỗi",
-        "success": "Giao dịch đã gửi thành công"
+        "success": "Giao dịch đã gửi thành công",
+        "isCoinbaseUTXO": "Your address contains newly mined coins, also called coinbase unspent transaction outputs (coinbase UTXO). These need to be shielded and unshielded first before they can be spent, please import the private key of this address into a full wallet like Swing and then send all your coins from this address to a Z-address and then back to this T-address. You will be then able to spend them in Arizen as well."
       }
     },
     "transactionHistory": {
@@ -162,15 +163,30 @@
       "explorerUrl": "ZEN Explorer URL",
       "apiUrl": "API URLs",
       "fiat": "Đơn vị tiền tệ quy đổi",
-      "save": "Lưu"
+      "save": "Lưu",
+      "enableNotifications": "Desktop notifications",
+      "enableDomainFronting": "Domain fronting",
+      "secureNodeFQDN": "Secure Node FQDN",
+      "sshUsername": "SSH username",
+      "sshPassword": "SSH password",
+      "sshPort": "SSH port",
+      "secureNodePort": "Secure Node Port (see zen.conf)",
+      "secureNodeUsername": "Secure Node Username (see zen.conf)",
+      "secureNodePassword": "Secure Node Password (see zen.conf)",
+      "readyTimeout": "Ready Timeout (default: 10000)",
+      "forwardTimeout": "Forward Timeout (default: 10000)",
+      "domainFrontingUrl": "Domain fronting public base URL",
+      "domainFrontingHost": "Domain fronting private host",
+      "autoLogOffEnable": "Enable automatic log off",
+      "autoLogOffTimeout": "Auto log off timeout in seconds"
     },
     "paperWallet": {
       "label": "Ví giấy",
       "generateNewWallet": "Tạo ví mới",
       "name": "Tên (không bắt buộc)",
       "addWalletToArizen": "Thêm ví vào Arizen",
-      "zenCashWalletLabel" : "Ví ZenCash",
-      "tAddrLabel" : "Khoá công khai - T Address",
+      "zenCashWalletLabel": "Ví ZenCash",
+      "tAddrLabel": "Khoá công khai - T Address",
       "privateKeyLabel": "Khoá riêng tư",
       "namePrint": "Tên",
       "exportPDFLabel": "Kết xuất ra PDF"
@@ -180,18 +196,34 @@
       "keepAmount": "Số lượng",
       "txFee": "Phí giao dịch"
     },
-    "importSinglePrivateKey":{
-      "openButtonLabel":"Import Private Key",
-      "titleLabel":"Import Single Private Key",
-      "privateKeyLabel":"Private Key",
-      "importButtonLabel":"Import",
-      "warningNotValidAddress":"Z address exist in your wallet",
+    "importSinglePrivateKey": {
+      "openButtonLabel": "Import Private Key",
+      "titleLabel": "Import Single Private Key",
+      "privateKeyLabel": "Private Key",
+      "importButtonLabel": "Import",
+      "warningNotValidAddress": "Z address exist in your wallet",
       "warningNotValidPK": "This is not a valid Private Key."
+    },
+    "autoLogOffLabel": "Log off in ",
+    "changePassword": {
+      "title": "Change Wallet Password",
+      "warningText": "WARNING: Wallet backups won't be re-encrypted! If you need to use them, you will have to use current password.",
+      "currentPassword": "Current Password",
+      "newPassword1": "New Password",
+      "newPassword2": "New Password (Retype)"
+    },
+    "rpcConsole": {
+      "title": "RPC",
+      "command": "Command",
+      "test": "Test Me",
+      "results": "RPC Results ...",
+      "status": "Status: ",
+      "testFunctionButton": "Test Function"
     }
   },
   "menu": {
-    "file" : "Tệp tin",
-    "backupEncrypted":  "Sao lưu ví ĐÃ MÃ HOÁ",
+    "file": "Tệp tin",
+    "backupEncrypted": "Sao lưu ví ĐÃ MÃ HOÁ",
     "backupUnencrypted": "Sao lưu ví CHƯA MÃ HOÁ",
     "importEncrypted": "Nhập vào ví Arizen ĐÃ MÃ HOÁ",
     "importUnencrypted": "Nhập vào ví Arizen CHƯA MÃ HOÁ",
@@ -206,15 +238,29 @@
       "copy": "Sao chép",
       "paste": "Dán",
       "selectAll": "Chọn tất cả"
-    }
+    },
+    "help": "Help",
+    "helpSubmenu": {
+      "arizenManual": "User Manual",
+      "support": "Support",
+      "zencash": "ZenCash"
+    },
+    "changeWalletPassword": "Change wallet password"
   },
   "warmingMessages": {
     "userWarningImportFileWithPKs": "New address(es) and a private key(s) will be imported. Your previous back-ups do not include the newly imported addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
     "userWarningExportWalletUnencrypted": "You are going to export an UNENCRYPTED wallet ( ie your private keys) in plain text. That means that anyone with this file can control your ZENs. Store this file in a safe place. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
-    "userWarningExportWalletEncrypted": "You are going to export an ENCRYPTED wallet and your private keys will be encrypted. That means that in order to access your private keys you need to know the corresponding username and password. In case you don't know them you cannot control the ZENs that are controled by these private keys. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
+    "userWarningExportWalletEncrypted": "You are going to export an ENCRYPTED wallet and your private keys will be encrypted. That means that in order to access your private keys you need to know the corresponding wallet name and password. In case you don't know them you cannot control the ZENs that are controled by these private keys. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
     "userWarningImportPK": "A new address and a private key will be imported. Your previous back-ups do not include the newly imported address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
-    "userWarningCreateNewAddress":"A new address and a private key will be created. Your previous back-ups do not include this newly generated address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
+    "userWarningCreateNewAddress": "A new address and a private key will be created. Your previous back-ups do not include this newly generated address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
     "userWarningIUnderstand": "I understand",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "userWarningImportPkUserZendRescan": "The balance of the Z address you imported will be visible after you rescan the blockchain. Please run 'zen-cli stop && sleep 8 && zend -rescan' in your secure node (linux)."
+  },
+  "common": {
+    "selectAll": "Select all",
+    "clearAll": "Clear all",
+    "okButtonText": "OK",
+    "cancelButtonText": "Cancel"
   }
 }
