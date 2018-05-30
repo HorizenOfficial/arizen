@@ -3,53 +3,53 @@
   "languageValue": "jp",
   "langFileVersion": "1",
   "login": {
-    "label": "Arizen：ログイン",
+    "label": "Arizen: ログイン",
     "username": "ユーザー名",
     "password": "パスワード",
     "loginButton": "ログイン",
     "createWalletLink": "ウォレット作成",
-    "warningWrongUsernameOrPassword": "<strong>ユーザー名</strong>または<strong>パスワード</strong>が誤っています",
-    "dataImportFailed": "データのインポートに失敗しました。入力情報が誤っている可能性があります",
-    "fileReplace": "ファイルを置換えますか？",
-    "walletReplace": "ウォレットを置換えますか？",
-    "walletReplaceMsg": "現在のウォレットが置換えられますが、よろしいですか？",
+    "warningWrongUsernameOrPassword": "<strong>ユーザー名</strong>または<strong>パスワード</strong>が間違っています",
+    "dataImportFailed": "データのインポートに失敗しました。入力情報が間違っている可能性があります",
+    "fileReplace": "ファイルを置換えますか?",
+    "walletReplace": "ウォレットを置換えますか?",
+    "walletReplaceMsg": "現在のウォレットが置換えられますが、よろしいですか?",
     "walletImported": "ウォレットをインポートしました",
     "walletImportFailed": "ウォレットのインポートに失敗しました",
     "yes": "はい",
     "no": "いいえ"
   },
   "createWallet": {
-    "label": "Arizen：ウォレット作成",
+    "label": "Arizen: ウォレット作成",
     "username": "ユーザー名",
     "password": "パスワード",
     "passwordAgain": "パスワード（確認）",
-    "oldUsername": "以前のユーザー名：",
-    "oldPassword": "以前のパスワード：",
+    "oldUsername": "以前のユーザー名: ",
+    "oldPassword": "以前のパスワード: ",
     "selectWallet": "ウォレット選択",
     "selectWalletButton": "閲覧",
     "createWalletButton": "ウォレット作成",
     "loginLink": "ログイン",
-    "warningUsername": "ユーザー名は次の要件を満たす必要があります：",
+    "warningUsername": "ユーザー名は次の要件を満たす必要があります:",
     "warningUsernameLength": "<strong>4文字</strong>以上",
-    "warningPassword": "パスワードは次の要件を満たす必要があります：",
+    "warningPassword": "パスワードは次の要件を満たす必要があります:",
     "warningPasswordLetter": "少なくとも<strong>1つの小文字</strong>",
     "warningPasswordCapitalLetter": "少なくとも<strong>1つの大文字</strong>",
     "warningPasswordNumber": "少なくとも<strong>1つの数字</strong>",
     "warningPasswordSpecial": "少なくとも<strong>1つの特殊文字</strong>",
     "warningPasswordLength": "少なくとも<strong>8文字</strong>",
-    "warningPasswordAgain": "パスワード（確認）は次の要件を満たす必要があります：",
+    "warningPasswordAgain": "パスワード (確認) は次の要件を満たす必要があります:",
     "warningPasswordAgainIdentical": "<strong>パスワードと同じであること</strong>",
     "errorCreationFailed": "ウォレットの作成に失敗しました",
     "errorFailedResponse": "レスポンスに失敗しました"
   },
   "notification": {
-    "settingsUpdated": "設定が更新されました。",
-    "balanceUpdated": "残高が更新されました。",
+    "settingsUpdated": "設定が更新されました",
+    "balanceUpdated": "残高が更新されました",
     "newTransactions": "新しいトランザクション"
   },
   "importExportPks": {
-    "chooseFileExport": "秘密鍵のファイルを選択",
-    "chooseFileImport": "秘密鍵でファイルを選択",
+    "chooseFileExport": "秘密鍵ファイルを選択",
+    "chooseFileImport": "秘密鍵ファイルを選択",
     "InvalidLinePk": "秘密鍵ファイルの ${0} 行目が無効です。",
     "InvalidPk": "秘密鍵ファイルの ${0} 行目の秘密鍵が無効です。"
   },
@@ -73,7 +73,7 @@
     "addressNotFound": "アドレスが見つかりませんでした",
     "nameNotFound": "名前が見つかりませんでした",
     "renameWalletSetTo": "アドレス ${0} は ${1} に設定されています。",
-    "fetchBlockchainFailed": "ブロックチェーンにおける変更情報を取得できませんでした：",
+    "fetchBlockchainFailed": "ブロックチェーンにおける変更情報を取得できませんでした: ",
     "save": "保存",
     "pdfExported": "PDF出力",
     "tabOverview": {
@@ -99,12 +99,12 @@
       "availableBalance": "利用可能残高",
       "fee": "トランザクション手数料",
       "txStatus": "トランザクションの状況",
-      "withdrawConfirmQuestion": "このトランザクションを送信してよろしいですか？",
+      "withdrawConfirmQuestion": "このトランザクションを送信してよろしいですか?",
       "messages": {
         "emptyFromAddr": "送付元アドレスが入力されていません",
         "unknownFromAddr": "送付元アドレスがこのウォレットに登録されていません",
-        "insufficientFirstSource": "1番目の送付元に十分な資金がありません（「付可能最低額 + 手数料」以上が必要です）",
-        "insufficientNextSource": "2番目またはそれ以降の送付元に十分な資金がありません（「送付可能最低額）",
+        "insufficientFirstSource": "1番目の送付元に十分な資金がありません (「送付可能最低額 + 手数料」以上が必要です)",
+        "insufficientNextSource": "2番目またはそれ以降の送付元に十分な資金がありません (「送付可能最低額」以上が必要です)",
         "numberOfKeys": "秘密鍵の数とアドレスの数が一致していません",
         "sumLowerThanFee": "送付元アドレス全ての合計残高が送付額を下回っています",
         "zenApi": "Zen APIが設定されていません",
@@ -123,7 +123,7 @@
         "feeIsNegative": "手数料は 0 以上である必要があります",
         "error": "エラー",
         "success": "トランザクションは正常に送信されました",
-        "isCoinbaseUTXO": "Your address contains newly mined coins, also called coinbase unspent transaction outputs (coinbase UTXO). These need to be shielded and unshielded first before they can be spent, please import the private key of this address into a full wallet like Swing and then send all your coins from this address to a Z-address and then back to this T-address. You will be then able to spend them in Arizen as well."
+        "isCoinbaseUTXO": "このアドレスには、新たにマイニングされたコイン (支払いが行われていないコインベーストランザクションアウトプット; コインベース UTXO) が含まれています。このコインを使用するためには、シールドした上で再びシールドを解除する必要があります。まず、本アドレスの秘密鍵を Swing のようなフルノードウォレットにインポートしてください。次に、本アドレスから、一旦対象となるコインを全て Z アドレスに送付し、そこから再び本アドレスに送付し直してください。これにより Arizen ウォレットからも、これらのコインを支払うことができるようになります。"
       }
     },
     "transactionHistory": {
@@ -145,7 +145,7 @@
     },
     "newAddress": {
       "label": "新しいアドレスを作成",
-      "name": "名前（任意）",
+      "name": "名前 (任意)",
       "createButton": "作成"
     },
     "about": {
@@ -162,28 +162,28 @@
       "language": "言語",
       "explorerUrl": "ZEN エクスプローラーの URL",
       "apiUrl": "API の URL",
-      "fiat": "法定通貨の表示単位",
+      "fiat": "フィアット",
       "save": "保存",
-      "enableNotifications": "Desktop notifications",
-      "enableDomainFronting": "Domain fronting",
-      "secureNodeFQDN": "Secure Node FQDN",
-      "sshUsername": "SSH username",
-      "sshPassword": "SSH password",
-      "sshPort": "SSH port",
-      "secureNodePort": "Secure Node Port (see zen.conf)",
-      "secureNodeUsername": "Secure Node Username (see zen.conf)",
-      "secureNodePassword": "Secure Node Password (see zen.conf)",
-      "readyTimeout": "Ready Timeout (default: 10000)",
-      "forwardTimeout": "Forward Timeout (default: 10000)",
-      "domainFrontingUrl": "Domain fronting public base URL",
-      "domainFrontingHost": "Domain fronting private host",
-      "autoLogOffEnable": "Enable automatic log off",
-      "autoLogOffTimeout": "Auto log off timeout in seconds"
+      "enableNotifications": "デスクトップ通知",
+      "enableDomainFronting": "ドメインフロンティング",
+      "secureNodeFQDN": "セキュアノード FQDN",
+      "sshUsername": "SSH ユーザー名",
+      "sshPassword": "SSH パスワード",
+      "sshPort": "SSH ポート",
+      "secureNodePort": "セキュアノードポート (zen.conf を参照してください)",
+      "secureNodeUsername": "セキュアノードユーザー名 (zen.conf を参照してください)",
+      "secureNodePassword": "セキュアノードパスワード (zen.conf を参照してください)",
+      "readyTimeout": "準備時間タイムアウト (デフォルト: 10000)",
+      "forwardTimeout": "フォワードタイムアウト (デフォルト: 10000)",
+      "domainFrontingUrl": "ドメインフロンティング公開ベース URL",
+      "domainFrontingHost": "ドメインフロンティング プライベートホスト",
+      "autoLogOffEnable": "自動ログアウトを有効にする",
+      "autoLogOffTimeout": "自動ログアウトまでの時間 (秒)"
     },
     "paperWallet": {
       "label": "ペーパーウォレット",
       "generateNewWallet": "新規ウォレット作成",
-      "name": "名前（任意）",
+      "name": "名前 (任意)",
       "addWalletToArizen": "このウォレットを Arizen に追加",
       "zenCashWalletLabel": "ZenCash ウォレット",
       "tAddrLabel": "公開鍵: T アドレス",
@@ -193,40 +193,40 @@
     },
     "batchWithdraw": {
       "label": "まとめて送付",
-      "keepAmount": "送付しないでおく額",
+      "keepAmount": "送付せずに残しておく額",
       "txFee": "トランザクション手数料"
     },
     "importSinglePrivateKey": {
-      "openButtonLabel": "Import Private Key",
-      "titleLabel": "Import Single Private Key",
-      "privateKeyLabel": "Private Key",
-      "importButtonLabel": "Import",
-      "warningNotValidAddress": "Z address exist in your wallet",
-      "warningNotValidPK": "This is not a valid Private Key."
+      "openButtonLabel": "秘密鍵のインポート",
+      "titleLabel": "単一の秘密鍵をインポート",
+      "privateKeyLabel": "秘密鍵",
+      "importButtonLabel": "インポート",
+      "warningNotValidAddress": "ウォレット内に対象アドレスがすでに存在しています",
+      "warningNotValidPK": "秘密鍵が有効ではありません"
     },
-    "autoLogOffLabel": "Log off in ",
+    "autoLogOffLabel": "自動でログアウト",
     "changePassword": {
-      "title": "Change Wallet Password",
-      "warningText": "WARNING: Wallet backups won't be re-encrypted! If you need to use them, you will have to use current password.",
-      "currentPassword": "Current Password",
-      "newPassword1": "New Password",
-      "newPassword2": "New Password (Retype)"
+      "title": "ウォレットパスワードの変更",
+      "warningText": "注意: パスワード変更前のウォレットのバックアップは、暗号化されていない状態となります。変更以前のバックアップが必要な場合、変更前のパスワードを使用してください",
+      "currentPassword": "現在のパスワード",
+      "newPassword1": "新たなパスワード",
+      "newPassword2": "新たなパスワード (確認)"
     },
     "rpcConsole": {
       "title": "RPC",
-      "command": "Command",
-      "test": "Test Me",
-      "results": "RPC Results ...",
-      "status": "Status: ",
-      "testFunctionButton": "Test Function"
+      "command": "コマンド",
+      "test": "テスト",
+      "results": "RPC の結果 ...",
+      "status": "ステータス: ",
+      "testFunctionButton": "実行"
     }
   },
   "menu": {
     "file": "ファイル",
     "backupEncrypted": "暗号化されたウォレットのバックアップ",
-    "backupUnencrypted": "暗号化されていないウォレットバックアップ",
-    "importEncrypted": "暗号化された Arizen ウォレットのインポート",
-    "importUnencrypted": "暗号化されていない Arizen ウォレットのインポート",
+    "backupUnencrypted": "暗号化されていないウォレットのバックアップ",
+    "importEncrypted": "暗号化されたウォレットのインポート",
+    "importUnencrypted": "暗号化されていないウォレットのインポート",
     "importPrivateKeys": "秘密鍵のインポート",
     "exportPrivateKeys": "秘密鍵のエクスポート",
     "exit": "終了",
@@ -239,28 +239,27 @@
       "paste": "貼付け",
       "selectAll": "全て選択"
     },
-    "help": "Help",
+    "help": "ヘルプ",
     "helpSubmenu": {
-      "arizenManual": "User Manual",
-      "support": "Support",
+      "arizenManual": "ユーザーマニュアル",
+      "support": "サポート",
       "zencash": "ZenCash"
     },
-    "changeWalletPassword": "Change wallet password"
   },
   "warmingMessages": {
-    "userWarningImportFileWithPKs": "New address(es) and a private key(s) will be imported. Your previous back-ups do not include the newly imported addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
-    "userWarningExportWalletUnencrypted": "You are going to export an UNENCRYPTED wallet ( ie your private keys) in plain text. That means that anyone with this file can control your ZENs. Store this file in a safe place. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
-    "userWarningExportWalletEncrypted": "You are going to export an ENCRYPTED wallet and your private keys will be encrypted. That means that in order to access your private keys you need to know the corresponding wallet name and password. In case you don't know them you cannot control the ZENs that are controled by these private keys. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
-    "userWarningImportPK": "A new address and a private key will be imported. Your previous back-ups do not include the newly imported address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
-    "userWarningCreateNewAddress": "A new address and a private key will be created. Your previous back-ups do not include this newly generated address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
-    "userWarningIUnderstand": "I understand",
-    "cancel": "Cancel",
-    "userWarningImportPkUserZendRescan": "The balance of the Z address you imported will be visible after you rescan the blockchain. Please run 'zen-cli stop && sleep 8 && zend -rescan' in your secure node (linux)."
+    "userWarningImportFileWithPKs": "新たなアドレスおよび秘密鍵をインポートしようとしています。これ以前に作成されたバックアップファイルには、新たに作成されたアドレスおよび秘密鍵は存在しません。よって、新たにバックアップファイルを作成する必要があります。これらの内容に関してご理解いただいた場合のみ、「実行」をクリックしてください。詳細に関しては、ヘルプメニューを参照してください。",
+    "userWarningExportWalletUnencrypted": "暗号化されていない、テキスト形式のウォレット (秘密鍵) をエクスポートしようとしています。エクスポートされたファイルが悪意のある第3者の手に渡った場合、ウォレット内の ZEN は盗まれたも同然です。したがって、このファイルは安全な場所に保管してください。これらの内容に関してご理解いただいた場合のみ、「実行」をクリックしてください。詳細に関しては、ヘルプメニューを参照してください。",
+    "userWarningExportWalletEncrypted": "暗号化されたウォレット (秘密鍵) をエクスポートしようとしています。ウォレット (秘密鍵) にアクセスするためには、ユーザー名およびパスワードが必要となります。いずれかが不明となった場合、ウォレットにより管理された ZEN にアクセスすることができなくなってしまいます。これらの内容に関してご理解いただいた場合のみ、「実行」をクリックしてください。詳細に関しては、ヘルプメニューを参照してください。",
+    "userWarningImportPK": "アドレスおよびこれに対応する秘密鍵をインポートしようとしています。これ以前に作成されたバックアップファイルには、新たにインポートされたアドレスおよび秘密鍵は存在しません。よって、新たにバックアップファイルを作成する必要があります。これらの内容に関してご理解いただいた場合のみ、「実行」をクリックしてください。詳細に関しては、ヘルプメニューを参照してください。",
+    "userWarningCreateNewAddress": "アドレスおよびこれに対応する秘密鍵を作成しようとしています。これ以前に作成されたバックアップファイルには、新たに作成されたアドレスおよび秘密鍵は存在しません。よって、新たにバックアップファイルを作成する必要があります。これらの内容に関してご理解いただいた場合のみ、「実行」をクリックしてください。詳細に関しては、ヘルプメニューを参照してください。",
+    "userWarningIUnderstand": "実行",
+    "cancel": "キャンセル",
+    "userWarningImportPkUserZendRescan": "インポートした Z アドレスにより管理された残高は、ブロックチェーン再スキャン後に表示されます。セキュアノードコンソール (linux) から、'zen-cli stop && sleep 8 && zend -rescan' を実行してください。"
   },
   "common": {
-    "selectAll": "Select all",
-    "clearAll": "Clear all",
+    "selectAll": "全て選択",
+    "clearAll": "全てクリア",
     "okButtonText": "OK",
-    "cancelButtonText": "Cancel"
+    "cancelButtonText": "キャンセル"
   }
 }
