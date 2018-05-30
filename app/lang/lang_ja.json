@@ -218,7 +218,7 @@
       "test": "テスト",
       "results": "RPC の結果 ...",
       "status": "ステータス: ",
-      "testFunctionButton": "テスト関数"
+      "testFunctionButton": "実行"
     }
   },
   "menu": {
