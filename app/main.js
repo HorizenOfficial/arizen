@@ -33,7 +33,8 @@ const userWarningExportWalletEncrypted = "You are going to export an ENCRYPTED w
 require("electron-debug")();
 
 // Uncomment if you want to run in production
-// process.env.NODE_ENV !== "production"
+// Show/Hide Development menu
+process.env.NODE_ENV = "production";
 
 function attachUpdaterHandlers() {
     function onUpdateDownloaded() {
