@@ -566,7 +566,7 @@ function updateDepositQrcode(qrcodeDelay = 0) {
     const amount = parseFloat(depositAmountInput.value || 0);
 
     if (!toAddr) {
-        setNodeTrText(depositMsg, "wallet.tabDeposit.messages.emptyToAddr", "The to address is empty");
+        setNodeTrText(depositMsg, "wallet.tabDeposit.messages.emptyToAddr", "The 'To' address is empty");
         return;
     }
 
@@ -574,7 +574,7 @@ function updateDepositQrcode(qrcodeDelay = 0) {
     depositSaveQrcodeButton.disabled = false;
 
     if (!addrIdxByAddr.has(toAddr)) {
-        setNodeTrText(depositMsg, "wallet.tabDeposit.messages.unknownToAddr", "The to address does not belong to this wallet");
+        setNodeTrText(depositMsg, "wallet.tabDeposit.messages.unknownToAddr", "The 'To' address does not belong to this wallet");
     } else if (amount <= 0) {
         setNodeTrText(depositMsg, "wallet.tabDeposit.messages.zeroAmount", "The amount is not positive");
     } else {
