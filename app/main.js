@@ -66,20 +66,23 @@ let userInfo = {
 };
 
 const defaultSettings = {
-    txHistory: 50,
     lang: "en",
+    fiatCurrency: "USD",
+    notifications: 1,
+    txHistory: 50,
+    autoLogOffEnable: 0,
+    autoLogOffTimeout: 60,
     explorerUrl: "https://explorer.zensystem.io",
     apiUrls: [
         "https://explorer.zensystem.io/insight-api-zen",
         "https://explorer.zen-solutions.io/api",
         "http://explorer.zenmine.pro/insight-api-zen"
     ],
-    fiatCurrency: "USD",
-    notifications: 1,
+    secureNodeFQDN: "",
+    secureNodePort: 18231,
     domainFronting: false,
     domainFrontingUrl: "https://www.google.com",
-    domainFrontingHost: "zendhide.appspot.com",
-    autoLogOffEnable: 0
+    domainFrontingHost: "zendhide.appspot.com"
 };
 
 const defaultInternalInfo = {pendingTxs: []};
