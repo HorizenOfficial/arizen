@@ -1,0 +1,266 @@
+{
+  "languageName": "简体中文",
+  "languageValue": "zh_cn",
+  "langFileVersion": "1",
+  "login": {
+    "label": "Arizen: 登入",
+    "username": "帐号",
+    "password": "密码",
+    "loginButton": "登入",
+    "createWalletLink": "创建钱包",
+    "warningWrongUsernameOrPassword": "<strong>帐号</strong> 或 <strong>密码</strong> 错误",
+    "dataImportFailed": "资料导入失败，可能是因为密码错误",
+    "fileReplace": "确定复盖文件？",
+    "walletReplace": "复盖钱包？",
+    "walletReplaceMsg": "这动作将会复盖你原有的钱包。是否确定执行？",
+    "walletImported": "钱包导入成功",
+    "walletImportFailed": "导入失败",
+    "yes": "是",
+    "no": "否"
+  },
+  "createWallet": {
+    "label": "Arizen: 创建钱包",
+    "username": "帐号",
+    "password": "密码",
+    "passwordAgain": "密码确认",
+    "oldUsername": "原帐号：",
+    "oldPassword": "原密码：",
+    "selectWallet": "选择钱包",
+    "selectWalletButton": "浏览",
+    "createWalletButton": "创建钱包",
+    "loginLink": "登入",
+    "warningUsername": "帐号必须满足以下条件：",
+    "warningUsernameLength": "至少 <strong>四个字</strong> 以上",
+    "warningPassword": "密码必须满足以下条件",
+    "warningPasswordLetter": "至少 <strong>一个字</strong> 以上",
+    "warningPasswordCapitalLetter": "至少 <strong>一个大写字符</strong> 以上",
+    "warningPasswordNumber": "至少 <strong>一个数字</strong>",
+    "warningPasswordSpecial": "至少 <strong>一个特殊字符</strong>",
+    "warningPasswordLength": "Be 至少 <strong>八个字符</strong>",
+    "warningPasswordAgain": "密码必须满足以下条件",
+    "warningPasswordAgainIdentical": "<strong>和上述密码内容一样</strong>",
+    "errorCreationFailed": "钱包创建失败",
+    "errorFailedResponse": "服务器回应错误"
+  },
+  "notification": {
+    "settingsUpdated": "设定已更新",
+    "balanceUpdated": "馀额已更新",
+    "newTransactions": "新交易"
+  },
+  "importExportPks": {
+    "chooseFileExport": "选择导出的私钥文件",
+    "chooseFileImport": "选择包含私钥的文件",
+    "InvalidLinePk": "私钥在第 ${0} 行有非法字符",
+    "InvalidPk": "在文件中第 ${0} 行有无效的私钥"
+  },
+  "wallet": {
+    "showSettingsDialogButton": "设定",
+    "showAboutDialogButton": "关于",
+    "refreshWallet": "重新整理",
+    "logout": "登出",
+    "exit": "退出",
+    "date": "日期",
+    "from": "从",
+    "to": "至",
+    "amount": "金额",
+    "balance": "馀额",
+    "totalBalance": "总馀额",
+    "lastUpdate": "最后更新时间",
+    "showExplorer": "用 ZEN Explorer 检视",
+    "listOfAddresses": "地址清单",
+    "showBatchWithdrawDialog": "批次取款",
+    "notLoggedIn": "未登入",
+    "addressNotFound": "找不到地址",
+    "nameNotFound": "找不到名字",
+    "renameWalletSetTo": "地址 ${0} 更名为 ${1}",
+    "fetchBlockchainFailed": "区块链更新失败：",
+    "save": "储存",
+    "pdfExported": "PDF 已导出",
+    "tabOverview": {
+      "label": "总揽",
+      "showZeroBalances": "显示馀额 0 的地址",
+      "newAddress": "取得新地址",
+      "unnamedAddress": "未命名地址",
+      "newAddressExists": "地址 ${0} 已经存在清单中"
+    },
+    "tabDeposit": {
+      "label": "存款",
+      "help": "按下欲存入的地址旁边的绿色按钮来开始存款。",
+      "saveQrcode": "储存 QR Code",
+      "messages": {
+        "emptyToAddr": "欲存入的地址是空的",
+        "unknownToAddr": "欲存入的地址并不属于这个钱包",
+        "zeroAmount": "金额不是正的数字"
+      }
+    },
+    "tabWithdraw": {
+      "label": "取款",
+      "help": "按下欲存入的地址旁边的红色按钮来开始取款",
+      "availableBalance": "可用馀额",
+      "fee": "交易费",
+      "txStatus": "交易状态",
+      "withdrawConfirmQuestion": "是否已确定要进行此交易？",
+      "messages": {
+        "emptyFromAddr": "欲取款的地址是空的",
+        "unknownFromAddr": "欲取款的地址并不属于这个钱包",
+        "insufficientFirstSource": "第一个来源地址的馀额不足。（至少需要：最小值 + 交易费）",
+        "insufficientNextSource": "第二个来源或其他来源地址的馀额不足。（至少须钥：最小值）",
+        "numberOfKeys": "私钥数量与地址数量不相等！",
+        "sumLowerThanFee": "目前所有来源地址的总馀额低于交易费！",
+        "zenApi": "设定中尚未设定 Zen API！",
+        "unknownAddress": "来源地址并不在你的钱包中！",
+        "insufficientFundsSourceAddr": "来源地址的馀额不足",
+        "emptyToAddr": "目标地址是空的",
+        "zeroAmount": "金额不是正的数字",
+        "insufficientFunds": "来源地址的的馀额不足",
+        "fromAddressBadLength": "来源地址的长度不正确！",
+        "fromAddressBadPrefix": "来源地址的开头不是「zn」！",
+        "toAddressBadLength": "目标地址的长度不正确！",
+        "toAddressBadPrefix": "目标地址的开头不是「zn」！",
+        "amounNotNumber": "金额不是一个数字",
+        "amountIsZero": "金额必须大于零！",
+        "feeNotNumber": "金额不是一个数字！",
+        "feeIsNegative": "金额必须大于或等于零！",
+        "error": "错误",
+        "success": "成功送出交易",
+        "isCoinbaseUTXO": "Your address contains newly mined coins, also called coinbase unspent transaction outputs (coinbase UTXO). These need to be shielded and unshielded first before they can be spent, please import the private key of this address into a full wallet like Swing and then send all your coins from this address to a Z-address and then back to this T-address. You will be then able to spend them in Arizen as well."
+      }
+    },
+    "transactionHistory": {
+      "label": "交易历史",
+      "unconfirmed": "未确认",
+      "replaceAttempt": "正在尝试取代区块中的交易"
+    },
+    "transactionDetail": {
+      "label": "交易详情",
+      "txid": "交易 ID",
+      "blockHeight": "区块高度",
+      "unconfirmedTx": "未确认的交易"
+    },
+    "addressDetail": {
+      "label": "地址详情",
+      "name": "名字",
+      "address": "地址",
+      "saveButton": "储存变更"
+    },
+    "newAddress": {
+      "label": "创建一个新的地址",
+      "name": "名字（非必填）",
+      "createButton": "创建"
+    },
+    "about": {
+      "label": "关于 Arizen",
+      "homepage": "首页",
+      "version": "版本",
+      "license": "授权",
+      "authors": "作者"
+    },
+    "settings": {
+      "label": "设定",
+      "limit": "交易限制",
+      "items": "项目",
+      "language": "语言",
+      "explorerUrl": "ZEN Explorer 地址",
+      "apiUrl": "API 地址",
+      "fiat": "对应法币",
+      "save": "储存",
+      "enableNotifications": "Desktop notifications",
+      "enableDomainFronting": "Domain fronting",
+      "secureNodeFQDN": "Secure Node FQDN",
+      "sshUsername": "SSH username",
+      "sshPassword": "SSH password",
+      "sshPort": "SSH port",
+      "secureNodePort": "Secure Node Port (see zen.conf)",
+      "secureNodeUsername": "Secure Node Username (see zen.conf)",
+      "secureNodePassword": "Secure Node Password (see zen.conf)",
+      "readyTimeout": "Ready Timeout (default: 10000)",
+      "forwardTimeout": "Forward Timeout (default: 10000)",
+      "domainFrontingUrl": "Domain fronting public base URL",
+      "domainFrontingHost": "Domain fronting private host",
+      "autoLogOffEnable": "Enable automatic log off",
+      "autoLogOffTimeout": "Auto log off timeout in seconds"
+    },
+    "paperWallet": {
+      "label": "纸上钱包",
+      "generateNewWallet": "创建新的钱包",
+      "name": "名字（非必填）",
+      "addWalletToArizen": "新增此钱包到 Arizen",
+      "zenCashWalletLabel": "ZenCash 钱包",
+      "tAddrLabel": "公钥 - T 地址",
+      "privateKeyLabel": "私钥",
+      "namePrint": "名称",
+      "exportPDFLabel": "导出 PDF"
+    },
+    "batchWithdraw": {
+      "label": "批次取款",
+      "keepAmount": "留置金额",
+      "txFee": "交易费"
+    },
+    "importSinglePrivateKey": {
+      "openButtonLabel": "Import Private Key",
+      "titleLabel": "Import Single Private Key",
+      "privateKeyLabel": "Private Key",
+      "importButtonLabel": "Import",
+      "warningNotValidAddress": "Z address exist in your wallet",
+      "warningNotValidPK": "This is not a valid Private Key."
+    },
+    "autoLogOffLabel": "Log off in ",
+    "changePassword": {
+      "title": "Change Wallet Password",
+      "warningText": "WARNING: Wallet backups won't be re-encrypted! If you need to use them, you will have to use current password.",
+      "currentPassword": "Current Password",
+      "newPassword1": "New Password",
+      "newPassword2": "New Password (Retype)"
+    },
+    "rpcConsole": {
+      "title": "RPC",
+      "command": "Command",
+      "test": "Test Me",
+      "results": "RPC Results ...",
+      "status": "Status: ",
+      "testFunctionButton": "Test Function"
+    }
+  },
+  "menu": {
+    "file": "文件",
+    "backupEncrypted": "以加密形式备份钱包",
+    "backupUnencrypted": "以未加密形式备份钱包",
+    "importEncrypted": "导入加密形式的 Arizen 钱包",
+    "importUnencrypted": "导入未加密形式的 Arizen 钱包",
+    "importPrivateKeys": "导入私钥",
+    "exportPrivateKeys": "导出私钥",
+    "exit": "离开",
+    "edit": "编辑",
+    "editSubmenu": {
+      "undo": "復原",
+      "redo": "重做",
+      "cut": "剪下",
+      "copy": "複製",
+      "paste": "贴上",
+      "selectAll": "选择全部"
+    },
+    "help": "Help",
+    "helpSubmenu": {
+      "arizenManual": "User Manual",
+      "support": "Support",
+      "zencash": "ZenCash"
+    },
+    "changeWalletPassword": "Change wallet password"
+  },
+  "warmingMessages": {
+    "userWarningImportFileWithPKs": "New address(es) and a private key(s) will be imported. Your previous back-ups do not include the newly imported addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
+    "userWarningExportWalletUnencrypted": "You are going to export an UNENCRYPTED wallet ( ie your private keys) in plain text. That means that anyone with this file can control your ZENs. Store this file in a safe place. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
+    "userWarningExportWalletEncrypted": "You are going to export an ENCRYPTED wallet and your private keys will be encrypted. That means that in order to access your private keys you need to know the corresponding wallet name and password. In case you don't know them you cannot control the ZENs that are controled by these private keys. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
+    "userWarningImportPK": "A new address and a private key will be imported. Your previous back-ups do not include the newly imported address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
+    "userWarningCreateNewAddress": "A new address and a private key will be created. Your previous back-ups do not include this newly generated address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
+    "userWarningIUnderstand": "I understand",
+    "cancel": "Cancel",
+    "userWarningImportPkUserZendRescan": "The balance of the Z address you imported will be visible after you rescan the blockchain. Please run 'zen-cli stop && sleep 8 && zend -rescan' in your secure node (linux)."
+  },
+  "common": {
+    "selectAll": "Select all",
+    "clearAll": "Clear all",
+    "okButtonText": "OK",
+    "cancelButtonText": "Cancel"
+  }
+}

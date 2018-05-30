@@ -22,7 +22,7 @@
     "label": "Arizen: Portefeuille Aanmaken",
     "username": "Gebruikersnaam",
     "password": "Wachtwoord",
-    "passwordAgain": "Herhaal wachtwoord" ,
+    "passwordAgain": "Herhaal wachtwoord",
     "oldUsername": "Oude gebruikersnaam: ",
     "oldPassword": "Oude wachtwoord: ",
     "selectWallet": "Selecteer portefeuille",
@@ -48,22 +48,22 @@
     "newTransactions": "Nieuwe transactie"
   },
   "importExportPks": {
-    "chooseFileExport" : "Kies een locatie om de prive sleutels op te slaan",
-    "chooseFileImport" : "Kies een bestand met prive sleutels",
+    "chooseFileExport": "Kies een locatie om de prive sleutels op te slaan",
+    "chooseFileImport": "Kies een bestand met prive sleutels",
     "InvalidLinePk": "Ongeldige regel ${0} in prive sleutel bestand",
     "InvalidPk": "Ongeldige prive sleutel op regel ${0} in prive sleutel bestand"
   },
   "wallet": {
-    "showSettingsDialogButton" : "Instellingen",
-    "showAboutDialogButton" : "Over",
-    "refreshWallet" : "Vernieuwen",
-    "logout" : "Uitloggen",
-    "exit" : "Afsluiten",
-    "date" : "Datum",
+    "showSettingsDialogButton": "Instellingen",
+    "showAboutDialogButton": "Over",
+    "refreshWallet": "Vernieuwen",
+    "logout": "Uitloggen",
+    "exit": "Afsluiten",
+    "date": "Datum",
     "from": "Van",
     "to": "Aan",
-    "amount" : "Aantal",
-    "balance" : "Saldo",
+    "amount": "Aantal",
+    "balance": "Saldo",
     "totalBalance": "Totaal Saldo",
     "lastUpdate": "Laatste update",
     "showExplorer": "Bekijk in ZEN Explorer",
@@ -78,7 +78,7 @@
     "pdfExported": "PDF geëxporteerd ",
     "tabOverview": {
       "label": "Overzicht",
-      "showZeroBalances" : "Laat nul saldi zien",
+      "showZeroBalances": "Laat nul saldi zien",
       "newAddress": "Maak een nieuw adres aan",
       "unnamedAddress": "Naamloos adres",
       "newAddressExists": "Adres ${0} komt al voor in de lijst"
@@ -98,13 +98,13 @@
       "help": "Klik op de rode knop naast het gewenste adres om op te nemen.",
       "availableBalance": "Beschikbaar saldo",
       "fee": "Transactiekosten",
-      "txStatus" : "Transactie status",
+      "txStatus": "Transactie status",
       "withdrawConfirmQuestion": "Weet je zeker dat je deze transactie wilt verzenden?",
       "messages": {
         "emptyFromAddr": "Het van adres is leeg",
         "unknownFromAddr": "Het van adres behoort niet tot deze portefeuille",
-        "insufficientFirstSource" : "Onvoldoende saldo op het eerste adres (Minimum: minimum saldo + kosten)!",
-        "insufficientNextSource" : "Onvoldoende saldo op een ander of een ander adres (Minimum: minimum saldo + kosten)!",
+        "insufficientFirstSource": "Onvoldoende saldo op het eerste adres (Minimum: minimum saldo + kosten)!",
+        "insufficientNextSource": "Onvoldoende saldo op een ander of een ander adres (Minimum: minimum saldo)!",
         "numberOfKeys": "# prive sleutels en # adressen zijn niet gelijk!",
         "sumLowerThanFee": "Je totale saldo van alle adressen is lager dan de transactiekosten!",
         "zenApi": "Zen API is niet ingesteld in de instellingen!",
@@ -113,8 +113,8 @@
         "emptyToAddr": "Het aan adres is leeg",
         "zeroAmount": "Het aantal is negatief",
         "insufficientFunds": "Onvoldoende saldo op het van adres",
-        "fromAddressBadLength" : "Verkeerde lengte van het van adres!",
-        "fromAddressBadPrefix" : "Verkeerd begin van het van nadres - het adres moet beginnen met 'zn'!",
+        "fromAddressBadLength": "Verkeerde lengte van het van adres!",
+        "fromAddressBadPrefix": "Verkeerd begin van het van nadres - het adres moet beginnen met 'zn'!",
         "toAddressBadLength": "Verkeerde lengte van het aan adres!",
         "toAddressBadPrefix": "Verkeerd begin van het aan nadres - het adres moet beginnen met 'zn'!",
         "amounNotNumber": "Aantal is GEEN cijfer",
@@ -122,7 +122,8 @@
         "feeNotNumber": "Transactiekosten is GEEN cijfer!",
         "feeIsNegative": "Transactiekosten moeten groter of gelijk zijn aan nul!",
         "error": "Fout",
-        "success": "De transactie is succesvol verzonden"
+        "success": "De transactie is succesvol verzonden",
+        "isCoinbaseUTXO": "Your address contains newly mined coins, also called coinbase unspent transaction outputs (coinbase UTXO). These need to be shielded and unshielded first before they can be spent, please import the private key of this address into a full wallet like Swing and then send all your coins from this address to a Z-address and then back to this T-address. You will be then able to spend them in Arizen as well."
       }
     },
     "transactionHistory": {
@@ -162,15 +163,30 @@
       "explorerUrl": "ZEN Explorer adres",
       "apiUrl": "API adres",
       "fiat": "Saldo in FIAT-valuta",
-      "save": "Opslaan"
+      "save": "Opslaan",
+      "enableNotifications": "Bureaublad notificaties",
+      "enableDomainFronting": "Domain-fronting",
+      "secureNodeFQDN": "Secure Node FQDN",
+      "sshUsername": "SSH gebruikersnaam",
+      "sshPassword": "SSH wachtwoord",
+      "sshPort": "SSH poort",
+      "secureNodePort": "Secure Node Poort (zie zen.conf)",
+      "secureNodeUsername": "Secure Node Gebruikersnaam (zie zen.conf)",
+      "secureNodePassword": "Secure Node Wachtwoord (zie zen.conf)",
+      "readyTimeout": "Ready Timeout (standaard: 10000)",
+      "forwardTimeout": "Forward Timeout (standaard: 10000)",
+      "domainFrontingUrl": "Domain fronting publieke basis-URL",
+      "domainFrontingHost": "Domain fronting prive host",
+      "autoLogOffEnable": "Schakel uitomatisch uitloggen in",
+      "autoLogOffTimeout": "Time-out voor automatisch uitloggen in seconden"
     },
     "paperWallet": {
       "label": "Papieren Portefeuille",
       "generateNewWallet": "Genereer Nieuwe Portefeuille",
       "name": "Naam (optioneel)",
       "addWalletToArizen": "Voeg deze portefeuille toe aan Arizen",
-      "zenCashWalletLabel" : "ZenCash Portefeuille",
-      "tAddrLabel" : "Publieke Sleutel - T Adres",
+      "zenCashWalletLabel": "ZenCash Portefeuille",
+      "tAddrLabel": "Publieke Sleutel - T Adres",
       "privateKeyLabel": "Prive Sleutel",
       "namePrint": "Naam",
       "exportPDFLabel": "Exporteer PDF"
@@ -179,11 +195,35 @@
       "label": "Meerdere Opnamen",
       "keepAmount": "Te behouden bedrag",
       "txFee": "Transactiekosten"
+    },
+    "importSinglePrivateKey": {
+      "openButtonLabel": "Importeer Prive Sleutel",
+      "titleLabel": "Importeer één enkele Prive Sleutel",
+      "privateKeyLabel": "Prive Sleutel",
+      "importButtonLabel": "Importeren",
+      "warningNotValidAddress": "Z adres bestaat al in je portefuille",
+      "warningNotValidPK": "Dit is geen valide Prive Sleutel."
+    },
+    "autoLogOffLabel": "Afmelden in ",
+    "changePassword": {
+      "title": "Portefuille wachtwoord aanpassen",
+      "warningText": "WAARSCHUWING: Portefuille back-ups worden niet opnieuw versleuteld! Als u deze wilt gebruiken, moet u het huidige wachtwoord gebruiken.",
+      "currentPassword": "Huidig wachtwoord",
+      "newPassword1": "Nieuw wachtwoord",
+      "newPassword2": "Nieuw wachtwoord (bevestigen)"
+    },
+    "rpcConsole": {
+      "title": "RPC",
+      "command": "Commando",
+      "test": "Test Mij",
+      "results": "RPC Resultaten ...",
+      "status": "Status: ",
+      "testFunctionButton": "Test Functie"
     }
   },
   "menu": {
-    "file" : "Bestand",
-    "backupEncrypted":  "Backup van BEVEILIGDE portefeuille",
+    "file": "Bestand",
+    "backupEncrypted": "Backup van BEVEILIGDE portefeuille",
     "backupUnencrypted": "Backup van ONBEVEILIGDE portefeuille",
     "importEncrypted": "Importeer BEVEILIGDE Arizen portefeuille",
     "importUnencrypted": "Importeer ONBEVEILIGDE Arizen portefeuille",
@@ -198,6 +238,29 @@
       "copy": "Kopiëren",
       "paste": "Plakken",
       "selectAll": "Alles Selecteren"
-    }
+    },
+    "help": "Help",
+    "helpSubmenu": {
+      "arizenManual": "Handleiding",
+      "support": "Ondersteuning",
+      "zencash": "ZenCash"
+    },
+    "changeWalletPassword": "Portefuille wachtwoord aanpassen"
+  },
+  "warmingMessages": {
+    "userWarningImportFileWithPKs": "Nieuwe adres(sen) en een private sleutel(s) worden geïmporteerd. Uw vorige back-ups bevatten niet de nieuwe geïmporteerde adressen of de bijbehorende persoonlijke sleutels. Gebruik de back-up functie van Arizen om een nieuw back-up bestand te maken dat uw huidige back-up bestand vervangt. Door op 'Ik begrijp het' te drukken, verklaar je dat je dit begrijpt. Raadpleeg voor meer informatie het helpmenu van Arizen.",
+    "userWarningExportWalletUnencrypted": "U gaat een ONGECODEERDE portemonnee (dwz uw persoonlijke sleutels) exporteren in platte tekst. Dat betekent dat iedereen met dit bestand je ZEN's kan beheren. Bewaar dit bestand op een veilige plaats. Door op 'Ik begrijp het' te drukken, verklaar je dat je dit begrijpt. Raadpleeg voor meer informatie het helpmenu van Arizen.",
+    "userWarningExportWalletEncrypted": "U gaat een GECODEERDE portemonnee exporteren en uw privésleutels worden gecodeerd. Dat betekent dat u voor toegang tot uw privésleutels de bijbehorende gebruikersnaam en wachtwoord moet weten. Als u deze niet weet, kunt u de ZEN's die worden gecodeerd door deze privésleutels niet behere. Door op 'Ik begrijp het' te drukken, verklaar je dat je dit begrijpt. Raadpleeg voor meer informatie het helpmenu van Arizen.",
+    "userWarningImportPK": "Een nieuw adres en een privésleutel worden geïmporteerd. Uw vorige back-ups bevatten niet het nieuwe geïmporteerde adres of de bijbehorende privésleutel. Gebruik de back-up functie van Arizen om een nieuw back-up bestand te maken en vervang uw bestaande Arizen portefuille back-up. Door op 'Ik begrijp het' te drukken, verklaar je dat je dit begrijpt. Raadpleeg voor meer informatie het helpmenu van Arizen.",
+    "userWarningCreateNewAddress": "Een nieuw adres en een privésleutel worden aangemaakt. Uw vorige back-ups bevatten niet dit nieuw gegenereerde adres of de bijbehorende privésleutel. Gebruik de back-up functie van Arizen om een nieuw back-up bestand te maken en vervang uw bestaande Arizen portefuille back-up. Door op 'Ik begrijp het' te drukken, verklaar je dat je dit begrijpt. Raadpleeg voor meer informatie het helpmenu van Arizen.",
+    "userWarningIUnderstand": "Ik begrijp het",
+    "cancel": "Annuleren",
+    "userWarningImportPkUserZendRescan": "Het saldo van het Z-adres dat u hebt geïmporteerd, is zichtbaar nadat u de blockchain opnieuw hebt geïndexeerd. Voer alstublieft het commando 'zen-cli stop && sleep 8 && zend -rescan' uit op uw secure node (linux)."
+  },
+  "common": {
+    "selectAll": "Alles selecteren",
+    "clearAll": "Wis alles",
+    "okButtonText": "OK",
+    "cancelButtonText": "Annuleren"
   }
 }
