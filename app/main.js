@@ -25,9 +25,6 @@ const {translate} = require("./util.js");
 const {DateTime} = require("luxon");
 const {zenextra} = require("./zenextra.js");
 
-let oldZAddrObjs;
-let totalBalance;
-
 const userWarningImportFileWithPKs = "New address(es) and a private key(s) will be imported. Your previous back-ups do not include the newly imported addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
 const userWarningExportWalletUnencrypted = "You are going to export an UNENCRYPTED wallet ( ie your private keys) in plain text. That means that anyone with this file can control your ZENs. Store this file in a safe place. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
 const userWarningExportWalletEncrypted = "You are going to export an ENCRYPTED wallet and your private keys will be encrypted. That means that in order to access your private keys you need to know the corresponding username and password. In case you don't know them you cannot control the ZENs that are controled by these private keys. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
@@ -707,7 +704,7 @@ async function updateBlockchainView(webContents) {
     webContents.send("add-loading-image");
     const addrObjs = sqlSelectObjects("SELECT addr, name, lastbalance FROM wallet where length(addr)=35");
     const knownTxIds = sqlSelectColumns("SELECT DISTINCT txid FROM transactions").map(row => row[0]);
-    totalBalance = addrObjs.filter(obj => obj.lastbalance).reduce((sum, a) => sum + a.lastbalance, 0);
+    let totalBalance = addrObjs.filter(obj => obj.lastbalance).reduce((sum, a) => sum + a.lastbalance, 0);
 
     let result;
     try {
@@ -728,16 +725,27 @@ async function updateBlockchainView(webContents) {
         }));
     }
 
-    let oldZAddrObjsTmp = sqlSelectObjects("SELECT addr, name, lastbalance,pk FROM wallet where length(addr)=95");
+    const zAddrObjs = sqlSelectObjects("SELECT addr, name, lastbalance,pk FROM wallet where length(addr)=95");
 
-    oldZAddrObjs = {};
     for (const addrObj of zAddrObjs) {
-      oldZAddrObjs[addrObj.addr] = addrObj.lastbalance;
+        let previousBalance = 0.0; // TODO: Should do something with this
+        let balance;
+        if (addrObj.lastbalance === "NaN" || addrObj.lastbalance === undefined) {
+            balance = 0.0;
+        } else {
+            balance = addrObj.lastbalance;
+        }
+        let balanceDiff = balance - previousBalance;
+        addrObj.lastbalance = balance;
+        sqlRun("UPDATE wallet SET lastbalance = ? WHERE addr = ?", balance, addrObj.addr);
+        totalBalance += balance; //not balanceDiff here
+        webContents.send("update-wallet-balance", JSON.stringify({
+            response: "OK",
+            addrObj: addrObj,
+            diff: balanceDiff,
+            total: totalBalance
+        }));
     }
-
-    webContents.send("old-Z-balance-ready",oldZAddrObjs);
-    // send old Z balance ready
-
 
     // Why here ? In case balance is unchanged the 'update-wallet-balance' is never sent, but the Zen/Fiat balance will change.
     webContents.send("send-refreshed-wallet-balance", totalBalance);
@@ -766,31 +774,6 @@ function sendWallet() {
     mainWindow.webContents.send("get-wallets-response", JSON.stringify(resp));
     updateBlockchainView(mainWindow.webContents);
 }
-
-ipcMain.on("compare-old-new-Z-and-update", function(){
-  const zAddrObjs = sqlSelectObjects("SELECT addr, name, lastbalance,pk FROM wallet where length(addr)=95");
-
-  for (const addrObj of zAddrObjs) {
-      let previousBalance = oldZAddrObjs[addrObj.addr]; // TODO: Should do something with this
-      let balance;
-      if (addrObj.lastbalance === "NaN" || addrObj.lastbalance === undefined) {
-          balance = 0.0;
-      } else {
-          balance = addrObj.lastbalance;
-      }
-
-      let balanceDiff = balance - previousBalance;
-      addrObj.lastbalance = balance;
-      sqlRun("UPDATE wallet SET lastbalance = ? WHERE addr = ?", balance, addrObj.addr);
-      totalBalance += balance; //not balanceDiff here
-      webContents.send("update-wallet-balance", JSON.stringify({
-          response: "OK",
-          addrObj: addrObj,
-          diff: balanceDiff,
-          total: totalBalance
-      }));
-  }
-});
 
 function importPKs() {
     function importFromFile(filename) {
