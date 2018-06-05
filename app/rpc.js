@@ -249,10 +249,10 @@ async function getZaddressBalance(pk, address) {
     let resp = await rpcCallResultSync("z_getbalance", [address]);
     if (resp.isOK) {
         balance = parseFloat(resp.output); //.toFixed(8)
-        return {balance: balance, status: resp.status}
+        return {balance: balance, status: resp.status, isOK:resp.isOK}
     } else {
         console.log(resp.status);
-        return {balance: balance, status: resp.status}
+        return {balance: balance, status: resp.status, isOK:resp.isOK}
     }
 }
 
