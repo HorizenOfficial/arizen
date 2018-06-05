@@ -309,16 +309,27 @@ function isValidDomainName(domainOrIP) {
 function pingSecureNode() {
     if (isValidDomainName(settings.secureNodeFQDN)) {
         let ping = require('ping');
+        const isIp = require('is-ip');
+
+        let fqdnIsV6 = isIp.v6(settings.secureNodeFQDN);
+        console.log(settings.secureNodeFQDN);
+        console.log(fqdnIsV6);
+
+        var cfg = {
+        v6:fqdnIsV6,
+        };
+
         let hosts = [settings.secureNodeFQDN];
         hosts.forEach(function (host) {
             ping.sys.probe(host, function (isAlive) {
+              console.log(isAlive);
                 if (isAlive) {
                     document.getElementById("dotSNstatus").style.backgroundColor = "#34A853"; // green
                 } else {
                     document.getElementById("dotSNstatus").style.backgroundColor = "#EA4335"; // red #EA4335
                     document.getElementById("dotSNstatusRPC").style.backgroundColor = "#EA4335"; // red #EA4335
                 }
-            });
+            }, cfg);
         });
     }
 }
