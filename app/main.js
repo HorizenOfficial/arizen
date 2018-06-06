@@ -1535,6 +1535,176 @@ ipcMain.on("send", async function (event, fromAddress, toAddress, fee, amount) {
 });
 
 /**
+ * Filters out all zero balanced wallets
+ * @param fromAddressesAll - all selected addresses
+ * @param thresholdLimit - threshold limit, eg 42
+ * @returns {Array} - filtered non-zero addresses
+ */
+function filterOutZeroAddresses(fromAddressesAll, thresholdLimit) {
+    let fromAddresses = [];
+
+    for (let i = 0; i < fromAddressesAll.length; i++) {
+        let walletAddr = sqlSelectObjects("SELECT * FROM wallet WHERE addr = ?", fromAddressesAll[i])[0];
+        if (walletAddr) {
+            if (walletAddr.lastbalance !== 0 && walletAddr.lastbalance > thresholdLimit) {
+                fromAddresses.push(fromAddressesAll[i]);
+            }
+        }
+    }
+
+    return fromAddresses
+}
+
+/**
+ * @param fromAddresses - array of addresses
+ * @returns {string} - returns string of addresses
+ */
+function getPreviousTxURL(fromAddresses){
+    let prevTxURL = "/addrs/";
+    for (let i = 0; i < fromAddresses.length; i++) {
+        prevTxURL += fromAddresses[i] + ",";
+    }
+    prevTxURL = prevTxURL.substring(0, prevTxURL.length - 1);
+    prevTxURL += "/utxo";
+
+    return prevTxURL
+}
+
+/**
+ * Iterate through each UTXO and append it to history specifically to every mapped address
+ * @param event - for throwing error
+ * @param txData - transaction data
+ * @param addrPk {Map<string, string>} - {Map<address, PK>}
+ * @returns {Map<string, Object>} - Map<address, Object> for better data storage and use
+ */
+function generateMap(event, txData, addrPk) {
+    let map = new Map();
+
+    for (let i = 0; i < txData.length; i++) {
+        if (txData[i].confirmations === 0) {
+            continue;
+        }
+
+        if (txData[i].isCoinbase) {
+            let err = tr("wallet.tabWithdraw.messages.isCoinbaseUTXO", "Your address contains newly mined coins, also called coinbase unspent transaction outputs (coinbase UTXO). These need to be shielded and unshielded first before they can be spent, please import the private key of this address into a full wallet like Swing and then send all your coins from this address to a Z-address and then back to this T-address. You will be then able to spend them in Arizen as well.");
+            event.sender.send("send-finish", "error", err);
+            return;
+        }
+
+        // if exist in Map, then edit, if not, then create
+        if (map.has(txData[i].address)) {
+            map.get(txData[i].address).satoshis += txData[i].satoshis;
+            map.get(txData[i].address).history = map.get(txData[i].address).history.concat({
+                txid: txData[i].txid,
+                vout: txData[i].vout,
+                scriptPubKey: txData[i].scriptPubKey
+            });
+        } else {
+            let obj = {
+                pk: addrPk.get(txData[i].address),
+                satoshis: txData[i].satoshis,
+                history: [{
+                    txid: txData[i].txid,
+                    vout: txData[i].vout,
+                    scriptPubKey: txData[i].scriptPubKey
+                }]
+            };
+            map.set(txData[i].address, obj);
+        }
+    }
+
+    return map
+}
+
+/**
+ *
+ * @param event
+ * @param txData
+ * @param thresholdLimitInSatoshi
+ * @param feeInSatoshi
+ * @param toAddress
+ * @param blockHeight
+ * @param blockHash
+ */
+function getMaxTxHexStrings(event, txData, thresholdLimitInSatoshi, feeInSatoshi, toAddress, blockHeight, blockHash, addrPk) {
+    const maxKbSize = 100.0;
+    let txHexStrings = [];
+    let history = [];
+    let err = "";
+    let belongToAddress = new Array(txData.length);
+
+    let map = generateMap(event, txData, addrPk);
+
+    let usedAddr = 1;
+    while (true){
+
+
+
+
+
+
+
+
+
+
+        let nAddress = 1;
+        for (let [key, value] of map.entries()) {
+            // 42.5 - (1 * 42.0 - 0.00001)
+            let amountInSatoshiToSend = value.satoshis - (nAddress * thresholdLimitInSatoshi) - feeInSatoshi;
+            let recipients = [{address: toAddress, satoshis: amountInSatoshiToSend}];
+
+            // Refund thresholdLimitInSatoshi amount to current address
+            if (thresholdLimitInSatoshi > 0) {
+                recipients = recipients.concat({
+                    address:  key,
+                    satoshis: thresholdLimitInSatoshi
+                });
+            }
+
+            // Create transaction
+            let txObj = zencashjs.transaction.createRawTx(history, recipients, blockHeight, blockHash);
+
+
+        }
+
+
+        break
+
+    }
+
+
+
+
+    // Sign each history transcation
+    let index;
+    for (let i = 0; i < history.length; i++) {
+        index = fromAddresses.indexOf(belongToAddress[i]);
+        txObj = zencashjs.transaction.signTx(txObj, i, privateKeys[index], true);
+    }
+
+    // Convert it to hex string
+    const txHexString = zencashjs.transaction.serializeTx(txObj);
+
+
+    if ((Buffer.byteLength(txHexString, "utf8") / 1024) > maxKbSize) {
+        txHexStrings.append(txHexString);
+        console.log("over")
+    } else {
+        // continue until filled
+        console.log("less")
+    }
+
+
+    //
+    // if ((satoshisSoFar - (fromAddresses.length * thresholdLimitInSatoshi)) < feeInSatoshi) {
+    //     err = tr("wallet.tabWithdraw.messages.sumLowerThanFee", "Your summed balance over all source addresses is lower than the fee!");
+    //     event.sender.send("send-finish", "error", err);
+    //     return;
+    // }
+
+}
+
+/**
  * @param event
  * @param {array} fromAddressesAll - Array of strings, array of ZEN addresses
  * @param toAddress - one destination ZEN address
@@ -1551,167 +1721,64 @@ ipcMain.on("send-many", async function (event, fromAddressesAll, toAddress, fee,
     }
 
     try {
-        // VARIABLES ---------------------------------------------------------------------------------------------------
-        // filter out all zero balanced wallets
-        let fromAddressesTemp = [];
-        for (let i = 0; i < fromAddressesAll.length; i++) {
-            let walletAddr = sqlSelectObjects("SELECT * FROM wallet WHERE addr = ?", fromAddressesAll[i])[0];
-            // TODO check walletAddrs is defined
-            if (walletAddr.lastbalance !== 0 && walletAddr.lastbalance !== thresholdLimit) {
-                fromAddressesTemp.push(fromAddressesAll[i]);
-            }
-        }
-
-        let txFinished = 0;
-        let chunkSize = 10;
+        // -------------------------------------------------------------------------------------------------------------
+        // Variables
+        const infoURL = "/status?q=getInfo";
+        const sendRawTxURL = "/tx/send";
         let finalMessage = "";
-        let chunks = [];
-        for (let i = 0, j = fromAddressesTemp.length; i < j; i += chunkSize) {
-            chunks.push(fromAddressesTemp.slice(i, i + chunkSize));
+        // <address, PK> pairs
+        let addrPk = new Map();
+        let err = "";
+        const satoshi = 100000000;
+        let feeInSatoshi = Math.round(fee * satoshi);
+        let thresholdLimitInSatoshi = Math.round(thresholdLimit * satoshi);
+        let fromAddresses = filterOutZeroAddresses(fromAddressesAll, thresholdLimit);
+
+        // check if there isn't any address with a balance
+        if(fromAddresses.length === 0){
+            // TODO: fix error message
+            err = tr("wallet.tabWithdraw.messages.", "!");
+            event.sender.send("send-finish", "error", err);
         }
 
-        for (let c = 0; c < chunks.length; c++) {
-            let fromAddresses = chunks[c];
+        for (let i = 0; i < fromAddresses.length; i++) {
+            let walletAddr = sqlSelectObjects("SELECT * FROM wallet WHERE addr = ?", fromAddresses[i])[0];
 
-            // TODO: check if fromAddresses.length == 0
-            const nFromAddresses = fromAddresses.length;
-            let privateKeys = new Array(nFromAddresses);
-            let amountsInSatoshi = new Array(nFromAddresses);
-            let err = "";
-            const satoshi = 100000000;
-
-            // CONVERT TO SATOSHI --------------------------------------------------------------------------------------
-            let feeInSatoshi = Math.round(fee * satoshi);
-            let thresholdLimitInSatoshi = Math.round(thresholdLimit * satoshi);
-            let balanceInSatoshi = 0;
-
-            for (let i = 0; i < nFromAddresses; i++) {
-                let walletAddr = sqlSelectObjects("SELECT * FROM wallet WHERE addr = ?", fromAddresses[i])[0];
-
-                if (!walletAddr) {
-                    err = tr("wallet.tabWithdraw.messages.unknownAddress", "Source address is not in your wallet!");
-                    event.sender.send("send-finish", "error", err);
-                    return;
-                }
-
-                balanceInSatoshi = walletAddr.lastbalance;
-
-                if (i === 0) {
-                    if (balanceInSatoshi < (parseFloat(thresholdLimit) + parseFloat(fee))) {
-                        err = tr("wallet.tabWithdraw.messages.insufficientFirstSource", "Insufficient funds on 1st source (Minimum: threshold limit + fee)!");
-                        event.sender.send("send-finish", "error", err);
-                        return;
-                    }
-
-                    amountsInSatoshi[i] = Math.round((balanceInSatoshi - parseFloat(fee)) * satoshi);
-                } else {
-                    if (balanceInSatoshi < (parseFloat(thresholdLimit))) {
-                        err = tr("wallet.tabWithdraw.messages.insufficientNextSource", "Insufficient funds on 2nd or next source (Minimum: threshold limit)!");
-                        event.sender.send("send-finish", "error", err);
-                        return;
-                    }
-                    amountsInSatoshi[i] = Math.round(balanceInSatoshi * satoshi);
-                }
-                privateKeys[i] = walletAddr.pk;
-            }
-
-            if (privateKeys.length !== nFromAddresses) {
-                err = tr("wallet.tabWithdraw.messages.numberOfKeys", "# private keys and # addresses are not equal!");
+            if (!walletAddr) {
+                err = tr("wallet.tabWithdraw.messages.unknownAddress", "Source address is not in your wallet!");
                 event.sender.send("send-finish", "error", err);
                 return;
             }
 
-            // GET PREVIOUS TRANSACTIONS -------------------------------------------------------------------------------
-            let prevTxURL = "/addrs/";
-            for (let i = 0; i < nFromAddresses; i++) {
-                prevTxURL += fromAddresses[i] + ",";
-            }
-            prevTxURL = prevTxURL.substring(0, prevTxURL.length - 1);
-            prevTxURL += "/utxo";
-            const infoURL = "/status?q=getInfo";
-            const sendRawTxURL = "/tx/send";
+            addrPk.set(walletAddr.addr, walletAddr.pk);
+        }
 
-            // BUILDING OUR TRANSACTION TXOBJ --------------------------------------------------------------------------
-            // Calculate maximum ZEN satoshis that we have
-            let satoshisSoFar = 0;
-            let history = [];
-            let belongToAddress;
+        if (addrPk.size !== fromAddresses.length) {
+            err = tr("wallet.tabWithdraw.messages.numberOfKeys", "# private keys and # addresses are not equal!");
+            event.sender.send("send-finish", "error", err);
+            return;
+        }
 
-            const txData = await apiGet(prevTxURL);
-            const infoData = await apiGet(infoURL);
+        // -------------------------------------------------------------------------------------------------------------
+        // Get previous transactions
+        const prevTxURL = getPreviousTxURL(fromAddresses);
+        const txData = await apiGet(prevTxURL);
 
-            const blockHeight = infoData.info.blocks - 300;
-            const blockHashURL = "/block-index/" + blockHeight;
+        // -------------------------------------------------------------------------------------------------------------
+        const infoData = await apiGet(infoURL);
+        const blockHeight = infoData.info.blocks - 300;
+        const blockHashURL = "/block-index/" + blockHeight;
+        const blockHash = (await apiGet(blockHashURL)).blockHash;
 
-            const blockHash = (await apiGet(blockHashURL)).blockHash;
+        const txHexStrings = getMaxTxHexStrings(event, txData, thresholdLimitInSatoshi, feeInSatoshi, toAddress, blockHeight, blockHash, addrPk);
 
-            belongToAddress = new Array(txData.length);
-            // Iterate through each utxo and append it to history
-            for (let i = 0; i < txData.length; i++) {
-                if (txData[i].confirmations === 0) {
-                    continue;
-                }
-
-                if (txData[i].isCoinbase) {
-                    err = tr("wallet.tabWithdraw.messages.isCoinbaseUTXO", "Your address contains newly mined coins, also called coinbase unspent transaction outputs (coinbase UTXO). These need to be shielded and unshielded first before they can be spent, please import the private key of this address into a full wallet like Swing and then send all your coins from this address to a Z-address and then back to this T-address. You will be then able to spend them in Arizen as well.");
-                    event.sender.send("send-finish", "error", err);
-                    return;
-                }
-
-                history = history.concat({
-                    txid: txData[i].txid,
-                    vout: txData[i].vout,
-                    scriptPubKey: txData[i].scriptPubKey
-                });
-
-                // to which address bellog this data
-                belongToAddress[i] = txData[i].address;
-
-                // How many satoshis we have so far
-                satoshisSoFar += txData[i].satoshis;
-            }
-
-            if ((satoshisSoFar - (nFromAddresses * thresholdLimitInSatoshi)) < feeInSatoshi) {
-                err = tr("wallet.tabWithdraw.messages.sumLowerThanFee", "Your summed balance over all source addresses is lower than the fee!");
-                event.sender.send("send-finish", "error", err);
-                return;
-            }
-
-            let amountInSatoshiToSend = satoshisSoFar - (nFromAddresses * thresholdLimitInSatoshi) - feeInSatoshi;
-            let recipients = [{address: toAddress, satoshis: amountInSatoshiToSend}];
-
-            // Refund thresholdLimitInSatoshi amount to current address
-            if (thresholdLimitInSatoshi > 0) {
-                for (let i = 0; i < nFromAddresses; i++) {
-                    recipients = recipients.concat({
-                        address: fromAddresses[i],
-                        satoshis: thresholdLimitInSatoshi
-                    });
-                }
-            }
-
-            // Create transaction
-            let txObj = zencashjs.transaction.createRawTx(history, recipients, blockHeight, blockHash);
-
-            // Sign each history transcation
-            let index;
-            for (let i = 0; i < history.length; i++) {
-                index = fromAddresses.indexOf(belongToAddress[i]);
-                txObj = zencashjs.transaction.signTx(txObj, i, privateKeys[index], true);
-            }
-
-            // Convert it to hex string
-            const txHexString = zencashjs.transaction.serializeTx(txObj);
+        for(let i = 0; i < txHexStrings.length; i++){
             const txRespData = await apiPost(sendRawTxURL, {rawtx: txHexString});
-
             finalMessage += `<small><a href="javascript:void(0)" onclick="openUrl('${settings.explorerUrl}/tx/${txRespData.txid}')" class="walletListItemDetails transactionExplorer monospace" target="_blank">${txRespData.txid}</a>`;
             finalMessage += "</small><br/>\n\n";
-
-            txFinished += 1;
-            if (txFinished === chunks.length) {
-                event.sender.send("send-finish", "ok", finalMessage);
-            }
         }
+
+        event.sender.send("send-finish", "ok", finalMessage);
     }
     catch (e) {
         event.sender.send("send-finish", "error", e.message);
