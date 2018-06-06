@@ -1618,6 +1618,55 @@ function generateMap(event, txData, addrPk) {
 
 /**
  *
+ * @param start
+ * @param nAddress
+ * @param data
+ * @param thresholdLimitInSatoshi
+ * @param feeInSatoshi
+ */
+function calculateForNaddress(start, nAddress, data, thresholdLimitInSatoshi, feeInSatoshi, toAddress) {
+    let history = [];
+    let err = "";
+
+    let idx = 0;
+
+    for (let [key, value] of data.entries()) {
+
+        if (idx >= start){
+            // 42.5 - (1 * 42.0 - 0.00001)
+            let amountInSatoshiToSend = value.satoshis - (nAddress * thresholdLimitInSatoshi) - feeInSatoshi;
+            let recipients = [{address: toAddress, satoshis: amountInSatoshiToSend}];
+
+            // Refund thresholdLimitInSatoshi amount to current address
+            if (thresholdLimitInSatoshi > 0) {
+                recipients = recipients.concat({
+                    address: key,
+                    satoshis: thresholdLimitInSatoshi
+                });
+            }
+
+            // Create transaction
+            let txObj = zencashjs.transaction.createRawTx(history, recipients, blockHeight, blockHash);
+
+            // Sign each history transcation
+            let index;
+            for (let i = 0; i < history.length; i++) {
+                index = fromAddresses.indexOf(belongToAddress[i]);
+                txObj = zencashjs.transaction.signTx(txObj, i, privateKeys[index], true);
+            }
+
+            // Convert it to hex string
+            const txHexString = zencashjs.transaction.serializeTx(txObj);
+
+        }
+
+        idx += 1;
+    }
+}
+
+
+/**
+ *
  * @param event
  * @param txData
  * @param thresholdLimitInSatoshi
@@ -1629,70 +1678,32 @@ function generateMap(event, txData, addrPk) {
 function getMaxTxHexStrings(event, txData, thresholdLimitInSatoshi, feeInSatoshi, toAddress, blockHeight, blockHash, addrPk) {
     const maxKbSize = 100.0;
     let txHexStrings = [];
-    let history = [];
-    let err = "";
-    let belongToAddress = new Array(txData.length);
+    let data = generateMap(event, txData, addrPk);
+    let loop = true;
+    let processedAddresses = 0;
+    let nAddrToValidate = 1;
+    let start = 0;
 
-    let map = generateMap(event, txData, addrPk);
+    while (loop){
+        let txHexString = calculateForNaddress(start, nAddrToValidate, data);
 
-    let usedAddr = 1;
-    while (true){
-
-
-
-
-
-
-
-
-
-
-        let nAddress = 1;
-        for (let [key, value] of map.entries()) {
-            // 42.5 - (1 * 42.0 - 0.00001)
-            let amountInSatoshiToSend = value.satoshis - (nAddress * thresholdLimitInSatoshi) - feeInSatoshi;
-            let recipients = [{address: toAddress, satoshis: amountInSatoshiToSend}];
-
-            // Refund thresholdLimitInSatoshi amount to current address
-            if (thresholdLimitInSatoshi > 0) {
-                recipients = recipients.concat({
-                    address:  key,
-                    satoshis: thresholdLimitInSatoshi
-                });
-            }
-
-            // Create transaction
-            let txObj = zencashjs.transaction.createRawTx(history, recipients, blockHeight, blockHash);
-
-
+        if ((Buffer.byteLength(txHexString, "utf8") / 1024) > maxKbSize) {
+            txHexStrings.append(calculateForNaddress(start, nAddrToValidate - 1, data, thresholdLimitInSatoshi, feeInSatoshi, toAddress));
+            start = nAddrToValidate - 1;
+            processedAddresses = nAddrToValidate;
+            nAddrToValidate = 1;
+        } else {
+            nAddrToValidate += 1;
         }
 
-
-        break
-
+        // while terminal condition
+        if (data.size === processedAddresses) {
+            loop = false;
+        }
     }
 
+    return txHexStrings
 
-
-
-    // Sign each history transcation
-    let index;
-    for (let i = 0; i < history.length; i++) {
-        index = fromAddresses.indexOf(belongToAddress[i]);
-        txObj = zencashjs.transaction.signTx(txObj, i, privateKeys[index], true);
-    }
-
-    // Convert it to hex string
-    const txHexString = zencashjs.transaction.serializeTx(txObj);
-
-
-    if ((Buffer.byteLength(txHexString, "utf8") / 1024) > maxKbSize) {
-        txHexStrings.append(txHexString);
-        console.log("over")
-    } else {
-        // continue until filled
-        console.log("less")
-    }
 
 
     //
@@ -1701,7 +1712,6 @@ function getMaxTxHexStrings(event, txData, thresholdLimitInSatoshi, feeInSatoshi
     //     event.sender.send("send-finish", "error", err);
     //     return;
     // }
-
 }
 
 /**
