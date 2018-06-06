@@ -337,6 +337,7 @@ function pingSecureNode() {
 function colorRpcLEDs(isAlive) {
     if (isAlive) {
         document.getElementById("dotSNstatusRPC").style.backgroundColor = "#34A853"; // green "#34A853"
+        document.getElementById("dotSNstatus").style.backgroundColor = "#34A853"; // green
     } else {
         document.getElementById("dotSNstatusRPC").style.backgroundColor = "#EA4335"; // red #EA4335
     }

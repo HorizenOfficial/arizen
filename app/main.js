@@ -25,6 +25,8 @@ const {translate} = require("./util.js");
 const {DateTime} = require("luxon");
 const {zenextra} = require("./zenextra.js");
 
+let oldZAddrJSON;
+
 const userWarningImportFileWithPKs = "New address(es) and a private key(s) will be imported. Your previous back-ups do not include the newly imported addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
 const userWarningExportWalletUnencrypted = "You are going to export an UNENCRYPTED wallet ( ie your private keys) in plain text. That means that anyone with this file can control your ZENs. Store this file in a safe place. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
 const userWarningExportWalletEncrypted = "You are going to export an ENCRYPTED wallet and your private keys will be encrypted. That means that in order to access your private keys you need to know the corresponding username and password. In case you don't know them you cannot control the ZENs that are controled by these private keys. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
@@ -728,7 +730,12 @@ async function updateBlockchainView(webContents) {
     const zAddrObjs = sqlSelectObjects("SELECT addr, name, lastbalance,pk FROM wallet where length(addr)=95");
 
     for (const addrObj of zAddrObjs) {
-        let previousBalance = 0.0; // TODO: Should do something with this
+        let previousBalance;
+        if ( !(oldZAddrJSON === undefined || oldZAddrJSON === {} ) ){
+            previousBalance = oldZAddrJSON[addrObj.addr]; // TODO: Should do something with this
+        } else {
+            previousBalance = 0.0;
+        }
         let balance;
         if (addrObj.lastbalance === "NaN" || addrObj.lastbalance === undefined) {
             balance = 0.0;
@@ -737,14 +744,17 @@ async function updateBlockchainView(webContents) {
         }
         let balanceDiff = balance - previousBalance;
         addrObj.lastbalance = balance;
+        oldZAddrJSON[addrObj.addr] = balance;
         sqlRun("UPDATE wallet SET lastbalance = ? WHERE addr = ?", balance, addrObj.addr);
         totalBalance += balance; //not balanceDiff here
-        webContents.send("update-wallet-balance", JSON.stringify({
-            response: "OK",
-            addrObj: addrObj,
-            diff: balanceDiff,
-            total: totalBalance
-        }));
+        if ( !(balanceDiff === 0.00000000)){
+            webContents.send("update-wallet-balance", JSON.stringify({
+                response: "OK",
+                addrObj: addrObj,
+                diff: balanceDiff,
+                total: totalBalance
+            }));
+       }
     }
 
     // Why here ? In case balance is unchanged the 'update-wallet-balance' is never sent, but the Zen/Fiat balance will change.
@@ -943,6 +953,9 @@ function includeDeveloperMenu(template) {
                     }
                 },
                 {role: "reload"},
+                {role: 'forcereload'},
+                {type: 'separator'},
+                {role: 'togglefullscreen'}
                 {type: "separator"},
                 {
                     label: tr("menu.backupUnencrypted", "Backup UNENCRYPTED wallet"),
@@ -1745,6 +1758,15 @@ ipcMain.on("renderer-show-message-box", (event, msgStr, buttons) => {
     });
 });
 
+ipcMain.on("update-Z-old-balance", (event) => {
+    // zAddrObjs
+    oldZAddrJSON = {};
+    let oldZAddrTmp = sqlSelectObjects("SELECT addr, name, lastbalance,pk FROM wallet where length(addr)=95");
+    for (const addrObj of oldZAddrTmp) {
+        oldZAddrJSON[addrObj.addr] = addrObj.lastbalance;
+    }
+    event.returnValue = true
+});
 
 ipcMain.on("get-all-Z-addresses", (event) => {
     // zAddrObjs

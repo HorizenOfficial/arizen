@@ -269,6 +269,7 @@ async function getTaddressBalance(address) {
 }
 
 async function updateAllZBalances() {
+    const valid = ipcRenderer.sendSync("update-Z-old-balance");
     const zAddrObjs = ipcRenderer.sendSync("get-all-Z-addresses");
     for (const addrObj of zAddrObjs) {
         let newBalanceResp = await getZaddressBalance(addrObj.pk, addrObj.addr);
