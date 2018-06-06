@@ -3,6 +3,10 @@
 /*jslint node: true */
 "use strict";
 
+// Press F12 to open the DevTools. See https://github.com/sindresorhus/electron-debug.
+// DO NOT COMMENT !!!
+require("electron-debug")();
+require("axios-debug-log");
 const electron = require("electron");
 const BrowserWindow = electron.BrowserWindow;
 const {app, Menu, ipcMain, dialog} = require("electron");
@@ -18,7 +22,6 @@ const zencashjs = require("zencashjs");
 const sql = require("sql.js");
 const updater = require("electron-simple-updater");
 const axios = require("axios");
-require("axios-debug-log");
 const querystring = require("querystring");
 const {List} = require("immutable");
 const {translate} = require("./util.js");
@@ -28,9 +31,6 @@ const {zenextra} = require("./zenextra.js");
 const userWarningImportFileWithPKs = "New address(es) and a private key(s) will be imported. Your previous back-ups do not include the newly imported addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
 const userWarningExportWalletUnencrypted = "You are going to export an UNENCRYPTED wallet ( ie your private keys) in plain text. That means that anyone with this file can control your ZENs. Store this file in a safe place. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
 const userWarningExportWalletEncrypted = "You are going to export an ENCRYPTED wallet and your private keys will be encrypted. That means that in order to access your private keys you need to know the corresponding username and password. In case you don't know them you cannot control the ZENs that are controled by these private keys. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
-
-// Press F12 to open the DevTools. See https://github.com/sindresorhus/electron-debug.
-require("electron-debug")();
 
 // Uncomment if you want to run in production
 // Show/Hide Development menu
