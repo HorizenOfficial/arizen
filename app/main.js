@@ -1560,14 +1560,31 @@ function filterOutZeroAddresses(fromAddressesAll, thresholdLimit) {
  * @returns {string} - returns string of addresses
  */
 function getPreviousTxURL(fromAddresses) {
-    let prevTxURL = "/addrs/";
-    for (let i = 0; i < fromAddresses.length; i++) {
-        prevTxURL += fromAddresses[i] + ",";
-    }
-    prevTxURL = prevTxURL.substring(0, prevTxURL.length - 1);
-    prevTxURL += "/utxo";
+    let prevTxURLs = [];
+    let prefix = "/addrs/";
+    let prevTxURL = prefix;
+    let notModulo = false;
 
-    return prevTxURL
+    for (let i = 1; i < fromAddresses.length + 1; i++) {
+        if (i % 10 === 0) {
+            prevTxURL += fromAddresses[i - 1];
+            prevTxURL += "/utxo";
+            prevTxURLs = prevTxURLs.concat(prevTxURL);
+            prevTxURL = prefix;
+            notModulo = false;
+        } else {
+            prevTxURL += fromAddresses[i - 1] + ",";
+            notModulo = true;
+        }
+    }
+
+    if (notModulo) {
+        prevTxURL = prevTxURL.substring(0, prevTxURL.length - 1);
+        prevTxURL += "/utxo";
+        prevTxURLs = prevTxURLs.concat(prevTxURL);
+    }
+
+    return prevTxURLs
 }
 
 /**
@@ -1797,8 +1814,11 @@ ipcMain.on("send-many", async function (event, fromAddressesAll, toAddress, fee,
 
         // -------------------------------------------------------------------------------------------------------------
         // Get previous transactions
-        const prevTxURL = getPreviousTxURL(fromAddresses);
-        const txData = await apiGet(prevTxURL);
+        const prevTxURLs = getPreviousTxURL(fromAddresses);
+        let txData = [];
+        for (let i = 0; i < prevTxURLs.length; i++) {
+            txData = txData.concat(await apiGet(prevTxURLs[i]));
+        }
 
         // -------------------------------------------------------------------------------------------------------------
         const infoData = await apiGet(infoURL);
