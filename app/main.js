@@ -55,7 +55,7 @@ function attachUpdaterHandlers() {
 updater.init({checkUpdateOnStart: true, autoDownload: true});
 attachUpdaterHandlers();
 
-// Keep a global reference of the window object, if you don"t, the window will
+// Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 let userInfo = {
@@ -752,8 +752,7 @@ async function updateBlockchainView(webContents) {
 
     for (const tx of result.newTxs) {
         if (tx.block >= 0) {
-            sqlRun("INSERT INTO transactions VALUES (?,?,?,?,?,?,?,?)",
-                null, tx.txid, tx.time, tx.address, tx.vins, tx.vouts, tx.amount, tx.block);
+            sqlRun("INSERT INTO transactions VALUES (?,?,?,?,?,?,?,?)", null, tx.txid, tx.time, tx.address, tx.vins, tx.vouts, tx.amount, tx.block);
         }
         webContents.send("get-transaction-update", JSON.stringify(tx));
     }
@@ -1524,7 +1523,6 @@ ipcMain.on("send", async function (event, fromAddress, toAddress, fee, amount) {
         const txHexString = zencashjs.transaction.serializeTx(txObj);
         const txRespData = await apiPost(sendRawTxURL, {rawtx: txHexString});
 
-        // TODO redo this into garbage
         let message = "TXid:\n\n<small>" + txRespData.txid + "</small><br /><a href=\"javascript:void(0)\" onclick=\"openUrl('" + settings.explorerUrl + "/tx/" + txRespData.txid + "')\" class=\"walletListItemDetails transactionExplorer\" target=\"_blank\">Show Transaction in Explorer</a>";
         event.sender.send("send-finish", "ok", message);
     }
@@ -1726,13 +1724,17 @@ function calculateForNaddress(event, start, nAddress, data, thresholdLimitInSato
  * @param addrPk
  */
 function getMaxTxHexStrings(event, txData, thresholdLimitInSatoshi, feeInSatoshi, toAddress, blockHeight, blockHash, addrPk) {
+    // API request limit, URL length
     const maxKbSize = 100.0;
     let txHexStrings = [];
+    // prepare data
     let data = generateMap(event, txData, addrPk);
 
     let start = 0;
     let nAddrToValidate = 1;
     let nAddrProcessed = 0;
+
+    // TODO: introduce booster - 5x multiplier
 
     while (true) {
         let txHexString = calculateForNaddress(event, start, nAddrToValidate, data, thresholdLimitInSatoshi, feeInSatoshi, toAddress, blockHeight, blockHash);
@@ -1871,7 +1873,7 @@ ipcMain.on("renderer-show-message-box", (event, msgStr, buttons) => {
 
 ipcMain.on("get-all-Z-addresses", (event) => {
     // zAddrObjs
-    event.returnValue = sqlSelectObjects("SELECT addr, name, lastbalance,pk FROM wallet where length(addr)=95");
+    event.returnValue = sqlSelectObjects("SELECT addr, name, lastbalance, pk FROM wallet where length(addr)=95");
 });
 
 ipcMain.on("update-addr-in-db", (event, addrObj) => {

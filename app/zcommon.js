@@ -66,6 +66,7 @@ function deepClone(obj) {
  *
  * @param {string} msg - message for the user
  * @param {function} onOk - lambda executed if OK is pressed
+ * @param onCancel
  * @param {function=} onOk - lambda executed if Cancel is pressed
  */
 function warnUser(msg, onOk, onCancel) {
@@ -295,7 +296,7 @@ function saveInternalInfo() {
 }
 
 function syncZaddrIfSettingsExist() {
-    let settingsForSecureNodeExist = (settings.secureNodeFQDN && settings.secureNodePort && settings.secureNodeUsername && settings.secureNodePassword && settings.sshUsername && settings.sshPassword && settings.sshPort)
+    let settingsForSecureNodeExist = (settings.secureNodeFQDN && settings.secureNodePort && settings.secureNodeUsername && settings.secureNodePassword && settings.sshUsername && settings.sshPassword && settings.sshPort);
     if (settingsForSecureNodeExist) {
         rpc.importAllZAddressesFromSNtoArizen();
         rpc.importAllZAddressesFromArizentoSN();
@@ -303,7 +304,7 @@ function syncZaddrIfSettingsExist() {
 }
 
 function isValidDomainName(domainOrIP) {
-    return (domainOrIP != "" && domainOrIP != undefined) // more to be added
+    return (domainOrIP !== "" && domainOrIP !== undefined) // more to be added
 }
 
 function pingSecureNode() {
