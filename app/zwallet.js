@@ -500,6 +500,7 @@ function scheduleRefresh() {
 }
 
 function refresh() {
+    pingSecureNode();
     scheduleRefresh();
     syncZaddrIfSettingsExist();
     rpc.updateAllZBalances();

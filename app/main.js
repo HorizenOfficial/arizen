@@ -36,7 +36,7 @@ require("electron-debug")();
 
 // Uncomment if you want to run in production
 // Show/Hide Development menu
-process.env.NODE_ENV = "production";
+//process.env.NODE_ENV = "production";
 
 function attachUpdaterHandlers() {
     function onUpdateDownloaded() {
