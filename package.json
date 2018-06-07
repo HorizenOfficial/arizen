@@ -8,6 +8,7 @@
     "start": "npm install && electron .",
     "pack": "build --dir",
     "dist": "build",
+    "dist-flatten": "node_modules/.bin/flatten-packages && npm run dist",
     "publish": "publish",
     "release": "npm run dist && npm run publish"
   },
@@ -117,7 +118,6 @@
     "flatten-packages": "^0.1.4",
     "fs-extra": "^6.0.1",
     "immutable": "^3.8.2",
-    "is-ip": "^2.0.0",
     "jspdf": "^1.4.0",
     "luxon": "^1.2.1",
     "node-json-rpc2": "^1.1.0",
