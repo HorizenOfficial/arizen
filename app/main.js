@@ -1638,7 +1638,7 @@ function calculateForNaddress(event, start, nAddress, data, thresholdLimitInSato
     let amountInSatoshiToSend = 0.0;
     amountInSatoshiToSend -= feeInSatoshi;
 
-    for (let [key, value] of data.entries()) {
+    for (let value of data.values()) {
         if (value.id >= start) {
             if (value.id === (start + nAddress)) {
                 break
@@ -1712,28 +1712,28 @@ function getMaxTxHexStrings(event, txData, thresholdLimitInSatoshi, feeInSatoshi
     const maxKbSize = 100.0;
     let txHexStrings = [];
     let data = generateMap(event, txData, addrPk);
-    let loop = true;
-    let processedAddresses = 0;
-    let nAddrToValidate = 1;
-    let start = 0;
 
-    while (loop){
+    let start = 0;
+    let nAddrToValidate = 1;
+    let nAddrProcessed = 0;
+
+    while (true) {
         let txHexString = calculateForNaddress(event, start, nAddrToValidate, data, thresholdLimitInSatoshi, feeInSatoshi, toAddress, blockHeight, blockHash);
 
         if ((Buffer.byteLength(txHexString, "utf8") / 1024) > maxKbSize) {
+            // FIXME: if nAddrToValidate === 1 and hop here, then error, cant push it in 1 tx throught API - rare
             txHexStrings = txHexStrings.concat(calculateForNaddress(event, start, nAddrToValidate - 1, data, thresholdLimitInSatoshi, feeInSatoshi, toAddress, blockHeight, blockHash));
-            start = nAddrToValidate - 1;
-            processedAddresses = nAddrToValidate;
+            start = nAddrProcessed;
             nAddrToValidate = 1;
         } else {
-            processedAddresses += 1;
+            nAddrProcessed += 1;
             nAddrToValidate += 1;
         }
 
         // while terminal condition
-        if (data.size === processedAddresses) {
+        if (data.size === nAddrProcessed) {
             txHexStrings = txHexStrings.concat(txHexString);
-            loop = false;
+            break
         }
     }
 
