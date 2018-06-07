@@ -296,8 +296,14 @@ function saveInternalInfo() {
 }
 
 function syncZaddrIfSettingsExist() {
-    let settingsForSecureNodeExist = (settings.secureNodeFQDN && settings.secureNodePort && settings.secureNodeUsername && settings.secureNodePassword && settings.sshUsername && settings.sshPassword && settings.sshPort);
-    if (settingsForSecureNodeExist) {
+    if (settings.secureNodeFQDN &&
+        settings.secureNodePort &&
+        settings.secureNodeUsername &&
+        settings.secureNodePassword &&
+        settings.sshUsername &&
+        settings.sshPassword &&
+        settings.sshPort) {
+        // FIXME: this calls multi-refresh transaction history
         rpc.importAllZAddressesFromSNtoArizen();
         rpc.importAllZAddressesFromArizentoSN();
     }
