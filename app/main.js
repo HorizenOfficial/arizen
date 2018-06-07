@@ -955,7 +955,7 @@ function includeDeveloperMenu(template) {
                 {role: "reload"},
                 {role: 'forcereload'},
                 {type: 'separator'},
-                {role: 'togglefullscreen'}
+                {role: 'togglefullscreen'},
                 {type: "separator"},
                 {
                     label: tr("menu.backupUnencrypted", "Backup UNENCRYPTED wallet"),
