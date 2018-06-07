@@ -1,0 +1,266 @@
+{
+  "languageName": "Italiano",
+  "languageValue": "it",
+  "langFileVersion": "1",
+  "login": {
+    "label": "Arizen: Login",
+    "username": "Nome Wallet",
+    "password": "Password",
+    "loginButton": "Login",
+    "createWalletLink": "Crea Wallet",
+    "warningWrongUsernameOrPassword": "<strong>Nome wallet</strong> o <strong>password</strong> errati",
+    "dataImportFailed": "Import dati fallito, le credenziali d'accesso potrebbero essere non corrette",
+    "fileReplace": "Vuoi sostituire il file?",
+    "walletReplace": "Vuoi sostituire il wallet?",
+    "walletReplaceMsg": "Quest'operazione sostituirà il tuo attuale wallet. Sei sicuro?",
+    "walletImported": "Wallet importato con successo",
+    "walletImportFailed": "Import fallito",
+    "yes": "Si",
+    "no": "No"
+  },
+  "createWallet": {
+    "label": "Arizen: Crea Wallet",
+    "username": "Nome Wallet",
+    "password": "Password",
+    "passwordAgain": "Inserisci di nuovo la password",
+    "oldUsername": "Precedente nome wallet: ",
+    "oldPassword": "Password precedente: ",
+    "selectWallet": "Seleziona il Wallet",
+    "selectWalletButton": "Sfoglia",
+    "createWalletButton": "Crea Wallet",
+    "loginLink": "Login",
+    "warningUsername": "Il nome del wallet ha i seguenti requisiti:",
+    "warningUsernameLength": "Almeno <strong>4 lettere</strong>",
+    "warningPassword": "La password ha i seguenti requisiti:",
+    "warningPasswordLetter": "Almeno <strong>1 carattere</strong>",
+    "warningPasswordCapitalLetter": "Almeno <strong>1 carattere maiuscolo</strong>",
+    "warningPasswordNumber": "Almeno <strong>1 numero</strong>",
+    "warningPasswordSpecial": "Almeno <strong>1 carattere speciale</strong>",
+    "warningPasswordLength": "Almeno <strong>8 caratteri</strong>",
+    "warningPasswordAgain": "La password ha i seguenti requisiti:",
+    "warningPasswordAgainIdentical": "<strong>Uguale</strong>",
+    "errorCreationFailed": "Creazione wallet fallita",
+    "errorFailedResponse": "Risposta non corretta"
+  },
+  "notification": {
+    "settingsUpdated": "Impostazioni aggiornate",
+    "balanceUpdated": "Saldo aggiornato",
+    "newTransactions": "Nuova transazione"
+  },
+  "common": {
+    "selectAll": "Seleziona tutto",
+    "clearAll": "Cancella tutto",
+    "okButtonText": "OK",
+    "cancelButtonText": "Annulla"
+  },
+  "importExportPks": {
+    "chooseFileExport": "Scegli il file per le chiavi private",
+    "chooseFileImport": "Seleziona il file con le chiavi private",
+    "InvalidLinePk": "Riga ${0} invalida nel file delle chiavi private",
+    "InvalidPk": "Chiave privata invalida alla riga ${0} nel file file delle chiavi private"
+  },
+  "wallet": {
+    "showSettingsDialogButton": "Impostazioni",
+    "showAboutDialogButton": "Info",
+    "refreshWallet": "Aggiorna",
+    "logout": "Logout",
+    "exit": "Exit",
+    "date": "Data",
+    "from": "Da",
+    "to": "A",
+    "amount": "Totale",
+    "balance": "Saldo",
+    "totalBalance": "Saldo totale",
+    "lastUpdate": "Ultimo aggiornamento",
+    "showExplorer": "Visualizza su ZEN Explorer",
+    "listOfAddresses": "Lista degli indirizzi",
+    "showBatchWithdrawDialog": "Prelievo multiplo",
+    "notLoggedIn": "Disconnesso",
+    "addressNotFound": "indirizzo non trovato",
+    "nameNotFound": "nome non trovato",
+    "renameWalletSetTo": "indirizzo ${0} impostato come ${1}",
+    "fetchBlockchainFailed": "Il recupero delle modifiche alla blockchain è fallito:",
+    "save": "Salva",
+    "pdfExported": "PDF esportato",
+    "autoLogOffLabel": "Disconnessione in ",
+    "tabOverview": {
+      "label": "Generale",
+      "showZeroBalances": "Visualizza saldi a zero",
+      "newAddress": "Genera un nuovo indirizzo",
+      "unnamedAddress": "Indirizzo anonimo",
+      "newAddressExists": "L'indirizzo ${0} è già presente in lista"
+    },
+    "tabDeposit": {
+      "label": "Deposito",
+      "help": "Clicca il pulsante verde vicino l'indirizzo dove effettuare il deposito.",
+      "saveQrcode": "Salva QR code",
+      "messages": {
+        "emptyToAddr": "L'indirizzo 'A' è vuoto",
+        "unknownToAddr": "L'indirizzo di destinazione non è presente in questo wallet",
+        "zeroAmount": "Il saldo non è positivo"
+      }
+    },
+    "tabWithdraw": {
+      "label": "Prelievo",
+      "help": "Clicca il pulsante rosso vicino all'indirizzo da cui effettuare il prelievo.",
+      "availableBalance": "Saldo disponibile",
+      "fee": "Fee della transazione",
+      "txStatus": "Stato transazione",
+      "withdrawConfirmQuestion": "Sicuro di voler inviare questa transazione?",
+      "messages": {
+        "emptyFromAddr": "L'indirizzo 'Da' è vuoto",
+        "unknownFromAddr": "L'indirizzo di origine non è presente in questo wallet",
+        "insufficientFirstSource": "Fondi insufficienti nel 1° indirizzo (minimo: valore soglia + fee)!",
+        "insufficientNextSource": "Fondi insufficienti nel 2 indirizzo o nei successivi (minimo: valore soglia)!",
+        "numberOfKeys": "# le chiavi private e # gli indirizzi non sono uguali!",
+        "sumLowerThanFee": "Il saldo totale di tutti gli indirizzi è inferiore alla fee!",
+        "zenApi": "Le Zen API sono assenti nelle impostazioni!",
+        "unknownAddress": "L'indirizzo di origine non è nel tuo wallet!",
+        "insufficientFundsSourceAddr": "Fondi insufficienti nell'indirizzo di origine o UTXO non disponibile!",
+        "emptyToAddr": "L'indirizzo 'A' è vuoto",
+        "zeroAmount": "Il totale non è positivo",
+        "insufficientFunds": "Fondi insufficienti nell'indirizzo 'Da'",
+        "fromAddressBadLength": "Errata lunghezza dell'indirizzo d'origine!",
+        "fromAddressBadPrefix": "Il prefisso dell'indirizzo d'origine non è corretto - deve essere 'zn'!",
+        "toAddressBadLength": "Errata lunghezza dell'indirizzo di destinazione!",
+        "toAddressBadPrefix": "Il prefisso dell'indirizzo di destinazione non è corretto - deve essere 'zn'!",
+        "amounNotNumber": "Il totale NON è un numero",
+        "amountIsZero": "Il totale deve essere maggiore di 0!",
+        "feeNotNumber": "Fee non è un numero!",
+        "feeIsNegative": "La fee deve essere maggiore o uguale a 0!",
+        "error": "Errore",
+        "success": "La transazione è stata inviata con successo",
+        "isCoinbaseUTXO": "Il tuo indirizzo contiene coin appena minate, anche chiamate output di transazione non spesi (coinbase UTXO). Prima di poter essere spesi devono essere inviati ad uno Z-address e quindi reinviati al T-address di origine, puoi effettuare questa operazione solo con un 'full wallet' come Swing dopo aver importato le chiavi. Dopo questa procedura potrai quindi utilizzarli su Arizen."
+      }
+    },
+    "transactionHistory": {
+      "label": "Storico transazioni",
+      "unconfirmed": "NON CONFERMATO",
+      "replaceAttempt": "Tentativo di sostituire la transazione nel blocco"
+    },
+    "transactionDetail": {
+      "label": "Dettagli transazione",
+      "txid": "ID transazione",
+      "blockHeight": "Altezza blocco",
+      "unconfirmedTx": "TRANSAZIONE NON CONFERMATA"
+    },
+    "addressDetail": {
+      "label": "Dettagli indirizzo",
+      "name": "Nome",
+      "address": "Indirizzo",
+      "saveButton": "Salva modifiche"
+    },
+    "newAddress": {
+      "label": "Genera un nuovo indirizzo",
+      "name": "Nome (opzionale)",
+      "createButton": "Genera"
+    },
+    "about": {
+      "label": "Informazioni su Arizen",
+      "homepage": "Homepage",
+      "version": "Versione",
+      "license": "Licenza",
+      "authors": "Autori"
+    },
+    "settings": {
+      "label": "Impostazioni",
+      "limit": "Limite transazioni",
+      "items": "oggetti",
+      "language": "Linguaggio",
+      "explorerUrl": "ULR ZEN Explorer",
+      "apiUrl": "URLs API",
+      "fiat": "Equivalente in Fiat",
+      "save": "Salva",
+      "enableNotifications": "Notifiche Desktop",
+      "enableDomainFronting": "Domain fronting",
+      "secureNodeFQDN": "Secure Node FQDN",
+      "sshUsername": "SSH username",
+      "sshPassword": "SSH password",
+      "sshPort": "SSH porta",
+      "secureNodePort": "Secure Node Porta (vedi zen.conf)",
+      "secureNodeUsername": "Secure Node Username (vedi zen.conf)",
+      "secureNodePassword": "Secure Node Password (vedi zen.conf)",
+      "readyTimeout": "Ready Timeout (default: 10000)",
+      "forwardTimeout": "Forward Timeout (default: 10000)",
+      "domainFrontingUrl": "Domain fronting public base URL",
+      "domainFrontingHost": "Domain fronting private host",
+      "autoLogOffEnable": "Abilita disconnessione automatica",
+      "autoLogOffTimeout": "Timeout in secondi per la disconnessione automatica"
+    },
+    "paperWallet": {
+      "label": "Paper Wallet",
+      "generateNewWallet": "Crea un nuovo wallet",
+      "name": "Nome (opzionale)",
+      "addWalletToArizen": "Aggiungi questo wallet ad Arizen",
+      "zenCashWalletLabel": "ZenCash Wallet",
+      "tAddrLabel": "Chiave pubblica - T Address",
+      "privateKeyLabel": "Chiave Privata",
+      "namePrint": "Nome",
+      "exportPDFLabel": "Esporta come PDF"
+    },
+    "batchWithdraw": {
+      "label": "Prelievo multiplo",
+      "keepAmount": "Totale da mantenere",
+      "txFee": "Fee di transazione"
+    },
+    "importSinglePrivateKey": {
+      "openButtonLabel": "Importa Chiave Privata",
+      "titleLabel": "Import di una Chiave privata",
+      "privateKeyLabel": "Chiave Privata",
+      "importButtonLabel": "Import",
+      "warningNotValidAddress": "L'indirizzo esiste nel tuo wallet",
+      "warningNotValidPK": "Questa non è una Chiave Privata valida o stai importando una Chiave di Spesa (solo per Z-Addr) invece di una Chiave Privata per T-Addr."
+    },
+    "changePassword": {
+      "title": "Modifica password del Wallet",
+      "warningText": "ATTENZIONE: i precedenti backup del wallet non verranno crittografati di nuovo! Per utilizzarli dovrai usare la password attuale.",
+      "currentPassword": "Password attuale",
+      "newPassword1": "Nuova Password",
+      "newPassword2": "Nuova Password (ripeti)"
+    },
+    "rpcConsole": {
+      "title": "RPC",
+      "command": "Comando",
+      "test": "Test",
+      "results": "Risultati RPC ...",
+      "status": "Status: ",
+      "testFunctionButton": "Funzione di Test"
+    }
+  },
+  "menu": {
+    "file": "File",
+    "backupEncrypted": "Backup CRIPTATO del wallet",
+    "backupUnencrypted": "Backup NON CRIPTATO del wallet",
+    "importEncrypted": "Import wallet CRIPTATO di Arizen",
+    "importUnencrypted": "Import wallet NON CRIPTATO di Arizen",
+    "importPrivateKeys": "Import chiavi private",
+    "exportPrivateKeys": "Export chiavi private",
+    "changeWalletPassword": "Modifica password del wallet",
+    "exit": "Uscita",
+    "edit": "Modifica",
+    "editSubmenu": {
+      "undo": "Annulla",
+      "redo": "Esegui di nuovo",
+      "cut": "Taglia",
+      "copy": "Copia",
+      "paste": "Incolla",
+      "selectAll": "Seleziona tutto"
+    },
+    "help": "Aiuto",
+    "helpSubmenu": {
+      "arizenManual": "Manuale Utente",
+      "support": "Support",
+      "zencash": "ZenCash"
+    }
+  },
+  "warmingMessages": {
+    "userWarningImportFileWithPKs": "Il nuovo indirizzo(i) e la chiave privata(e) saranno importati. I precedenti backup non includono gli indirizzi appena importati o le chiavi private corrispondenti. Utilizza la funzione di backup di Arizen per creare un nuovo file di backup e sostituire il backup del wallet Arizen esistente. Premendo 'Ho capito' dichiari di aver capito questo. Per ulteriori informazioni, consulta il menù di aiuto di Arizen.",
+    "userWarningExportWalletUnencrypted": "Stai per salvare un wallet NON CRIPTATO (e le chiavi private) in un file di testo. Ciò significa che chiunque abbia questo file può controllare i tuoi ZEN. Conserva questo file in un posto sicuro. Premendo 'Ho capito' dichiari di aver capito questo. Per ulteriori informazioni, consulta il menù di aiuto di Arizen.",
+    "userWarningExportWalletEncrypted": "Stai per esportare un wallet CRIPTATO, le tue chiavi private saranno criptate. Ciò significa che per accedere alle tue chiavi private devi conoscere il nome e la password del wallet corrispondente. Nel caso in cui non li conosci, non puoi utilizzare gli ZEN controllate da queste chiavi private. Premendo 'Ho capito' dichiari di aver capito questo. Per ulteriori informazioni, consulta il menù di aiuto di Arizen.",
+    "userWarningImportPK": "Verrà importato un nuovo indirizzo e la chiave privata. I backup precedenti non includono l'indirizzo appena importato o la chiave privata corrispondente. Utilizzare la funzione di backup di Arizen per creare un nuovo file di backup e sostituire il backup del wallet di Arizen esistente. Premendo 'Ho capito' dichiari di aver capito questo. Per ulteriori informazioni, consulta il menù di aiuto di Arizen.",
+    "userWarningCreateNewAddress": "Verranno generati un nuovo indirizzo ed una chiave privata. I tuoi precedenti backup non includono questo indirizzo appena generato o la chiave privata corrispondente. Utilizzare la funzione di backup di Arizen per creare un nuovo file di backup e sostituire il backup del wallet di Arizen esistente. Premendo 'Ho capito' dichiari di aver capito questo. Per ulteriori informazioni, consulta il menù di aiuto di Arizen.",
+    "userWarningIUnderstand": "Ho capito",
+    "cancel": "Annulla",
+    "userWarningImportPkUserZendRescan": "Il saldo dello Z-Addr importato sarà visibile dopo aver eseguito nuovamente la scansione della blockchain. Esegui 'zen-cli stop && sleep 8 && zend -rescan' nel tuo securenode (linux)."
+  }
+}
