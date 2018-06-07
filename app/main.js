@@ -446,13 +446,13 @@ function setSettings(newSettings) {
             headers: {
                 "Host": settings.domainFrontingHost
             },
-            timeout: 10000,
+            timeout: 30000,
         });
     }
     else {
         axiosApi = axios.create({
             baseURL: "https://explorer.zensystem.io/insight-api-zen",
-            timeout: 10000,
+            timeout: 30000,
         });
     }
 }
