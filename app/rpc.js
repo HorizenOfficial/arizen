@@ -296,6 +296,7 @@ async function getPKofZAddress(zAddr) {
 async function importAllZAddressesFromSNtoArizen() {
     let resp = await listAllZAddresses();
     let addrList = resp.output;
+    let isT = false;
     if (resp.isOK) {
         if (!(addrList === undefined || addrList.length === 0)) {
             for (const addr of addrList) {
@@ -303,7 +304,6 @@ async function importAllZAddressesFromSNtoArizen() {
                 // let spendingKey = resp.output;
                 // spendingKey
                 let pk = zenextra.spendingKeyToSecretKey(resp.output);
-                let isT = false;
                 ipcRenderer.send("import-single-key", "My SN Z address", pk, isT);
             }
         }

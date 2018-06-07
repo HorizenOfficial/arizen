@@ -728,7 +728,8 @@ async function updateBlockchainView(webContents) {
     const zAddrObjs = sqlSelectObjects("SELECT addr, name, lastbalance,pk FROM wallet where length(addr)=95");
 
     for (const addrObj of zAddrObjs) {
-        let previousBalance = 0.0; // TODO: Should do something with this
+        // TODO: Should do something with previousBalance
+        let previousBalance = 0.0;
         let balance;
         if (addrObj.lastbalance === "NaN" || addrObj.lastbalance === undefined) {
             balance = 0.0;
@@ -738,7 +739,7 @@ async function updateBlockchainView(webContents) {
         let balanceDiff = balance - previousBalance;
         addrObj.lastbalance = balance;
         sqlRun("UPDATE wallet SET lastbalance = ? WHERE addr = ?", balance, addrObj.addr);
-        totalBalance += balance; //not balanceDiff here
+        totalBalance += balance; // not balanceDiff here
         webContents.send("update-wallet-balance", JSON.stringify({
             response: "OK",
             addrObj: addrObj,
