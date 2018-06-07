@@ -1559,7 +1559,7 @@ function filterOutZeroAddresses(fromAddressesAll, thresholdLimit) {
  * @param fromAddresses - array of addresses
  * @returns {string} - returns string of addresses
  */
-function getPreviousTxURL(fromAddresses){
+function getPreviousTxURL(fromAddresses) {
     let prevTxURL = "/addrs/";
     for (let i = 0; i < fromAddresses.length; i++) {
         prevTxURL += fromAddresses[i] + ",";
@@ -1579,6 +1579,7 @@ function getPreviousTxURL(fromAddresses){
  */
 function generateMap(event, txData, addrPk) {
     let map = new Map();
+    let walletId = 0;
 
     for (let i = 0; i < txData.length; i++) {
         if (txData[i].confirmations === 0) {
@@ -1601,6 +1602,7 @@ function generateMap(event, txData, addrPk) {
             });
         } else {
             let obj = {
+                id: walletId,
                 pk: addrPk.get(txData[i].address),
                 satoshis: txData[i].satoshis,
                 history: [{
@@ -1610,6 +1612,7 @@ function generateMap(event, txData, addrPk) {
                 }]
             };
             map.set(txData[i].address, obj);
+            walletId += 1;
         }
     }
 
@@ -1618,24 +1621,45 @@ function generateMap(event, txData, addrPk) {
 
 /**
  *
+ * @param event
  * @param start
  * @param nAddress
  * @param data
  * @param thresholdLimitInSatoshi
  * @param feeInSatoshi
+ * @param toAddress
+ * @param blockHeight
+ * @param blockHash
  */
-function calculateForNaddress(start, nAddress, data, thresholdLimitInSatoshi, feeInSatoshi, toAddress) {
+function calculateForNaddress(event, start, nAddress, data, thresholdLimitInSatoshi, feeInSatoshi, toAddress, blockHeight, blockHash) {
     let history = [];
     let err = "";
 
-    let idx = 0;
+    let amountInSatoshiToSend = 0.0;
+    amountInSatoshiToSend -= feeInSatoshi;
 
     for (let [key, value] of data.entries()) {
+        if (value.id >= start) {
+            if (value.id === (start + nAddress)) {
+                break
+            }
+            amountInSatoshiToSend += (value.satoshis - thresholdLimitInSatoshi);
+        }
+    }
 
-        if (idx >= start){
-            // 42.5 - (1 * 42.0 - 0.00001)
-            let amountInSatoshiToSend = value.satoshis - (nAddress * thresholdLimitInSatoshi) - feeInSatoshi;
-            let recipients = [{address: toAddress, satoshis: amountInSatoshiToSend}];
+    if (amountInSatoshiToSend <= 0.0) {
+        err = tr("wallet.tabWithdraw.messages.sumLowerThanFee", "Your summed balance over all source addresses is lower than the fee!");
+        event.sender.send("send-finish", "error", err);
+        return;
+    }
+
+    let recipients = [{address: toAddress, satoshis: amountInSatoshiToSend}];
+
+    for (let [key, value] of data.entries()) {
+        if (value.id >= start) {
+            if (value.id === (start + nAddress)) {
+                break
+            }
 
             // Refund thresholdLimitInSatoshi amount to current address
             if (thresholdLimitInSatoshi > 0) {
@@ -1645,25 +1669,33 @@ function calculateForNaddress(start, nAddress, data, thresholdLimitInSatoshi, fe
                 });
             }
 
-            // Create transaction
-            let txObj = zencashjs.transaction.createRawTx(history, recipients, blockHeight, blockHash);
+            value.history.forEach(function(h) {
+                history = history.concat(h);
+            });
+        }
+    }
 
-            // Sign each history transcation
-            let index;
-            for (let i = 0; i < history.length; i++) {
-                index = fromAddresses.indexOf(belongToAddress[i]);
-                txObj = zencashjs.transaction.signTx(txObj, i, privateKeys[index], true);
+    // Create transaction
+    let txObj = zencashjs.transaction.createRawTx(history, recipients, blockHeight, blockHash);
+
+    // Sign history/transaction with PKs
+    let j = 0;
+    for (let value of data.values()) {
+        if (value.id >= start) {
+            if (value.id === (start + nAddress)) {
+                break
             }
 
-            // Convert it to hex string
-            const txHexString = zencashjs.transaction.serializeTx(txObj);
-
+            for (let i = 0; i < value.history.length; i++) {
+                txObj = zencashjs.transaction.signTx(txObj, j, value.pk, true);
+                j += 1;
+            }
         }
-
-        idx += 1;
     }
-}
 
+    // Convert it to hex string
+    return zencashjs.transaction.serializeTx(txObj);
+}
 
 /**
  *
@@ -1674,6 +1706,7 @@ function calculateForNaddress(start, nAddress, data, thresholdLimitInSatoshi, fe
  * @param toAddress
  * @param blockHeight
  * @param blockHash
+ * @param addrPk
  */
 function getMaxTxHexStrings(event, txData, thresholdLimitInSatoshi, feeInSatoshi, toAddress, blockHeight, blockHash, addrPk) {
     const maxKbSize = 100.0;
@@ -1685,33 +1718,26 @@ function getMaxTxHexStrings(event, txData, thresholdLimitInSatoshi, feeInSatoshi
     let start = 0;
 
     while (loop){
-        let txHexString = calculateForNaddress(start, nAddrToValidate, data);
+        let txHexString = calculateForNaddress(event, start, nAddrToValidate, data, thresholdLimitInSatoshi, feeInSatoshi, toAddress, blockHeight, blockHash);
 
         if ((Buffer.byteLength(txHexString, "utf8") / 1024) > maxKbSize) {
-            txHexStrings.append(calculateForNaddress(start, nAddrToValidate - 1, data, thresholdLimitInSatoshi, feeInSatoshi, toAddress));
+            txHexStrings = txHexStrings.concat(calculateForNaddress(event, start, nAddrToValidate - 1, data, thresholdLimitInSatoshi, feeInSatoshi, toAddress, blockHeight, blockHash));
             start = nAddrToValidate - 1;
             processedAddresses = nAddrToValidate;
             nAddrToValidate = 1;
         } else {
+            processedAddresses += 1;
             nAddrToValidate += 1;
         }
 
         // while terminal condition
         if (data.size === processedAddresses) {
+            txHexStrings = txHexStrings.concat(txHexString);
             loop = false;
         }
     }
 
     return txHexStrings
-
-
-
-    //
-    // if ((satoshisSoFar - (fromAddresses.length * thresholdLimitInSatoshi)) < feeInSatoshi) {
-    //     err = tr("wallet.tabWithdraw.messages.sumLowerThanFee", "Your summed balance over all source addresses is lower than the fee!");
-    //     event.sender.send("send-finish", "error", err);
-    //     return;
-    // }
 }
 
 /**
@@ -1783,7 +1809,7 @@ ipcMain.on("send-many", async function (event, fromAddressesAll, toAddress, fee,
         const txHexStrings = getMaxTxHexStrings(event, txData, thresholdLimitInSatoshi, feeInSatoshi, toAddress, blockHeight, blockHash, addrPk);
 
         for(let i = 0; i < txHexStrings.length; i++){
-            const txRespData = await apiPost(sendRawTxURL, {rawtx: txHexString});
+            const txRespData = await apiPost(sendRawTxURL, {rawtx: txHexStrings[i]});
             finalMessage += `<small><a href="javascript:void(0)" onclick="openUrl('${settings.explorerUrl}/tx/${txRespData.txid}')" class="walletListItemDetails transactionExplorer monospace" target="_blank">${txRespData.txid}</a>`;
             finalMessage += "</small><br/>\n\n";
         }
