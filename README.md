@@ -17,7 +17,7 @@
 
 ## v1.1.8
 - [ ] Bug fixes for v1.1.7 version
-- [x] Italiano translation
+- [x] Italian translation
 
 ## v1.1.7
 - [x] Support for sending Z transactions and addresses (available only for Secure Node (SN) operators).
