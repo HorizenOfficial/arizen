@@ -500,6 +500,7 @@ function scheduleRefresh() {
 }
 
 function refresh() {
+    pingSecureNode();
     scheduleRefresh();
     syncZaddrIfSettingsExist();
     rpc.updateAllZBalances();
@@ -601,6 +602,7 @@ async function checkIntermediateSend(tIntermediateAddress, toAddr, amount, feeTw
     amount = parseFloat(amount).toFixed(8);
     let resp = await rpc.getTaddressBalance(tIntermediateAddress);
     balance = resp.balance;
+    console.log(tIntermediateAddress);
     console.log(balance);
     console.log(amount);
     if (balance >= amount) {
@@ -868,6 +870,7 @@ function initWallet() {
     fixPage();
     initDepositView();
     initWithdrawView();
+    const valid = ipcRenderer.sendSync("update-Z-old-balance");
     document.getElementById("actionShowZeroBalances").addEventListener("click", toggleZeroBalanceAddrs);
     document.getElementById("refreshButton").addEventListener("click", refresh);
     document.getElementById("createNewAddrButton").addEventListener("click", showNewAddrDialog);

@@ -268,13 +268,14 @@ async function getTaddressBalance(address) {
 }
 
 async function updateAllZBalances() {
-    let zAddrObjs = ipcRenderer.sendSync("get-all-Z-addresses");
-    let newBalanceResp;
-    for (let addrObj of zAddrObjs) {
-        newBalanceResp = await getZaddressBalance(addrObj.pk, addrObj.addr);
-        if (newBalanceResp.balance >= 0.0) {
-            addrObj.lastbalance = newBalanceResp.balance;
-            ipcRenderer.sendSync("update-addr-in-db", addrObj);
+    const valid = ipcRenderer.sendSync("update-Z-old-balance");
+    const zAddrObjs = ipcRenderer.sendSync("get-all-Z-addresses");
+    for (const addrObj of zAddrObjs) {
+        let newBalanceResp = await getZaddressBalance(addrObj.pk, addrObj.addr);
+        let newBalance = newBalanceResp.balance;
+        if (newBalance >= 0.0) {
+            addrObj.lastbalance = newBalance;
+            let respZ = ipcRenderer.sendSync("update-addr-in-db", addrObj);
         }
     }
 }
@@ -310,6 +311,31 @@ async function importAllZAddressesFromSNtoArizen() {
     }
 }
 
+async function importAllZAddressesFromSNtoArizenExcludeExisting() {
+    let resp = await listAllZAddresses();
+    let addrList = resp.output;
+    let isT = false;
+    if (resp.isOK) {
+        const zAddrObjsArizen = ipcRenderer.sendSync("get-all-Z-addresses"); // In Arizen
+        let arizenZs = [];
+        for (const addrObj of zAddrObjsArizen) {
+            arizenZs.push(addrObj.addr)
+        }
+
+        if (!(addrList === undefined || addrList.length === 0)) {
+            for (const addr of addrList) {
+                if (!(arizenZs.includes(addr))){
+                    let resp = await getPKofZAddress(addr);
+                    // let spendingKey = resp.output;
+                    // spendingKey
+                    let pk = zenextra.spendingKeyToSecretKey(resp.output);
+                    ipcRenderer.send("import-single-key", "My SN Z address", pk, isT);
+                }
+            }
+        }
+    }
+}
+
 async function importAllZAddressesFromArizentoSN() {
     const zAddrObjs = ipcRenderer.sendSync("get-all-Z-addresses");
     let nullResp;
@@ -340,6 +366,7 @@ module.exports = {
     sendFromOrToZaddress: sendFromOrToZaddress,
     updateAllZBalances: updateAllZBalances,
     importAllZAddressesFromSNtoArizen: importAllZAddressesFromSNtoArizen,
+    importAllZAddressesFromSNtoArizenExcludeExisting: importAllZAddressesFromSNtoArizenExcludeExisting,
     importAllZAddressesFromArizentoSN: importAllZAddressesFromArizentoSN,
     pingSecureNodeRPC: pingSecureNodeRPC,
     getSecureNodeTaddressOrGenerate: getSecureNodeTaddressOrGenerate,
