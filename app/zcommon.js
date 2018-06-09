@@ -304,7 +304,7 @@ function syncZaddrIfSettingsExist() {
         settings.sshPassword &&
         settings.sshPort) {
         rpc.importAllZAddressesFromSNtoArizenExcludeExisting();
-        rpc.importAllZAddressesFromArizentoSN();
+        rpc.importAllZAddressesFromArizenToSN();
     }
 }
 

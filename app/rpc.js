@@ -336,7 +336,7 @@ async function importAllZAddressesFromSNtoArizenExcludeExisting() {
     }
 }
 
-async function importAllZAddressesFromArizentoSN() {
+async function importAllZAddressesFromArizenToSN() {
     const zAddrObjs = ipcRenderer.sendSync("get-all-Z-addresses");
     let nullResp;
     for (const addrObj of zAddrObjs) {
@@ -365,12 +365,12 @@ module.exports = {
     getNewZaddressPK: getNewZaddressPK,
     sendFromOrToZaddress: sendFromOrToZaddress,
     updateAllZBalances: updateAllZBalances,
-    importAllZAddressesFromSNtoArizen: importAllZAddressesFromSNtoArizen,
     importAllZAddressesFromSNtoArizenExcludeExisting: importAllZAddressesFromSNtoArizenExcludeExisting,
-    importAllZAddressesFromArizentoSN: importAllZAddressesFromArizentoSN,
+    importAllZAddressesFromArizenToSN: importAllZAddressesFromArizenToSN,
     pingSecureNodeRPC: pingSecureNodeRPC,
     getSecureNodeTaddressOrGenerate: getSecureNodeTaddressOrGenerate,
     getTaddressBalance: getTaddressBalance
+    // importAllZAddressesFromSNtoArizen: importAllZAddressesFromSNtoArizen,
     // getOperationStatus: getOperationStatus,
     // getZaddressBalance: getZaddressBalance,
     // rpcCallCoreSync: rpcCallCoreSync,
