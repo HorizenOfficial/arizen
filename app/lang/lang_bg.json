@@ -1,0 +1,266 @@
+{
+  "languageName": "Bulgarian",
+  "languageValue": "bg",
+  "langFileVersion": "1",
+  "login": {
+    "label": "Arizen: Влизане",
+    "username": "Име на портфейла",
+    "password": "Парола",
+    "loginButton": "Влизане",
+    "createWalletLink": "Създаване на портфейл",
+    "warningWrongUsernameOrPassword": "Грешно <strong>име на портфейла</strong> или <strong>парола</strong>",
+    "dataImportFailed": "Неуспешно внасяне на данни, възможна причина е грешка в отчетените данни",
+    "fileReplace": "Желаете ли да заместите файла?",
+    "walletReplace": "Заместване на портфейла?",
+    "walletReplaceMsg": "Това ще замести съществуващия Ви портфейл. Съгласявате ли се?",
+    "walletImported": "Портфейлът е импортиран успешно",
+    "walletImportFailed": "Неуспешно импортиране",
+    "yes": "Да",
+    "no": "Не"
+  },
+  "createWallet": {
+    "label": "Arizen: Създаване на портфейл",
+    "username": "Име на портфейла",
+    "password": "Парола",
+    "passwordAgain": "Повторете паролата",
+    "oldUsername": "Име на стария портфейл: ",
+    "oldPassword": "Стара парола: ",
+    "selectWallet": "Изберете портфейл",
+    "selectWalletButton": "Търсене",
+    "createWalletButton": "Създаване на портфейл",
+    "loginLink": "Влизане",
+    "warningUsername": "Името на портфейла трябва да отговаря на следните изисквания:",
+    "warningUsernameLength": "Най-малко <strong>четири букви</strong>",
+    "warningPassword": "Паролата трябва да отговаря на следните изисквания:",
+    "warningPasswordLetter": "Най-малко <strong>една буква</strong>",
+    "warningPasswordCapitalLetter": "Най-малко <strong>една главна буква</strong>",
+    "warningPasswordNumber": "Най-малко <strong>една цифра</strong>",
+    "warningPasswordSpecial": "Най-малко <strong>един специален символ</strong>",
+    "warningPasswordLength": "Най-малко <strong>8 символа</strong>",
+    "warningPasswordAgain": "Паролата трябва да отговаря на следните изисквания:",
+    "warningPasswordAgainIdentical": "<strong>Идентични</strong>",
+    "errorCreationFailed": "Неуспешно създаване на портфейл",
+    "errorFailedResponse": "Няма отговор"
+  },
+  "notification": {
+    "settingsUpdated": "Обновени настройки",
+    "balanceUpdated": "Обновен баланс",
+    "newTransactions": "Нова транзакция"
+  },
+  "common": {
+    "selectAll": "Маркиране на всичко",
+    "clearAll": "Изчистване на всичко",
+    "okButtonText": "ОК",
+    "cancelButtonText": "Отказ"
+  },
+  "importExportPks": {
+    "chooseFileExport": "Изберете файл за частните ключове",
+    "chooseFileImport": "Изберете файл с частните ключове",
+    "InvalidLinePk": "Невалиден ред ${0} във файла с частните ключове",
+    "InvalidPk": "Невалиден частен ключ на ред ${0} във файла с частните ключове"
+  },
+  "wallet": {
+    "showSettingsDialogButton": "Настройки",
+    "showAboutDialogButton": "Относно",
+    "refreshWallet": "Опресняване",
+    "logout": "Смяна на потребителя",
+    "exit": "Изход",
+    "date": "Дата",
+    "from": "От",
+    "to": "До",
+    "amount": "Стойност",
+    "balance": "Баланс",
+    "totalBalance": "Общ баланс",
+    "lastUpdate": "Последно обновяване",
+    "showExplorer": "Показване в ZEN Explorer",
+    "listOfAddresses": "Списък с адреси",
+    "showBatchWithdrawDialog": "Групово изплащане",
+    "notLoggedIn": "Потребителят не е влязъл в системата",
+    "addressNotFound": "адресът не е намерен",
+    "nameNotFound": "името не е намерено",
+    "renameWalletSetTo": "Адресът ${0} е преименуван в ${1}",
+    "fetchBlockchainFailed": "Грешка при обновяване на промените в блокчейна:",
+    "save": "Запазване",
+    "pdfExported": "PDF експортиран",
+    "autoLogOffLabel": "Вход/Изход в ",
+    "tabOverview": {
+      "label": "Преглед",
+      "showZeroBalances": "Показване на нулев баланс",
+      "newAddress": "Получаване на нов адрес",
+      "unnamedAddress": "Ненаименован адрес",
+      "newAddressExists": "Адресът ${0} вече е в списъка"
+    },
+    "tabDeposit": {
+      "label": "Депозит",
+      "help": "Кликнете зеления бутон до желания адрес за да направите депозит.",
+      "saveQrcode": "Запазване на QR код",
+      "messages": {
+        "emptyToAddr": "Адресът на получателя е празен",
+        "unknownToAddr": "Адресът на получателя не принадлежи към този портфейл",
+        "zeroAmount": "Сумата не е положителна"
+      }
+    },
+    "tabWithdraw": {
+      "label": "Теглене",
+      "help": "Кликнете червения бутон до желания адрес за теглене.",
+      "availableBalance": "Наличен баланс",
+      "fee": "Такса за транзакция",
+      "txStatus": "Състояние на транзакцията",
+      "withdrawConfirmQuestion": "Наистина ли искате да изпратите тази транзакция?",
+      "messages": {
+        "emptyFromAddr": "Адресът на подателя е празен",
+        "unknownFromAddr": "Адресът на подателя не принадлежи към този портфейл",
+        "insufficientFirstSource": "Недостатъчна наличност на 1-ви източник (минимум: трешхолд лимит + таксата)!",
+        "insufficientNextSource": "недостатъчна наличност на 2-ри или следващ източник (минимум: трешхолд лимит)!",
+        "numberOfKeys": "# частни ключове и # адреси не са еднакви!",
+        "sumLowerThanFee": "Ващият общ баланс от всички адреси източници е по-малък от таксата!",
+        "zenApi": "Zen API не е заложено в настройките!",
+        "unknownAddress": "Адресът на източника не е във Вашия портфейл!",
+        "insufficientFundsSourceAddr": "Недостатъчна наличност в адреса на източника или невалидни UTXO(незавършени транзакции от добив)!",
+        "emptyToAddr": "Адресът на получателя е празен",
+        "zeroAmount": "Сумата не е положително число",
+        "insufficientFunds": "Недостатъчна наличност в адреса на подателя",
+        "fromAddressBadLength": "Грешка в дължината на адреса на източника!",
+        "fromAddressBadPrefix": "Грешен префикс на адреса - трябва да започва с 'zn'!",
+        "toAddressBadLength": "Грешка в дължината на адреса на получателя!",
+        "toAddressBadPrefix": "грешен префикс на адреса на получателя - трябва да започва с 'zn'!",
+        "amounNotNumber": "Сумата НЕ Е число",
+        "amountIsZero": "Сумата трябва да е по-голяма или равна на нула!",
+        "feeNotNumber": "Таксата НЕ Е число!",
+        "feeIsNegative": "Таксата трябва да е по-голяма или равна на нула!",
+        "error": "Грешка",
+        "success": "Транзакцията е изпратена успешно",
+        "isCoinbaseUTXO": "Вашият адрес съдържа новоизкопани койни, също наречени койнбейс незавършени транзакции от добив (coinbase UTXO). Те трябва да бъдат защитени и незащитени преди да могат да бъдат изразходвани. Моля, импортирайте частния ключ на този адрес в пълен портфейл като Swing и след това изпратете всичките си монети от този адрес на Z-адрес и след това обратно на този T-адрес. След това ще можете да ги похарчите в Arizen. "
+      }
+    },
+    "transactionHistory": {
+      "label": "История на транзакциите",
+      "unconfirmed": "НЕПОТВЪРДЕНИ",
+      "replaceAttempt": "Опит за смяна на транзакция в блока"
+    },
+    "transactionDetail": {
+      "label": "Подробности по транзакциите",
+      "txid": "Номер на транзакцията",
+      "blockHeight": "Последен блок",
+      "unconfirmedTx": "НЕПОТВЪРДЕНА ТРАНЗАКЦИЯ"
+    },
+    "addressDetail": {
+      "label": "Посробности за адреса",
+      "name": "Име",
+      "address": "Адрес",
+      "saveButton": "Запазване на промените"
+    },
+    "newAddress": {
+      "label": "Създаване на нов адрес",
+      "name": "Име(по избор)",
+      "createButton": "Създаване"
+    },
+    "about": {
+      "label": "Относно Arizen",
+      "homepage": "Домашна страница",
+      "version": "Версия",
+      "license": "Лиценз",
+      "authors": "Разработчици"
+    },
+    "settings": {
+      "label": "Настройки",
+      "limit": "Ограничение на транзакциите",
+      "items": "обекти",
+      "language": "Език",
+      "explorerUrl": "ZEN Explorer URL",
+      "apiUrl": "API URLs",
+      "fiat": "Фиатни пари",
+      "save": "Запазване",
+      "enableNotifications": "Desktop notifications",
+      "enableDomainFronting": "Domain fronting",
+      "secureNodeFQDN": "Secure Node FQDN",
+      "sshUsername": "SSH потребителско име",
+      "sshPassword": "SSH парола",
+      "sshPort": "SSH порт",
+      "secureNodePort": "Secure Node Port (see zen.conf)",
+      "secureNodeUsername": "Secure Node Потребителско име (see zen.conf)",
+      "secureNodePassword": "Secure Node Парола (see zen.conf)",
+      "readyTimeout": "Ready Timeout (default: 10000)",
+      "forwardTimeout": "Forward Timeout (default: 10000)",
+      "domainFrontingUrl": "Domain fronting public base URL",
+      "domainFrontingHost": "Domain fronting private host",
+      "autoLogOffEnable": "Активиране на автоматично потребителско излизане от системата",
+      "autoLogOffTimeout": "Времетраене до активирането на автоматично потребителско излизане от системата в секунди"
+    },
+    "paperWallet": {
+      "label": "Хартиен портфейл",
+      "generateNewWallet": "Генериране на нов портфейл",
+      "name": "Име (по избор)",
+      "addWalletToArizen": "Добавяне на портфейла към Arizen",
+      "zenCashWalletLabel": "ZenCash портфейл",
+      "tAddrLabel": "Public Key - T Address",
+      "privateKeyLabel": "Private Key",
+      "namePrint": "Име",
+      "exportPDFLabel": "Експорт на PDF"
+    },
+    "batchWithdraw": {
+      "label": "Групово изплащане",
+      "keepAmount": "Сума за запазване",
+      "txFee": "Такса за транзакция"
+    },
+    "importSinglePrivateKey": {
+      "openButtonLabel": "Импортиране на частен ключ",
+      "titleLabel": "Импортиране на единичвн частен ключ",
+      "privateKeyLabel": "Частен ключ",
+      "importButtonLabel": "Импортиране",
+      "warningNotValidAddress": "Адресът съществува в портфейла Ви",
+      "warningNotValidPK": "Това не е валиден частен ключ или се опитвате да въведете Spending Key (само за Z адреси) като T адрес частен ключ."
+    },
+    "changePassword": {
+      "title": "Смяна на паролата на портфейла",
+      "warningText": "ВНИМАНИЕ: Предходните резервни копия на портфейла няма да бъдат криптирани наново! Ако Ви е необходимо да ги използвате, ще трябва да използвате настоящата парола.",
+      "currentPassword": "Сегашна парола",
+      "newPassword1": "Нова парола",
+      "newPassword2": "Нова парола (въведете наново)"
+    },
+    "rpcConsole": {
+      "title": "RPC",
+      "command": "Команда",
+      "test": "Тествай ме",
+      "results": "RPC резултати ...",
+      "status": "Състояние: ",
+      "testFunctionButton": "Тестване на функции"
+    }
+  },
+  "menu": {
+    "file": "Файл",
+    "backupEncrypted": "Създаване на резервно копие на КРИПТИРАН портфейл",
+    "backupUnencrypted": "Създаване на резервно копие на НЕКРИПТИРАН портфейл",
+    "importEncrypted": "Импортиране на КРИПТИРАН Arizen портфейл",
+    "importUnencrypted": "Импортиране на НЕКРИПТИРАН Arizen портфейл",
+    "importPrivateKeys": "Импортиране на частните ключове",
+    "exportPrivateKeys": "Експортиране на частните ключове",
+    "changeWalletPassword": "Смяна на паролата на портфейла",
+    "exit": "Изход",
+    "edit": "Редактиране",
+    "editSubmenu": {
+      "undo": "Отмяна",
+      "redo": "Повторение",
+      "cut": "Изрязване",
+      "copy": "Копиране",
+      "paste": "Поставяне",
+      "selectAll": "Маркиране на всичко"
+    },
+    "help": "Помощ",
+    "helpSubmenu": {
+      "arizenManual": "Упътване",
+      "support": "Поддръжка",
+      "zencash": "ZenCash"
+    }
+  },
+  "warmingMessages": {
+    "userWarningImportFileWithPKs": "Нов/и адрес/и и частен/и ключове ще бъдат импортирани. Вашите предходни резервни копия не съдържат новоимпортираните адреси или съответните им частни ключове. Моля използвайте опцията на Arizen за правене на резервно копие за да създадете нов бекъп файл на мястото на Вашия вече съществуващ Arizen портфейл бекъп. Като изберете 'Разбрах', декларирате, че това е разбрано. За повече информация, моля, вижте в помощното меню на Arizen.",
+    "userWarningExportWalletUnencrypted": "Вие ще експортирате НЕКРИПТИРАН портфейл (т.е вашите частни ключове) в обикновен текст. Това означава, че всеки, който притежава този файл, може да контролира Вашия ZEN. Съхранете файла на сигурно място. Като изберете 'Разбрах', декларирате, че това е разбрано. За повече информация, моля, вижте в помощното меню на Arizen.",
+    "userWarningExportWalletEncrypted": "Вие ще експортирате КРИПТИРАН портфейл и вашите частни ключове ще бъдат криптирани. Това означава, че за да имате достъп до Вашите частни ключове, трябва да знаете съответното име на портфейл и парола. В случй, че не ги знаете, Вие не може да контролирате ZEN-овете, които биват контролирани от тези частни ключове. Като изберете 'Разбрах', декларирате, че това е разбрано. За повече информация, моля, вижте в помощното меню на Arizen.",
+    "userWarningImportPK": "Ще бъдат импортирани нов адрес и частен ключ. Вашите предходни резервни копия не съдържат новоимпортираните адреси или съответните им частни ключове. Моля използвайте опцията на Arizen за правене на резервно копие за да създадете нов бекъп файл на мястото на Вашия вече съществуващ Arizen портфейл бекъп. Като изберете 'Разбрах', декларирате, че това е разбрано. За повече информация, моля, вижте в помощното меню на Arizen.",
+    "userWarningCreateNewAddress": "Ще бъдат създадени нов адрес и частен ключ. Вашите предходни резервни копия не съдържат новоимпортираните адреси или съответните им частни ключове. Моля използвайте опцията на Arizen за правене на резервно копие за да създадете нов бекъп файл на мястото на Вашия вече съществуващ Arizen портфейл бекъп. Като изберете 'Разбрах', декларирате, че това е разбрано. За повече информация, моля, вижте в помощното меню на Arizen.",
+    "userWarningIUnderstand": "Разбрах",
+    "cancel": "Отказ",
+    "userWarningImportPkUserZendRescan": "Балансът на Z адресът, който импортирахте, ще бъде видим след като сканирате наново блокчейна. Моля, пуснете 'zen-cli stop && sleep 8 && zend -rescan' във Вашия secure node (linux)."
+  }
+}
