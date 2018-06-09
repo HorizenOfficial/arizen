@@ -754,7 +754,7 @@ async function updateBlockchainView(webContents) {
                 diff: balanceDiff,
                 total: totalBalance
             }));
-       
+       }
     }
 
     // Why here ? In case balance is unchanged the 'update-wallet-balance' is never sent, but the Zen/Fiat balance will change.

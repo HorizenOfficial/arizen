@@ -303,8 +303,7 @@ function syncZaddrIfSettingsExist() {
         settings.sshUsername &&
         settings.sshPassword &&
         settings.sshPort) {
-        // FIXME: this calls multi-refresh transaction history
-        rpc.importAllZAddressesFromSNtoArizen();
+        rpc.importAllZAddressesFromSNtoArizenExcludeExisting();
         rpc.importAllZAddressesFromArizentoSN();
     }
 }
