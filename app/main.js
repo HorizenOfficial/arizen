@@ -1081,8 +1081,7 @@ function createWindow() {
     updateMenuAtLogout();
     mainWindow = new BrowserWindow({width: 1010, height: 730, resizable: true, icon: "resources/zen_icon.png"});
 
-    mainWindow.webContents.openDevTools();
-
+    // mainWindow.webContents.openDevTools();
 
     if (fs.existsSync(getWalletPath())) {
         mainWindow.loadURL(url.format({
