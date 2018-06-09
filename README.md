@@ -16,8 +16,11 @@
 # Version History
 
 ## v1.1.8
-- [ ] Bug fixes for v1.1.7 version
-- [x] Italian translation
+- [x] Sync refresh of Z balances.
+- [x] Ping to IPv6
+- [x] Include flatten package
+- [x] Fix of the flickering issue in TXs
+- [x] Italian and Bulgarian translation
 
 ## v1.1.7
 - [x] Support for sending Z transactions and addresses (available only for Secure Node (SN) operators).
