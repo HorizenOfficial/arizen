@@ -123,7 +123,8 @@
         "feeIsNegative": "수수료는 0이거나 그보다 커야합니다!",
         "error": "오류",
         "success": "거래가 성공적으로 완료되었습니다.",
-        "isCoinbaseUTXO": "귀하의 주소에는 coinbase 미사용 거래 출력 (coinbase UTXO)이라고도하는 새로 채굴 된 동전이 있습니다. 이것들은 보호 받기 전에 차폐가 필요합니다. 스윙과 같은 전체 지갑에 이 주소의 비공개 키를 가져온 다음, 이 주소에서 Z 주소로 모든 동전을 보내고 T 주소로 되돌려주십시오. 그러면 Arizen에서 그들을 보낼 수 있습니다."
+        "isCoinbaseUTXO": "귀하의 주소에는 coinbase 미사용 거래 출력 (coinbase UTXO)이라고도하는 새로 채굴 된 동전이 있습니다. 이것들은 보호 받기 전에 차폐가 필요합니다. 스윙과 같은 전체 지갑에 이 주소의 비공개 키를 가져온 다음, 이 주소에서 Z 주소로 모든 동전을 보내고 T 주소로 되돌려주십시오. 그러면 Arizen에서 그들을 보낼 수 있습니다.",
+        "tooManyUTXOs": "Your address consists of too many UTXOs, it is not possible to send this transaction via API!"
       }
     },
     "transactionHistory": {
