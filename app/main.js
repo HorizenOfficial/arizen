@@ -1739,28 +1739,47 @@ function calculateForNaddress(event, start, nAddress, data, thresholdLimitInSato
  */
 function getMaxTxHexStrings(event, txData, thresholdLimitInSatoshi, feeInSatoshi, toAddress, blockHeight, blockHash, addrPk) {
     // API request limit, URL length
-    const maxKbSize = 100.0;
+    const maxKbSize = 1.6; // 100
     let txHexStrings = [];
-    // prepare data
-    let data = generateMap(event, txData, addrPk);
-
+    let err = "";
     let start = 0;
     let nAddrToValidate = 1;
     let nAddrProcessed = 0;
+    let booster = 2; // 20
+    let boosterEnabled = false;
 
-    // TODO: introduce booster - 5x multiplier
+    // prepare data
+    let data = generateMap(event, txData, addrPk);
+
+    // Enable booster if there are many addresses
+    if (data.size >= booster) {
+        nAddrToValidate = booster;
+        boosterEnabled = true;
+    }
 
     while (true) {
         let txHexString = calculateForNaddress(event, start, nAddrToValidate, data, thresholdLimitInSatoshi, feeInSatoshi, toAddress, blockHeight, blockHash);
 
         if ((Buffer.byteLength(txHexString, "utf8") / 1024) > maxKbSize) {
-            // FIXME: if nAddrToValidate === 1 and hop here, then error, cant push it in 1 tx throught API - rare
-            txHexStrings = txHexStrings.concat(calculateForNaddress(event, start, nAddrToValidate - 1, data, thresholdLimitInSatoshi, feeInSatoshi, toAddress, blockHeight, blockHash));
-            start = nAddrProcessed;
-            nAddrToValidate = 1;
+            if (nAddrToValidate === 1) {
+                err = tr("wallet.tabWithdraw.messages.tooManyUTXOs", "Your address consists of too many UTXOs, it is not possible to send this transaction via API!");
+                event.sender.send("send-finish", "error", err);
+            }
+
+            if (boosterEnabled) {
+                nAddrToValidate = 1;
+                boosterEnabled = false;
+            } else {
+                txHexStrings = txHexStrings.concat(calculateForNaddress(event, start, nAddrToValidate - 1, data, thresholdLimitInSatoshi, feeInSatoshi, toAddress, blockHeight, blockHash));
+                start = nAddrProcessed;
+
+                nAddrToValidate = ((start + booster) < data.size) ? booster : 1;
+                boosterEnabled = ((start + booster) < data.size);
+            }
         } else {
-            nAddrProcessed += 1;
+            nAddrProcessed += boosterEnabled ? booster : 1;
             nAddrToValidate += 1;
+            boosterEnabled = false;
         }
 
         // while terminal condition
