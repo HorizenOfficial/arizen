@@ -1739,13 +1739,13 @@ function calculateForNaddress(event, start, nAddress, data, thresholdLimitInSato
  */
 function getMaxTxHexStrings(event, txData, thresholdLimitInSatoshi, feeInSatoshi, toAddress, blockHeight, blockHash, addrPk) {
     // API request limit, URL length
-    const maxKbSize = 1.6; // 100
+    const maxKbSize = 100;
     let txHexStrings = [];
     let err = "";
     let start = 0;
     let nAddrToValidate = 1;
     let nAddrProcessed = 0;
-    let booster = 2; // 20
+    let booster = 20;
     let boosterEnabled = false;
 
     // prepare data
