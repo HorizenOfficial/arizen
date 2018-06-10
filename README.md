@@ -16,6 +16,8 @@
 # Version History
 
 ## v1.1.8
+- [x] Refactor: batch-withdraw functionality
+- [x] Introduce booster for batch-withdraw functionality (speed-up logic in case of many addresses)
 - [x] Sync refresh of Z balances.
 - [x] Ping to IPv6
 - [x] Include flatten package
