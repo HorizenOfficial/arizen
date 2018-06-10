@@ -3,7 +3,7 @@ const LANGDIR = __dirname + "/../app/lang";
 const jsonfileplus = require("json-file-plus");
 const argv = require("yargs").argv;
 
-if (argv._.length != 2) {
+if (argv._.length !== 2) {
     console.log(`Usage: ${argv.$0} key value`);
     process.exit(1);
 }
