@@ -1752,7 +1752,7 @@ function getMaxTxHexStrings(event, txData, thresholdLimitInSatoshi, feeInSatoshi
     let start = 0;
     let nAddrToValidate = 1;
     let nAddrProcessed = 0;
-    let booster = 20;
+    let booster = 25;
     let boosterEnabled = false;
 
     // prepare data
