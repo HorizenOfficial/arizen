@@ -36,7 +36,7 @@ const userWarningExportWalletEncrypted = "You are going to export an ENCRYPTED w
 
 // Uncomment if you want to run in production
 // Show/Hide Development menu
-//process.env.NODE_ENV = "production";
+process.env.NODE_ENV = "production";
 
 // Wait function to avoid api rate-limiting
 function sleep(millis) {
