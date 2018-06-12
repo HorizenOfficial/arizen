@@ -236,7 +236,6 @@ async function getSecureNodeTaddressOrGenerate() {
     } else {
         return false
     }
-
 }
 
 async function getOperationStatus(opid) {
@@ -269,6 +268,7 @@ async function getTaddressBalance(address) {
 }
 
 async function updateAllZBalances() {
+    const valid = ipcRenderer.sendSync("update-Z-old-balance");
     const zAddrObjs = ipcRenderer.sendSync("get-all-Z-addresses");
     for (const addrObj of zAddrObjs) {
         let newBalanceResp = await getZaddressBalance(addrObj.pk, addrObj.addr);
@@ -281,42 +281,62 @@ async function updateAllZBalances() {
 }
 
 async function listAllTAddresses() {
-    // let resp = await rpcCallResultSync("listaddresses", []);
     return await rpcCallResultSync("listaddresses", [])
 }
 
 async function listAllZAddresses() {
-    // let resp = await rpcCallResultSync("z_listaddresses", []);
     return await rpcCallResultSync("z_listaddresses", [])
 }
 
 async function getPKofZAddress(zAddr) {
     const cmd = "z_exportkey";
     let paramsUsed = [zAddr];
-    // let spendingKey = resp.output;
-    // let resp = await rpcCallResultSync(cmd, paramsUsed);
     return await rpcCallResultSync(cmd, paramsUsed)
 }
 
 async function importAllZAddressesFromSNtoArizen() {
-    let addrList = [];
     let resp = await listAllZAddresses();
-    // console.log(resp);
-    addrList = resp.output;
+    let addrList = resp.output;
+    let isT = false;
     if (resp.isOK) {
         if (!(addrList === undefined || addrList.length === 0)) {
             for (const addr of addrList) {
                 let resp = await getPKofZAddress(addr);
-                //let spendingKey = resp.output;
-                let pk = zenextra.spendingKeyToSecretKey(resp.output); //spendingKey
-                let isT = false;
-                ipcRenderer.send("import-single-key", "My SN Z addr", pk, isT);
+                // let spendingKey = resp.output;
+                // spendingKey
+                let pk = zenextra.spendingKeyToSecretKey(resp.output);
+                ipcRenderer.send("import-single-key", "My SN Z address", pk, isT);
             }
         }
     }
 }
 
-async function importAllZAddressesFromArizentoSN() {
+async function importAllZAddressesFromSNtoArizenExcludeExisting() {
+    let resp = await listAllZAddresses();
+    let addrList = resp.output;
+    let isT = false;
+    if (resp.isOK) {
+        const zAddrObjsArizen = ipcRenderer.sendSync("get-all-Z-addresses"); // In Arizen
+        let arizenZs = [];
+        for (const addrObj of zAddrObjsArizen) {
+            arizenZs.push(addrObj.addr)
+        }
+
+        if (!(addrList === undefined || addrList.length === 0)) {
+            for (const addr of addrList) {
+                if (!(arizenZs.includes(addr))){
+                    let resp = await getPKofZAddress(addr);
+                    // let spendingKey = resp.output;
+                    // spendingKey
+                    let pk = zenextra.spendingKeyToSecretKey(resp.output);
+                    ipcRenderer.send("import-single-key", "My SN Z address", pk, isT);
+                }
+            }
+        }
+    }
+}
+
+async function importAllZAddressesFromArizenToSN() {
     const zAddrObjs = ipcRenderer.sendSync("get-all-Z-addresses");
     let nullResp;
     for (const addrObj of zAddrObjs) {
@@ -338,22 +358,22 @@ async function sendFromOrToZaddress(fromAddressPK, fromAddress, toAddress, amoun
     return resp
 }
 
-// FIXME: rpcCallCoreSync, getZaddressBalance, getOperationStatus, importPKinSN, and helpSync are unused
 module.exports = {
     cleanCommandString: cleanCommandString,
     splitCommandString: splitCommandString,
-    // rpcCallCoreSync: rpcCallCoreSync,
     rpcCallResultSync: rpcCallResultSync,
     getNewZaddressPK: getNewZaddressPK,
-    // getZaddressBalance: getZaddressBalance,
     sendFromOrToZaddress: sendFromOrToZaddress,
-    // getOperationStatus: getOperationStatus,
     updateAllZBalances: updateAllZBalances,
-    importAllZAddressesFromSNtoArizen: importAllZAddressesFromSNtoArizen,
-    importAllZAddressesFromArizentoSN: importAllZAddressesFromArizentoSN,
-    // importPKinSN: importPKinSN,
+    importAllZAddressesFromSNtoArizenExcludeExisting: importAllZAddressesFromSNtoArizenExcludeExisting,
+    importAllZAddressesFromArizenToSN: importAllZAddressesFromArizenToSN,
     pingSecureNodeRPC: pingSecureNodeRPC,
     getSecureNodeTaddressOrGenerate: getSecureNodeTaddressOrGenerate,
-    getTaddressBalance: getTaddressBalance,
-    helpSync: helpSync
+    getTaddressBalance: getTaddressBalance
+    // importAllZAddressesFromSNtoArizen: importAllZAddressesFromSNtoArizen,
+    // getOperationStatus: getOperationStatus,
+    // getZaddressBalance: getZaddressBalance,
+    // rpcCallCoreSync: rpcCallCoreSync,
+    // importPKinSN: importPKinSN,
+    // helpSync: helpSync
 };

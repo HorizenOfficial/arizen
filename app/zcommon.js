@@ -66,6 +66,7 @@ function deepClone(obj) {
  *
  * @param {string} msg - message for the user
  * @param {function} onOk - lambda executed if OK is pressed
+ * @param onCancel
  * @param {function=} onOk - lambda executed if Cancel is pressed
  */
 function warnUser(msg, onOk, onCancel) {
@@ -295,30 +296,46 @@ function saveInternalInfo() {
 }
 
 function syncZaddrIfSettingsExist() {
-    let settingsForSecureNodeExist = (settings.secureNodeFQDN && settings.secureNodePort && settings.secureNodeUsername && settings.secureNodePassword && settings.sshUsername && settings.sshPassword && settings.sshPort)
-    if (settingsForSecureNodeExist) {
-        rpc.importAllZAddressesFromSNtoArizen();
-        rpc.importAllZAddressesFromArizentoSN();
+    if (settings.secureNodeFQDN &&
+        settings.secureNodePort &&
+        settings.secureNodeUsername &&
+        settings.secureNodePassword &&
+        settings.sshUsername &&
+        settings.sshPassword &&
+        settings.sshPort) {
+        rpc.importAllZAddressesFromSNtoArizenExcludeExisting();
+        rpc.importAllZAddressesFromArizenToSN();
     }
 }
 
 function isValidDomainName(domainOrIP) {
-    return (domainOrIP != "" && domainOrIP != undefined) // more to be added
+    return (domainOrIP !== "" && domainOrIP !== undefined) // more to be added
 }
 
 function pingSecureNode() {
     if (isValidDomainName(settings.secureNodeFQDN)) {
         let ping = require('ping');
+        const isIp = require('is-ip');
+
+        let fqdnIsV6 = isIp.v6(settings.secureNodeFQDN);
+        console.log(settings.secureNodeFQDN);
+        console.log(fqdnIsV6);
+
+        var cfg = {
+        v6:fqdnIsV6,
+        };
+
         let hosts = [settings.secureNodeFQDN];
         hosts.forEach(function (host) {
             ping.sys.probe(host, function (isAlive) {
+              console.log(isAlive);
                 if (isAlive) {
                     document.getElementById("dotSNstatus").style.backgroundColor = "#34A853"; // green
                 } else {
                     document.getElementById("dotSNstatus").style.backgroundColor = "#EA4335"; // red #EA4335
                     document.getElementById("dotSNstatusRPC").style.backgroundColor = "#EA4335"; // red #EA4335
                 }
-            });
+            }, cfg);
         });
     }
 }
@@ -326,6 +343,7 @@ function pingSecureNode() {
 function colorRpcLEDs(isAlive) {
     if (isAlive) {
         document.getElementById("dotSNstatusRPC").style.backgroundColor = "#34A853"; // green "#34A853"
+        document.getElementById("dotSNstatus").style.backgroundColor = "#34A853"; // green
     } else {
         document.getElementById("dotSNstatusRPC").style.backgroundColor = "#EA4335"; // red #EA4335
     }

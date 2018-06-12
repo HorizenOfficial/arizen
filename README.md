@@ -4,6 +4,7 @@
 [![Code Climate][codeclimate-img]][codeclimate-url]
 
 # User Manuals
+- v1.1.8: [Arizen v1.1.8 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.8/Arizen.v1.1.8.Wallet.User.Manual.pdf)
 - v1.1.7: [Arizen v1.1.7 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.7/Arizen.v1.1.7.Wallet.User.Manual.pdf)
 - v1.1.6: [Arizen v1.1.6 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.6/Arizen.v1.1.6.Wallet.User.Manual.pdf)
 - v1.1.5: [Arizen v1.1.5 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.5/Arizen.v1.1.5.Wallet.User.Manual.pdf)
@@ -13,6 +14,15 @@
 - v1.0.0: [Arizen v1.0.0 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.0.0/Arizen.Wallet.User.Manual.pdf)
 
 # Version History
+
+## v1.1.8
+- [x] Refactor: batch-withdraw functionality
+- [x] Introduce booster for batch-withdraw functionality (speed-up logic in case of many addresses)
+- [x] Sync refresh of Z balances.
+- [x] Ping to IPv6
+- [x] Include flatten package
+- [x] Fix of the flickering issue in TXs
+- [x] Italian and Bulgarian translation
 
 ## v1.1.7
 - [x] Support for sending Z transactions and addresses (available only for Secure Node (SN) operators).
