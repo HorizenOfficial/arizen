@@ -168,6 +168,7 @@
       "enableNotifications": "Desktop-Benachrichtigungen",
       "enableDomainFronting": "Domain Fronting",
       "secureNodeFQDN": "Secure Node FQDN",
+      "sshPrivateKey" : "Pfad zur privaten SSH-Schlüssel Datei",
       "sshUsername": "SSH Nutzername",
       "sshPassword": "SSH Passwort",
       "sshPort": "SSH Port",

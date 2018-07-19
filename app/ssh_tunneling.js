@@ -12,6 +12,7 @@ async function openTunnel() {
         host: settings.secureNodeFQDN,// SSH server //settings.secureNodeFQDN,
         port: settings.sshPort, // SSH port
         // keepAlive:true,
+        privateKey: settings.sshPrivateKey, //settings.secureNodeSshPrivateKey,
         username: settings.sshUsername, //settings.secureNodeUsername,
         password: settings.sshPassword, //settings.secureNodePassword,
         srcPort: settings.secureNodePort, // Arizen localhost port //settings.secureNodePort

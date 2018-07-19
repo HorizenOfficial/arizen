@@ -168,6 +168,7 @@
       "enableNotifications": "デスクトップ通知",
       "enableDomainFronting": "ドメインフロンティング",
       "secureNodeFQDN": "セキュアノード FQDN",
+      "sshPrivateKey" : "Path to SSH private key file",
       "sshUsername": "SSH ユーザー名",
       "sshPassword": "SSH パスワード",
       "sshPort": "SSH ポート",

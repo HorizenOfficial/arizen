@@ -175,6 +175,7 @@
       "enableNotifications": "Notifiche Desktop",
       "enableDomainFronting": "Domain fronting",
       "secureNodeFQDN": "Secure Node FQDN",
+      "sshPrivateKey" : "Path to SSH private key file",
       "sshUsername": "SSH username",
       "sshPassword": "SSH password",
       "sshPort": "SSH porta",

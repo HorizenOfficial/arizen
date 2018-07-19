@@ -168,6 +168,7 @@
       "enableNotifications": "Ειδοποιήσεις Επιφάνειας Εργασίας",
       "enableDomainFronting": "Domain fronting",
       "secureNodeFQDN": "Secure Node FQDN",
+      "sshPrivateKey" : "Path to SSH private key file",
       "sshUsername": "SSH όνομα χρήστη",
       "sshPassword": "SSH κωδικός",
       "sshPort": "SSH port",
