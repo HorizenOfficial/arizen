@@ -169,6 +169,7 @@
       "enableDomainFronting": "Domain Fronting",
       "secureNodeFQDN": "Secure Node FQDN",
       "sshPrivateKey" : "Pfad zur privaten SSH-Schlüssel Datei",
+      "sshPassphrase" : "Passwort zur Entschlüsselung der privaten SSH-Schlüssel Datei (falls notwendig)",
       "sshUsername": "SSH Nutzername",
       "sshPassword": "SSH Passwort",
       "sshPort": "SSH Port",

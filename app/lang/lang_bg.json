@@ -176,6 +176,7 @@
       "enableDomainFronting": "Domain fronting",
       "secureNodeFQDN": "Secure Node FQDN",
       "sshPrivateKey" : "Path to SSH private key file",
+      "sshPassphrase" : "Passphrase for SSH private key file (if necessary)",
       "sshUsername": "SSH потребителско име",
       "sshPassword": "SSH парола",
       "sshPort": "SSH порт",
