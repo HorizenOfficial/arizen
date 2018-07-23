@@ -22,7 +22,7 @@ ipcRenderer.on("export-paper-wallet", (sender, wif, name) => {
 
     function renderWallet(pkHexQrCode, tAddrQrCode) {
         const pdf = new PDFjs(); // a4
-        const pdfW = pdf.internal.pageSize.width;
+        const pdfW = pdf.internal.pageSize.getWidth();
 
         function centeredText(text, y) {
             const textWidth = pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
