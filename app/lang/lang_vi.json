@@ -165,7 +165,7 @@
       "apiUrl": "API URLs",
       "fiat": "Đơn vị tiền tệ quy đổi",
       "save": "Lưu",
-      "enableNotifications": "Desktop notifications",
+      "enableNotifications": "Thông báo cho Desktop",
       "enableDomainFronting": "Domain fronting",
       "secureNodeFQDN": "Secure Node FQDN",
       "sshPrivateKey" : "Path to SSH private key file",
@@ -180,8 +180,8 @@
       "forwardTimeout": "Forward Timeout (default: 10000)",
       "domainFrontingUrl": "Domain fronting public base URL",
       "domainFrontingHost": "Domain fronting private host",
-      "autoLogOffEnable": "Enable automatic log off",
-      "autoLogOffTimeout": "Auto log off timeout in seconds"
+      "autoLogOffEnable": "Bật tự đông đăng xuất",
+      "autoLogOffTimeout": "Thời gian tự động đăng xuất tính bằng giây"
     },
     "paperWallet": {
       "label": "Ví giấy",
@@ -202,18 +202,18 @@
     "importSinglePrivateKey": {
       "openButtonLabel": "Import Private Key",
       "titleLabel": "Import Single Private Key",
-      "privateKeyLabel": "Private Key",
+      "privateKeyLabel": "Khóa riêng tư",
       "importButtonLabel": "Import",
-      "warningNotValidAddress": "Z address exist in your wallet",
-      "warningNotValidPK": "This is not a valid Private Key."
+      "warningNotValidAddress": "Địa chỉ Z đã tồn tại trong ví của bạn",
+      "warningNotValidPK": "Khóa riêng tư không hợp lệ."
     },
-    "autoLogOffLabel": "Log off in ",
+    "autoLogOffLabel": "Đăng xuất ",
     "changePassword": {
-      "title": "Change Wallet Password",
-      "warningText": "WARNING: Wallet backups won't be re-encrypted! If you need to use them, you will have to use current password.",
-      "currentPassword": "Current Password",
-      "newPassword1": "New Password",
-      "newPassword2": "New Password (Retype)"
+      "title": "Thay đổi mật khẩu của ví",
+      "warningText": "Cảnh báo: bản sao lưu của ví sẽ không được mã hóa lại! Nếu bạn cần dùng, bạn sẽ phải dùng mật khẩu hiện tại.",
+      "currentPassword": "Mật khẩu hiện tại",
+      "newPassword1": "Mật khẩu mới",
+      "newPassword2": "Mật khảu mới (nhập lại)"
     },
     "rpcConsole": {
       "title": "RPC",
@@ -242,13 +242,13 @@
       "paste": "Dán",
       "selectAll": "Chọn tất cả"
     },
-    "help": "Help",
+    "help": "Trợ giúp",
     "helpSubmenu": {
-      "arizenManual": "User Manual",
-      "support": "Support",
+      "arizenManual": "Hướng dẫn sử dụng",
+      "support": "Hỗ trợ",
       "zencash": "ZenCash"
     },
-    "changeWalletPassword": "Change wallet password"
+    "changeWalletPassword": "Thay đổi mật khẩu của ví"
   },
   "warmingMessages": {
     "userWarningImportFileWithPKs": "New address(es) and a private key(s) will be imported. Your previous back-ups do not include the newly imported addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
@@ -261,8 +261,8 @@
     "userWarningImportPkUserZendRescan": "The balance of the Z address you imported will be visible after you rescan the blockchain. Please run 'zen-cli stop && sleep 8 && zend -rescan' in your secure node (linux)."
   },
   "common": {
-    "selectAll": "Select all",
-    "clearAll": "Clear all",
+    "selectAll": "Chọn tất cả",
+    "clearAll": "Bỏ chọn tất cả",
     "okButtonText": "OK",
     "cancelButtonText": "Cancel"
   }
