@@ -4,6 +4,7 @@
 [![Code Climate][codeclimate-img]][codeclimate-url]
 
 # User Manuals
+- v1.1.9: [Arizen v1.1.9 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.9/Arizen.v1.1.9.Wallet.User.Manual.pdf)
 - v1.1.8: [Arizen v1.1.8 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.8/Arizen.v1.1.8.Wallet.User.Manual.pdf)
 - v1.1.7: [Arizen v1.1.7 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.7/Arizen.v1.1.7.Wallet.User.Manual.pdf)
 - v1.1.6: [Arizen v1.1.6 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.6/Arizen.v1.1.6.Wallet.User.Manual.pdf)
@@ -14,6 +15,8 @@
 - v1.0.0: [Arizen v1.0.0 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.0.0/Arizen.Wallet.User.Manual.pdf)
 
 # Version History
+
+## v1.1.9
 
 ## v1.1.8
 - [x] Refactor: batch-withdraw functionality
