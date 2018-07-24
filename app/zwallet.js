@@ -51,6 +51,7 @@ const withdrawFromAddrInput = document.getElementById("withdrawFromAddr");
 const withdrawToButton = document.getElementById("withdrawToButton");
 const withdrawToAddrInput = document.getElementById("withdrawToAddr");
 const withdrawAmountInput = document.getElementById("withdrawAmount");
+const withdrawMaxButton = document.getElementById("withdrawMaxButton");
 const withdrawFeeInput = document.getElementById("withdrawFee");
 const withdrawMsg = document.getElementById("withdrawMsg");
 const withdrawButton = document.getElementById("withdrawButton");
@@ -528,7 +529,7 @@ function showAddrSelectDialog(zeroBalanceAddrs, zAddressesInclude, onSelected) {
             setBalanceText(row.querySelector(".addrSelectRowBalance"), addrObj.lastbalance);
             row.addEventListener("click", () => {
                 dialog.close();
-                onSelected(addrObj.addr);
+                onSelected(addrObj);
             });
             listNode.appendChild(row)
         }
@@ -539,8 +540,8 @@ function initDepositView() {
     const qrcodeTypeDelay = 500; // ms
     depositToAddrInput.addEventListener("input", () => updateDepositQrcode(qrcodeTypeDelay));
     depositAmountInput.addEventListener("input", () => updateDepositQrcode(qrcodeTypeDelay));
-    depositToButton.addEventListener("click", () => showAddrSelectDialog(true, false, addr => {
-        depositToAddrInput.value = addr;
+    depositToButton.addEventListener("click", () => showAddrSelectDialog(true, false, addrObj => {
+        depositToAddrInput.value = addrObj.addr;
         updateDepositQrcode();
     }));
     depositSaveQrcodeButton.addEventListener("click", () => {
@@ -608,13 +609,9 @@ async function checkIntermediateSend(tIntermediateAddress, toAddr, amount, feeTw
     if (balance >= amount) {
         // send from T to Z
         console.log("Sending...");
-        let sendResp = await rpc.sendFromOrToZaddress(undefined, tIntermediateAddress, toAddr, amount, feeTwo)
+        let sendResp = await rpc.sendFromOrToZaddress(undefined, tIntermediateAddress, toAddr, amount, feeTwo);
         console.log(sendResp.status);
-        if (sendResp.status === "ok") {
-            return true
-        } else {
-            return false
-        }
+        return sendResp.status === "ok";
 
     } else {
         console.log("Will check again later...");
@@ -645,6 +642,7 @@ async function sendPendingTxs() {
 }
 
 async function initWithdrawView() {
+    let maxAmount = 0;
     withdrawFromAddrInput.addEventListener("input", validateWithdrawForm);
     withdrawToAddrInput.addEventListener("input", validateWithdrawForm);
     withdrawAmountInput.addEventListener("input", validateWithdrawForm);
@@ -690,8 +688,6 @@ async function initWithdrawView() {
                         sendPendingTxs();
                     }
                 }
-
-
             } else { // Z - Z or Z - T
                 let fromAddrObj = ipcRenderer.sendSync("get-address-object", fromAddr);
                 let fromAddressPK = fromAddrObj.pk;
@@ -701,14 +697,26 @@ async function initWithdrawView() {
             }
         }
     });
-    withdrawFromButton.addEventListener("click", () => showAddrSelectDialog(false, true, addr => {
-        withdrawFromAddrInput.value = addr;
+    withdrawFromButton.addEventListener("click", () => showAddrSelectDialog(false, true, addrObj => {
+        withdrawFromAddrInput.value = addrObj.addr;
+        maxAmount = addrObj.lastbalance;
         validateWithdrawForm();
     }));
-    withdrawToButton.addEventListener("click", () => showAddrSelectDialog(true, true, addr => {
-        withdrawToAddrInput.value = addr;
+    withdrawToButton.addEventListener("click", () => showAddrSelectDialog(true, true, addrObj => {
+        withdrawToAddrInput.value = addrObj.addr;
         validateWithdrawForm();
     }));
+    withdrawMaxButton.addEventListener("click", function () {
+        let fee = 0.0001;
+        let amount = 0;
+        if (maxAmount !== 0) {
+            amount = maxAmount - fee;
+        }
+
+        withdrawAmountInput.value = amount;
+        withdrawFeeInput.value = fee;
+        validateWithdrawForm();
+    });
     validateWithdrawForm();
 }
 
@@ -822,8 +830,8 @@ function showBatchWithdrawDialog() {
         setInputNodeValue(toAddrInput, bwSettings.toAddr);
         setInputNodeValue(keepAmountInput, bwSettings.keepAmount);
         setInputNodeValue(txFeeInput, bwSettings.txFee);
-        toAddrSelectButton.addEventListener("click", () => showAddrSelectDialog(true, false, addr => {
-            toAddrInput.value = addr;
+        toAddrSelectButton.addEventListener("click", () => showAddrSelectDialog(true, false, addrObj => {
+            toAddrInput.value = addrObj.addr;
             // TODO validate form
         }));
 

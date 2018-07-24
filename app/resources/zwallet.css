@@ -260,6 +260,14 @@ header button {
     min-width: 60px;
 }
 
+#withdrawAmount {
+    width: 70%;
+}
+
+#withdrawMaxButton {
+    min-width: 28%;
+}
+
 /* Trasactions */
 
 .txPanel {
