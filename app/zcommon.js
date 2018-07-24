@@ -301,9 +301,7 @@ function syncZaddrIfSettingsExist() {
         settings.secureNodeUsername &&
         settings.secureNodePassword &&
         settings.sshUsername &&
-        settings.sshPassword &&
-        settings.sshPrivateKey &&
-        settings.sshPassphrase &&
+        ( settings.sshPassword || settings.sshPrivateKey) &&        
         settings.sshPort) {
         rpc.importAllZAddressesFromSNtoArizenExcludeExisting();
         rpc.importAllZAddressesFromArizenToSN();
