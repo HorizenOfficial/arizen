@@ -175,6 +175,8 @@
       "enableNotifications": "Desktop obaveštenja",
       "enableDomainFronting": "Domain fronting",
       "secureNodeFQDN": "Sigurnosni Nod FQDN",
+      "sshPrivateKey" : "Path to SSH private key file",
+      "sshPassphrase" : "Passphrase for SSH private key file (if necessary)",
       "sshUsername": "SSH korisnik",
       "sshPassword": "SSH lozinka",
       "sshPort": "SSH port",
