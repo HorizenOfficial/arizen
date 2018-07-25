@@ -25,6 +25,7 @@ matrix:
     sudo: required
     language: c
   - os: windows
+    sudo: required
     env: TARGET_ARCH=x64
     language: c
   - os: linux
