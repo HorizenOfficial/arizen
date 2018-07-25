@@ -197,8 +197,7 @@
     },
     "batchWithdraw": {
       "label": "Ομαδική ανάληψη",
-      "keepAmount": "Ποσό να κρατηθεί",
-      "txFee": "Τέλος συναλλαγής"
+      "keepAmount": "Ποσό να κρατηθεί"
     },
     "importSinglePrivateKey": {
       "openButtonLabel": "Εισαγωγή ιδιωτικού κλειδιού",
@@ -223,6 +222,12 @@
       "results": "RPC αποτελέσματα ...",
       "status": "Κατάσταση: ",
       "testFunctionButton": "Δοκίμασε συνάρτηση"
+    },
+    "batchSplit": {
+      "label": "Batch Split",
+      "splitToAmounts": "Split to amounts",
+      "toAddresses": "To addresses:",
+      "splitButtonLabel": "Split"
     }
   },
   "menu": {

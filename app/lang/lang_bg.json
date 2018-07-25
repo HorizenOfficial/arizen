@@ -204,8 +204,7 @@
     },
     "batchWithdraw": {
       "label": "Групово изплащане",
-      "keepAmount": "Сума за запазване",
-      "txFee": "Такса за транзакция"
+      "keepAmount": "Сума за запазване"
     },
     "importSinglePrivateKey": {
       "openButtonLabel": "Импортиране на частен ключ",
@@ -229,6 +228,12 @@
       "results": "RPC резултати ...",
       "status": "Състояние: ",
       "testFunctionButton": "Тестване на функции"
+    },
+    "batchSplit": {
+      "label": "Batch Split",
+      "splitToAmounts": "Split to amounts",
+      "toAddresses": "To addresses:",
+      "splitButtonLabel": "Split"
     }
   },
   "menu": {

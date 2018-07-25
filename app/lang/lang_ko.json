@@ -197,8 +197,7 @@
     },
     "batchWithdraw": {
       "label": "일괄 철회",
-      "keepAmount": "유지할 금액",
-      "txFee": "거래 수수료"
+      "keepAmount": "유지할 금액"
     },
     "importSinglePrivateKey": {
       "openButtonLabel": "개인 키 가져오기",
@@ -223,6 +222,12 @@
       "results": "RPC 결과 ...",
       "status": "상태: ",
       "testFunctionButton": "테스트 기능"
+    },
+    "batchSplit": {
+      "label": "Batch Split",
+      "splitToAmounts": "Split to amounts",
+      "toAddresses": "To addresses:",
+      "splitButtonLabel": "Split"
     }
   },
   "menu": {

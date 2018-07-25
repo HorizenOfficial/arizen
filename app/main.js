@@ -1876,6 +1876,10 @@ ipcMain.on("send-many", async function (event, fromAddressesAll, toAddress, fee,
     }
 });
 
+ipcMain.on("split", async function (event, fromAddress, toAddresses, fee, splitTo = 42.0) {
+
+});
+
 ipcMain.on("create-paper-wallet", (event, name, addToWallet) => {
     let wif;
     if (addToWallet) {

@@ -197,8 +197,7 @@
     },
     "batchWithdraw": {
       "label": "Retirada múltipla",
-      "keepAmount": "Quantidade para manter",
-      "txFee": "Taxa de transação"
+      "keepAmount": "Quantidade para manter"
     },
     "importSinglePrivateKey": {
       "openButtonLabel": "Import Private Key",
@@ -223,6 +222,12 @@
       "results": "RPC Results ...",
       "status": "Status: ",
       "testFunctionButton": "Test Function"
+    },
+    "batchSplit": {
+      "label": "Batch Split",
+      "splitToAmounts": "Split to amounts",
+      "toAddresses": "To addresses:",
+      "splitButtonLabel": "Split"
     }
   },
   "menu": {

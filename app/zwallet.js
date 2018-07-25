@@ -874,6 +874,92 @@ function showBatchWithdrawDialog() {
     });
 }
 
+function showBatchSplitDialog() {
+    showDialogFromTemplate("batchSplitDialogTemplate", dialog => {
+        const bsSettings = deepClone(settings.batchSplit) || {
+            fromAddr: "",
+            toAddrs: [],
+            splitToAmounts: 42,
+            txFee: 0.0001,
+        };
+
+        const toAddrsSet = new Set(bsSettings.toAddrs);
+        const listNode = dialog.querySelector(".addrSelectList");
+
+        for (const addrObj of addrObjList) {
+            if (addrObj.addr.length !== 35) {
+                // it is Z address
+                continue;
+            }
+
+            const row = cloneTemplate("addrMultiselectRowTemplate");
+            row.dataset.addr = addrObj.addr;
+
+            const selectCheckbox = row.querySelector(".addrSelectCheckbox");
+            const nameNode = row.querySelector(".addrSelectRowName");
+            const addrNode = row.querySelector(".addrSelectRowAddr");
+            const balanceNode = row.querySelector(".addrSelectRowBalance");
+
+            if (toAddrsSet.has(addrObj.addr)) {
+                selectCheckbox.checked = true;
+            }
+            nameNode.textContent = addrObj.name;
+            addrNode.textContent = addrObj.addr;
+            setBalanceText(balanceNode, addrObj.lastbalance);
+
+            listNode.appendChild(row)
+        }
+
+        const splitToAmountInput = dialog.querySelector("#batchSplitToAmount");
+        const txFeeInput = dialog.querySelector("#batchSplitFee");
+        const fromAddrSelectButton = dialog.querySelector("#batchSplitFromAddrSelect");
+        const fromAddrInput = dialog.querySelector("#batchSplitFromAddr");
+        const splitButton = dialog.querySelector("#batchSplitButton");
+        const clearAllButton = dialog.querySelector("#batchSplitClearAll");
+
+        setInputNodeValue(fromAddrInput, bsSettings.fromAddr);
+        setInputNodeValue(splitToAmountInput, bsSettings.splitToAmounts);
+        setInputNodeValue(txFeeInput, bsSettings.txFee);
+        fromAddrSelectButton.addEventListener("click", () => showAddrSelectDialog(false, false, addrObj => {
+            fromAddrInput.value = addrObj.addr;
+            // TODO validate form
+        }));
+
+        splitButton.addEventListener("click", () => {
+            bsSettings.toAddrs = [];
+            [...listNode.children].forEach(row => {
+                if (row.querySelector(".addrSelectCheckbox").checked) {
+                    bsSettings.toAddrs.push(row.dataset.addr);
+                }
+            });
+
+            bsSettings.fromAddr = fromAddrInput.value;
+            bsSettings.splitToAmounts = splitToAmountInput.value;
+            bsSettings.txFee = txFeeInput.value;
+
+            settings.batchSplit = bsSettings;
+            saveModifiedSettings();
+
+            warnTxSend(() => {
+                const statusDialog = createDialogFromTemplate("txSendStatusDialogTemplate");
+                const statusText = statusDialog.querySelector("#txStatusText");
+                ipcRenderer.once("send-finish", (event, result, msg) => {
+                    statusText.innerHTML = msg;
+                });
+                ipcRenderer.send("split", bsSettings.fromAddr, bsSettings.toAddrs, bsSettings.txFee, bsSettings.splitToAmounts);
+                dialog.close();
+                statusDialog.showModal();
+            });
+        });
+
+        clearAllButton.addEventListener("click", () => {
+            [...listNode.children].forEach(row => {
+                row.querySelector(".addrSelectCheckbox").checked = false;
+            });
+        });
+    });
+}
+
 function initWallet() {
     fixPage();
     initDepositView();

@@ -198,8 +198,7 @@
     },
     "batchWithdraw": {
       "label": "Hromadný výběr",
-      "keepAmount": "Minimální zůstatek",
-      "txFee": "Poplatek za transakci"
+      "keepAmount": "Minimální zůstatek"
     },
     "importSinglePrivateKey": {
       "openButtonLabel": "Import privátního klíče",
@@ -224,6 +223,12 @@
       "results": "RPC odpověď ...",
       "status": "Status: ",
       "testFunctionButton": "Otestuj funkci"
+    },
+    "batchSplit": {
+      "label": "Batch Split",
+      "splitToAmounts": "Split to amounts",
+      "toAddresses": "To addresses:",
+      "splitButtonLabel": "Split"
     }
   },
   "menu": {

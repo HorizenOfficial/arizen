@@ -197,8 +197,7 @@
     },
     "batchWithdraw": {
       "label": "まとめて送付",
-      "keepAmount": "送付せずに残しておく額",
-      "txFee": "トランザクション手数料"
+      "keepAmount": "送付せずに残しておく額"
     },
     "importSinglePrivateKey": {
       "openButtonLabel": "秘密鍵のインポート",
@@ -223,6 +222,12 @@
       "results": "RPC の結果 ...",
       "status": "ステータス: ",
       "testFunctionButton": "実行"
+    },
+    "batchSplit": {
+      "label": "Batch Split",
+      "splitToAmounts": "Split to amounts",
+      "toAddresses": "To addresses:",
+      "splitButtonLabel": "Split"
     }
   },
   "menu": {

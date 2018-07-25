@@ -204,8 +204,7 @@
     },
     "batchWithdraw": {
       "label": "Višestruko povlačenje",
-      "keepAmount": "Iznos za zadržati",
-      "txFee": "Transakcioni fee"
+      "keepAmount": "Iznos za zadržati"
     },
     "importSinglePrivateKey": {
       "openButtonLabel": "Importujte Privatni Ključ",
@@ -229,6 +228,12 @@
       "results": "RPC rezultati ...",
       "status": "Status: ",
       "testFunctionButton": "Test Funkcija"
+    },
+    "batchSplit": {
+      "label": "Batch Split",
+      "splitToAmounts": "Split to amounts",
+      "toAddresses": "To addresses:",
+      "splitButtonLabel": "Split"
     }
   },
   "menu": {

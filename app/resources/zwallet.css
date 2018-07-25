@@ -387,6 +387,11 @@ header button {
     margin: 10px 0 20px 0;
 }
 
+.batchSplitContent .addrSelectList {
+    max-height: 300px; /* cannot make table to not overflow in any otther way sadly */
+    margin: 10px 0 20px 0;
+}
+
 .dotSNstatus {
     height: 14px;
     width: 14px;

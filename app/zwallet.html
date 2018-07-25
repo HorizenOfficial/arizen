@@ -189,15 +189,41 @@
                 <input type=text id=batchWithdrawToAddr name=batchWithdrawToAddr class=monospace />
 
                 <label for=batchWithdrawKeepAmount data-tr=wallet.batchWithdraw.keepAmount>Amount to keep</label>
-                <input type=number id=batchWithdrawKeepAmount name=batchWithdrawKeepAmount
-                    class=amountInput value=42.00000000 min=0 step=0.1 />
+                <input type=number id=batchWithdrawKeepAmount name=batchWithdrawKeepAmount class=amountInput value=42.00000000 min=0 step=0.1 />
 
-                <label for=batchWithdrawFee data-tr=wallet.batchWithdraw.txFee>Transaction fee</label>
-                <input type=number id=batchWithdrawFee name=batchWithdrawFee
-                    class=amountInput value=0.00000000 min=0 step=0.1 />
+                <label for=batchWithdrawFee data-tr=wallet.tabWithdraw.fee>Transaction fee</label>
+                <input type=number id=batchWithdrawFee name=batchWithdrawFee class=amountInput value=0.00000000 min=0 step=0.1 />
             </div>
             <div class=formButtons>
                 <button id=batchWithdrawButton data-tr=wallet.tabWithdraw.label>Withdraw</button>
+            </div>
+        </div>
+    </arizen-dialog>
+</template>
+
+<template id=batchSplitDialogTemplate>
+    <arizen-dialog>
+        <h2 slot=headerText data-tr=wallet.batchSplit.label>Batch Split</h2>
+        <div slot=content class=batchSplitContent>
+            <div class=form>
+                <button id=batchSplitFromAddrSelect data-tr=wallet.from>From</button>
+                <input type=text id=batchSplitFromAddr name=batchSplitFromAddr class=monospace />
+
+                <label for=batchSplitToAmount data-tr=wallet.batchSplit.splitToAmounts>Split to amounts</label>
+                <input type=number id=batchSplitToAmount name=batchSplitToAmount class=amountInput value=42.00000000 min=0 step=0.1 />
+
+                <label for=batchSplitFee data-tr=wallet.tabWithdraw.fee>Transaction fee</label>
+                <input type=number id=batchSplitFee name=batchSplitFee class=amountInput value=0.00000000 min=0 step=0.1 />
+            </div>
+            <br>
+            <label data-tr=wallet.batchSplit.toAddresses>To addresses:</label>
+            <table class=addrSelectList></table>
+            <div class='hToolbar batchSplitToolbar'>
+                <button id=batchSplitClearAll data-tr=common.clearAll>Clear all</button>
+            </div>
+
+            <div class=formButtons>
+                <button id=batchSplitButton data-tr=wallet.tabSplit.splitButtonLabel>Split</button>
             </div>
         </div>
     </arizen-dialog>
@@ -406,9 +432,9 @@
 
 <header class='panel'>
     <div class=headerLeft>
-        <span><button onclick="showSettingsDialog()" data-tr=wallet.showSettingsDialogButton>Settings</button></span>
         <span><button onclick="showPaperWalletDialog()" data-tr=wallet.paperWallet.label>Paper Wallet</button></span>
         <span><button onclick="showBatchWithdrawDialog()" data-tr=wallet.showBatchWithdrawDialog>Batch Withdraw</button></span>
+        <span><button onclick="showBatchSplitDialog()" data-tr=wallet.showBatchSplitDialog>Batch Split</button></span>
         <span><button onclick="showImportSinglePKDialog()" data-tr=wallet.importSinglePrivateKey.openButtonLabel>Import Private Key</button></span>
     </div>
     <div class=headerCenter>
@@ -416,6 +442,7 @@
         <a class=zenLogo><img id=zenImg src='resources/zen_icon.png' /></a>
     </div>
     <div class=headerRight>
+        <span><button onclick="showSettingsDialog()" data-tr=wallet.showSettingsDialogButton>Settings</button></span>
         <span><button id=refreshButton data-tr=wallet.refreshWallet>Refresh</button></span>
         <span><button onclick='logout()' data-tr=wallet.logout>Logout</button></span>
         <span><button onclick="showAboutDialog()" data-tr=wallet.showAboutDialogButton>About</button></span>

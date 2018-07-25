@@ -197,8 +197,7 @@
     },
     "batchWithdraw": {
       "label": "Meerdere Opnamen",
-      "keepAmount": "Te behouden bedrag",
-      "txFee": "Transactiekosten"
+      "keepAmount": "Te behouden bedrag"
     },
     "importSinglePrivateKey": {
       "openButtonLabel": "Importeer Prive Sleutel",
@@ -223,6 +222,12 @@
       "results": "RPC Resultaten ...",
       "status": "Status: ",
       "testFunctionButton": "Test Functie"
+    },
+    "batchSplit": {
+      "label": "Batch Split",
+      "splitToAmounts": "Split to amounts",
+      "toAddresses": "To addresses:",
+      "splitButtonLabel": "Split"
     }
   },
   "menu": {

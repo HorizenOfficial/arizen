@@ -197,8 +197,7 @@
     },
     "batchWithdraw": {
       "label": "批次取款",
-      "keepAmount": "留置金额",
-      "txFee": "交易费"
+      "keepAmount": "留置金额"
     },
     "importSinglePrivateKey": {
       "openButtonLabel": "Import Private Key",
@@ -223,6 +222,12 @@
       "results": "RPC Results ...",
       "status": "Status: ",
       "testFunctionButton": "Test Function"
+    },
+    "batchSplit": {
+      "label": "Batch Split",
+      "splitToAmounts": "Split to amounts",
+      "toAddresses": "To addresses:",
+      "splitButtonLabel": "Split"
     }
   },
   "menu": {
