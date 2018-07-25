@@ -301,7 +301,7 @@ function syncZaddrIfSettingsExist() {
         settings.secureNodeUsername &&
         settings.secureNodePassword &&
         settings.sshUsername &&
-        settings.sshPassword &&
+        ( settings.sshPassword || settings.sshPrivateKey) &&        
         settings.sshPort) {
         rpc.importAllZAddressesFromSNtoArizenExcludeExisting();
         rpc.importAllZAddressesFromArizenToSN();
@@ -369,6 +369,8 @@ function showSettingsDialog() {
         const inputSecureNodeUsername = dialog.querySelector(".settingsSecureNodeUsername");
         const inputSecureNodePassword = dialog.querySelector(".settingsSecureNodePassword");
 
+        const inputSshPassphrase = dialog.querySelector(".settingsSshPassphrase");
+        const inputSshPrivateKey = dialog.querySelector(".settingsSshPrivateKey");
         const inputSshUsername = dialog.querySelector(".settingsSshUsername");
         const inputSshPassword = dialog.querySelector(".settingsSshPassword");
         const inputSshPort = dialog.querySelector(".settingsSshPort");
@@ -395,6 +397,8 @@ function showSettingsDialog() {
         inputSecureNodePort.value = settings.secureNodePort || 8231;
         inputSecureNodeUsername.value = settings.secureNodeUsername || "";
         inputSecureNodePassword.value = settings.secureNodePassword || "";
+        inputSshPassphrase.value = settings.sshPassphrase || "";
+        inputSshPrivateKey.value = settings.sshPrivateKey || "";
         inputSshUsername.value = settings.sshUsername || "";
         inputSshPassword.value = settings.sshPassword || "";
         inputSshPort.value = settings.sshPort || 22;
@@ -418,6 +422,8 @@ function showSettingsDialog() {
                 secureNodePort: inputSecureNodePort.value,
                 secureNodeUsername: inputSecureNodeUsername.value,
                 secureNodePassword: inputSecureNodePassword.value,
+                sshPassphrase: inputSshPassphrase.value,
+                sshPrivateKey: inputSshPrivateKey.value,
                 sshUsername: inputSshUsername.value,
                 sshPassword: inputSshPassword.value,
                 sshPort: inputSshPort.value,

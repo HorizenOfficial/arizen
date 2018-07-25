@@ -4,6 +4,7 @@
 "use strict";
 
 const openSshTunnel = require("open-ssh-tunnel");
+const fs = require('fs-extra');
 
 const localHost = "127.0.0.1";
 
@@ -12,6 +13,8 @@ async function openTunnel() {
         host: settings.secureNodeFQDN,// SSH server //settings.secureNodeFQDN,
         port: settings.sshPort, // SSH port
         // keepAlive:true,
+        privateKey: fs.readFileSync(settings.sshPrivateKey), //settings.secureNodeSshPrivateKey,
+        passphrase: settings.sshPassphrase, //settings.secureNodeSshPassphrase,
         username: settings.sshUsername, //settings.secureNodeUsername,
         password: settings.sshPassword, //settings.secureNodePassword,
         srcPort: settings.secureNodePort, // Arizen localhost port //settings.secureNodePort

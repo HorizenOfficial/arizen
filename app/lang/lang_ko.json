@@ -168,6 +168,8 @@
       "enableNotifications": "데스크탑 알림",
       "enableDomainFronting": "도메인 프론팅",
       "secureNodeFQDN": "보안 노드 FQDN",
+      "sshPrivateKey" : "Path to SSH private key file",
+      "sshPassphrase" : "Passphrase for SSH private key file (if necessary)",
       "sshUsername": "SSH 사용자 이름",
       "sshPassword": "SSH 비밀번호",
       "sshPort": "SSH 포트",
