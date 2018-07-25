@@ -1824,8 +1824,7 @@ ipcMain.on("send-many", async function (event, fromAddressesAll, toAddress, fee,
 
         // check if there isn't any address with a balance
         if(fromAddresses.length === 0){
-            // TODO: fix error message
-            err = tr("wallet.tabWithdraw.messages.", "!");
+            err = tr("wallet.tabWithdraw.messages.noSourceAddress", "No source address was selected!");
             event.sender.send("send-finish", "error", err);
         }
 

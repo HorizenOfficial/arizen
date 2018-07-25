@@ -131,7 +131,8 @@
         "error": "Greška",
         "success": "Transakcija je uspešno poslata",
         "isCoinbaseUTXO": "Vaša adresa sadrži novoproizvedene novčiće, takozvani Coinbase nepotrošeni transakcioni izlazi (coinbase UTXO). Oni moraju biti kriptovani i dekriptovani pre nego što se mogu potrošiti! Molimo Vas da importujete privatni ključ ove adrese u 'full node' novčanik - Swing. Sve svoje novčiće sa ove adrese pošaljite na  Z-adresu, a zatim ih vratite na ovu T-adresu. Tada ćete biti u stanju trošiti ih pomoću Arizen novčanika.",
-        "tooManyUTXOs": "Your address consists of too many UTXOs, it is not possible to send this transaction via API!"
+        "tooManyUTXOs": "Your address consists of too many UTXOs, it is not possible to send this transaction via API!",
+        "noSourceAddress": "No source address was selected!"
       }
     },
     "transactionHistory": {
@@ -175,8 +176,8 @@
       "enableNotifications": "Desktop obaveštenja",
       "enableDomainFronting": "Domain fronting",
       "secureNodeFQDN": "Sigurnosni Nod FQDN",
-      "sshPrivateKey" : "Path to SSH private key file",
-      "sshPassphrase" : "Passphrase for SSH private key file (if necessary)",
+      "sshPrivateKey": "Path to SSH private key file",
+      "sshPassphrase": "Passphrase for SSH private key file (if necessary)",
       "sshUsername": "SSH korisnik",
       "sshPassword": "SSH lozinka",
       "sshPort": "SSH port",

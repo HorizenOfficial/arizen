@@ -131,7 +131,8 @@
         "error": "Errore",
         "success": "La transazione è stata inviata con successo",
         "isCoinbaseUTXO": "Il tuo indirizzo contiene coin appena minate, anche chiamate output di transazione non spesi (coinbase UTXO). Prima di poter essere spesi devono essere inviati ad uno Z-address e quindi reinviati al T-address di origine, puoi effettuare questa operazione solo con un 'full wallet' come Swing dopo aver importato le chiavi. Dopo questa procedura potrai quindi utilizzarli su Arizen.",
-        "tooManyUTXOs": "Your address consists of too many UTXOs, it is not possible to send this transaction via API!"
+        "tooManyUTXOs": "Your address consists of too many UTXOs, it is not possible to send this transaction via API!",
+        "noSourceAddress": "No source address was selected!"
       }
     },
     "transactionHistory": {
@@ -175,8 +176,8 @@
       "enableNotifications": "Notifiche Desktop",
       "enableDomainFronting": "Domain fronting",
       "secureNodeFQDN": "Secure Node FQDN",
-      "sshPrivateKey" : "Path to SSH private key file",
-      "sshPassphrase" : "Passphrase for SSH private key file (if necessary)",
+      "sshPrivateKey": "Path to SSH private key file",
+      "sshPassphrase": "Passphrase for SSH private key file (if necessary)",
       "sshUsername": "SSH username",
       "sshPassword": "SSH password",
       "sshPort": "SSH porta",
