@@ -1429,7 +1429,17 @@ function checkStandardSendParameters(fromAddress, toAddress, fee, amount) {
     return errors;
 }
 
-function checkSweepSendParameters(fromAddresses, toAddress, fee, thresholdLimit) {
+function checkBatchSplitParameters(fromAddresses, toAddress, fee, splitTo) {
+    let errors = checkSendParameters(fromAddresses, [toAddress], fee);
+
+    if (splitTo <= 0) {
+        errors.push(tr("wallet.batchSplit.messages.splitToIsZero", "Split to amounts have to be greater than zero!"));
+    }
+
+    return errors;
+}
+
+function checkBatchWithdrawParameters(fromAddresses, toAddress, fee, thresholdLimit) {
     let errors = checkSendParameters(fromAddresses, [toAddress], fee);
 
     if (thresholdLimit < 0) {
@@ -1800,7 +1810,7 @@ function getMaxTxHexStrings(event, txData, thresholdLimitInSatoshi, feeInSatoshi
  * @param thresholdLimit - How many ZENs will remain in every fromAddresses
  */
 ipcMain.on("send-many", async function (event, fromAddressesAll, toAddress, fee, thresholdLimit = 42.0) {
-    let paramErrors = checkSweepSendParameters(fromAddressesAll, toAddress, fee, thresholdLimit);
+    let paramErrors = checkBatchWithdrawParameters(fromAddressesAll, toAddress, fee, thresholdLimit);
     if (paramErrors.length) {
         // TODO: Come up with better message. For now, just make a HTML out of it.
         const errString = paramErrors.join("<br/>\n\n");
@@ -1876,8 +1886,152 @@ ipcMain.on("send-many", async function (event, fromAddressesAll, toAddress, fee,
     }
 });
 
-ipcMain.on("split", async function (event, fromAddress, toAddresses, fee, splitTo = 42.0) {
+/**
+ *
+ * @param event
+ * @param txData
+ * @param splitToInSatoshi
+ * @param feeInSatoshi
+ * @param toAddresses
+ * @param blockHeight
+ * @param blockHash
+ * @param addrPk
+ */
+function getTxHexStringsForSplit(event, txData, toAddresses, splitToInSatoshi, feeInSatoshi, blockHeight, blockHash, addrPk) {
+    let history = [];
+    let err = "";
 
+    // prepare data
+    let data = generateMap(event, txData, addrPk);
+
+    let amountInSatoshiToSend = 0.0;
+    for (let value of data.values()) {
+        amountInSatoshiToSend += value.satoshis;
+    }
+    amountInSatoshiToSend -= feeInSatoshi;
+
+    if (amountInSatoshiToSend <= 0.0) {
+        err = tr("wallet.tabWithdraw.messages.sumLowerThanFee", "Your summed balance over all source addresses is lower than the fee!");
+        event.sender.send("send-finish", "error", err);
+        return;
+    }
+
+    let recipients = [];
+
+    let quotient = Math.floor(amountInSatoshiToSend / splitToInSatoshi);
+    let remainder = amountInSatoshiToSend % splitToInSatoshi;
+
+    if (remainder !== 0) {
+        quotient += 1;
+    }
+
+    // if there is less/more addresses - refund the rest to the last address
+    if (quotient !== toAddresses.length) {
+        quotient = toAddresses.length;
+    }
+
+    let toAddress;
+    for (let i = 0; i < quotient; i++) {
+        toAddress = toAddresses[i];
+        // refund the rest to the last address
+        if (i === (quotient - 1)) {
+            recipients = recipients.concat({
+                address: toAddress,
+                satoshis: (amountInSatoshiToSend - (i * splitToInSatoshi))
+            });
+        } else {
+            recipients = recipients.concat({
+                address: toAddress,
+                satoshis: splitToInSatoshi
+            });
+        }
+    }
+
+    for (let value of data.values()) {
+        value.history.forEach(function(h) {
+            history = history.concat(h);
+        });
+    }
+
+    // Create transaction
+    let txObj = zencashjs.transaction.createRawTx(history, recipients, blockHeight, blockHash);
+
+    // Sign history/transaction with PKs
+    for (let value of data.values()) {
+        for (let i = 0; i < history.length; i++) {
+            txObj = zencashjs.transaction.signTx(txObj, i, value.pk, true);
+        }
+    }
+
+    // Convert it to hex string
+    return zencashjs.transaction.serializeTx(txObj);
+}
+
+ipcMain.on("split", async function (event, fromAddress, toAddresses, fee, splitTo = 42.0) {
+    let paramErrors = checkBatchSplitParameters(toAddresses, fromAddress, fee, splitTo);
+    if (paramErrors.length) {
+        // TODO: Come up with better message. For now, just make a HTML out of it.
+        const errString = paramErrors.join("<br/>\n\n");
+        event.sender.send("send-finish", "error", errString);
+        return;
+    }
+
+    try {
+        // -------------------------------------------------------------------------------------------------------------
+        // Variables
+        const infoURL = "/status?q=getInfo";
+        const sendRawTxURL = "/tx/send";
+        let finalMessage = "";
+        // <address, PK> pairs
+        let addrPk = new Map();
+        let err = "";
+        const satoshi = 100000000;
+        let feeInSatoshi = Math.round(fee * satoshi);
+        let splitToInSatoshi = Math.round(splitTo * satoshi);
+
+        // check if an address has been selected
+        if(fromAddress === ""){
+            err = tr("wallet.tabWithdraw.messages.noSourceAddress", "No source address was selected!");
+            event.sender.send("send-finish", "error", err);
+        }
+
+        let walletAddr = sqlSelectObjects("SELECT * FROM wallet WHERE addr = ?", fromAddress)[0];
+        if (!walletAddr) {
+            err = tr("wallet.tabWithdraw.messages.unknownAddress", "One of your destination address is not in your wallet!");
+            event.sender.send("send-finish", "error", err);
+            return;
+        }
+        addrPk.set(walletAddr.addr, walletAddr.pk);
+
+        // -------------------------------------------------------------------------------------------------------------
+        // Get previous transactions
+        const prevTxURL = "/addrs/" + fromAddress + "/utxo";
+        let txData = await apiGet(prevTxURL);
+
+        // -------------------------------------------------------------------------------------------------------------
+        const infoData = await apiGet(infoURL);
+        const blockHeight = infoData.info.blocks - 300;
+        const blockHashURL = "/block-index/" + blockHeight;
+        const blockHash = (await apiGet(blockHashURL)).blockHash;
+
+        const txHexString = getTxHexStringsForSplit(event, txData, toAddresses, splitToInSatoshi, feeInSatoshi, blockHeight, blockHash, addrPk);
+
+        if ((Buffer.byteLength(txHexString, "utf8") / 1024) > 100) {
+            err = tr("wallet.batchSplit.messages.tooManyInputsOutputs", "Your transaction contains too many inputs/outputs addresses, please try less address!");
+            event.sender.send("send-finish", "error", err);
+            return;
+        }
+
+        const txRespData = await apiPost(sendRawTxURL, {rawtx: txHexString});
+        finalMessage += `<small><a href="javascript:void(0)" onclick="openUrl('${settings.explorerUrl}/tx/${txRespData.txid}')" class="walletListItemDetails transactionExplorer monospace" target="_blank">${txRespData.txid}</a>`;
+        finalMessage += "</small><br/>\n\n";
+
+        event.sender.send("send-finish", "ok", finalMessage);
+    }
+    catch (e) {
+        event.sender.send("send-finish", "error", e.message);
+        console.log(e);
+    }
 });
 
 ipcMain.on("create-paper-wallet", (event, name, addToWallet) => {

@@ -883,6 +883,7 @@ function showBatchSplitDialog() {
             txFee: 0.0001,
         };
 
+
         const toAddrsSet = new Set(bsSettings.toAddrs);
         const listNode = dialog.querySelector(".addrSelectList");
 
@@ -907,7 +908,14 @@ function showBatchSplitDialog() {
             addrNode.textContent = addrObj.addr;
             setBalanceText(balanceNode, addrObj.lastbalance);
 
-            listNode.appendChild(row)
+            listNode.appendChild(row);
+
+            if (bsSettings.fromAddr === addrObj.addr) {
+                setBalanceText(splitAvailBalance, addrObj.lastbalance);
+            }
+        }
+        if (bsSettings.fromAddr === "") {
+            setBalanceText(splitAvailBalance, 0);
         }
 
         const splitToAmountInput = dialog.querySelector("#batchSplitToAmount");
@@ -922,6 +930,7 @@ function showBatchSplitDialog() {
         setInputNodeValue(txFeeInput, bsSettings.txFee);
         fromAddrSelectButton.addEventListener("click", () => showAddrSelectDialog(false, false, addrObj => {
             fromAddrInput.value = addrObj.addr;
+            setBalanceText(splitAvailBalance, addrObj.lastbalance);
             // TODO validate form
         }));
 

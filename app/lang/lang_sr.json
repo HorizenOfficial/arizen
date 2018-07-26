@@ -233,7 +233,12 @@
       "label": "Batch Split",
       "splitToAmounts": "Split to amounts",
       "toAddresses": "To addresses:",
-      "splitButtonLabel": "Split"
+      "splitButtonLabel": "Split",
+      "messages": {
+        "splitToIsZero": "Split to amounts have to be greater than zero!",
+        "unknownAddress": "One of your destination address is not in your wallet!",
+        "tooManyInputsOutputs": "Your transaction contains too many inputs/outputs addresses, please try less address!"
+      }
     }
   },
   "menu": {

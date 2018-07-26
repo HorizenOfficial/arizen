@@ -176,20 +176,20 @@
       "enableNotifications": "Desktop notifications",
       "enableDomainFronting": "Domain fronting",
       "secureNodeFQDN": "Secure Node FQDN",
-      "sshPrivateKey" : "Path to SSH private key file",
-      "sshPassphrase" : "Passphrase for SSH private key file (if necessary)",
-      "sshUsername" : "SSH username",
-      "sshPassword" : "SSH password",
-      "sshPort" : "SSH port",
-      "secureNodePort" : "Secure Node Port (see zen.conf)",
-      "secureNodeUsername" : "Secure Node Username (see zen.conf)",
-      "secureNodePassword" : "Secure Node Password (see zen.conf)",
-      "readyTimeout" : "Ready Timeout (default: 10000)",
-      "forwardTimeout" : "Forward Timeout (default: 10000)",
-      "domainFrontingUrl" : "Domain fronting public base URL",
-      "domainFrontingHost" : "Domain fronting private host",
-      "autoLogOffEnable" : "Enable automatic log off",
-      "autoLogOffTimeout" : "Auto log off timeout in seconds"
+      "sshPrivateKey": "Path to SSH private key file",
+      "sshPassphrase": "Passphrase for SSH private key file (if necessary)",
+      "sshUsername": "SSH username",
+      "sshPassword": "SSH password",
+      "sshPort": "SSH port",
+      "secureNodePort": "Secure Node Port (see zen.conf)",
+      "secureNodeUsername": "Secure Node Username (see zen.conf)",
+      "secureNodePassword": "Secure Node Password (see zen.conf)",
+      "readyTimeout": "Ready Timeout (default: 10000)",
+      "forwardTimeout": "Forward Timeout (default: 10000)",
+      "domainFrontingUrl": "Domain fronting public base URL",
+      "domainFrontingHost": "Domain fronting private host",
+      "autoLogOffEnable": "Enable automatic log off",
+      "autoLogOffTimeout": "Auto log off timeout in seconds"
     },
     "paperWallet": {
       "label": "Paper Wallet",
@@ -233,7 +233,12 @@
       "label": "Batch Split",
       "splitToAmounts": "Split to amounts",
       "toAddresses": "To addresses:",
-      "splitButtonLabel": "Split"
+      "splitButtonLabel": "Split",
+      "messages": {
+        "splitToIsZero": "Split to amounts have to be greater than zero!",
+        "unknownAddress": "One of your destination address is not in your wallet!",
+        "tooManyInputsOutputs": "Your transaction contains too many inputs/outputs addresses, please try less address!"
+      }
     }
   },
   "menu": {
@@ -270,6 +275,6 @@
     "userWarningCreateNewAddress": "A new address and a private key will be created. Your previous back-ups do not include this newly generated address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
     "userWarningIUnderstand": "I understand",
     "cancel": "Cancel",
-    "userWarningImportPkUserZendRescan" : "The balance of the Z address you imported will be visible after you rescan the blockchain. Please run 'zen-cli stop && sleep 8 && zend -rescan' in your secure node (linux)."
+    "userWarningImportPkUserZendRescan": "The balance of the Z address you imported will be visible after you rescan the blockchain. Please run 'zen-cli stop && sleep 8 && zend -rescan' in your secure node (linux)."
   }
 }
