@@ -883,7 +883,6 @@ function showBatchSplitDialog() {
             txFee: 0.0001,
         };
 
-
         const toAddrsSet = new Set(bsSettings.toAddrs);
         const listNode = dialog.querySelector(".addrSelectList");
 
