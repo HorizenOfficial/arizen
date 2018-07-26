@@ -301,7 +301,7 @@ function syncZaddrIfSettingsExist() {
         settings.secureNodeUsername &&
         settings.secureNodePassword &&
         settings.sshUsername &&
-        ( settings.sshPassword || settings.sshPrivateKey) &&        
+        (settings.sshPassword || settings.sshPrivateKey) &&
         settings.sshPort) {
         rpc.importAllZAddressesFromSNtoArizenExcludeExisting();
         rpc.importAllZAddressesFromArizenToSN();
@@ -321,14 +321,14 @@ function pingSecureNode() {
         console.log(settings.secureNodeFQDN);
         console.log(fqdnIsV6);
 
-        var cfg = {
-        v6:fqdnIsV6,
+        let cfg = {
+            v6: fqdnIsV6,
         };
 
         let hosts = [settings.secureNodeFQDN];
         hosts.forEach(function (host) {
             ping.sys.probe(host, function (isAlive) {
-              console.log(isAlive);
+                console.log(isAlive);
                 if (isAlive) {
                     document.getElementById("dotSNstatus").style.backgroundColor = "#34A853"; // green
                 } else {
