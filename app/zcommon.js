@@ -408,6 +408,15 @@ function showSettingsDialog() {
         inputAutoLogOffEnable.checked = settings.autoLogOffEnable;
         inputAutoLogOffTimeout.value = settings.autoLogOffTimeout || 60;
 
+        dialog.querySelector(".chooseKeyPath").addEventListener("click", () => {
+            let inputFakeElement = document.createElement('input');
+            inputFakeElement.addEventListener("change", function(){
+                let fileList = this.files;
+                inputSshPrivateKey.value = fileList[0].path;
+            }, false);
+            inputFakeElement.type = 'file';
+            inputFakeElement.click();
+        });
 
         dialog.querySelector(".settingsSave").addEventListener("click", () => {
             const newSettings = {
