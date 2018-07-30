@@ -325,10 +325,13 @@ function syncZaddrIfSettingsExist() {
         rpc.importAllZAddressesFromArizenToSN();
     }
 }
+function ledWrapperExists(){
+    let LEDWrapper = document.getElementById("snStatusWraper");
+    return !(LEDWrapper === null);
+}
 
 function toggleLedHTML(){
-    let LEDWrapper = document.getElementById("snStatusWraper");
-    let wrapperExists = !(LEDWrapper === null);
+    let wrapperExists = ledWrapperExists();
 
     if (properlyConfigRemoteNode() && !wrapperExists){
         document.getElementById("snStatusFrame").innerHTML = "";
@@ -341,7 +344,8 @@ function toggleLedHTML(){
 }
 
 function isValidDomainName(domainOrIP) {
-    return (domainOrIP !== "" && domainOrIP !== undefined) // more to be added
+    const isIp = require('is-ip');
+    return ((domainOrIP !== "" && domainOrIP !== undefined) || isIp(domainOrIP) )// more to be added
 }
 
 function pingSecureNode() {
@@ -350,8 +354,6 @@ function pingSecureNode() {
         const isIp = require('is-ip');
 
         let fqdnIsV6 = isIp.v6(settings.secureNodeFQDN);
-        console.log(settings.secureNodeFQDN);
-        console.log(fqdnIsV6);
 
         let cfg = {
             v6: fqdnIsV6,
@@ -360,13 +362,14 @@ function pingSecureNode() {
         let hosts = [settings.secureNodeFQDN];
         hosts.forEach(function (host) {
             ping.sys.probe(host, function (isAlive) {
-                //console.log(isAlive);
                 toggleLedHTML();
-                if (isAlive) {
-                    document.getElementById("dotSNstatus").style.backgroundColor = "#34A853"; // green
-                } else {
-                    document.getElementById("dotSNstatus").style.backgroundColor = "#EA4335"; // red #EA4335
-                    document.getElementById("dotSNstatusRPC").style.backgroundColor = "#EA4335"; // red #EA4335
+                if (ledWrapperExists()){
+                    if (isAlive) {
+                        document.getElementById("dotSNstatus").style.backgroundColor = "#34A853"; // green #34A853
+                    } else {
+                        document.getElementById("dotSNstatus").style.backgroundColor = "#EA4335"; // red #EA4335
+                        document.getElementById("dotSNstatusRPC").style.backgroundColor = "#EA4335"; // red #EA4335
+                    }
                 }
             }, cfg);
         });
