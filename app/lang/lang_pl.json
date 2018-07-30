@@ -40,7 +40,8 @@
     "warningPasswordAgain": "Hasło musi spełniać następujące wymagania:",
     "warningPasswordAgainIdentical": "<strong>Muszą Być Identyczne</strong>",
     "errorCreationFailed": "Utworzenie Portfela Nie Powiodło Się",
-    "errorFailedResponse": "Nieudana Odpowiedź"
+    "errorFailedResponse": "Nieudana Odpowiedź",
+    "haveBackup": "Do you have previous backup?"
   },
   "notification": {
     "settingsUpdated": "Ustawienia Zaktualizowane",

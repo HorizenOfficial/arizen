@@ -40,7 +40,8 @@
     "warningPasswordAgain": "Mật khẩu phải thoả mãn các điều kiện:",
     "warningPasswordAgainIdentical": "<strong>Hợp lệ</strong>",
     "errorCreationFailed": "Tạo ví mới lỗi",
-    "errorFailedResponse": "Lỗi phản hồi"
+    "errorFailedResponse": "Lỗi phản hồi",
+    "haveBackup": "Do you have previous backup?"
   },
   "notification": {
     "settingsUpdated": "Cài đặt đã được cập nhật",

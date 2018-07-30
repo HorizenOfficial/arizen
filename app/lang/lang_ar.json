@@ -40,7 +40,8 @@
     "warningPasswordAgain": "يجب أن تستوفي كلمة المرور المتطلبات التالية:",
     "warningPasswordAgainIdentical": "<strong>مطابق</strong>",
     "errorCreationFailed": "أخفق إنشاء المحفظة",
-    "errorFailedResponse": "استجابة فاشلة"
+    "errorFailedResponse": "استجابة فاشلة",
+    "haveBackup": "Do you have previous backup?"
   },
   "notification": {
     "settingsUpdated": "تم تحديث الإعدادات",

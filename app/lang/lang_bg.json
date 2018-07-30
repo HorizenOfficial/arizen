@@ -40,7 +40,8 @@
     "warningPasswordAgain": "Паролата трябва да отговаря на следните изисквания:",
     "warningPasswordAgainIdentical": "<strong>Идентични</strong>",
     "errorCreationFailed": "Неуспешно създаване на портфейл",
-    "errorFailedResponse": "Няма отговор"
+    "errorFailedResponse": "Няма отговор",
+    "haveBackup": "Do you have previous backup?"
   },
   "notification": {
     "settingsUpdated": "Обновени настройки",

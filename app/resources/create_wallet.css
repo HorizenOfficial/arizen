@@ -38,6 +38,10 @@
     border-bottom: 1px solid #69FFBD;
 }
 
+#have_previous_backup {
+    display: none;
+}
+
 #old_username_area {
     display: none;
     font-size: 0.8em;

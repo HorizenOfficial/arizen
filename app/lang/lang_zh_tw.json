@@ -40,7 +40,8 @@
     "warningPasswordAgain": "密碼必須滿足以下條件",
     "warningPasswordAgainIdentical": "<strong>和上述密碼內容一樣</strong>",
     "errorCreationFailed": "錢包創建失敗",
-    "errorFailedResponse": "伺服器回應錯誤"
+    "errorFailedResponse": "伺服器回應錯誤",
+    "haveBackup": "Do you have previous backup?"
   },
   "notification": {
     "settingsUpdated": "設定已更新",

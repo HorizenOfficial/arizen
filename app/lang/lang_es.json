@@ -40,7 +40,8 @@
     "warningPasswordAgain": "Su contraseña debe cumplir los siguientes requisitos:",
     "warningPasswordAgainIdentical": "<strong>Contraseña idéntica a la anterior</strong>",
     "errorCreationFailed": "La creación de la cartera ha fallado",
-    "errorFailedResponse": "Respuesta fallida"
+    "errorFailedResponse": "Respuesta fallida",
+    "haveBackup": "Do you have previous backup?"
   },
   "notification": {
     "settingsUpdated": "La configuración ha sido actualizada",

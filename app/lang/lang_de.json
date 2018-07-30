@@ -40,7 +40,8 @@
     "warningPasswordAgain": "Ihr Passwort muss die folgenden Anforderungen erfüllen:",
     "warningPasswordAgainIdentical": "<strong>Identisch</strong>",
     "errorCreationFailed": "Erstellen der Wallet fehlgeschlagen",
-    "errorFailedResponse": "Antwort fehlgeschlagen"
+    "errorFailedResponse": "Antwort fehlgeschlagen",
+    "haveBackup": "Do you have previous backup?"
   },
   "notification": {
     "settingsUpdated": "Einstellungen aktualisiert",

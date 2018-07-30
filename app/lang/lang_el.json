@@ -40,7 +40,8 @@
     "warningPasswordAgain": "Ο κωδικός πρέπει να πληροί τις ακόλουθες απαιτήσεις:",
     "warningPasswordAgainIdentical": "<strong>Πανομοιότυπος</strong>",
     "errorCreationFailed": "Η δημιουργία πορτοφολιού απέτυχε",
-    "errorFailedResponse": "Αποτυχία ανταπόκρισης"
+    "errorFailedResponse": "Αποτυχία ανταπόκρισης",
+    "haveBackup": "Do you have previous backup?"
   },
   "notification": {
     "settingsUpdated": "Οι ρυθμίσεις ενημερώθηκαν",

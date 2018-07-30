@@ -40,7 +40,8 @@
     "warningPasswordAgain": "パスワード (確認) は次の要件を満たす必要があります:",
     "warningPasswordAgainIdentical": "<strong>パスワードと同じであること</strong>",
     "errorCreationFailed": "ウォレットの作成に失敗しました",
-    "errorFailedResponse": "レスポンスに失敗しました"
+    "errorFailedResponse": "レスポンスに失敗しました",
+    "haveBackup": "Do you have previous backup?"
   },
   "notification": {
     "settingsUpdated": "設定が更新されました",

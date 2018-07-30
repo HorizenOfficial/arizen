@@ -40,7 +40,8 @@
     "warningPasswordAgain": "Şifre şu kurallara uygun olmalıdır:",
     "warningPasswordAgainIdentical": "<strong>Eşleşme</strong>",
     "errorCreationFailed": "Cüzdan oluşturma hatası",
-    "errorFailedResponse": "Yanıt alınamadı"
+    "errorFailedResponse": "Yanıt alınamadı",
+    "haveBackup": "Do you have previous backup?"
   },
   "notification": {
     "settingsUpdated": "Ayarlar Güncellendi",

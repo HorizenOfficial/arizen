@@ -40,7 +40,8 @@
     "warningPasswordAgain": "Le mot de passe doit répondre aux exigences suivantes:",
     "warningPasswordAgainIdentical": "<strong>Identique</strong>",
     "errorCreationFailed": "La création du portefeuille a échoué",
-    "errorFailedResponse": "Réponse incorrecte"
+    "errorFailedResponse": "Réponse incorrecte",
+    "haveBackup": "Do you have previous backup?"
   },
   "notification": {
     "settingsUpdated": "Paramètres mis à jour",

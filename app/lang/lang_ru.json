@@ -40,7 +40,8 @@
     "warningPasswordAgain": "Пароль должен соответствовать данным требованиям:",
     "warningPasswordAgainIdentical": "<strong>Идентичный</strong>",
     "errorCreationFailed": "Не удалось создать кошелёк",
-    "errorFailedResponse": "Нет ответа"
+    "errorFailedResponse": "Нет ответа",
+    "haveBackup": "Do you have previous backup?"
   },
   "notification": {
     "settingsUpdated": "Настройки обновлены",

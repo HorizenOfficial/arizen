@@ -40,7 +40,8 @@
     "warningPasswordAgain": "Lozinka mora da ispunjava sledeće zahteve:",
     "warningPasswordAgainIdentical": "<strong>Identično</strong>",
     "errorCreationFailed": "Kreiranje novčanika nije uspelo",
-    "errorFailedResponse": "Nema odgovora"
+    "errorFailedResponse": "Nema odgovora",
+    "haveBackup": "Do you have previous backup?"
   },
   "notification": {
     "settingsUpdated": "Podešavanja su ažurirana",

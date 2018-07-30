@@ -40,7 +40,8 @@
     "warningPasswordAgain": "비밀번호는 다음 요구사항을 따라야 합니다 :",
     "warningPasswordAgainIdentical": "<strong>같습니다.</strong>",
     "errorCreationFailed": "지갑 생성에 실패하였습니다.",
-    "errorFailedResponse": "응답에 실패하였습니다."
+    "errorFailedResponse": "응답에 실패하였습니다.",
+    "haveBackup": "Do you have previous backup?"
   },
   "notification": {
     "settingsUpdated": "설정이 업데이트 되었습니다.",

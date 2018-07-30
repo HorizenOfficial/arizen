@@ -25,7 +25,7 @@
     "oldUsername": "Staré jméno peněženky: ",
     "oldPassword": "Staré heslo: ",
     "passwordAgain": "Heslo znovu",
-    "selectWallet": "Nebo vybrat soubor s peněženkou",
+    "selectWallet": "Vybrat soubor s peněženkou",
     "selectWalletButton": "Procházet",
     "createWalletButton": "Vytvořit peněženku",
     "loginLink": "Přihlásit se ",
@@ -40,7 +40,8 @@
     "warningPasswordAgain": "Hesla musejí splnit následující požadavky",
     "warningPasswordAgainIdentical": "<strong>Musí být identické</strong>",
     "errorCreationFailed": "Vytvoření peněženky selhalo",
-    "errorFailedResponse": "Nezdařilo se"
+    "errorFailedResponse": "Nezdařilo se",
+    "haveBackup": "Máte předchozí zálohu?"
   },
   "notification": {
     "settingsUpdated": "Nastavení aktualizováno",

@@ -40,7 +40,8 @@
     "warningPasswordAgain": "La password ha i seguenti requisiti:",
     "warningPasswordAgainIdentical": "<strong>Uguale</strong>",
     "errorCreationFailed": "Creazione wallet fallita",
-    "errorFailedResponse": "Risposta non corretta"
+    "errorFailedResponse": "Risposta non corretta",
+    "haveBackup": "Do you have previous backup?"
   },
   "notification": {
     "settingsUpdated": "Impostazioni aggiornate",

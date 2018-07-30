@@ -40,7 +40,8 @@
     "warningPasswordAgain": "A senha deve atender aos seguintes requisitos:",
     "warningPasswordAgainIdentical": "<strong>Idêntico</strong>",
     "errorCreationFailed": "A criação da carteira falhou",
-    "errorFailedResponse": "Resposta falhada"
+    "errorFailedResponse": "Resposta falhada",
+    "haveBackup": "Do you have previous backup?"
   },
   "notification": {
     "settingsUpdated": "Configurações atualizadas",

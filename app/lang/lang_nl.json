@@ -40,7 +40,8 @@
     "warningPasswordAgain": "Wachtwoord moet aan de volgende eisen voldoen:",
     "warningPasswordAgainIdentical": "<strong>Identiek</strong>",
     "errorCreationFailed": "Portefeuille aanmaken mislukt",
-    "errorFailedResponse": "Mislukte poging"
+    "errorFailedResponse": "Mislukte poging",
+    "haveBackup": "Do you have previous backup?"
   },
   "notification": {
     "settingsUpdated": "Instellingen geupdate",

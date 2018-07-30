@@ -25,7 +25,7 @@
     "passwordAgain": "Password again",
     "oldUsername": "Old wallet name: ",
     "oldPassword": "Old password: ",
-    "selectWallet": "Or Select Wallet",
+    "selectWallet": "Select Wallet",
     "selectWalletButton": "Browse",
     "createWalletButton": "Create Wallet",
     "loginLink": "Login",
@@ -40,7 +40,8 @@
     "warningPasswordAgain": "Password must meet the following requirements:",
     "warningPasswordAgainIdentical": "<strong>Identical</strong>",
     "errorCreationFailed": "Wallet creation failed",
-    "errorFailedResponse": "Failed response"
+    "errorFailedResponse": "Failed response",
+    "haveBackup": "Do you have previous backup?"
   },
   "notification": {
     "settingsUpdated": "Settings updated",

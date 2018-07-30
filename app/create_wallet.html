@@ -32,13 +32,20 @@
                 <span style="text-align:center;"><label id="pswd_again_label" for="pswd_again" data-tr=createWallet.passwordAgain>Password again</label></span>
                 <span><input id="pswd_again" class="inputs" name="pswd_again" type="password" onkeyup="checkPasswdAgain();" tabindex="3" onfocus="selectColumn(false, false, true);checkPasswdAgain();"/></span>
             </li>
+
             <li>
+                <span class=checkmark style="text-align:center;" data-tr=createWallet.haveBackup>Do you have previous backup?
+                <input type=checkbox id=have_previous_backup_checkbox name=have_previous_backup_checkbox onclick="haveBackup()">
+                </span>
+            </li>
+            <li>
+                <div id="have_previous_backup">
                     <span class="marginLeft5p" data-tr=createWallet.selectWallet>Select Wallet
                     <input id="btWalletButton" class="buttons btWalletButtonClass" name="btWalletButton" type="button" data-tr=createWallet.selectWalletButton value="Browse" tabindex="4" onclick="document.getElementById('btWallet').click();"/>
                     <input id="btWallet" name="btWallet" style="display: none;" type='file' accept=".awd,.uawd" onchange="handleWalletFile()"/>
                     </span>
                     <span id="btWalletFilename" class="right"></span>
-
+                </div>
             </li>
             <li>
                 <div id="old_username_area">
