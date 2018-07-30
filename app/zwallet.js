@@ -503,6 +503,7 @@ function scheduleRefresh() {
 function refresh() {
     pingSecureNode();
     scheduleRefresh();
+    toggleLedHTML();
     syncZaddrIfSettingsExist();
     rpc.updateAllZBalances();
     ipcRenderer.send("refresh-wallet");
