@@ -170,12 +170,16 @@ function decryptWallet(login, password, path) {
              * https://github.com/nodejs/node/blob/ee76f3153b51c60c74e7e4b0882a99f3a3745294/src/node_crypto.cc#L3705
              * https://github.com/nodejs/node/blob/ee76f3153b51c60c74e7e4b0882a99f3a3745294/src/node_crypto.cc#L312
              */
-            if (err.message.match(/Unsupported state/)) {
+            if (err.message.match(/Unsupported state or unable to authenticate data/)) {
                 /*
-                 * User should be notified that wallet couldn't be decrypted because of an invalid
-                 * password or because the wallet file is corrupted.
+                 * User should be notified that wallet couldn't be decrypted because of an invalid password.
                  */
-                outputBytes = [];
+                outputBytes = -1;
+            } else if (err.message.match(/Unsupported state/)) {
+                /*
+                 * User should be notified that wallet couldn't be decrypted because the wallet file is corrupted.
+                 */
+                outputBytes = -2;
             } else {
                 // FIXME: handle other errors
                 throw err;
@@ -199,7 +203,11 @@ function importWallet(filename, encrypt) {
         data = fs.readFileSync(filename);
     }
 
-    if (data.length > 0) {
+    if (data === -1) {
+        dialog.showErrorBox(tr("login.walletImportFailed", "Import failed"), tr("login.dataImportFailed1", "Data import failed, possible reason is wrong credentials or file is corrupted."));
+    } else if (data === -2) {
+        dialog.showErrorBox(tr("login.walletImportFailed", "Import failed"), tr("login.dataImportFailed2", "Data import failed, possible reason is wrong credentials."));
+    } else if (data.length > 1) {
         if (encrypt) {
             fs.copy(filename, getWalletPath() + userInfo.login + ".awd");
         }
@@ -207,8 +215,6 @@ function importWallet(filename, encrypt) {
         userInfo.walletDb = new sql.Database(data);
         mainWindow.webContents.send("call-get-wallets");
         mainWindow.webContents.send("show-notification-response", "Import", tr("login.walletImported", "Wallet imported succesfully"), 3);
-    } else {
-        dialog.showErrorBox(tr("login.walletImportFailed", "Import failed"), tr("login.dataImportFailed", "Data import failed, possible reason is wrong credentials"));
     }
 }
 
@@ -1163,12 +1169,18 @@ ipcMain.on("write-login-info", function (event, data) {
                 let walletBytes = [];
                 if (inputs.encrypted) {
                     walletBytes = decryptWallet(inputs.olduser, inputs.oldpass, inputs.walletPath);
-                    resp.msg = "Wallet decrypt failed";
+                    if (walletBytes === -1) {
+                        resp.msg = "Data import failed, possible reason is wrong credentials or file is corrupted";
+                    } else if (data === -2) {
+                        resp.msg = "Data import failed, possible reason is wrong credentials";
+                    } else {
+                        resp.msg = "Wallet decrypt failed";
+                    }
                 } else {
                     walletBytes = fs.readFileSync(inputs.walletPath);
                     resp.msg = "Wallet read failed";
                 }
-                if (walletBytes.length > 0) {
+                if (walletBytes.length > 1) {
                     let db = new sql.Database(walletBytes);
                     let walletEncrypted = encryptWallet(inputs.username, inputs.password, db.export());
                     storeFile(path, walletEncrypted);
@@ -1189,14 +1201,20 @@ ipcMain.on("write-login-info", function (event, data) {
 });
 
 ipcMain.on("verify-login-info", function (event, login, pass) {
-    let resp = {
-        response: "ERR"
-    };
+    let resp;
     let path = getWalletPath() + login + ".awd";
 
     if (fs.existsSync(path)) {
         let walletBytes = decryptWallet(login, pass, path);
-        if (walletBytes.length > 0) {
+        if (walletBytes === -1) {
+            resp = {
+                response: "ERR_corrupted_file"
+            };
+        } else if (walletBytes === -2) {
+            resp = {
+                response: "ERR_wrong_credentials"
+            };
+        } else if (walletBytes.length > 1) {
             userInfo.loggedIn = true;
             userInfo.login = login;
             userInfo.pass = pass;
@@ -1210,6 +1228,10 @@ ipcMain.on("verify-login-info", function (event, login, pass) {
                 user: login
             };
         }
+    } else {
+        resp = {
+            response: "ERR_nonexistent_wallet_name"
+        };
     }
 
     event.sender.send("verify-login-response", JSON.stringify(resp));

@@ -16,7 +16,11 @@ ipcRenderer.on("verify-login-response", function (event, resp) {
     if (data.response === "OK") {
         location.href = "./zwallet.html";
         console.log("Login was successful - redirecting to wallet.html");
-    } else {
-        document.getElementById("login_pswd_info").style.display = "block";
+    } else if (data.response === "ERR_corrupted_file") {
+        document.getElementById("login_corrupted_file").style.display = "block";
+    } else if (data.response === "ERR_wrong_credentials") {
+        document.getElementById("login_wrong_credentials").style.display = "block";
+    } else if (data.response === "ERR_nonexistent_wallet_name") {
+        document.getElementById("login_nonexistent_wallet_name").style.display = "block";
     }
 });

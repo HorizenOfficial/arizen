@@ -178,9 +178,9 @@ label {
     display: block;
 }
 
-#login_pswd_info {
+#login_corrupted_file {
     position: absolute;
-    bottom: 155px;
+    bottom: 220px;
     right: -292px;
     width: 250px;
     padding: 15px;
@@ -189,13 +189,71 @@ label {
     border: 1px solid #1B2F59;
 }
 
-#login_pswd_info h4 {
+#login_corrupted_file h4 {
     margin: 0 0 10px 0;
     padding: 0;
     font-weight: normal;
 }
 
-#login_pswd_info::before {
+#login_corrupted_file::before {
+    content: "\25C0";
+    color: #69FFBD;
+    position: absolute;
+    top: 45%;
+    left: -12px;
+    font-size: 14px;
+    line-height: 14px;
+    text-shadow: none;
+    display: block;
+}
+
+#login_wrong_credentials {
+    position: absolute;
+    bottom: 140px;
+    right: -292px;
+    width: 250px;
+    padding: 15px;
+    background: #f3f3f3;
+    font-size: .875em;
+    border: 1px solid #1B2F59;
+}
+
+#login_wrong_credentials h4 {
+    margin: 0 0 10px 0;
+    padding: 0;
+    font-weight: normal;
+}
+
+#login_wrong_credentials::before {
+    content: "\25C0";
+    color: #69FFBD;
+    position: absolute;
+    top: 45%;
+    left: -12px;
+    font-size: 14px;
+    line-height: 14px;
+    text-shadow: none;
+    display: block;
+}
+
+#login_nonexistent_wallet_name {
+    position: absolute;
+    bottom: 60px;
+    right: -292px;
+    width: 250px;
+    padding: 15px;
+    background: #f3f3f3;
+    font-size: .875em;
+    border: 1px solid #1B2F59;
+}
+
+#login_nonexistent_wallet_name h4 {
+    margin: 0 0 10px 0;
+    padding: 0;
+    font-weight: normal;
+}
+
+#login_nonexistent_wallet_name::before {
     content: "\25C0";
     color: #69FFBD;
     position: absolute;
