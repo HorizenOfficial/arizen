@@ -432,6 +432,13 @@ function showNewAddrDialog() {
     if (response === 0) {
         showDialogFromTemplate("newAddrDialogTemplate", dialog => {
             const createButton = dialog.querySelector(".newAddrDialogCreate");
+            if (!properlyConfigRemoteNode()){
+                let zSelection = dialog.querySelector(".TorZgetZ");
+                zSelection.disabled = true;
+                let zSelectionRadioLabel = dialog.querySelector(".radioLabelTorZgetZ");
+                zSelectionRadioLabel.innerHTML = "";
+
+            }
             createButton.addEventListener("click", () => {
                 let getT = dialog.querySelector(".TorZgetT").checked;
                 let getZ = dialog.querySelector(".TorZgetZ").checked;
