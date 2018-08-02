@@ -260,6 +260,15 @@ header button {
     min-width: 60px;
 }
 
+#settingsSshPrivateKey {
+    width: 69%;
+}
+
+#chooseKeyPath {
+    min-width: 28%;
+    float: right;
+}
+
 #withdrawAmount {
     width: 70%;
 }
