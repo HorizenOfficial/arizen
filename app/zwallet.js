@@ -435,8 +435,11 @@ function showNewAddrDialog() {
             if (!properlyConfigRemoteNode()){
                 let zSelection = dialog.querySelector(".TorZgetZ");
                 zSelection.disabled = true;
-                let zSelectionRadioLabel = dialog.querySelector(".radioLabelTorZgetZ");
-                zSelectionRadioLabel.innerHTML = "";
+                zSelection.style.visibility="hidden";
+                let zSelectionLabel = dialog.querySelector(".TorZgetZLabel"); // 192.168.99.204
+                zSelectionLabel.style.visibility="hidden";
+                let zSelectionRadioLabel = dialog.querySelector(".TorZgetZframe"); // 192.168.99.204
+                zSelectionRadioLabel.innerHTML = ""
 
             }
             createButton.addEventListener("click", () => {
