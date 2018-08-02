@@ -184,7 +184,8 @@
       "domainFrontingUrl": "Domain fronting public base URL",
       "domainFrontingHost": "Domain fronting private host",
       "autoLogOffEnable": "Enable automatic log off",
-      "autoLogOffTimeout": "Auto log off timeout in seconds"
+      "autoLogOffTimeout": "Auto log off timeout in seconds",
+      "chooseKeyPath": "Browse"
     },
     "paperWallet": {
       "label": "纸上钱包",
@@ -235,7 +236,9 @@
         "unknownAddress": "One of your destination address is not in your wallet!",
         "tooManyInputsOutputs": "Your transaction contains too many inputs/outputs addresses, please try less address!"
       }
-    }
+    },
+    "max": "Max",
+    "showBatchSplitDialog": "Batch Split"
   },
   "menu": {
     "file": "文件",

@@ -191,7 +191,8 @@
       "domainFrontingUrl": "Domain fronting public base URL",
       "domainFrontingHost": "Domain fronting private host",
       "autoLogOffEnable": "Активиране на автоматично потребителско излизане от системата",
-      "autoLogOffTimeout": "Времетраене до активирането на автоматично потребителско излизане от системата в секунди"
+      "autoLogOffTimeout": "Времетраене до активирането на автоматично потребителско излизане от системата в секунди",
+      "chooseKeyPath": "Browse"
     },
     "paperWallet": {
       "label": "Хартиен портфейл",
@@ -241,7 +242,9 @@
         "unknownAddress": "One of your destination address is not in your wallet!",
         "tooManyInputsOutputs": "Your transaction contains too many inputs/outputs addresses, please try less address!"
       }
-    }
+    },
+    "max": "Max",
+    "showBatchSplitDialog": "Batch Split"
   },
   "menu": {
     "file": "Файл",

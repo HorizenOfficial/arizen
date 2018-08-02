@@ -184,7 +184,8 @@
       "domainFrontingUrl": "ドメインフロンティング公開ベース URL",
       "domainFrontingHost": "ドメインフロンティング プライベートホスト",
       "autoLogOffEnable": "自動ログアウトを有効にする",
-      "autoLogOffTimeout": "自動ログアウトまでの時間 (秒)"
+      "autoLogOffTimeout": "自動ログアウトまでの時間 (秒)",
+      "chooseKeyPath": "Browse"
     },
     "paperWallet": {
       "label": "ペーパーウォレット",
@@ -235,7 +236,9 @@
         "unknownAddress": "One of your destination address is not in your wallet!",
         "tooManyInputsOutputs": "Your transaction contains too many inputs/outputs addresses, please try less address!"
       }
-    }
+    },
+    "max": "Max",
+    "showBatchSplitDialog": "Batch Split"
   },
   "menu": {
     "file": "ファイル",

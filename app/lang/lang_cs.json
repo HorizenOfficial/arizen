@@ -185,7 +185,8 @@
       "domainFrontingUrl": "Domain fronting veřejná URL",
       "domainFrontingHost": "Domain fronting privátní host",
       "autoLogOffEnable": "Zapnout automatické odhlášení",
-      "autoLogOffTimeout": "Časový limit automatického odhlášení"
+      "autoLogOffTimeout": "Časový limit automatického odhlášení",
+      "chooseKeyPath": "Procházet"
     },
     "paperWallet": {
       "label": "Papírová peněženka",
@@ -236,7 +237,9 @@
         "unknownAddress": "Jedna z Vašich cílových adres není ve Vaší peněžence!",
         "tooManyInputsOutputs": "Vaše transakce obsahuje příliš mnoho vstupních/výstupních adres, zkuste méně adres!"
       }
-    }
+    },
+    "max": "Max",
+    "showBatchSplitDialog": "Dávkové rozdělení"
   },
   "menu": {
     "file": "Soubor",

@@ -184,7 +184,8 @@
       "domainFrontingUrl": "도메인 프론팅 공용 URL",
       "domainFrontingHost": "도메인 프론팅 개인 호스트",
       "autoLogOffEnable": "자동 로그 오프 사용",
-      "autoLogOffTimeout": "자동 로그 오프 시간 제한(초)"
+      "autoLogOffTimeout": "자동 로그 오프 시간 제한(초)",
+      "chooseKeyPath": "Browse"
     },
     "paperWallet": {
       "label": "페이퍼지갑",
@@ -235,7 +236,9 @@
         "unknownAddress": "One of your destination address is not in your wallet!",
         "tooManyInputsOutputs": "Your transaction contains too many inputs/outputs addresses, please try less address!"
       }
-    }
+    },
+    "max": "Max",
+    "showBatchSplitDialog": "Batch Split"
   },
   "menu": {
     "file": "파일",

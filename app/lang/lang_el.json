@@ -184,7 +184,8 @@
       "domainFrontingUrl": "Domain fronting δημόσιο base URL",
       "domainFrontingHost": "Domain fronting ιδιωτικός διακομιστής",
       "autoLogOffEnable": "Ενεργοποίηση αυτόματης αποσύνδεσης (log off)",
-      "autoLogOffTimeout": "Χρόνος αυτόματης αποσύνδεσης (log off) σε δευτερόλεπτα"
+      "autoLogOffTimeout": "Χρόνος αυτόματης αποσύνδεσης (log off) σε δευτερόλεπτα",
+      "chooseKeyPath": "Browse"
     },
     "paperWallet": {
       "label": "Χάρτινο Πορτοφόλι",
@@ -235,7 +236,9 @@
         "unknownAddress": "One of your destination address is not in your wallet!",
         "tooManyInputsOutputs": "Your transaction contains too many inputs/outputs addresses, please try less address!"
       }
-    }
+    },
+    "max": "Max",
+    "showBatchSplitDialog": "Batch Split"
   },
   "menu": {
     "file": "Αρχείο",

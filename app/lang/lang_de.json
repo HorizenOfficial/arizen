@@ -184,7 +184,8 @@
       "domainFrontingUrl": "Domain fronting öffentliche Basis URL",
       "domainFrontingHost": "Domain fronting privater Host",
       "autoLogOffEnable": "Automatische Abmeldung",
-      "autoLogOffTimeout": "Dauer bis zur automatischen Abmeldung"
+      "autoLogOffTimeout": "Dauer bis zur automatischen Abmeldung",
+      "chooseKeyPath": "Browse"
     },
     "paperWallet": {
       "label": "Paper Wallet",
@@ -235,7 +236,9 @@
         "unknownAddress": "One of your destination address is not in your wallet!",
         "tooManyInputsOutputs": "Your transaction contains too many inputs/outputs addresses, please try less address!"
       }
-    }
+    },
+    "max": "Max",
+    "showBatchSplitDialog": "Batch Split"
   },
   "menu": {
     "file": "Datei",
