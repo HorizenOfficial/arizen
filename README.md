@@ -17,6 +17,16 @@
 # Version History
 
 ## v1.1.9
+- [x] Batch Split
+- [x] Add certificate login to the Secure Node
+- [x] Max button in withdraw tab
+- [x] Speed-up
+- [x] Minor fixes
+- [x] More languages
+- [x] Hide LEDs when Secure Node is not connected/setting is not presented
+- [x] Less confusing "create wallet" dialog
+- [x] Additional warnings and errors in the login process
+- [x] Disallow generating/clicking on create new Z address when Secure Node is not connected
 
 ## v1.1.8
 - [x] Refactor: batch-withdraw functionality
