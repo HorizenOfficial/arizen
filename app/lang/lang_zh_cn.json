@@ -9,7 +9,7 @@
     "loginButton": "登入",
     "createWalletLink": "创建钱包",
     "warningWrongUsernameOrPassword": "<strong>帐号</strong> 或 <strong>密码</strong> 错误",
-    "dataImportFailed1": "Data import failed, possible reason is wrong credentials or file is corrupted.",
+    "dataImportFailed1": "资料导入失败，可能的原因是凭据错误或文件已损坏。",
     "dataImportFailed2": "资料导入失败，可能是因为密码错误",
     "fileReplace": "确定复盖文件？",
     "walletReplace": "复盖钱包？",
@@ -42,7 +42,7 @@
     "warningPasswordAgainIdentical": "<strong>和上述密码内容一样</strong>",
     "errorCreationFailed": "钱包创建失败",
     "errorFailedResponse": "服务器回应错误",
-    "haveBackup": "Do you have previous backup?"
+    "haveBackup": "你有以前的备份吗？?"
   },
   "notification": {
     "settingsUpdated": "设定已更新",
@@ -125,9 +125,9 @@
         "feeIsNegative": "金额必须大于或等于零！",
         "error": "错误",
         "success": "成功送出交易",
-        "isCoinbaseUTXO": "Your address contains newly mined coins, also called coinbase unspent transaction outputs (coinbase UTXO). These need to be shielded and unshielded first before they can be spent, please import the private key of this address into a full wallet like Swing and then send all your coins from this address to a Z-address and then back to this T-address. You will be then able to spend them in Arizen as well.",
-        "tooManyUTXOs": "Your address consists of too many UTXOs, it is not possible to send this transaction via API!",
-        "noSourceAddress": "No source address was selected!"
+        "isCoinbaseUTXO": "您的地址包含新开采的硬币，也称为coinbase未使用的交易输出（coinbase UTXO）。 这些需要先屏蔽和不屏蔽才能用完，请将此地址的私钥导入Swing等完整钱包，然后将所有硬币从此地址发送到Z地址，然后再返回此T地址。 然后你也可以在Arizen度过。",
+        "tooManyUTXOs": "您的地址由太多的UTXO组成，无法通过API发送此事务！",
+        "noSourceAddress": "没有选择源地址！"
       }
     },
     "transactionHistory": {
@@ -203,42 +203,42 @@
       "keepAmount": "留置金额"
     },
     "importSinglePrivateKey": {
-      "openButtonLabel": "Import Private Key",
-      "titleLabel": "Import Single Private Key",
-      "privateKeyLabel": "Private Key",
-      "importButtonLabel": "Import",
-      "warningNotValidAddress": "Z address exist in your wallet",
-      "warningNotValidPK": "This is not a valid Private Key."
+      "openButtonLabel": "导入私钥",
+      "titleLabel": "导入单个私钥",
+      "privateKeyLabel": "私钥",
+      "importButtonLabel": "导入",
+      "warningNotValidAddress": "Z地址存在于您的钱包中",
+      "warningNotValidPK": "这不是有效的私钥。"
     },
-    "autoLogOffLabel": "Log off in ",
+    "autoLogOffLabel": "登出",
     "changePassword": {
-      "title": "Change Wallet Password",
-      "warningText": "WARNING: Wallet backups won't be re-encrypted! If you need to use them, you will have to use current password.",
-      "currentPassword": "Current Password",
-      "newPassword1": "New Password",
-      "newPassword2": "New Password (Retype)"
+      "title": "更改钱包密码",
+      "warningText": "警告：不会重新加密电子钱包备份！ 如果您需要使用它们，则必须使用当前密码。",
+      "currentPassword": "当前密码",
+      "newPassword1": "新密码",
+      "newPassword2": "新密码（重新输入）"
     },
     "rpcConsole": {
       "title": "RPC",
-      "command": "Command",
-      "test": "Test Me",
+      "command": "命令",
+      "test": "测试",
       "results": "RPC Results ...",
-      "status": "Status: ",
-      "testFunctionButton": "Test Function"
+      "status": "状态： ",
+      "testFunctionButton": "测试功能"
     },
     "batchSplit": {
-      "label": "Batch Split",
-      "splitToAmounts": "Split to amounts",
-      "toAddresses": "To addresses:",
-      "splitButtonLabel": "Split",
+      "label": "批量拆分",
+      "splitToAmounts": "分成金额",
+      "toAddresses": "致地址：",
+      "splitButtonLabel": "分拆",
       "messages": {
-        "splitToIsZero": "Split to amounts have to be greater than zero!",
-        "unknownAddress": "One of your destination address is not in your wallet!",
-        "tooManyInputsOutputs": "Your transaction contains too many inputs/outputs addresses, please try less address!"
+        "splitToIsZero": "拆分金额必须大于零！",
+        "unknownAddress": "您的目的地地址之一不在钱包里！",
+        "tooManyInputsOutputs": "您的交易包含太多输入/输出地址，请尝试减少地址！"
       }
     },
     "max": "Max",
-    "showBatchSplitDialog": "Batch Split"
+    "showBatchSplitDialog": "批量拆分"
   },
   "menu": {
     "file": "文件",
@@ -258,28 +258,28 @@
       "paste": "贴上",
       "selectAll": "选择全部"
     },
-    "help": "Help",
+    "help": "帮助",
     "helpSubmenu": {
-      "arizenManual": "User Manual",
-      "support": "Support",
+      "arizenManual": "用户手册",
+      "support": "支援",
       "zencash": "ZenCash"
     },
-    "changeWalletPassword": "Change wallet password"
+    "changeWalletPassword": "更改钱包密码"
   },
   "warmingMessages": {
-    "userWarningImportFileWithPKs": "New address(es) and a private key(s) will be imported. Your previous back-ups do not include the newly imported addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
-    "userWarningExportWalletUnencrypted": "You are going to export an UNENCRYPTED wallet ( ie your private keys) in plain text. That means that anyone with this file can control your ZENs. Store this file in a safe place. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
-    "userWarningExportWalletEncrypted": "You are going to export an ENCRYPTED wallet and your private keys will be encrypted. That means that in order to access your private keys you need to know the corresponding wallet name and password. In case you don't know them you cannot control the ZENs that are controled by these private keys. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
-    "userWarningImportPK": "A new address and a private key will be imported. Your previous back-ups do not include the newly imported address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
-    "userWarningCreateNewAddress": "A new address and a private key will be created. Your previous back-ups do not include this newly generated address or the corresponding private key. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
-    "userWarningIUnderstand": "I understand",
-    "cancel": "Cancel",
-    "userWarningImportPkUserZendRescan": "The balance of the Z address you imported will be visible after you rescan the blockchain. Please run 'zen-cli stop && sleep 8 && zend -rescan' in your secure node (linux)."
+    "userWarningImportFileWithPKs": "你将导入新地址和私钥您之前的备份不包括新导入的地址或相应的私钥请使用Arizen的备份功能进行新备份提交并替换现有的Arizen钱包备份按。 “我理解”即表示您理解这一点。有关详细信息，请参阅Arizen的帮助菜单",
+    "userWarningExportWalletUnencrypted": "您将以纯文本格式导出未经加密的钱包（即您的私钥）。这意味着拥有此文件的任何人都可以控制您的ZEN。请将此文件存储在安全的地方。当你按下”我理解“即您声明您理解这一点。有关详细信息，请参阅Arizen的帮助菜单。",
+    "userWarningExportWalletEncrypted": "您将导出一个加密的钱包，您的私钥将被加密。这意味着，为访问您的私钥。您需要知道相应的钱包名称和密码。如果您不知道它们您无法控制由这些私钥控制的ZEN。按“我理解”即表示您理解这一点。有关详细信息，请参阅Arizen的帮助菜单。",
+    "userWarningImportPK": "将导入新地址和私钥。您之前的备份不包括新导入的地址或相应的私钥。请使用Arizen的备份功能制作新的备份文件并替换现有的Arizen钱包备份。按“我理解”即表示您理解这一点。有关详细信息，请参阅Arizen的帮助菜单。",
+    "userWarningCreateNewAddress": "你将创建一个新地址和一个私人密钥。您之前的备份不包括这个新生成的地址或相应的私钥。请使用Arizen的备份功能制作新的备份文件并替换现有的Arizen钱包备份。当你按下“我理解”即表示您理解这一点。有关详细信息，请参阅Arizen的帮助菜单。",
+    "userWarningIUnderstand": "我理解",
+    "cancel": "取消",
+    "userWarningImportPkUserZendRescan": "重新扫描区块链后，您导入的Z地址的余额将会显示。请在您的安全节点（linux）中运行'zen-cli stop && sleep 8 && zend -rescan'。"
   },
   "common": {
-    "selectAll": "Select all",
-    "clearAll": "Clear all",
-    "okButtonText": "OK",
-    "cancelButtonText": "Cancel"
+    "selectAll": "全选",
+    "clearAll": "全部清除",
+    "okButtonText": "好的",
+    "cancelButtonText": "取消"
   }
 }
