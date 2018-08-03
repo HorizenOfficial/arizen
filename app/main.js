@@ -494,7 +494,8 @@ function exportWalletArizen(ext, encrypt) {
         if (response === 0) {
             dialog.showSaveDialog({
                 title: "Save wallet." + ext,
-                filters: [{name: "Wallet", extensions: [ext]}]
+                filters: [{name: "Wallet", extensions: [ext]}],
+                defaultPath: userInfo.login
             }, function (filename) {
                 if (typeof filename !== "undefined" && filename !== "") {
                     if (!fs.exists(filename)) {
@@ -575,7 +576,7 @@ function exportPKs() {
             dialog.showSaveDialog({
                 type: "warning",
                 title: "Choose file for private keys",
-                defaultPath: "arizen-private-keys.txt"
+                defaultPath: "arizen-private-keys-" + userInfo.login + ".txt"
             }, filename => {
                 if (filename) {
                     exportToFile(filename);
