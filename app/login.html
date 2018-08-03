@@ -32,9 +32,19 @@
             <a href="create_wallet.html" class="create_wallet_link" data-tr=login.createWalletLink>Create Wallet</a>
         </div>
     </form>
-    <div id="login_pswd_info" style="display:none">
+    <div id="login_corrupted_file" style="display:none">
+        <ul>
+            <li class="invalid">Probably <strong>corrupted wallet file</strong> or wrong <strong>wallet name</strong> or <strong>password</strong></li>
+        </ul>
+    </div>
+    <div id="login_wrong_credentials" style="display:none">
         <ul>
             <li class="invalid">Wrong <strong>wallet name</strong> or <strong>password</strong></li>
+        </ul>
+    </div>
+    <div id="login_nonexistent_wallet_name" style="display:none">
+        <ul>
+            <li class="invalid">Wallet with this name <strong>does NOT exist</strong></li>
         </ul>
     </div>
 </div>

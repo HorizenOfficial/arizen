@@ -9,7 +9,8 @@
     "loginButton": "ログイン",
     "createWalletLink": "ウォレット作成",
     "warningWrongUsernameOrPassword": "<strong>ユーザー名</strong>または<strong>パスワード</strong>が間違っています",
-    "dataImportFailed": "データのインポートに失敗しました。入力情報が間違っている可能性があります",
+    "dataImportFailed1": "Data import failed, possible reason is wrong credentials or file is corrupted.",
+    "dataImportFailed2": "データのインポートに失敗しました。入力情報が間違っている可能性があります",
     "fileReplace": "ファイルを置換えますか?",
     "walletReplace": "ウォレットを置換えますか?",
     "walletReplaceMsg": "現在のウォレットが置換えられますが、よろしいですか?",
@@ -40,7 +41,8 @@
     "warningPasswordAgain": "パスワード (確認) は次の要件を満たす必要があります:",
     "warningPasswordAgainIdentical": "<strong>パスワードと同じであること</strong>",
     "errorCreationFailed": "ウォレットの作成に失敗しました",
-    "errorFailedResponse": "レスポンスに失敗しました"
+    "errorFailedResponse": "レスポンスに失敗しました",
+    "haveBackup": "Do you have previous backup?"
   },
   "notification": {
     "settingsUpdated": "設定が更新されました",
@@ -124,7 +126,8 @@
         "error": "エラー",
         "success": "トランザクションは正常に送信されました",
         "isCoinbaseUTXO": "このアドレスには、新たにマイニングされたコイン (支払いが行われていないコインベーストランザクションアウトプット; コインベース UTXO) が含まれています。このコインを使用するためには、シールドした上で再びシールドを解除する必要があります。まず、本アドレスの秘密鍵を Swing のようなフルノードウォレットにインポートしてください。次に、本アドレスから、一旦対象となるコインを全て Z アドレスに送付し、そこから再び本アドレスに送付し直してください。これにより Arizen ウォレットからも、これらのコインを支払うことができるようになります。",
-        "tooManyUTXOs": "Your address consists of too many UTXOs, it is not possible to send this transaction via API!"
+        "tooManyUTXOs": "Your address consists of too many UTXOs, it is not possible to send this transaction via API!",
+        "noSourceAddress": "No source address was selected!"
       }
     },
     "transactionHistory": {
@@ -168,6 +171,8 @@
       "enableNotifications": "デスクトップ通知",
       "enableDomainFronting": "ドメインフロンティング",
       "secureNodeFQDN": "セキュアノード FQDN",
+      "sshPrivateKey": "Path to SSH private key file",
+      "sshPassphrase": "Passphrase for SSH private key file (if necessary)",
       "sshUsername": "SSH ユーザー名",
       "sshPassword": "SSH パスワード",
       "sshPort": "SSH ポート",
@@ -179,7 +184,8 @@
       "domainFrontingUrl": "ドメインフロンティング公開ベース URL",
       "domainFrontingHost": "ドメインフロンティング プライベートホスト",
       "autoLogOffEnable": "自動ログアウトを有効にする",
-      "autoLogOffTimeout": "自動ログアウトまでの時間 (秒)"
+      "autoLogOffTimeout": "自動ログアウトまでの時間 (秒)",
+      "chooseKeyPath": "Browse"
     },
     "paperWallet": {
       "label": "ペーパーウォレット",
@@ -194,8 +200,7 @@
     },
     "batchWithdraw": {
       "label": "まとめて送付",
-      "keepAmount": "送付せずに残しておく額",
-      "txFee": "トランザクション手数料"
+      "keepAmount": "送付せずに残しておく額"
     },
     "importSinglePrivateKey": {
       "openButtonLabel": "秘密鍵のインポート",
@@ -220,7 +225,20 @@
       "results": "RPC の結果 ...",
       "status": "ステータス: ",
       "testFunctionButton": "実行"
-    }
+    },
+    "batchSplit": {
+      "label": "Batch Split",
+      "splitToAmounts": "Split to amounts",
+      "toAddresses": "To addresses:",
+      "splitButtonLabel": "Split",
+      "messages": {
+        "splitToIsZero": "Split to amounts have to be greater than zero!",
+        "unknownAddress": "One of your destination address is not in your wallet!",
+        "tooManyInputsOutputs": "Your transaction contains too many inputs/outputs addresses, please try less address!"
+      }
+    },
+    "max": "Max",
+    "showBatchSplitDialog": "Batch Split"
   },
   "menu": {
     "file": "ファイル",

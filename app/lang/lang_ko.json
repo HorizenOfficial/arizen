@@ -9,7 +9,8 @@
     "loginButton": "로그인",
     "createWalletLink": "지갑 생성",
     "warningWrongUsernameOrPassword": "<strong>아이디</strong> 나 <strong>비밀번호</strong>가 다릅니다.",
-    "dataImportFailed": "데이터를 가져오는 데 실패하였습니다. 잘못된 자격증명일 수 있습니다.",
+    "dataImportFailed1": "Data import failed, possible reason is wrong credentials or file is corrupted.",
+    "dataImportFailed2": "데이터를 가져오는 데 실패하였습니다. 잘못된 자격증명일 수 있습니다.",
     "fileReplace": "파일을 교체하시겠습니까?",
     "walletReplace": "지갑을 교체하시겠습니까?",
     "walletReplaceMsg": "당신의 실제 지갑을 대체하게 됩니다.. 확실하십니까?",
@@ -40,7 +41,8 @@
     "warningPasswordAgain": "비밀번호는 다음 요구사항을 따라야 합니다 :",
     "warningPasswordAgainIdentical": "<strong>같습니다.</strong>",
     "errorCreationFailed": "지갑 생성에 실패하였습니다.",
-    "errorFailedResponse": "응답에 실패하였습니다."
+    "errorFailedResponse": "응답에 실패하였습니다.",
+    "haveBackup": "Do you have previous backup?"
   },
   "notification": {
     "settingsUpdated": "설정이 업데이트 되었습니다.",
@@ -124,7 +126,8 @@
         "error": "오류",
         "success": "거래가 성공적으로 완료되었습니다.",
         "isCoinbaseUTXO": "귀하의 주소에는 coinbase 미사용 거래 출력 (coinbase UTXO)이라고도하는 새로 채굴 된 동전이 있습니다. 이것들은 보호 받기 전에 차폐가 필요합니다. 스윙과 같은 전체 지갑에 이 주소의 비공개 키를 가져온 다음, 이 주소에서 Z 주소로 모든 동전을 보내고 T 주소로 되돌려주십시오. 그러면 Arizen에서 그들을 보낼 수 있습니다.",
-        "tooManyUTXOs": "Your address consists of too many UTXOs, it is not possible to send this transaction via API!"
+        "tooManyUTXOs": "Your address consists of too many UTXOs, it is not possible to send this transaction via API!",
+        "noSourceAddress": "No source address was selected!"
       }
     },
     "transactionHistory": {
@@ -168,6 +171,8 @@
       "enableNotifications": "데스크탑 알림",
       "enableDomainFronting": "도메인 프론팅",
       "secureNodeFQDN": "보안 노드 FQDN",
+      "sshPrivateKey": "Path to SSH private key file",
+      "sshPassphrase": "Passphrase for SSH private key file (if necessary)",
       "sshUsername": "SSH 사용자 이름",
       "sshPassword": "SSH 비밀번호",
       "sshPort": "SSH 포트",
@@ -179,7 +184,8 @@
       "domainFrontingUrl": "도메인 프론팅 공용 URL",
       "domainFrontingHost": "도메인 프론팅 개인 호스트",
       "autoLogOffEnable": "자동 로그 오프 사용",
-      "autoLogOffTimeout": "자동 로그 오프 시간 제한(초)"
+      "autoLogOffTimeout": "자동 로그 오프 시간 제한(초)",
+      "chooseKeyPath": "Browse"
     },
     "paperWallet": {
       "label": "페이퍼지갑",
@@ -194,8 +200,7 @@
     },
     "batchWithdraw": {
       "label": "일괄 철회",
-      "keepAmount": "유지할 금액",
-      "txFee": "거래 수수료"
+      "keepAmount": "유지할 금액"
     },
     "importSinglePrivateKey": {
       "openButtonLabel": "개인 키 가져오기",
@@ -220,7 +225,20 @@
       "results": "RPC 결과 ...",
       "status": "상태: ",
       "testFunctionButton": "테스트 기능"
-    }
+    },
+    "batchSplit": {
+      "label": "Batch Split",
+      "splitToAmounts": "Split to amounts",
+      "toAddresses": "To addresses:",
+      "splitButtonLabel": "Split",
+      "messages": {
+        "splitToIsZero": "Split to amounts have to be greater than zero!",
+        "unknownAddress": "One of your destination address is not in your wallet!",
+        "tooManyInputsOutputs": "Your transaction contains too many inputs/outputs addresses, please try less address!"
+      }
+    },
+    "max": "Max",
+    "showBatchSplitDialog": "Batch Split"
   },
   "menu": {
     "file": "파일",

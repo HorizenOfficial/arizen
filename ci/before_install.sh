@@ -4,18 +4,15 @@ set -e
 
 echo "Before Install Script"
 
-if [[ $TRAVIS_OS_NAME == "osx" ]]; then
+if [[ ${TRAVIS_OS_NAME} == "osx" ]]; then
     echo "Before install: MacOS"
     brew update
     brew install graphviz
-
-elif [[ $TRAVIS_OS_NAME == "windows" ]]; then
+elif [[ ${TRAVIS_OS_NAME} == "windows" ]]; then
     echo "Before install: Windows OS"
-
-elif [[ $TRAVIS_OS_NAME == "linux" ]]; then
+elif [[ ${TRAVIS_OS_NAME} == "linux" ]]; then
     echo "Before install: Linux"
     sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils
-
 else
     echo "Unknown OS"
 fi

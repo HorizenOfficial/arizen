@@ -9,7 +9,8 @@
     "loginButton": "تسجيل الدخول",
     "createWalletLink": "إنشاء محفظة",
     "warningWrongUsernameOrPassword": "اسم المستخدم أو كلمة المرور خاطئة",
-    "dataImportFailed": "فشل استيراد البيانات، هل بيانات الاعتماد صحيحة؟",
+    "dataImportFailed1": "Data import failed, possible reason is wrong credentials or file is corrupted.",
+    "dataImportFailed2": "فشل استيراد البيانات، هل بيانات الاعتماد صحيحة؟",
     "fileReplace": "هل تريد استبدال الملف؟",
     "walletReplace": "استبدال المحفظة؟",
     "walletReplaceMsg": "سيؤدي هذا إلى استبدال المحفظة الفعلية. هل أنت واثق؟",
@@ -40,7 +41,8 @@
     "warningPasswordAgain": "يجب أن تستوفي كلمة المرور المتطلبات التالية:",
     "warningPasswordAgainIdentical": "<strong>مطابق</strong>",
     "errorCreationFailed": "أخفق إنشاء المحفظة",
-    "errorFailedResponse": "استجابة فاشلة"
+    "errorFailedResponse": "استجابة فاشلة",
+    "haveBackup": "Do you have previous backup?"
   },
   "notification": {
     "settingsUpdated": "تم تحديث الإعدادات",
@@ -124,7 +126,8 @@
         "error": "خطأ",
         "success": "اكتملت المعاملة بنجاح",
         "isCoinbaseUTXO": "Your address contains newly mined coins, also called coinbase unspent transaction outputs (coinbase UTXO). These need to be shielded and unshielded first before they can be spent, please import the private key of this address into a full wallet like Swing and then send all your coins from this address to a Z-address and then back to this T-address. You will be then able to spend them in Arizen as well.",
-        "tooManyUTXOs": "Your address consists of too many UTXOs, it is not possible to send this transaction via API!"
+        "tooManyUTXOs": "Your address consists of too many UTXOs, it is not possible to send this transaction via API!",
+        "noSourceAddress": "No source address was selected!"
       }
     },
     "transactionHistory": {
@@ -168,6 +171,8 @@
       "enableNotifications": "Desktop notifications",
       "enableDomainFronting": "Domain fronting",
       "secureNodeFQDN": "Secure Node FQDN",
+      "sshPrivateKey": "Path to SSH private key file",
+      "sshPassphrase": "Passphrase for SSH private key file (if necessary)",
       "sshUsername": "SSH username",
       "sshPassword": "SSH password",
       "sshPort": "SSH port",
@@ -179,7 +184,8 @@
       "domainFrontingUrl": "Domain fronting public base URL",
       "domainFrontingHost": "Domain fronting private host",
       "autoLogOffEnable": "Enable automatic log off",
-      "autoLogOffTimeout": "Auto log off timeout in seconds"
+      "autoLogOffTimeout": "Auto log off timeout in seconds",
+      "chooseKeyPath": "Browse"
     },
     "paperWallet": {
       "label": "ورقة المحفظة",
@@ -194,8 +200,7 @@
     },
     "batchWithdraw": {
       "label": "انسحاب متعددة",
-      "keepAmount": "المبلغ للحفاظ على",
-      "txFee": "رسوم التحويل"
+      "keepAmount": "المبلغ للحفاظ على"
     },
     "importSinglePrivateKey": {
       "openButtonLabel": "Import Private Key",
@@ -220,7 +225,20 @@
       "results": "RPC Results ...",
       "status": "Status: ",
       "testFunctionButton": "Test Function"
-    }
+    },
+    "batchSplit": {
+      "label": "Batch Split",
+      "splitToAmounts": "Split to amounts",
+      "toAddresses": "To addresses:",
+      "splitButtonLabel": "Split",
+      "messages": {
+        "splitToIsZero": "Split to amounts have to be greater than zero!",
+        "unknownAddress": "One of your destination address is not in your wallet!",
+        "tooManyInputsOutputs": "Your transaction contains too many inputs/outputs addresses, please try less address!"
+      }
+    },
+    "max": "Max",
+    "showBatchSplitDialog": "Batch Split"
   },
   "menu": {
     "file": "ملف",

@@ -261,8 +261,7 @@ function showAboutDialog() {
     const {ipcRenderer} = require("electron");
     ipcRenderer.on("settings", (sender, settingsStr) => {
         // don't notify about new settings on startup
-        pingSecureNode();
-        //rpc.pingSecureNodeRPCResult();
+        executeWhenSettingsArriveInitially();
 
         if (Object.keys(settings).length) {
             showNotification(tr("notification.settingsUpdated", "Settings updated"));
@@ -295,21 +294,58 @@ function saveInternalInfo() {
     ipcRenderer.send("save-internal-info", JSON.stringify(internalInfo));
 }
 
+function executeWhenSettingsArriveInitially(){
+    toggleLedHTML();
+    pingSecureNode();
+    //rpc.pingSecureNodeRPCResult();
+}
+
+function properlyConfigRemoteNode(){
+    let propConf = false;
+    if (settings.secureNodeFQDN === "127.0.0.1" || settings.secureNodeFQDN === "localhost"){
+        propConf = (settings.secureNodeFQDN &&
+            settings.secureNodePort &&
+            settings.secureNodeUsername &&
+            settings.secureNodePassword)
+    } else {
+        propConf = (settings.secureNodeFQDN &&
+            settings.secureNodePort &&
+            settings.secureNodeUsername &&
+            settings.secureNodePassword &&
+            settings.sshUsername &&
+            (settings.sshPassword || settings.sshPrivateKey) &&
+            settings.sshPort)
+    }
+        return propConf
+}
+
 function syncZaddrIfSettingsExist() {
-    if (settings.secureNodeFQDN &&
-        settings.secureNodePort &&
-        settings.secureNodeUsername &&
-        settings.secureNodePassword &&
-        settings.sshUsername &&
-        settings.sshPassword &&
-        settings.sshPort) {
+    if (properlyConfigRemoteNode()) {
         rpc.importAllZAddressesFromSNtoArizenExcludeExisting();
         rpc.importAllZAddressesFromArizenToSN();
     }
 }
+function ledWrapperExists(){
+    let LEDWrapper = document.getElementById("snStatusWraper");
+    return !(LEDWrapper === null);
+}
+
+function toggleLedHTML(){
+    let wrapperExists = ledWrapperExists();
+
+    if (properlyConfigRemoteNode() && !wrapperExists){
+        document.getElementById("snStatusFrame").innerHTML = "";
+        document.getElementById("snStatusFrame").innerHTML = "<span id=snStatusWraper class=snStatusWraper><span id=snStatusSeperator> / </span><span>Server: <span id=dotSNstatus class=dotSNstatus></span></span> <span>zend: <span id=dotSNstatusRPC class=dotSNstatusRPC></span></span></span>";
+    }
+
+    if (!properlyConfigRemoteNode() && wrapperExists){
+        document.getElementById("snStatusFrame").innerHTML = "";
+    }
+}
 
 function isValidDomainName(domainOrIP) {
-    return (domainOrIP !== "" && domainOrIP !== undefined) // more to be added
+    const isIp = require('is-ip');
+    return ((domainOrIP !== "" && domainOrIP !== undefined) || isIp(domainOrIP) )// more to be added
 }
 
 function pingSecureNode() {
@@ -318,22 +354,22 @@ function pingSecureNode() {
         const isIp = require('is-ip');
 
         let fqdnIsV6 = isIp.v6(settings.secureNodeFQDN);
-        console.log(settings.secureNodeFQDN);
-        console.log(fqdnIsV6);
 
-        var cfg = {
-        v6:fqdnIsV6,
+        let cfg = {
+            v6: fqdnIsV6,
         };
 
         let hosts = [settings.secureNodeFQDN];
         hosts.forEach(function (host) {
             ping.sys.probe(host, function (isAlive) {
-              console.log(isAlive);
-                if (isAlive) {
-                    document.getElementById("dotSNstatus").style.backgroundColor = "#34A853"; // green
-                } else {
-                    document.getElementById("dotSNstatus").style.backgroundColor = "#EA4335"; // red #EA4335
-                    document.getElementById("dotSNstatusRPC").style.backgroundColor = "#EA4335"; // red #EA4335
+                toggleLedHTML();
+                if (ledWrapperExists()){
+                    if (isAlive) {
+                        document.getElementById("dotSNstatus").style.backgroundColor = "#34A853"; // green #34A853
+                    } else {
+                        document.getElementById("dotSNstatus").style.backgroundColor = "#EA4335"; // red #EA4335
+                        document.getElementById("dotSNstatusRPC").style.backgroundColor = "#EA4335"; // red #EA4335
+                    }
                 }
             }, cfg);
         });
@@ -369,6 +405,8 @@ function showSettingsDialog() {
         const inputSecureNodeUsername = dialog.querySelector(".settingsSecureNodeUsername");
         const inputSecureNodePassword = dialog.querySelector(".settingsSecureNodePassword");
 
+        const inputSshPassphrase = dialog.querySelector(".settingsSshPassphrase");
+        const inputSshPrivateKey = dialog.querySelector(".settingsSshPrivateKey");
         const inputSshUsername = dialog.querySelector(".settingsSshUsername");
         const inputSshPassword = dialog.querySelector(".settingsSshPassword");
         const inputSshPort = dialog.querySelector(".settingsSshPort");
@@ -395,6 +433,8 @@ function showSettingsDialog() {
         inputSecureNodePort.value = settings.secureNodePort || 8231;
         inputSecureNodeUsername.value = settings.secureNodeUsername || "";
         inputSecureNodePassword.value = settings.secureNodePassword || "";
+        inputSshPassphrase.value = settings.sshPassphrase || "";
+        inputSshPrivateKey.value = settings.sshPrivateKey || "";
         inputSshUsername.value = settings.sshUsername || "";
         inputSshPassword.value = settings.sshPassword || "";
         inputSshPort.value = settings.sshPort || 22;
@@ -404,6 +444,15 @@ function showSettingsDialog() {
         inputAutoLogOffEnable.checked = settings.autoLogOffEnable;
         inputAutoLogOffTimeout.value = settings.autoLogOffTimeout || 60;
 
+        dialog.querySelector(".chooseKeyPath").addEventListener("click", () => {
+            let inputFakeElement = document.createElement('input');
+            inputFakeElement.addEventListener("change", function(){
+                let fileList = this.files;
+                inputSshPrivateKey.value = fileList[0].path;
+            }, false);
+            inputFakeElement.type = 'file';
+            inputFakeElement.click();
+        });
 
         dialog.querySelector(".settingsSave").addEventListener("click", () => {
             const newSettings = {
@@ -418,6 +467,8 @@ function showSettingsDialog() {
                 secureNodePort: inputSecureNodePort.value,
                 secureNodeUsername: inputSecureNodeUsername.value,
                 secureNodePassword: inputSecureNodePassword.value,
+                sshPassphrase: inputSshPassphrase.value,
+                sshPrivateKey: inputSshPrivateKey.value,
                 sshUsername: inputSshUsername.value,
                 sshPassword: inputSshPassword.value,
                 sshPort: inputSshPort.value,

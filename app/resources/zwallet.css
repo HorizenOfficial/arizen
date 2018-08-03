@@ -260,6 +260,23 @@ header button {
     min-width: 60px;
 }
 
+#settingsSshPrivateKey {
+    width: 69%;
+}
+
+#chooseKeyPath {
+    min-width: 28%;
+    float: right;
+}
+
+#withdrawAmount {
+    width: 70%;
+}
+
+#withdrawMaxButton {
+    min-width: 28%;
+}
+
 /* Trasactions */
 
 .txPanel {
@@ -375,6 +392,11 @@ header button {
 }
 
 .batchWithdrawContent .addrSelectList {
+    max-height: 300px; /* cannot make table to not overflow in any otther way sadly */
+    margin: 10px 0 20px 0;
+}
+
+.batchSplitContent .addrSelectList {
     max-height: 300px; /* cannot make table to not overflow in any otther way sadly */
     margin: 10px 0 20px 0;
 }

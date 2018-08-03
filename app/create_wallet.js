@@ -150,3 +150,21 @@ function handleWalletFile() {
     }
     document.getElementById("old_username_area").style.display = targetStyle;
 }
+
+function haveBackup() {
+    let re = /(?:\.([^.]+))?$/;
+    let targetStylePreviousBackup = "none";
+
+    if(document.getElementById("have_previous_backup_checkbox").checked){
+        targetStylePreviousBackup = "block";
+        document.getElementById("btWalletFilename").textContent = document.getElementById("btWallet").value;
+        if (re.exec(document.getElementById("btWallet").value)[1] === "awd") {
+            document.getElementById("old_username_area").style.display = "block";
+        }
+    } else {
+        targetStylePreviousBackup = "none";
+        document.getElementById("old_username_area").style.display = "none";
+    }
+
+    document.getElementById("have_previous_backup").style.display = targetStylePreviousBackup;
+}

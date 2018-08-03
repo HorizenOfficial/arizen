@@ -9,7 +9,8 @@
     "loginButton": "Влизане",
     "createWalletLink": "Създаване на портфейл",
     "warningWrongUsernameOrPassword": "Грешно <strong>име на портфейла</strong> или <strong>парола</strong>",
-    "dataImportFailed": "Неуспешно внасяне на данни, възможна причина е грешка в отчетените данни",
+    "dataImportFailed1": "Data import failed, possible reason is wrong credentials or file is corrupted.",
+    "dataImportFailed2": "Неуспешно внасяне на данни, възможна причина е грешка в отчетените данни",
     "fileReplace": "Желаете ли да заместите файла?",
     "walletReplace": "Заместване на портфейла?",
     "walletReplaceMsg": "Това ще замести съществуващия Ви портфейл. Съгласявате ли се?",
@@ -40,7 +41,8 @@
     "warningPasswordAgain": "Паролата трябва да отговаря на следните изисквания:",
     "warningPasswordAgainIdentical": "<strong>Идентични</strong>",
     "errorCreationFailed": "Неуспешно създаване на портфейл",
-    "errorFailedResponse": "Няма отговор"
+    "errorFailedResponse": "Няма отговор",
+    "haveBackup": "Do you have previous backup?"
   },
   "notification": {
     "settingsUpdated": "Обновени настройки",
@@ -131,7 +133,8 @@
         "error": "Грешка",
         "success": "Транзакцията е изпратена успешно",
         "isCoinbaseUTXO": "Вашият адрес съдържа новоизкопани койни, също наречени койнбейс незавършени транзакции от добив (coinbase UTXO). Те трябва да бъдат защитени и незащитени преди да могат да бъдат изразходвани. Моля, импортирайте частния ключ на този адрес в пълен портфейл като Swing и след това изпратете всичките си монети от този адрес на Z-адрес и след това обратно на този T-адрес. След това ще можете да ги похарчите в Arizen.",
-        "tooManyUTXOs": "Вашият адрес съдържа прекалено много UTXOs, не е възможно да изпълните тази транзакция чрез API!"
+        "tooManyUTXOs": "Вашият адрес съдържа прекалено много UTXOs, не е възможно да изпълните тази транзакция чрез API!",
+        "noSourceAddress": "No source address was selected!"
       }
     },
     "transactionHistory": {
@@ -175,6 +178,8 @@
       "enableNotifications": "Desktop notifications",
       "enableDomainFronting": "Domain fronting",
       "secureNodeFQDN": "Secure Node FQDN",
+      "sshPrivateKey": "Path to SSH private key file",
+      "sshPassphrase": "Passphrase for SSH private key file (if necessary)",
       "sshUsername": "SSH потребителско име",
       "sshPassword": "SSH парола",
       "sshPort": "SSH порт",
@@ -186,7 +191,8 @@
       "domainFrontingUrl": "Domain fronting public base URL",
       "domainFrontingHost": "Domain fronting private host",
       "autoLogOffEnable": "Активиране на автоматично потребителско излизане от системата",
-      "autoLogOffTimeout": "Времетраене до активирането на автоматично потребителско излизане от системата в секунди"
+      "autoLogOffTimeout": "Времетраене до активирането на автоматично потребителско излизане от системата в секунди",
+      "chooseKeyPath": "Browse"
     },
     "paperWallet": {
       "label": "Хартиен портфейл",
@@ -201,8 +207,7 @@
     },
     "batchWithdraw": {
       "label": "Групово изплащане",
-      "keepAmount": "Сума за запазване",
-      "txFee": "Такса за транзакция"
+      "keepAmount": "Сума за запазване"
     },
     "importSinglePrivateKey": {
       "openButtonLabel": "Импортиране на частен ключ",
@@ -226,7 +231,20 @@
       "results": "RPC резултати ...",
       "status": "Състояние: ",
       "testFunctionButton": "Тестване на функции"
-    }
+    },
+    "batchSplit": {
+      "label": "Batch Split",
+      "splitToAmounts": "Split to amounts",
+      "toAddresses": "To addresses:",
+      "splitButtonLabel": "Split",
+      "messages": {
+        "splitToIsZero": "Split to amounts have to be greater than zero!",
+        "unknownAddress": "One of your destination address is not in your wallet!",
+        "tooManyInputsOutputs": "Your transaction contains too many inputs/outputs addresses, please try less address!"
+      }
+    },
+    "max": "Max",
+    "showBatchSplitDialog": "Batch Split"
   },
   "menu": {
     "file": "Файл",

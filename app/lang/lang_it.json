@@ -9,7 +9,8 @@
     "loginButton": "Login",
     "createWalletLink": "Crea Wallet",
     "warningWrongUsernameOrPassword": "<strong>Nome wallet</strong> o <strong>password</strong> errati",
-    "dataImportFailed": "Import dati fallito, le credenziali d'accesso potrebbero essere non corrette",
+    "dataImportFailed1": "Data import failed, possible reason is wrong credentials or file is corrupted.",
+    "dataImportFailed2": "Import dati fallito, le credenziali d'accesso potrebbero essere non corrette",
     "fileReplace": "Vuoi sostituire il file?",
     "walletReplace": "Vuoi sostituire il wallet?",
     "walletReplaceMsg": "Quest'operazione sostituirà il tuo attuale wallet. Sei sicuro?",
@@ -40,7 +41,8 @@
     "warningPasswordAgain": "La password ha i seguenti requisiti:",
     "warningPasswordAgainIdentical": "<strong>Uguale</strong>",
     "errorCreationFailed": "Creazione wallet fallita",
-    "errorFailedResponse": "Risposta non corretta"
+    "errorFailedResponse": "Risposta non corretta",
+    "haveBackup": "Do you have previous backup?"
   },
   "notification": {
     "settingsUpdated": "Impostazioni aggiornate",
@@ -131,7 +133,8 @@
         "error": "Errore",
         "success": "La transazione è stata inviata con successo",
         "isCoinbaseUTXO": "Il tuo indirizzo contiene coin appena minate, anche chiamate output di transazione non spesi (coinbase UTXO). Prima di poter essere spesi devono essere inviati ad uno Z-address e quindi reinviati al T-address di origine, puoi effettuare questa operazione solo con un 'full wallet' come Swing dopo aver importato le chiavi. Dopo questa procedura potrai quindi utilizzarli su Arizen.",
-        "tooManyUTXOs": "Your address consists of too many UTXOs, it is not possible to send this transaction via API!"
+        "tooManyUTXOs": "Your address consists of too many UTXOs, it is not possible to send this transaction via API!",
+        "noSourceAddress": "No source address was selected!"
       }
     },
     "transactionHistory": {
@@ -175,6 +178,8 @@
       "enableNotifications": "Notifiche Desktop",
       "enableDomainFronting": "Domain fronting",
       "secureNodeFQDN": "Secure Node FQDN",
+      "sshPrivateKey": "Path to SSH private key file",
+      "sshPassphrase": "Passphrase for SSH private key file (if necessary)",
       "sshUsername": "SSH username",
       "sshPassword": "SSH password",
       "sshPort": "SSH porta",
@@ -186,7 +191,8 @@
       "domainFrontingUrl": "Domain fronting public base URL",
       "domainFrontingHost": "Domain fronting private host",
       "autoLogOffEnable": "Abilita disconnessione automatica",
-      "autoLogOffTimeout": "Timeout in secondi per la disconnessione automatica"
+      "autoLogOffTimeout": "Timeout in secondi per la disconnessione automatica",
+      "chooseKeyPath": "Browse"
     },
     "paperWallet": {
       "label": "Paper Wallet",
@@ -201,8 +207,7 @@
     },
     "batchWithdraw": {
       "label": "Prelievo multiplo",
-      "keepAmount": "Totale da mantenere",
-      "txFee": "Fee di transazione"
+      "keepAmount": "Totale da mantenere"
     },
     "importSinglePrivateKey": {
       "openButtonLabel": "Importa Chiave Privata",
@@ -226,7 +231,20 @@
       "results": "Risultati RPC ...",
       "status": "Status: ",
       "testFunctionButton": "Funzione di Test"
-    }
+    },
+    "batchSplit": {
+      "label": "Batch Split",
+      "splitToAmounts": "Split to amounts",
+      "toAddresses": "To addresses:",
+      "splitButtonLabel": "Split",
+      "messages": {
+        "splitToIsZero": "Split to amounts have to be greater than zero!",
+        "unknownAddress": "One of your destination address is not in your wallet!",
+        "tooManyInputsOutputs": "Your transaction contains too many inputs/outputs addresses, please try less address!"
+      }
+    },
+    "max": "Max",
+    "showBatchSplitDialog": "Batch Split"
   },
   "menu": {
     "file": "File",

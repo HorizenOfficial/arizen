@@ -4,6 +4,7 @@
 [![Code Climate][codeclimate-img]][codeclimate-url]
 
 # User Manuals
+- v1.1.9: [Arizen v1.1.9 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.9/Arizen.v1.1.9.Wallet.User.Manual.pdf)
 - v1.1.8: [Arizen v1.1.8 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.8/Arizen.v1.1.8.Wallet.User.Manual.pdf)
 - v1.1.7: [Arizen v1.1.7 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.7/Arizen.v1.1.7.Wallet.User.Manual.pdf)
 - v1.1.6: [Arizen v1.1.6 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.6/Arizen.v1.1.6.Wallet.User.Manual.pdf)
@@ -14,6 +15,18 @@
 - v1.0.0: [Arizen v1.0.0 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.0.0/Arizen.Wallet.User.Manual.pdf)
 
 # Version History
+
+## v1.1.9
+- [x] Batch Split
+- [x] Add certificate login to the Secure Node
+- [x] Max button in withdraw tab
+- [x] Speed-up
+- [x] Minor fixes
+- [x] More languages
+- [x] Hide LEDs when Secure Node is not connected/setting is not presented
+- [x] Less confusing "create wallet" dialog
+- [x] Additional warnings and errors in the login process
+- [x] Disallow generating/clicking on create new Z address when Secure Node is not connected
 
 ## v1.1.8
 - [x] Refactor: batch-withdraw functionality

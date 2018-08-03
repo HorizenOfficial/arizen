@@ -51,6 +51,7 @@ const withdrawFromAddrInput = document.getElementById("withdrawFromAddr");
 const withdrawToButton = document.getElementById("withdrawToButton");
 const withdrawToAddrInput = document.getElementById("withdrawToAddr");
 const withdrawAmountInput = document.getElementById("withdrawAmount");
+const withdrawMaxButton = document.getElementById("withdrawMaxButton");
 const withdrawFeeInput = document.getElementById("withdrawFee");
 const withdrawMsg = document.getElementById("withdrawMsg");
 const withdrawButton = document.getElementById("withdrawButton");
@@ -431,6 +432,16 @@ function showNewAddrDialog() {
     if (response === 0) {
         showDialogFromTemplate("newAddrDialogTemplate", dialog => {
             const createButton = dialog.querySelector(".newAddrDialogCreate");
+            if (!properlyConfigRemoteNode()){
+                let zSelection = dialog.querySelector(".TorZgetZ");
+                zSelection.disabled = true;
+                zSelection.style.visibility="hidden";
+                let zSelectionLabel = dialog.querySelector(".TorZgetZLabel"); // 192.168.99.204
+                zSelectionLabel.style.visibility="hidden";
+                let zSelectionRadioLabel = dialog.querySelector(".TorZgetZframe"); // 192.168.99.204
+                zSelectionRadioLabel.innerHTML = ""
+
+            }
             createButton.addEventListener("click", () => {
                 let getT = dialog.querySelector(".TorZgetT").checked;
                 let getZ = dialog.querySelector(".TorZgetZ").checked;
@@ -502,6 +513,7 @@ function scheduleRefresh() {
 function refresh() {
     pingSecureNode();
     scheduleRefresh();
+    toggleLedHTML();
     syncZaddrIfSettingsExist();
     rpc.updateAllZBalances();
     ipcRenderer.send("refresh-wallet");
@@ -528,7 +540,7 @@ function showAddrSelectDialog(zeroBalanceAddrs, zAddressesInclude, onSelected) {
             setBalanceText(row.querySelector(".addrSelectRowBalance"), addrObj.lastbalance);
             row.addEventListener("click", () => {
                 dialog.close();
-                onSelected(addrObj.addr);
+                onSelected(addrObj);
             });
             listNode.appendChild(row)
         }
@@ -539,8 +551,8 @@ function initDepositView() {
     const qrcodeTypeDelay = 500; // ms
     depositToAddrInput.addEventListener("input", () => updateDepositQrcode(qrcodeTypeDelay));
     depositAmountInput.addEventListener("input", () => updateDepositQrcode(qrcodeTypeDelay));
-    depositToButton.addEventListener("click", () => showAddrSelectDialog(true, false, addr => {
-        depositToAddrInput.value = addr;
+    depositToButton.addEventListener("click", () => showAddrSelectDialog(true, false, addrObj => {
+        depositToAddrInput.value = addrObj.addr;
         updateDepositQrcode();
     }));
     depositSaveQrcodeButton.addEventListener("click", () => {
@@ -608,13 +620,9 @@ async function checkIntermediateSend(tIntermediateAddress, toAddr, amount, feeTw
     if (balance >= amount) {
         // send from T to Z
         console.log("Sending...");
-        let sendResp = await rpc.sendFromOrToZaddress(undefined, tIntermediateAddress, toAddr, amount, feeTwo)
+        let sendResp = await rpc.sendFromOrToZaddress(undefined, tIntermediateAddress, toAddr, amount, feeTwo);
         console.log(sendResp.status);
-        if (sendResp.status === "ok") {
-            return true
-        } else {
-            return false
-        }
+        return sendResp.status === "ok";
 
     } else {
         console.log("Will check again later...");
@@ -645,6 +653,7 @@ async function sendPendingTxs() {
 }
 
 async function initWithdrawView() {
+    let maxAmount = 0;
     withdrawFromAddrInput.addEventListener("input", validateWithdrawForm);
     withdrawToAddrInput.addEventListener("input", validateWithdrawForm);
     withdrawAmountInput.addEventListener("input", validateWithdrawForm);
@@ -690,8 +699,6 @@ async function initWithdrawView() {
                         sendPendingTxs();
                     }
                 }
-
-
             } else { // Z - Z or Z - T
                 let fromAddrObj = ipcRenderer.sendSync("get-address-object", fromAddr);
                 let fromAddressPK = fromAddrObj.pk;
@@ -701,14 +708,26 @@ async function initWithdrawView() {
             }
         }
     });
-    withdrawFromButton.addEventListener("click", () => showAddrSelectDialog(false, true, addr => {
-        withdrawFromAddrInput.value = addr;
+    withdrawFromButton.addEventListener("click", () => showAddrSelectDialog(false, true, addrObj => {
+        withdrawFromAddrInput.value = addrObj.addr;
+        maxAmount = addrObj.lastbalance;
         validateWithdrawForm();
     }));
-    withdrawToButton.addEventListener("click", () => showAddrSelectDialog(true, true, addr => {
-        withdrawToAddrInput.value = addr;
+    withdrawToButton.addEventListener("click", () => showAddrSelectDialog(true, true, addrObj => {
+        withdrawToAddrInput.value = addrObj.addr;
         validateWithdrawForm();
     }));
+    withdrawMaxButton.addEventListener("click", function () {
+        let fee = 0.00010000;
+        let amount = 0;
+        if (maxAmount !== 0) {
+            amount = maxAmount - fee;
+        }
+
+        withdrawAmountInput.value = Number.parseFloat(amount).toFixed(8);
+        withdrawFeeInput.value = Number.parseFloat(fee).toFixed(8);
+        validateWithdrawForm();
+    });
     validateWithdrawForm();
 }
 
@@ -822,8 +841,8 @@ function showBatchWithdrawDialog() {
         setInputNodeValue(toAddrInput, bwSettings.toAddr);
         setInputNodeValue(keepAmountInput, bwSettings.keepAmount);
         setInputNodeValue(txFeeInput, bwSettings.txFee);
-        toAddrSelectButton.addEventListener("click", () => showAddrSelectDialog(true, false, addr => {
-            toAddrInput.value = addr;
+        toAddrSelectButton.addEventListener("click", () => showAddrSelectDialog(true, false, addrObj => {
+            toAddrInput.value = addrObj.addr;
             // TODO validate form
         }));
 
@@ -858,6 +877,100 @@ function showBatchWithdrawDialog() {
                 row.querySelector(".addrSelectCheckbox").checked = true;
             });
         });
+        clearAllButton.addEventListener("click", () => {
+            [...listNode.children].forEach(row => {
+                row.querySelector(".addrSelectCheckbox").checked = false;
+            });
+        });
+    });
+}
+
+function showBatchSplitDialog() {
+    showDialogFromTemplate("batchSplitDialogTemplate", dialog => {
+        const bsSettings = deepClone(settings.batchSplit) || {
+            fromAddr: "",
+            toAddrs: [],
+            splitToAmounts: 42,
+            txFee: 0.0001,
+        };
+
+        const toAddrsSet = new Set(bsSettings.toAddrs);
+        const listNode = dialog.querySelector(".addrSelectList");
+
+        for (const addrObj of addrObjList) {
+            if (addrObj.addr.length !== 35) {
+                // it is Z address
+                continue;
+            }
+
+            const row = cloneTemplate("addrMultiselectRowTemplate");
+            row.dataset.addr = addrObj.addr;
+
+            const selectCheckbox = row.querySelector(".addrSelectCheckbox");
+            const nameNode = row.querySelector(".addrSelectRowName");
+            const addrNode = row.querySelector(".addrSelectRowAddr");
+            const balanceNode = row.querySelector(".addrSelectRowBalance");
+
+            if (toAddrsSet.has(addrObj.addr)) {
+                selectCheckbox.checked = true;
+            }
+            nameNode.textContent = addrObj.name;
+            addrNode.textContent = addrObj.addr;
+            setBalanceText(balanceNode, addrObj.lastbalance);
+
+            listNode.appendChild(row);
+
+            if (bsSettings.fromAddr === addrObj.addr) {
+                setBalanceText(splitAvailBalance, addrObj.lastbalance);
+            }
+        }
+        if (bsSettings.fromAddr === "") {
+            setBalanceText(splitAvailBalance, 0);
+        }
+
+        const splitToAmountInput = dialog.querySelector("#batchSplitToAmount");
+        const txFeeInput = dialog.querySelector("#batchSplitFee");
+        const fromAddrSelectButton = dialog.querySelector("#batchSplitFromAddrSelect");
+        const fromAddrInput = dialog.querySelector("#batchSplitFromAddr");
+        const splitButton = dialog.querySelector("#batchSplitButton");
+        const clearAllButton = dialog.querySelector("#batchSplitClearAll");
+
+        setInputNodeValue(fromAddrInput, bsSettings.fromAddr);
+        setInputNodeValue(splitToAmountInput, bsSettings.splitToAmounts);
+        setInputNodeValue(txFeeInput, bsSettings.txFee);
+        fromAddrSelectButton.addEventListener("click", () => showAddrSelectDialog(false, false, addrObj => {
+            fromAddrInput.value = addrObj.addr;
+            setBalanceText(splitAvailBalance, addrObj.lastbalance);
+            // TODO validate form
+        }));
+
+        splitButton.addEventListener("click", () => {
+            bsSettings.toAddrs = [];
+            [...listNode.children].forEach(row => {
+                if (row.querySelector(".addrSelectCheckbox").checked) {
+                    bsSettings.toAddrs.push(row.dataset.addr);
+                }
+            });
+
+            bsSettings.fromAddr = fromAddrInput.value;
+            bsSettings.splitToAmounts = splitToAmountInput.value;
+            bsSettings.txFee = txFeeInput.value;
+
+            settings.batchSplit = bsSettings;
+            saveModifiedSettings();
+
+            warnTxSend(() => {
+                const statusDialog = createDialogFromTemplate("txSendStatusDialogTemplate");
+                const statusText = statusDialog.querySelector("#txStatusText");
+                ipcRenderer.once("send-finish", (event, result, msg) => {
+                    statusText.innerHTML = msg;
+                });
+                ipcRenderer.send("split", bsSettings.fromAddr, bsSettings.toAddrs, bsSettings.txFee, bsSettings.splitToAmounts);
+                dialog.close();
+                statusDialog.showModal();
+            });
+        });
+
         clearAllButton.addEventListener("click", () => {
             [...listNode.children].forEach(row => {
                 row.querySelector(".addrSelectCheckbox").checked = false;

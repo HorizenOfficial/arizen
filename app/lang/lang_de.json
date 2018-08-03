@@ -9,7 +9,8 @@
     "loginButton": "Anmelden",
     "createWalletLink": "Wallet erstellen",
     "warningWrongUsernameOrPassword": "<strong>Benutzername</strong> oder <strong>Passwort</strong> falsch",
-    "dataImportFailed": "Datenimport fehlgeschlagen, Ihre Anmeldedaten sind möglicherweise falsch",
+    "dataImportFailed1": "Data import failed, possible reason is wrong credentials or file is corrupted.",
+    "dataImportFailed2": "Datenimport fehlgeschlagen, Ihre Anmeldedaten sind möglicherweise falsch",
     "fileReplace": "Wollen Sie die Datei überschreiben?",
     "walletReplace": "Wallet überschreiben?",
     "walletReplaceMsg": "Dies wird Ihre aktuelle Wallet überschreiben. Sind Sie sicher?",
@@ -40,7 +41,8 @@
     "warningPasswordAgain": "Ihr Passwort muss die folgenden Anforderungen erfüllen:",
     "warningPasswordAgainIdentical": "<strong>Identisch</strong>",
     "errorCreationFailed": "Erstellen der Wallet fehlgeschlagen",
-    "errorFailedResponse": "Antwort fehlgeschlagen"
+    "errorFailedResponse": "Antwort fehlgeschlagen",
+    "haveBackup": "Do you have previous backup?"
   },
   "notification": {
     "settingsUpdated": "Einstellungen aktualisiert",
@@ -124,7 +126,8 @@
         "error": "Error",
         "success": "Die Transaktion wurde erfolgreich gesendet",
         "isCoinbaseUTXO": "Ihre Adresse enthält neu geschürfte Coins, auch Coinbase unverbrauchte Transaktionsausgabe (coinbase unspent transaction outputs/coinbase UTXO) genannt. Diese müssen anonymisiert und de-anonymisiert werden, bevor sie ausgegeben werden können. Bitte importieren Sie den privaten Schlüssel in eine Full Wallet wie Swing und senden Sie alle Coins von dieser Adresse zu einer Z-Adresse und zurück zu dieser T-Adresse. Danach werden Sie die Coins auch in Arizen ausgeben können.",
-        "tooManyUTXOs": "Your address consists of too many UTXOs, it is not possible to send this transaction via API!"
+        "tooManyUTXOs": "Your address consists of too many UTXOs, it is not possible to send this transaction via API!",
+        "noSourceAddress": "No source address was selected!"
       }
     },
     "transactionHistory": {
@@ -168,6 +171,8 @@
       "enableNotifications": "Desktop-Benachrichtigungen",
       "enableDomainFronting": "Domain Fronting",
       "secureNodeFQDN": "Secure Node FQDN",
+      "sshPrivateKey": "Pfad zur privaten SSH-Schlüssel Datei",
+      "sshPassphrase": "Passwort zur Entschlüsselung der privaten SSH-Schlüssel Datei (falls notwendig)",
       "sshUsername": "SSH Nutzername",
       "sshPassword": "SSH Passwort",
       "sshPort": "SSH Port",
@@ -179,7 +184,8 @@
       "domainFrontingUrl": "Domain fronting öffentliche Basis URL",
       "domainFrontingHost": "Domain fronting privater Host",
       "autoLogOffEnable": "Automatische Abmeldung",
-      "autoLogOffTimeout": "Dauer bis zur automatischen Abmeldung"
+      "autoLogOffTimeout": "Dauer bis zur automatischen Abmeldung",
+      "chooseKeyPath": "Browse"
     },
     "paperWallet": {
       "label": "Paper Wallet",
@@ -194,8 +200,7 @@
     },
     "batchWithdraw": {
       "label": "Gruppenauszahlung",
-      "keepAmount": "Zu behaltener Betrag",
-      "txFee": "Transakltionsgebühr"
+      "keepAmount": "Zu behaltener Betrag"
     },
     "importSinglePrivateKey": {
       "openButtonLabel": "Privaten Schlüssel importieren",
@@ -220,7 +225,20 @@
       "results": "RPC Ausgabe ...",
       "status": "Status: ",
       "testFunctionButton": "Funktion testen"
-    }
+    },
+    "batchSplit": {
+      "label": "Batch Split",
+      "splitToAmounts": "Split to amounts",
+      "toAddresses": "To addresses:",
+      "splitButtonLabel": "Split",
+      "messages": {
+        "splitToIsZero": "Split to amounts have to be greater than zero!",
+        "unknownAddress": "One of your destination address is not in your wallet!",
+        "tooManyInputsOutputs": "Your transaction contains too many inputs/outputs addresses, please try less address!"
+      }
+    },
+    "max": "Max",
+    "showBatchSplitDialog": "Batch Split"
   },
   "menu": {
     "file": "Datei",

@@ -9,7 +9,8 @@
     "loginButton": "Inloggen",
     "createWalletLink": "Portefeuille maken",
     "warningWrongUsernameOrPassword": "Verkeerde <strong>gebruikersnaam</strong> of <strong>wachtwoord</strong>",
-    "dataImportFailed": "Importeren van data niet gelukt, mogelijk omdat de gegevens niet kloppen",
+    "dataImportFailed1": "Data import failed, possible reason is wrong credentials or file is corrupted.",
+    "dataImportFailed2": "Importeren van data niet gelukt, mogelijk omdat de gegevens niet kloppen",
     "fileReplace": "Wil je het bestand vervangen?",
     "walletReplace": "Vervang portefeuille?",
     "walletReplaceMsg": "Dit vervangt je huidige portefeuille. Weet je het zeker?",
@@ -40,7 +41,8 @@
     "warningPasswordAgain": "Wachtwoord moet aan de volgende eisen voldoen:",
     "warningPasswordAgainIdentical": "<strong>Identiek</strong>",
     "errorCreationFailed": "Portefeuille aanmaken mislukt",
-    "errorFailedResponse": "Mislukte poging"
+    "errorFailedResponse": "Mislukte poging",
+    "haveBackup": "Do you have previous backup?"
   },
   "notification": {
     "settingsUpdated": "Instellingen geupdate",
@@ -124,7 +126,8 @@
         "error": "Fout",
         "success": "De transactie is succesvol verzonden",
         "isCoinbaseUTXO": "Your address contains newly mined coins, also called coinbase unspent transaction outputs (coinbase UTXO). These need to be shielded and unshielded first before they can be spent, please import the private key of this address into a full wallet like Swing and then send all your coins from this address to a Z-address and then back to this T-address. You will be then able to spend them in Arizen as well.",
-        "tooManyUTXOs": "Your address consists of too many UTXOs, it is not possible to send this transaction via API!"
+        "tooManyUTXOs": "Your address consists of too many UTXOs, it is not possible to send this transaction via API!",
+        "noSourceAddress": "No source address was selected!"
       }
     },
     "transactionHistory": {
@@ -168,6 +171,8 @@
       "enableNotifications": "Bureaublad notificaties",
       "enableDomainFronting": "Domain-fronting",
       "secureNodeFQDN": "Secure Node FQDN",
+      "sshPrivateKey": "Path to SSH private key file",
+      "sshPassphrase": "Passphrase for SSH private key file (if necessary)",
       "sshUsername": "SSH gebruikersnaam",
       "sshPassword": "SSH wachtwoord",
       "sshPort": "SSH poort",
@@ -179,7 +184,8 @@
       "domainFrontingUrl": "Domain fronting publieke basis-URL",
       "domainFrontingHost": "Domain fronting prive host",
       "autoLogOffEnable": "Schakel uitomatisch uitloggen in",
-      "autoLogOffTimeout": "Time-out voor automatisch uitloggen in seconden"
+      "autoLogOffTimeout": "Time-out voor automatisch uitloggen in seconden",
+      "chooseKeyPath": "Browse"
     },
     "paperWallet": {
       "label": "Papieren Portefeuille",
@@ -194,8 +200,7 @@
     },
     "batchWithdraw": {
       "label": "Meerdere Opnamen",
-      "keepAmount": "Te behouden bedrag",
-      "txFee": "Transactiekosten"
+      "keepAmount": "Te behouden bedrag"
     },
     "importSinglePrivateKey": {
       "openButtonLabel": "Importeer Prive Sleutel",
@@ -220,7 +225,20 @@
       "results": "RPC Resultaten ...",
       "status": "Status: ",
       "testFunctionButton": "Test Functie"
-    }
+    },
+    "batchSplit": {
+      "label": "Batch Split",
+      "splitToAmounts": "Split to amounts",
+      "toAddresses": "To addresses:",
+      "splitButtonLabel": "Split",
+      "messages": {
+        "splitToIsZero": "Split to amounts have to be greater than zero!",
+        "unknownAddress": "One of your destination address is not in your wallet!",
+        "tooManyInputsOutputs": "Your transaction contains too many inputs/outputs addresses, please try less address!"
+      }
+    },
+    "max": "Max",
+    "showBatchSplitDialog": "Batch Split"
   },
   "menu": {
     "file": "Bestand",

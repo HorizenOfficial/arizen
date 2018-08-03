@@ -9,7 +9,8 @@
     "loginButton": "Đăng nhập",
     "createWalletLink": "Tạo ví mới",
     "warningWrongUsernameOrPassword": "Sai <strong>tên đăng nhập</strong> hoặc <strong>mật khẩu</strong>.",
-    "dataImportFailed": "Dữ liệu nhập vào bị lỗi, có thể do sai chứng chỉ.",
+    "dataImportFailed1": "Data import failed, possible reason is wrong credentials or file is corrupted.",
+    "dataImportFailed2": "Dữ liệu nhập vào bị lỗi, có thể do sai chứng chỉ.",
     "fileReplace": "Bạn có muốn ghi đè tệp tin này?",
     "walletReplace": "Ghi đè ví?",
     "walletReplaceMsg": "Ví hiện tại sẽ bị ghi đè. Bạn chắc chắn muốn thực hiện?",
@@ -40,7 +41,8 @@
     "warningPasswordAgain": "Mật khẩu phải thoả mãn các điều kiện:",
     "warningPasswordAgainIdentical": "<strong>Hợp lệ</strong>",
     "errorCreationFailed": "Tạo ví mới lỗi",
-    "errorFailedResponse": "Lỗi phản hồi"
+    "errorFailedResponse": "Lỗi phản hồi",
+    "haveBackup": "Do you have previous backup?"
   },
   "notification": {
     "settingsUpdated": "Cài đặt đã được cập nhật",
@@ -124,7 +126,8 @@
         "error": "Lỗi",
         "success": "Giao dịch đã gửi thành công",
         "isCoinbaseUTXO": "Your address contains newly mined coins, also called coinbase unspent transaction outputs (coinbase UTXO). These need to be shielded and unshielded first before they can be spent, please import the private key of this address into a full wallet like Swing and then send all your coins from this address to a Z-address and then back to this T-address. You will be then able to spend them in Arizen as well.",
-        "tooManyUTXOs": "Your address consists of too many UTXOs, it is not possible to send this transaction via API!"
+        "tooManyUTXOs": "Your address consists of too many UTXOs, it is not possible to send this transaction via API!",
+        "noSourceAddress": "No source address was selected!"
       }
     },
     "transactionHistory": {
@@ -165,9 +168,11 @@
       "apiUrl": "API URLs",
       "fiat": "Đơn vị tiền tệ quy đổi",
       "save": "Lưu",
-      "enableNotifications": "Desktop notifications",
+      "enableNotifications": "Thông báo cho Desktop",
       "enableDomainFronting": "Domain fronting",
       "secureNodeFQDN": "Secure Node FQDN",
+      "sshPrivateKey": "Path to SSH private key file",
+      "sshPassphrase": "Passphrase for SSH private key file (if necessary)",
       "sshUsername": "SSH username",
       "sshPassword": "SSH password",
       "sshPort": "SSH port",
@@ -178,8 +183,9 @@
       "forwardTimeout": "Forward Timeout (default: 10000)",
       "domainFrontingUrl": "Domain fronting public base URL",
       "domainFrontingHost": "Domain fronting private host",
-      "autoLogOffEnable": "Enable automatic log off",
-      "autoLogOffTimeout": "Auto log off timeout in seconds"
+      "autoLogOffEnable": "Bật tự đông đăng xuất",
+      "autoLogOffTimeout": "Thời gian tự động đăng xuất tính bằng giây",
+      "chooseKeyPath": "Browse"
     },
     "paperWallet": {
       "label": "Ví giấy",
@@ -194,24 +200,23 @@
     },
     "batchWithdraw": {
       "label": "Gửi tiền hàng loạt",
-      "keepAmount": "Số lượng",
-      "txFee": "Phí giao dịch"
+      "keepAmount": "Số lượng"
     },
     "importSinglePrivateKey": {
       "openButtonLabel": "Import Private Key",
       "titleLabel": "Import Single Private Key",
-      "privateKeyLabel": "Private Key",
+      "privateKeyLabel": "Khóa riêng tư",
       "importButtonLabel": "Import",
-      "warningNotValidAddress": "Z address exist in your wallet",
-      "warningNotValidPK": "This is not a valid Private Key."
+      "warningNotValidAddress": "Địa chỉ Z đã tồn tại trong ví của bạn",
+      "warningNotValidPK": "Khóa riêng tư không hợp lệ."
     },
-    "autoLogOffLabel": "Log off in ",
+    "autoLogOffLabel": "Đăng xuất ",
     "changePassword": {
-      "title": "Change Wallet Password",
-      "warningText": "WARNING: Wallet backups won't be re-encrypted! If you need to use them, you will have to use current password.",
-      "currentPassword": "Current Password",
-      "newPassword1": "New Password",
-      "newPassword2": "New Password (Retype)"
+      "title": "Thay đổi mật khẩu của ví",
+      "warningText": "Cảnh báo: bản sao lưu của ví sẽ không được mã hóa lại! Nếu bạn cần dùng, bạn sẽ phải dùng mật khẩu hiện tại.",
+      "currentPassword": "Mật khẩu hiện tại",
+      "newPassword1": "Mật khẩu mới",
+      "newPassword2": "Mật khảu mới (nhập lại)"
     },
     "rpcConsole": {
       "title": "RPC",
@@ -220,7 +225,20 @@
       "results": "RPC Results ...",
       "status": "Status: ",
       "testFunctionButton": "Test Function"
-    }
+    },
+    "batchSplit": {
+      "label": "Batch Split",
+      "splitToAmounts": "Split to amounts",
+      "toAddresses": "To addresses:",
+      "splitButtonLabel": "Split",
+      "messages": {
+        "splitToIsZero": "Split to amounts have to be greater than zero!",
+        "unknownAddress": "One of your destination address is not in your wallet!",
+        "tooManyInputsOutputs": "Your transaction contains too many inputs/outputs addresses, please try less address!"
+      }
+    },
+    "max": "Max",
+    "showBatchSplitDialog": "Batch Split"
   },
   "menu": {
     "file": "Tệp tin",
@@ -240,13 +258,13 @@
       "paste": "Dán",
       "selectAll": "Chọn tất cả"
     },
-    "help": "Help",
+    "help": "Trợ giúp",
     "helpSubmenu": {
-      "arizenManual": "User Manual",
-      "support": "Support",
+      "arizenManual": "Hướng dẫn sử dụng",
+      "support": "Hỗ trợ",
       "zencash": "ZenCash"
     },
-    "changeWalletPassword": "Change wallet password"
+    "changeWalletPassword": "Thay đổi mật khẩu của ví"
   },
   "warmingMessages": {
     "userWarningImportFileWithPKs": "New address(es) and a private key(s) will be imported. Your previous back-ups do not include the newly imported addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.",
@@ -259,8 +277,8 @@
     "userWarningImportPkUserZendRescan": "The balance of the Z address you imported will be visible after you rescan the blockchain. Please run 'zen-cli stop && sleep 8 && zend -rescan' in your secure node (linux)."
   },
   "common": {
-    "selectAll": "Select all",
-    "clearAll": "Clear all",
+    "selectAll": "Chọn tất cả",
+    "clearAll": "Bỏ chọn tất cả",
     "okButtonText": "OK",
     "cancelButtonText": "Cancel"
   }
