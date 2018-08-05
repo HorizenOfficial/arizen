@@ -444,7 +444,10 @@ function showNewAddrDialog() {
             }
             createButton.addEventListener("click", () => {
                 let getT = dialog.querySelector(".TorZgetT").checked;
-                let getZ = dialog.querySelector(".TorZgetZ").checked;
+                let getZ = false;
+                if (dialog.querySelector(".TorZgetZ")) {
+                    getZ = dialog.querySelector(".TorZgetZ").checked;
+                }
                 let nameAddress = dialog.querySelector(".newAddrDialogName").value;
                 if (getT) {
                     ipcRenderer.send("generate-wallet", nameAddress);
