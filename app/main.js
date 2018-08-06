@@ -38,6 +38,11 @@ const userWarningExportWalletEncrypted = "You are going to export an ENCRYPTED w
 // Show/Hide Development menu
 process.env.NODE_ENV = "production";
 
+ // Wait function to avoid api rate-limiting
+function sleep(millis) {
+    return new Promise(resolve => setTimeout(resolve, millis));
+}
+
 function attachUpdaterHandlers() {
     function onUpdateDownloaded() {
         let version = updater.meta.version;
@@ -613,11 +618,13 @@ function importOnePK(pk, name = "", isT = true) {
 
 async function apiGet(url) {
     const resp = await axiosApi(url);
+    await sleep(334);
     return resp.data;
 }
 
 async function apiPost(url, form) {
     const resp = await axiosApi.post(url, querystring.stringify(form));
+    await sleep(334);
     return resp.data;
 }
 

@@ -1,5 +1,5 @@
 {
-  "name": "Arizen",
+  "name": "hurriZen",
   "version": "1.1.9",
   "description": "Arizen is light API wallet for ZenCash with localy stored and encrypted files.",
   "main": "app/main.js",
