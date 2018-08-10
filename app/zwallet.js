@@ -67,6 +67,7 @@ let depositQrcodeTimer;
 let addrObjList;
 let addrIdxByAddr;
 let refreshCounter = 0;
+let maxAmount = 0;
 
 // ---------------------------------------------------------------------------------------------------------------------
 // IPC
@@ -240,20 +241,18 @@ function createAddrItem(addrObj) {
 
     setAddressNodeName(addrObj, addrItem.getElementsByClassName("addrName")[0]);
     addrItem.getElementsByClassName("addrText")[0].textContent = formatAddressInList(addrObj.addr);
-    addrItem.getElementsByClassName("addrNameLine")[0]
-        .addEventListener("click", () => showAddrDetail(addrObj.addr));
-    addrItem.getElementsByClassName("addrDepositButton")[0]
-        .addEventListener("click", () => {
-            depositToAddrInput.value = addrObj.addr;
-            updateDepositQrcode();
-            depositTabButton.click();
-        });
-    addrItem.getElementsByClassName("addrWithdrawButton")[0]
-        .addEventListener("click", () => {
-            withdrawFromAddrInput.value = addrObj.addr;
-            validateWithdrawForm();
-            withdrawTabButton.click();
-        });
+    addrItem.getElementsByClassName("addrNameLine")[0].addEventListener("click", () => showAddrDetail(addrObj.addr));
+    addrItem.getElementsByClassName("addrDepositButton")[0].addEventListener("click", () => {
+        depositToAddrInput.value = addrObj.addr;
+        updateDepositQrcode();
+        depositTabButton.click();
+    });
+    addrItem.getElementsByClassName("addrWithdrawButton")[0].addEventListener("click", () => {
+        maxAmount = addrObj.lastbalance;
+        withdrawFromAddrInput.value = addrObj.addr;
+        validateWithdrawForm();
+        withdrawTabButton.click();
+    });
 
     setAddrItemBalance(addrItem, addrObj.lastbalance);
     return addrItem;
@@ -656,7 +655,6 @@ async function sendPendingTxs() {
 }
 
 async function initWithdrawView() {
-    let maxAmount = 0;
     withdrawFromAddrInput.addEventListener("input", validateWithdrawForm);
     withdrawToAddrInput.addEventListener("input", validateWithdrawForm);
     withdrawAmountInput.addEventListener("input", validateWithdrawForm);
