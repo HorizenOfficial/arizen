@@ -1,38 +1,38 @@
 {
   "linux-x64-prod": {
     "readme": "1st version",
-    "update": "https://github.com/ZencashOfficial/arizen/releases/download/v1.2.0/Arizen-1.2.0-x96_64.AppImage",
-    "install": "https://github.com/ZencashOfficial/arizen/releases/download/v1.2.0/Arizen-1.2.0-x96_64.AppImage",
-    "version": "1.2.0"
+    "update": "https://github.com/ZencashOfficial/arizen/releases/download/v1.1.91/Arizen-1.1.91-x96_64.AppImage",
+    "install": "https://github.com/ZencashOfficial/arizen/releases/download/v1.1.91/Arizen-1.1.91-x96_64.AppImage",
+    "version": "1.1.91"
   },
   "win32-x64-prod": {
     "readme": "1st version",
-    "update": "https://github.com/ZencashOfficial/arizen/releases/download/v1.2.0",
-    "install": "https://github.com/ZencashOfficial/arizen/releases/download/v1.2.0",
-    "version": "1.2.0"
+    "update": "https://github.com/ZencashOfficial/arizen/releases/download/v1.1.91",
+    "install": "https://github.com/ZencashOfficial/arizen/releases/download/v1.1.91",
+    "version": "1.1.91"
   },
   "darwin-x64-prod": {
     "readme": "1st version",
-    "update": "https://github.com/ZencashOfficial/arizen/releases/download/v1.2.0/release.json",
-    "install": "https://github.com/ZencashOfficial/arizen/releases/download/v1.2.0/Arizen-1.2.0.dmg",
-    "version": "1.2.0"
+    "update": "https://github.com/ZencashOfficial/arizen/releases/download/v1.1.91/release.json",
+    "install": "https://github.com/ZencashOfficial/arizen/releases/download/v1.1.91/Arizen-1.1.91.dmg",
+    "version": "1.1.91"
   },
   "linux-x64-beta": {
     "readme": "beta version",
-    "update": "https://github.com/ZencashOfficial/arizen/releases/download/v1.2.0/Arizen-1.2.0-x96_64.AppImage",
-    "install": "https://github.com/ZencashOfficial/arizen/releases/download/v1.2.0/Arizen-1.2.0-x96_64.AppImage",
-    "version": "1.2.0-beta"
+    "update": "https://github.com/ZencashOfficial/arizen/releases/download/v1.1.91/Arizen-1.1.91-x96_64.AppImage",
+    "install": "https://github.com/ZencashOfficial/arizen/releases/download/v1.1.91/Arizen-1.1.91-x96_64.AppImage",
+    "version": "1.1.91-beta"
   },
   "win32-x64-beta": {
     "readme": "beta version",
-    "update": "https://github.com/ZencashOfficial/arizen/releases/download/v1.2.0",
-    "install": "https://github.com/ZencashOfficial/arizen/releases/download/v1.2.0",
-    "version": "1.2.0-beta"
+    "update": "https://github.com/ZencashOfficial/arizen/releases/download/v1.1.91",
+    "install": "https://github.com/ZencashOfficial/arizen/releases/download/v1.1.91",
+    "version": "1.1.91-beta"
   },
   "darwin-x64-beta": {
     "readme": "beta version",
-    "update": "https://github.com/ZencashOfficial/arizen/releases/download/v1.2.0/release.json",
-    "install": "https://github.com/ZencashOfficial/arizen/releases/download/v1.2.0/Arizen-1.2.0.dmg",
-    "version": "1.2.0-beta"
+    "update": "https://github.com/ZencashOfficial/arizen/releases/download/v1.1.91/release.json",
+    "install": "https://github.com/ZencashOfficial/arizen/releases/download/v1.1.91/Arizen-1.1.91.dmg",
+    "version": "1.1.91-beta"
   }
 }
