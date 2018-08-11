@@ -16,6 +16,10 @@
 
 # Version History
 
+## v1.1.91
+- [x] FIX: generate new T address
+- [x] FIX: max button
+
 ## v1.1.9
 - [x] Batch Split
 - [x] Add certificate login to the Secure Node
