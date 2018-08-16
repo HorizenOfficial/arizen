@@ -719,14 +719,13 @@ async function initWithdrawView() {
         validateWithdrawForm();
     }));
     withdrawMaxButton.addEventListener("click", function () {
-        let fee = 0.00010000;
+        let fee = withdrawFeeInput.value;
         let amount = 0;
         if (maxAmount !== 0) {
             amount = maxAmount - fee;
         }
 
         withdrawAmountInput.value = Number.parseFloat(amount).toFixed(8);
-        withdrawFeeInput.value = Number.parseFloat(fee).toFixed(8);
         validateWithdrawForm();
     });
     validateWithdrawForm();
