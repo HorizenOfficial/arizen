@@ -928,21 +928,21 @@ function createHelpSubmenu() {
             label: tr("menu.helpSubmenu.arizenManual", "User Manual"),
             accelerator: "CmdOrCtrl+H",
             click: () => {
-                require("electron").shell.openExternal("https://github.com/Horizen/arizen#user-manuals");
+                require("electron").shell.openExternal("https://github.com/ZencashOfficial/arizen#user-manuals");
             }
         },
         {
             label: tr("menu.helpSubmenu.support", "Support"),
             accelerator: "Shift+CmdOrCtrl+S",
             click: () => {
-                require("electron").shell.openExternal("https://support.horizen.com");
+                require("electron").shell.openExternal("https://support.horizen.global");
             }
         },
         {type: "separator"},
         {
             label: tr("menu.helpSubmenu.horizen", "Horizen"),
             click: () => {
-                require("electron").shell.openExternal("https://horizen.com");
+                require("electron").shell.openExternal("https://horizen.global");
             }
         }
     ];
