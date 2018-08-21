@@ -4,21 +4,21 @@
 [![Code Climate][codeclimate-img]][codeclimate-url]
 
 # User Manuals
-- v1.2.0: [Arizen v1.2.0 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.2.0/Arizen.v1.2.0.Wallet.User.Manual.pdf)
-- v1.1.9: [Arizen v1.1.9 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.9/Arizen.v1.1.9.Wallet.User.Manual.pdf)
-- v1.1.8: [Arizen v1.1.8 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.8/Arizen.v1.1.8.Wallet.User.Manual.pdf)
-- v1.1.7: [Arizen v1.1.7 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.7/Arizen.v1.1.7.Wallet.User.Manual.pdf)
-- v1.1.6: [Arizen v1.1.6 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.6/Arizen.v1.1.6.Wallet.User.Manual.pdf)
-- v1.1.5: [Arizen v1.1.5 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.5/Arizen.v1.1.5.Wallet.User.Manual.pdf)
-- v1.1.4: [Arizen v1.1.4 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.4/Arizen.v1.1.4.Wallet.User.Manual.pdf)
-- v1.1.3: [Arizen v1.1.3 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.3/Arizen.v1.1.3.Wallet.User.Manual.pdf)
-- v1.1.1: [Arizen v1.1.1 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.1/Arizen.v1.1.1.Wallet.User.Manual.pdf)
-- v1.0.0: [Arizen v1.0.0 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.0.0/Arizen.Wallet.User.Manual.pdf)
+- v1.2.0: [Arizen v1.2.0 Wallet User Manual.pdf](https://github.com/Horizen/arizen/releases/download/v1.2.0/Arizen.v1.2.0.Wallet.User.Manual.pdf)
+- v1.1.9: [Arizen v1.1.9 Wallet User Manual.pdf](https://github.com/Horizen/arizen/releases/download/v1.1.9/Arizen.v1.1.9.Wallet.User.Manual.pdf)
+- v1.1.8: [Arizen v1.1.8 Wallet User Manual.pdf](https://github.com/Horizen/arizen/releases/download/v1.1.8/Arizen.v1.1.8.Wallet.User.Manual.pdf)
+- v1.1.7: [Arizen v1.1.7 Wallet User Manual.pdf](https://github.com/Horizen/arizen/releases/download/v1.1.7/Arizen.v1.1.7.Wallet.User.Manual.pdf)
+- v1.1.6: [Arizen v1.1.6 Wallet User Manual.pdf](https://github.com/Horizen/arizen/releases/download/v1.1.6/Arizen.v1.1.6.Wallet.User.Manual.pdf)
+- v1.1.5: [Arizen v1.1.5 Wallet User Manual.pdf](https://github.com/Horizen/arizen/releases/download/v1.1.5/Arizen.v1.1.5.Wallet.User.Manual.pdf)
+- v1.1.4: [Arizen v1.1.4 Wallet User Manual.pdf](https://github.com/Horizen/arizen/releases/download/v1.1.4/Arizen.v1.1.4.Wallet.User.Manual.pdf)
+- v1.1.3: [Arizen v1.1.3 Wallet User Manual.pdf](https://github.com/Horizen/arizen/releases/download/v1.1.3/Arizen.v1.1.3.Wallet.User.Manual.pdf)
+- v1.1.1: [Arizen v1.1.1 Wallet User Manual.pdf](https://github.com/Horizen/arizen/releases/download/v1.1.1/Arizen.v1.1.1.Wallet.User.Manual.pdf)
+- v1.0.0: [Arizen v1.0.0 Wallet User Manual.pdf](https://github.com/Horizen/arizen/releases/download/v1.0.0/Arizen.Wallet.User.Manual.pdf)
 
 # Version History
 
 ## v1.2.0
-- [ ] Brand expansion
+- [x] Brand expansion
 - [x] FIX: max button
 
 
@@ -150,7 +150,7 @@ printed. This created address can by included to your Arizen or not.
 ## Development
 
 ### How to create distribution
-      git clone https://github.com/ZencashOfficial/arizen
+      git clone https://github.com/Horizen/arizen
       git checkout master
       npm install
       npm run dist
@@ -181,11 +181,11 @@ printed. This created address can by included to your Arizen or not.
 ![Notification](https://i.imgur.com/WdW0WMK.png)
 
 
-[david-img]: https://david-dm.org/ZencashOfficial/arizen.svg?style=flat-square
-[david-url]: https://david-dm.org/ZencashOfficial/arizen
+[david-img]: https://david-dm.org/Horizen/arizen.svg?style=flat-square
+[david-url]: https://david-dm.org/Horizen/arizen
 [license-img]: https://img.shields.io/badge/license-MIT-green.svg?style=flat-square
 [license-url]: LICENSE
-[travis-img]: https://img.shields.io/travis/ZencashOfficial/arizen.svg?style=flat-square
-[travis-url]: https://travis-ci.org/ZencashOfficial/arizen.svg?branch=master
-[codeclimate-img]: https://codeclimate.com/github/ZencashOfficial/arizen/badges/gpa.svg?style=flat-square
-[codeclimate-url]: https://codeclimate.com/github/ZencashOfficial/arizen
+[travis-img]: https://img.shields.io/travis/Horizen/arizen.svg?style=flat-square
+[travis-url]: https://travis-ci.org/Horizen/arizen.svg?branch=master
+[codeclimate-img]: https://codeclimate.com/github/Horizen/arizen/badges/gpa.svg?style=flat-square
+[codeclimate-url]: https://codeclimate.com/github/Horizen/arizen

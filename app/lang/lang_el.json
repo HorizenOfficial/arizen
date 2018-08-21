@@ -192,7 +192,7 @@
       "generateNewWallet": "Δημιουργία νέου πορτοφολιού",
       "name": "Όνομα (προαιρετικό)",
       "addWalletToArizen": "Προσθέστε αυτό το πορτοφόλι στο Arizen",
-      "zenCashWalletLabel": "Πορτοφόλι ZenCash",
+      "horizenWalletLabel": "Πορτοφόλι Horizen",
       "tAddrLabel": "Δημόσιο κλειδί - T Διεύθυνση",
       "privateKeyLabel": "Ιδιωτικό κλειδί",
       "namePrint": "Όνομα",
@@ -262,7 +262,7 @@
     "helpSubmenu": {
       "arizenManual": "Εγχειρίδιο χρήσης",
       "support": "Υποστήριξη",
-      "zencash": "ZenCash"
+      "horizen": "Horizen"
     },
     "changeWalletPassword": "Αλλαγή κωδικού πορτοφολιού"
   },

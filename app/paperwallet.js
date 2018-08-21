@@ -42,9 +42,9 @@ ipcRenderer.on("export-paper-wallet", (sender, wif, name) => {
         let y = 10;
 
         if (name) {
-            y += centeredText("ZENCASH WALLET " + name, y);
+            y += centeredText("HORIZEN WALLET " + name, y);
         } else {
-            y += centeredText("ZENCASH WALLET", y);
+            y += centeredText("HORIZEN WALLET", y);
         }
         y += 10;
 

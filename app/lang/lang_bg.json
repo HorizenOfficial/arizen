@@ -199,7 +199,7 @@
       "generateNewWallet": "Генериране на нов портфейл",
       "name": "Име (по избор)",
       "addWalletToArizen": "Добавяне на портфейла към Arizen",
-      "zenCashWalletLabel": "ZenCash портфейл",
+      "horizenWalletLabel": "ZenCash портфейл",
       "tAddrLabel": "Public Key - T Address",
       "privateKeyLabel": "Private Key",
       "namePrint": "Име",
@@ -269,7 +269,7 @@
     "helpSubmenu": {
       "arizenManual": "Упътване",
       "support": "Поддръжка",
-      "zencash": "ZenCash"
+      "horizen": "Horizen"
     }
   },
   "warmingMessages": {

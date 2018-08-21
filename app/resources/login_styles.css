@@ -2,7 +2,7 @@ body {
     background: #ffffff;
     font-family: "Segoe UI", Candara, "Bitstream Vera Sans", "DejaVu Sans", "Bitstream Vera Sans", "Trebuchet MS", Verdana, "Verdana Ref", sans serif;
     font-size: 15px;
-    color: #1B2F59;
+    color: #041742;
 }
 
 ul, li {
@@ -23,7 +23,7 @@ ul, li {
     width: 400px;
     padding: 0 0 10px;
     background: #f3f3f3;
-    color: #1B2F59;
+    color: #041742;
     margin: 0 auto;
     border: 1px solid #c4cddb;
     /*border-radius: 10px;*/
@@ -56,7 +56,7 @@ form ul li:last-child {
 .inputs {
     padding: 10px 10px;
     border: none;
-    border-bottom: 1px solid #1B2F59;
+    border-bottom: 1px solid #041742;
     #border-radius: 5px;
     #box-shadow: 0 0 5px #e8e9eb inset;
     width: 328px; /* 400 (#container) - 40 (li margins) -  10 (span paddings) - 20 (input paddings) - 2 (input borders) */
@@ -64,19 +64,19 @@ form ul li:last-child {
     outline: 0; /* remove webkit focus styles */
     transition: all 0.4s;
     background: #f3f3f3;
-    color: #1B2F59;
+    color: #041742;
 }
 
 .inputs:focus {
     width: 318px;
     padding: 15px 15px;
     border: none;
-    border-bottom: 1px solid #69FFBD;
+    border-bottom: 1px solid #26DB8D;
 }
 
 label {
     font-size: 1.3em;
-    color: #1B2F59;
+    color: #041742;
 }
 
 #container span {
@@ -91,9 +91,9 @@ label {
     padding: 8px 15px;
     width: 50%;
     outline: none;
-    border: 1px #69FFBD solid;
+    border: 1px #26DB8D solid;
     background-color: transparent;
-    color: #1B2F59;
+    color: #041742;
     font-size: 1em;
     transition: all 0.2s;
     /*border-radius: 5px;*/
@@ -101,21 +101,21 @@ label {
 }
 
 .buttons:hover {
-    border: 1px #1B2F59 solid;
-    background: #69FFBD;
-    color: #1B2F59;
+    border: 1px #041742 solid;
+    background: #26DB8D;
+    color: #041742;
 }
 
 .buttons:active {
-    border: 1px #69FFBD solid;
+    border: 1px #26DB8D solid;
     background-color: transparent;
-    color: #1B2F59;
+    color: #041742;
 }
 
 .buttons:focus {
-    border: 1px #69FFBD solid;
+    border: 1px #26DB8D solid;
     background-color: transparent;
-    color: #1B2F59;
+    color: #041742;
     width: 50%;
 }
 
@@ -128,7 +128,7 @@ label {
     padding: 15px;
     background: #f3f3f3;
     font-size: .875em;
-    border: 1px solid #1B2F59;
+    border: 1px solid #041742;
 }
 
 #username_info h4 {
@@ -144,7 +144,7 @@ label {
     top: 45%;
     font-size: 14px;
     line-height: 14px;
-    color: #69FFBD;
+    color: #26DB8D;
     text-shadow: none;
     display: block;
 }
@@ -157,7 +157,7 @@ label {
     padding: 15px;
     background: #f3f3f3;
     font-size: .875em;
-    border: 1px solid #1B2F59;
+    border: 1px solid #041742;
 }
 
 #pswd_info h4 {
@@ -168,7 +168,7 @@ label {
 
 #pswd_info::before {
     content: "\25C0";
-    color: #69FFBD;
+    color: #26DB8D;
     position: absolute;
     top: 45%;
     left: -12px;
@@ -186,7 +186,7 @@ label {
     padding: 15px;
     background: #f3f3f3;
     font-size: .875em;
-    border: 1px solid #1B2F59;
+    border: 1px solid #041742;
 }
 
 #login_corrupted_file h4 {
@@ -197,7 +197,7 @@ label {
 
 #login_corrupted_file::before {
     content: "\25C0";
-    color: #69FFBD;
+    color: #26DB8D;
     position: absolute;
     top: 45%;
     left: -12px;
@@ -215,7 +215,7 @@ label {
     padding: 15px;
     background: #f3f3f3;
     font-size: .875em;
-    border: 1px solid #1B2F59;
+    border: 1px solid #041742;
 }
 
 #login_wrong_credentials h4 {
@@ -226,7 +226,7 @@ label {
 
 #login_wrong_credentials::before {
     content: "\25C0";
-    color: #69FFBD;
+    color: #26DB8D;
     position: absolute;
     top: 45%;
     left: -12px;
@@ -244,7 +244,7 @@ label {
     padding: 15px;
     background: #f3f3f3;
     font-size: .875em;
-    border: 1px solid #1B2F59;
+    border: 1px solid #041742;
 }
 
 #login_nonexistent_wallet_name h4 {
@@ -255,7 +255,7 @@ label {
 
 #login_nonexistent_wallet_name::before {
     content: "\25C0";
-    color: #69FFBD;
+    color: #26DB8D;
     position: absolute;
     top: 45%;
     left: -12px;
@@ -273,7 +273,7 @@ label {
     padding: 15px;
     background: #f3f3f3;
     font-size: .875em;
-    border: 1px solid #1B2F59;
+    border: 1px solid #041742;
 }
 
 #pswd_identical_info h4 {
@@ -289,7 +289,7 @@ label {
     top: 45%;
     font-size: 14px;
     line-height: 14px;
-    color: #69FFBD;
+    color: #26DB8D;
     text-shadow: none;
     display: block;
 }
@@ -302,7 +302,7 @@ label {
     padding: 15px;
     background: #f3f3f3;
     font-size: .875em;
-    border: 1px solid #1B2F59;
+    border: 1px solid #041742;
 }
 
 #wallet_creation_info_area h4 {
@@ -318,7 +318,7 @@ label {
     top: 45%;
     font-size: 14px;
     line-height: 14px;
-    color: #69FFBD;
+    color: #26DB8D;
     text-shadow: none;
     display: block;
 }
@@ -355,7 +355,7 @@ label {
 
 /* Login.html only */
 .create_wallet_link {
-    color: #1B2F59;
+    color: #041742;
     padding: 10px;
     margin: 10px;
     font-size: 16px;

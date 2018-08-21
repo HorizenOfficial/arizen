@@ -192,7 +192,7 @@
       "generateNewWallet": "创建新的钱包",
       "name": "名字（非必填）",
       "addWalletToArizen": "新增此钱包到 Arizen",
-      "zenCashWalletLabel": "ZenCash 钱包",
+      "horizenWalletLabel": "Horizen 钱包",
       "tAddrLabel": "公钥 - T 地址",
       "privateKeyLabel": "私钥",
       "namePrint": "名称",
@@ -262,7 +262,7 @@
     "helpSubmenu": {
       "arizenManual": "用户手册",
       "support": "支援",
-      "zencash": "ZenCash"
+      "horizen": "Horizen"
     },
     "changeWalletPassword": "更改钱包密码"
   },
