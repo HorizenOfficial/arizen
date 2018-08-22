@@ -192,7 +192,7 @@
       "generateNewWallet": "새 지갑 생성",
       "name": "이름 (선택사항)",
       "addWalletToArizen": "이 지갑을 Arizen 에 보내기",
-      "zenCashWalletLabel": "ZenCash 지갑",
+      "horizenWalletLabel": "Horizen 지갑",
       "tAddrLabel": "공용키 - T 주소",
       "privateKeyLabel": "개인 키",
       "namePrint": "이름",
@@ -262,7 +262,7 @@
     "helpSubmenu": {
       "arizenManual": "사용자 매뉴얼",
       "support": "지원",
-      "zencash": "ZenCash"
+      "horizen": "Horizen"
     },
     "changeWalletPassword": "지갑 비밀번호 변경"
   },

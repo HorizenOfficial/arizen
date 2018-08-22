@@ -192,7 +192,7 @@
       "generateNewWallet": "Generar nueva cartera de papel",
       "name": "Nombre: (Opcional)",
       "addWalletToArizen": "Agrega esta cartera a Arizen",
-      "zenCashWalletLabel": "Cartera ZenCash",
+      "horizenWalletLabel": "Cartera Horizen",
       "tAddrLabel": "Clave pública - Dirección transparente",
       "privateKeyLabel": "Clave privada",
       "namePrint": "Nombre",
@@ -262,7 +262,7 @@
     "helpSubmenu": {
       "arizenManual": "User Manual",
       "support": "Support",
-      "zencash": "ZenCash"
+      "horizen": "Horizen"
     },
     "changeWalletPassword": "Change wallet password"
   },

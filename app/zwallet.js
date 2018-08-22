@@ -204,6 +204,7 @@ function setFiatBalanceText(balanceZen, fiatCurrencySymbol = "") {
 
     const axios = require("axios");
     const BASE_API_URL = "https://api.coinmarketcap.com/v1/ticker";
+    // TODO: change this when CMC will update
     let API_URL = BASE_API_URL + "/zencash/?convert=" + fiatCurrencySymbol;
 
     axios.get(API_URL).then(response => {
@@ -719,14 +720,13 @@ async function initWithdrawView() {
         validateWithdrawForm();
     }));
     withdrawMaxButton.addEventListener("click", function () {
-        let fee = 0.00010000;
+        let fee = withdrawFeeInput.value;
         let amount = 0;
         if (maxAmount !== 0) {
             amount = maxAmount - fee;
         }
 
         withdrawAmountInput.value = Number.parseFloat(amount).toFixed(8);
-        withdrawFeeInput.value = Number.parseFloat(fee).toFixed(8);
         validateWithdrawForm();
     });
     validateWithdrawForm();

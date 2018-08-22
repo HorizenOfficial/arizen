@@ -199,7 +199,7 @@
       "generateNewWallet": "Kreirajte novi novčanik",
       "name": "Ime (opciono)",
       "addWalletToArizen": "Dodajte ovaj novčanik u Arizen",
-      "zenCashWalletLabel": "ZenCash Novčanik",
+      "horizenWalletLabel": "Horizen Novčanik",
       "tAddrLabel": "Javni Ključ - T Adresa",
       "privateKeyLabel": "Privatni ključ",
       "namePrint": "Ime",
@@ -269,7 +269,7 @@
     "helpSubmenu": {
       "arizenManual": "Uputstvo za korisnike",
       "support": "Podrška",
-      "zencash": "ZenCash"
+      "horizen": "Horizen"
     }
   },
   "warmingMessages": {

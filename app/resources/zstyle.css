@@ -30,10 +30,10 @@ body, .body {
 
 /* main look and feel */
 :root {
-    --arizen-fg: #115D95;
+    --arizen-fg: #1B2F59;
     --panel-bg: #ffffff;
     --button-bg: #f3f3f3;
-    --button-fg: #115D95;
+    --button-fg: #1B2F59;
     --border-color: #c4cddb;
     --money-negative: #942824;
     --money-positive: #61b884;
@@ -42,10 +42,8 @@ body, .body {
     --hover-fg: #69FFBD;
 }
 
-/* #1B2F59; */
-
 body {
-    color: #115D95;;
+    color: #1B2F59;;
     background: #f3f3f3;
     font-family: 'Raleway', 'Lato', sans-serif;
 }

@@ -35,7 +35,7 @@
     margin-right: 5%;
     color: #1B2F59;
     font-size: 0.8em;
-    border-bottom: 1px solid #69FFBD;
+    border-bottom: 1px solid #61b884;
 }
 
 #have_previous_backup {
@@ -64,7 +64,7 @@
 }
 
 .inputs_small:focus {
-    border-bottom: 1px solid #69FFBD;
+    border-bottom: 1px solid #61b884;
 }
 
 .input_smaller {

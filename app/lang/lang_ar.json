@@ -192,7 +192,7 @@
       "generateNewWallet": "إنشاء محفظة جديدة",
       "name": "الاسم اختياري",
       "addWalletToArizen": "إضافة هذه المحفظة إلى أريزين",
-      "zenCashWalletLabel": "محفظة زنكاش",
+      "horizenWalletLabel": "محفظة زنكاش",
       "tAddrLabel": "مفتاح عام - عنوان شفاف",
       "privateKeyLabel": "مفتاح سري",
       "namePrint": "اسم",
@@ -262,7 +262,7 @@
     "helpSubmenu": {
       "arizenManual": "User Manual",
       "support": "Support",
-      "zencash": "ZenCash"
+      "horizen": "Horizen"
     },
     "changeWalletPassword": "Change wallet password"
   },

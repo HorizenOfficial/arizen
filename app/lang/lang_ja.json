@@ -192,7 +192,7 @@
       "generateNewWallet": "新規ウォレット作成",
       "name": "名前 (任意)",
       "addWalletToArizen": "このウォレットを Arizen に追加",
-      "zenCashWalletLabel": "ZenCash ウォレット",
+      "horizenWalletLabel": "Horizen ウォレット",
       "tAddrLabel": "公開鍵: T アドレス",
       "privateKeyLabel": "秘密鍵",
       "namePrint": "名前",
@@ -262,7 +262,7 @@
     "helpSubmenu": {
       "arizenManual": "ユーザーマニュアル",
       "support": "サポート",
-      "zencash": "ZenCash"
+      "horizen": "Horizen"
     },
     "changeWalletPassword": "ウォレットのパスワードを変更"
   },

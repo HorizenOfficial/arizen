@@ -192,7 +192,7 @@
       "generateNewWallet": "Wygeneruj Nowy Portfel",
       "name": "Nazwa (niewymagane)",
       "addWalletToArizen": "Dodaj ten portfel do Arizen",
-      "zenCashWalletLabel": "ZenCash Portfel",
+      "horizenWalletLabel": "Horizen Portfel",
       "tAddrLabel": "Klucz publiczny - T Adres",
       "privateKeyLabel": "Prywatny klucz",
       "namePrint": "Nazwa",
@@ -262,7 +262,7 @@
     "helpSubmenu": {
       "arizenManual": "User Manual",
       "support": "Support",
-      "zencash": "ZenCash"
+      "horizen": "Horizen"
     },
     "changeWalletPassword": "Change wallet password"
   },

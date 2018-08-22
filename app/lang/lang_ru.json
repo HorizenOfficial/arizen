@@ -192,7 +192,7 @@
       "generateNewWallet": "Создать новый кошелёк",
       "name": "Имя (опционально)",
       "addWalletToArizen": "Добавить этот кошелёк в Arizen",
-      "zenCashWalletLabel": "ZenCash кошелёк",
+      "horizenWalletLabel": "Horizen кошелёк",
       "tAddrLabel": "Публичный Ключ - T Адрес",
       "privateKeyLabel": "Приватный Ключ",
       "namePrint": "Имя",
@@ -262,7 +262,7 @@
     "helpSubmenu": {
       "arizenManual": "User Manual",
       "support": "Support",
-      "zencash": "ZenCash"
+      "horizen": "Horizen"
     },
     "changeWalletPassword": "Change wallet password"
   },

@@ -199,7 +199,7 @@
       "generateNewWallet": "Crea un nuovo wallet",
       "name": "Nome (opzionale)",
       "addWalletToArizen": "Aggiungi questo wallet ad Arizen",
-      "zenCashWalletLabel": "ZenCash Wallet",
+      "horizenWalletLabel": "Horizen Wallet",
       "tAddrLabel": "Chiave pubblica - T Address",
       "privateKeyLabel": "Chiave Privata",
       "namePrint": "Nome",
@@ -269,7 +269,7 @@
     "helpSubmenu": {
       "arizenManual": "Manuale Utente",
       "support": "Support",
-      "zencash": "ZenCash"
+      "horizen": "Horizen"
     }
   },
   "warmingMessages": {
