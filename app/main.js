@@ -1948,8 +1948,8 @@ function getTxHexStringsForSplit(event, txData, toAddresses, splitToInSatoshi, f
         quotient += 1;
     }
 
-    // if there is less/more addresses - refund the rest to the last address
-    if (quotient !== toAddresses.length) {
+    // if there is less addresses - refund the rest to the last address
+    if (quotient > toAddresses.length) {
         quotient = toAddresses.length;
     }
 
@@ -1981,7 +1981,7 @@ function getTxHexStringsForSplit(event, txData, toAddresses, splitToInSatoshi, f
 
     // Sign history/transaction with PKs
     for (let value of data.values()) {
-        for (let i = 0; i < history.length; i++) {
+        for (let i = 0; i < value.history.length; i++) {
             txObj = zencashjs.transaction.signTx(txObj, i, value.pk, true);
         }
     }
