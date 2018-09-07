@@ -4,6 +4,7 @@
 [![Code Climate][codeclimate-img]][codeclimate-url]
 
 # User Manuals
+- v1.2.1: [Arizen v1.2.1 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.2.1/Arizen.v1.2.1.Wallet.User.Manual.pdf)
 - v1.2.0: [Arizen v1.2.0 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.2.0/Arizen.v1.2.0.Wallet.User.Manual.pdf)
 - v1.1.9: [Arizen v1.1.9 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.9/Arizen.v1.1.9.Wallet.User.Manual.pdf)
 - v1.1.8: [Arizen v1.1.8 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.8/Arizen.v1.1.8.Wallet.User.Manual.pdf)
@@ -17,10 +18,13 @@
 
 # Version History
 
-## v1.2.0
-- [ ] Brand expansion
-- [x] FIX: max button
+## v1.2.1
+- [ ]
+- [ ]
 
+## v1.2.0
+- [x] Brand expansion
+- [x] FIX: max button
 
 ## v1.1.91
 - [x] FIX: generate new T address

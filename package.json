@@ -1,7 +1,7 @@
 {
   "name": "Arizen",
-  "version": "1.2.0",
-  "description": "Arizen is light API wallet for ZenCash with localy stored and encrypted files.",
+  "version": "1.2.1",
+  "description": "Arizen is light API wallet for Horizen with localy stored and encrypted files.",
   "main": "app/main.js",
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
