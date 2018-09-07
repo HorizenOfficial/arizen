@@ -1,8 +1,8 @@
 {
   "linux-x64-prod": {
     "readme": "1st version",
-    "update": "https://github.com/ZencashOfficial/arizen/releases/download/v1.2.0/Arizen-1.2.0-x96_64.AppImage",
-    "install": "https://github.com/ZencashOfficial/arizen/releases/download/v1.2.0/Arizen-1.2.0-x96_64.AppImage",
+    "update": "https://github.com/ZencashOfficial/arizen/releases/download/v1.2.0/Arizen-1.2.0-x86_64.AppImage",
+    "install": "https://github.com/ZencashOfficial/arizen/releases/download/v1.2.0/Arizen-1.2.0-x86_64.AppImage",
     "version": "1.2.0"
   },
   "win32-x64-prod": {
@@ -19,8 +19,8 @@
   },
   "linux-x64-beta": {
     "readme": "beta version",
-    "update": "https://github.com/ZencashOfficial/arizen/releases/download/v1.2.0/Arizen-1.2.0-x96_64.AppImage",
-    "install": "https://github.com/ZencashOfficial/arizen/releases/download/v1.2.0/Arizen-1.2.0-x96_64.AppImage",
+    "update": "https://github.com/ZencashOfficial/arizen/releases/download/v1.2.0/Arizen-1.2.0-x86_64.AppImage",
+    "install": "https://github.com/ZencashOfficial/arizen/releases/download/v1.2.0/Arizen-1.2.0-x86_64.AppImage",
     "version": "1.2.0-beta"
   },
   "win32-x64-beta": {
