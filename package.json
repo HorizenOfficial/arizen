@@ -12,13 +12,13 @@
     "publish": "publish",
     "release": "npm run dist && npm run publish"
   },
-  "homepage": "https://github.com/ZencashOfficial/arizen",
+  "homepage": "https://horizen.global/github/arizen",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zencashofficial/arizen.git"
+    "url": "git+https://github.com/ZencashOfficial/arizen.git"
   },
   "bugs": {
-    "url": "https://github.com/zencashofficial/arizen/issues"
+    "url": "https://github.com/ZencashOfficial/arizen/issues"
   },
   "updater": {
     "url": "https://raw.githubusercontent.com/ZencashOfficial/arizen/master/updates.json"

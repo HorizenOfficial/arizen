@@ -192,7 +192,7 @@
       "generateNewWallet": "Tạo ví mới",
       "name": "Tên (không bắt buộc)",
       "addWalletToArizen": "Thêm ví vào Arizen",
-      "zenCashWalletLabel": "Ví ZenCash",
+      "horizenWalletLabel": "Ví Horizen",
       "tAddrLabel": "Khoá công khai - T Address",
       "privateKeyLabel": "Khoá riêng tư",
       "namePrint": "Tên",
@@ -262,7 +262,7 @@
     "helpSubmenu": {
       "arizenManual": "Hướng dẫn sử dụng",
       "support": "Hỗ trợ",
-      "zencash": "ZenCash"
+      "horizen": "Horizen"
     },
     "changeWalletPassword": "Thay đổi mật khẩu của ví"
   },

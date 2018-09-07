@@ -192,7 +192,7 @@
       "generateNewWallet": "Genereer Nieuwe Portefeuille",
       "name": "Naam (optioneel)",
       "addWalletToArizen": "Voeg deze portefeuille toe aan Arizen",
-      "zenCashWalletLabel": "ZenCash Portefeuille",
+      "horizenWalletLabel": "Horizen Portefeuille",
       "tAddrLabel": "Publieke Sleutel - T Adres",
       "privateKeyLabel": "Prive Sleutel",
       "namePrint": "Naam",
@@ -262,7 +262,7 @@
     "helpSubmenu": {
       "arizenManual": "Handleiding",
       "support": "Ondersteuning",
-      "zencash": "ZenCash"
+      "horizen": "Horizen"
     },
     "changeWalletPassword": "Portefuille wachtwoord aanpassen"
   },

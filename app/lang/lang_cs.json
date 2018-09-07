@@ -193,7 +193,7 @@
       "generateNewWallet": "Vytvořit novou peněženku",
       "name": "Jméno (nepovinné)",
       "addWalletToArizen": "Přidat vytvořenou peněženku do Arizen",
-      "zenCashWalletLabel": "ZenCash peněženka",
+      "horizenWalletLabel": "Horizen peněženka",
       "tAddrLabel": "Veřejný klíč - T adresa",
       "privateKeyLabel": "Privátní klíč",
       "namePrint": "Jméno",
@@ -260,7 +260,7 @@
       "selectAll": "Vybrat vše"
     },
     "helpSubmenu": {
-      "zencash": "ZenCash",
+      "horizen": "Horizen",
       "support": "Podpora",
       "arizenManual": "Uživatelská Příručka"
     },

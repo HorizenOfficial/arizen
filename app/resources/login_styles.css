@@ -71,7 +71,7 @@ form ul li:last-child {
     width: 318px;
     padding: 15px 15px;
     border: none;
-    border-bottom: 1px solid #69FFBD;
+    border-bottom: 1px solid #26DB8D;
 }
 
 label {
@@ -91,7 +91,7 @@ label {
     padding: 8px 15px;
     width: 50%;
     outline: none;
-    border: 1px #69FFBD solid;
+    border: 1px #26DB8D solid;
     background-color: transparent;
     color: #1B2F59;
     font-size: 1em;
@@ -102,18 +102,18 @@ label {
 
 .buttons:hover {
     border: 1px #1B2F59 solid;
-    background: #69FFBD;
+    background: #26DB8D;
     color: #1B2F59;
 }
 
 .buttons:active {
-    border: 1px #69FFBD solid;
+    border: 1px #26DB8D solid;
     background-color: transparent;
     color: #1B2F59;
 }
 
 .buttons:focus {
-    border: 1px #69FFBD solid;
+    border: 1px #26DB8D solid;
     background-color: transparent;
     color: #1B2F59;
     width: 50%;
@@ -144,7 +144,7 @@ label {
     top: 45%;
     font-size: 14px;
     line-height: 14px;
-    color: #69FFBD;
+    color: #26DB8D;
     text-shadow: none;
     display: block;
 }
@@ -168,7 +168,7 @@ label {
 
 #pswd_info::before {
     content: "\25C0";
-    color: #69FFBD;
+    color: #26DB8D;
     position: absolute;
     top: 45%;
     left: -12px;
@@ -197,7 +197,7 @@ label {
 
 #login_corrupted_file::before {
     content: "\25C0";
-    color: #69FFBD;
+    color: #26DB8D;
     position: absolute;
     top: 45%;
     left: -12px;
@@ -226,7 +226,7 @@ label {
 
 #login_wrong_credentials::before {
     content: "\25C0";
-    color: #69FFBD;
+    color: #26DB8D;
     position: absolute;
     top: 45%;
     left: -12px;
@@ -255,7 +255,7 @@ label {
 
 #login_nonexistent_wallet_name::before {
     content: "\25C0";
-    color: #69FFBD;
+    color: #26DB8D;
     position: absolute;
     top: 45%;
     left: -12px;
@@ -289,7 +289,7 @@ label {
     top: 45%;
     font-size: 14px;
     line-height: 14px;
-    color: #69FFBD;
+    color: #26DB8D;
     text-shadow: none;
     display: block;
 }
@@ -318,7 +318,7 @@ label {
     top: 45%;
     font-size: 14px;
     line-height: 14px;
-    color: #69FFBD;
+    color: #26DB8D;
     text-shadow: none;
     display: block;
 }

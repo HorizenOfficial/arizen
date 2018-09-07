@@ -204,6 +204,7 @@ function setFiatBalanceText(balanceZen, fiatCurrencySymbol = "") {
 
     const axios = require("axios");
     const BASE_API_URL = "https://api.coinmarketcap.com/v1/ticker";
+    // TODO: change this when CMC will update
     let API_URL = BASE_API_URL + "/zencash/?convert=" + fiatCurrencySymbol;
 
     axios.get(API_URL).then(response => {

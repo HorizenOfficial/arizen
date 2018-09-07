@@ -6,7 +6,6 @@
 # User Manuals
 - v1.2.1: [Arizen v1.2.1 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.2.1/Arizen.v1.2.1.Wallet.User.Manual.pdf)
 - v1.2.0: [Arizen v1.2.0 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.2.0/Arizen.v1.2.0.Wallet.User.Manual.pdf)
-- v1.1.9: [Arizen v1.1.9 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.9/Arizen.v1.1.9.Wallet.User.Manual.pdf)
 - v1.1.8: [Arizen v1.1.8 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.8/Arizen.v1.1.8.Wallet.User.Manual.pdf)
 - v1.1.7: [Arizen v1.1.7 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.7/Arizen.v1.1.7.Wallet.User.Manual.pdf)
 - v1.1.6: [Arizen v1.1.6 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.6/Arizen.v1.1.6.Wallet.User.Manual.pdf)
