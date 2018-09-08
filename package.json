@@ -56,7 +56,7 @@
     "npm": ">=6.0.0"
   },
   "build": {
-    "appId": "io.zensystem.arizen",
+    "appId": "global.horizen.arizen",
     "mac": {
       "category": "public.app-category.finance",
       "type": "distribution"
