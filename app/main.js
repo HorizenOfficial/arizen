@@ -621,14 +621,12 @@ function importOnePK(pk, name = "", isT = true) {
 
 async function apiGet(url) {
     const resp = await axiosApi(url);
-    console.log(sleepTimeOSDependent());
     await sleep(sleepTimeOSDependent());
     return resp.data;
 }
 
 async function apiPost(url, form) {
     const resp = await axiosApi.post(url, querystring.stringify(form));
-    console.log(sleepTimeOSDependent());
     await sleep(sleepTimeOSDependent());
     return resp.data;
 }
