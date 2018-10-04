@@ -38,6 +38,12 @@ const userWarningExportWalletEncrypted = "You are going to export an ENCRYPTED w
 // Show/Hide Development menu
 process.env.NODE_ENV = "production";
 
+let sleepTimeOSDependent = () => {if (os.platform() === 'linux'){ return 334 } else { return 0 } }
+
+function sleep(millis) {
+    return new Promise(resolve => setTimeout(resolve, millis));
+}
+
 function attachUpdaterHandlers() {
     function onUpdateDownloaded() {
         let version = updater.meta.version;
@@ -452,7 +458,9 @@ function setSettings(newSettings) {
         axiosApi = axios.create({
             baseURL: settings.domainFrontingUrl,
             headers: {
-                "Host": settings.domainFrontingHost
+                "Host": settings.domainFrontingHost,
+                "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:61.0) Gecko/20100101 Firefox/61.0"
+
             },
             timeout: 30000,
         });
@@ -613,11 +621,15 @@ function importOnePK(pk, name = "", isT = true) {
 
 async function apiGet(url) {
     const resp = await axiosApi(url);
+    console.log(sleepTimeOSDependent());
+    await sleep(sleepTimeOSDependent());
     return resp.data;
 }
 
 async function apiPost(url, form) {
     const resp = await axiosApi.post(url, querystring.stringify(form));
+    console.log(sleepTimeOSDependent());
+    await sleep(sleepTimeOSDependent());
     return resp.data;
 }
 
