@@ -38,7 +38,15 @@ const userWarningExportWalletEncrypted = "You are going to export an ENCRYPTED w
 // Show/Hide Development menu
 process.env.NODE_ENV = "production";
 
-let sleepTimeOSDependent = () => {if (os.platform() === 'linux'){ return 334 } else { return 0 } }
+//let sleepTimeOSDependent = () => {if (os.platform() === 'linux'){ return 334 } else { return 0 } }
+
+function sleepTimeOSDependent() {
+    if (os.platform() === 'linux'){
+        return 334
+    } else {
+      return 0
+    }
+}
 
 function sleep(millis) {
     return new Promise(resolve => setTimeout(resolve, millis));
