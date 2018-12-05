@@ -39,11 +39,12 @@ const userWarningExportWalletEncrypted = "You are going to export an ENCRYPTED w
 process.env.NODE_ENV = "production";
 
 function sleepTimeOSDependent() {
-    if (os.platform() === 'linux'){
-        return 334
-    } else {
-      return 0
-    }
+    // if (os.platform() === 'linux'){
+    //     return 334
+    // } else {
+    //   return 0
+    // }
+    return 0
 }
 
 function sleep(millis) {
