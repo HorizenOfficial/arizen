@@ -53,7 +53,7 @@ before_install:
   - ./ci/before_install.sh
 
 install:
-  - nvm install 6
+  - nvm install 10
   - ./ci/install.sh
 
 script:
