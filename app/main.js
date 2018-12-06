@@ -38,6 +38,8 @@ const userWarningExportWalletEncrypted = "You are going to export an ENCRYPTED w
 // Show/Hide Development menu
 process.env.NODE_ENV = "production";
 
+//Test
+
 function attachUpdaterHandlers() {
     function onUpdateDownloaded() {
         let version = updater.meta.version;
