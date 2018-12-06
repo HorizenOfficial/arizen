@@ -53,6 +53,7 @@ before_install:
   - ./ci/before_install.sh
 
 install:
+  - nvm ls
   - nvm install 10
   - ./ci/install.sh
 
