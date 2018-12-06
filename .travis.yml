@@ -16,7 +16,7 @@ env:
   global:
     # TODO Update this to match the name of your project.
     - PROJECT_NAME=arizen
-    - NODE_JS_VERSION=10
+    - NODE_VERSION="10"
 
 matrix:
   include:
@@ -52,11 +52,12 @@ addons:
 
 before_install:
   - ./ci/before_install.sh
+  - git clone https://github.com/creationix/nvm.git /tmp/.nvm;
+  - source /tmp/.nvm/nvm.sh;
+  - nvm install $NODE_VERSION;
+  - nvm use --delete-prefix $NODE_VERSION;
 
 install:
-  - curl -o ~/.nvm/nvm.sh https://raw.githubusercontent.com/creationix/nvm/v0.31.0/nvm.sh # update nvm
-  - bash -c "nvm use $NODE_JS_VERSION" || true
-  - bash -c "source ~/.nvm/nvm.sh; nvm install $NODE_JS_VERSION; node --version"   
   - nvm ls
   - nvm install 10
   - ./ci/install.sh
