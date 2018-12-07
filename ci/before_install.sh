@@ -10,6 +10,7 @@ if [[ ${TRAVIS_OS_NAME} == "osx" ]]; then
     brew install graphviz
 elif [[ ${TRAVIS_OS_NAME} == "windows" ]]; then
     echo "Before install: Windows OS"
+    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.0/install.sh | bash
 elif [[ ${TRAVIS_OS_NAME} == "linux" ]]; then
     echo "Before install: Linux"
     sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils
