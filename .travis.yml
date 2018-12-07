@@ -25,10 +25,6 @@ matrix:
     osx_image: xcode9.2
     sudo: required
     language: c
-  - os: windows
-    sudo: required
-    env: TARGET_ARCH=x64
-    language: c
   - os: linux
     env: CC=clang CXX=clang++ npm_config_clang=1 TARGET_ARCH=x64
     compiler: clang
