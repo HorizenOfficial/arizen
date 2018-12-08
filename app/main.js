@@ -90,6 +90,7 @@ const defaultSettings = {
     autoLogOffTimeout: 60,
     explorerUrl: "https://explorer.zensystem.io",
     apiUrls: [
+        "https://explorer.horizen.global/insight-api-zen",
         "https://explorer.zensystem.io/insight-api-zen",
         "https://explorer.zen-solutions.io/api",
         "http://explorer.zenmine.pro/insight-api-zen"
@@ -98,7 +99,8 @@ const defaultSettings = {
     secureNodePort: 18231,
     domainFronting: false,
     domainFrontingUrl: "https://www.google.com",
-    domainFrontingHost: "zendhide.appspot.com"
+    domainFrontingHost: "zendhide.appspot.com",
+    refreshIntervalAPI: 334
 };
 
 const defaultInternalInfo = {pendingTxs: []};
@@ -628,13 +630,13 @@ function importOnePK(pk, name = "", isT = true) {
 
 async function apiGet(url) {
     const resp = await axiosApi(url);
-    await sleep(sleepTimeOSDependent());
+    await sleep(parseFloat(settings.refreshIntervalAPI));
     return resp.data;
 }
 
 async function apiPost(url, form) {
-    const resp = await axiosApi.post(url, querystring.stringify(form));
-    await sleep(sleepTimeOSDependent());
+    const resp = await axiosApi.post(url, querystring.stringify(form));    
+    await sleep(parseFloat(settings.refreshIntervalAPI));
     return resp.data;
 }
 
