@@ -25,10 +25,10 @@ matrix:
     osx_image: xcode9.2
     sudo: required
     language: c
-  # - os: windows
-  #   sudo: required
-  #   env: TARGET_ARCH=x64
-  #   language: c
+  - os: windows
+    sudo: required
+    env: TARGET_ARCH=x64
+    language: c
   - os: linux
     env: CC=clang CXX=clang++ npm_config_clang=1 TARGET_ARCH=x64
     compiler: clang
@@ -54,7 +54,9 @@ before_install:
   - ./ci/before_install.sh
 
 install:
-  - nvm install $NODE_VERSION
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then nvm install $NODE_VERSION; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then nvm install $NODE_VERSION; fi
+  - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then choco install nvm; fi
   - ./ci/install.sh
 
 script:
