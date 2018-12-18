@@ -88,12 +88,10 @@ const defaultSettings = {
     txHistory: 50,
     autoLogOffEnable: 0,
     autoLogOffTimeout: 60,
-    explorerUrl: "https://explorer.zensystem.io",
+    explorerUrl: "https://explorer.horizen.global",
     apiUrls: [
-        "https://explorer.horizen.global/insight-api-zen",
-        "https://explorer.zensystem.io/insight-api-zen",
-        "https://explorer.zen-solutions.io/api",
-        "http://explorer.zenmine.pro/insight-api-zen"
+        "https://explorer.horizen.global/api",        
+        "https://explorer.zen-solutions.io/api"        
     ],
     secureNodeFQDN: "",
     secureNodePort: 18231,

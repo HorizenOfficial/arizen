@@ -394,18 +394,16 @@
                 <input type=text name=settingsForwardTimeout class=settingsForwardTimeout />
 
                 <hr class=formDivider />
-
-                <label for=enableDomainFronting data-tr=wallet.settings.enableDomainFronting>Enable domain fronting</label>
-                <label class=container>
+                <label for=enableDomainFronting data-tr=wallet.settings.enableDomainFronting style="visibility:hidden;display: none">Enable domain fronting</label>
+                <label class=container style="visibility:hidden;display: none">
                     <input type=checkbox class=enableDomainFronting name=enableDomainFronting />
                     <span class=checkmark></span>
                 </label>
-                <label for=settingDomainFrontingUrl data-tr=wallet.settings.domainFrontingUrl>Domain fronting public base URL</label>
-                <input type=text name=settingDomainFrontingUrl class=settingDomainFrontingUrl />
-                <label for=settingDomainFrontingHost data-tr=wallet.settings.domainFrontingHost>Domain fronting private host</label>
-                <input type=text name=settingDomainFrontingHost class=settingDomainFrontingHost />
-
-                <hr class=formDivider />
+                <label for=settingDomainFrontingUrl data-tr=wallet.settings.domainFrontingUrl style="visibility:hidden;display: none">Domain fronting public base URL</label>
+                <input type=text name=settingDomainFrontingUrl class=settingDomainFrontingUrl style="visibility:hidden;display: none" />
+                <label for=settingDomainFrontingHost data-tr=wallet.settings.domainFrontingHost style="visibility:hidden;display: none">Domain fronting private host</label>
+                <input type=text name=settingDomainFrontingHost class=settingDomainFrontingHost style="visibility:hidden;display: none" />
+                <hr class=formDivider style="visibility:hidden;display: none"/>
             </div>
             <div class=formButtons>
                 <button class=settingsSave data-tr=wallet.settings.save>Save</button>
