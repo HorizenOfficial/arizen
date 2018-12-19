@@ -31,7 +31,7 @@ matrix:
   - os: windows
     sudo: required
     env: TARGET_ARCH=x64
-    language: node_js
+    #language: node_js
   - os: linux
     env: CC=clang CXX=clang++ npm_config_clang=1 TARGET_ARCH=x64
     compiler: clang
