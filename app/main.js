@@ -38,15 +38,6 @@ const userWarningExportWalletEncrypted = "You are going to export an ENCRYPTED w
 // Show/Hide Development menu
 process.env.NODE_ENV = "production";
 
-function sleepTimeOSDependent() {
-    // if (os.platform() === 'linux'){
-    //     return 334
-    // } else {
-    //   return 0
-    // }
-    return 0
-}
-
 function sleep(millis) {
     return new Promise(resolve => setTimeout(resolve, millis));
 }
@@ -319,8 +310,6 @@ function saveWallet() {
         }
         const timestamp = DateTime.local().toFormat("yyyyLLddHHmmss");
         const backupPath = backupDir + "/" + userInfo.login + "-" + timestamp + ".awd";
-        //fs.copyFileSync(walletPath, backupPath);
-        // piece of shit node.js ecosystem, why the fuck do we have to deal with fs-extra crap here?
         fs.copySync(walletPath, backupPath);
         pruneBackups(backupDir, userInfo.login);
     }
@@ -417,8 +406,7 @@ function tableExists(table) {
 
 function loadSettings() {
     /* Remove settings row from settings table. Old versions chceks row count in
-     * the table and inserts missing settings if the count isn't 6. By inserting
-     * another setting we fucked up its fucked up upgrade logic. This only
+     * the table and inserts missing settings if the count isn't 6. This only
      * happens in old versions after new version (f422bfff) run. */
     if (tableExists("settings")) {
         sqlRun("delete from settings where name = 'settings'");
@@ -556,7 +544,6 @@ function importWalletArizen(ext, encrypted) {
 }
 
 function exportPKs() {
-    // function exportToFile(filename, override = False) {
     function exportToFile(filename) {
         fs.open(filename, "w", 0o600, (err, fd) => {
             if (err) {
