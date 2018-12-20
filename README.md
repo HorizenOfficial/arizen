@@ -18,8 +18,11 @@
 # Version History
 
 ## v1.2.1
-- [ ]
-- [ ]
+- [x] FIX: issue in Batch Split when are more addresses than you can divide into
+- [x] Small visual GUI changes
+- [x] FIX: Linux Sync issue: Add user defined delay
+- [x] FIX: Api URLs
+- [x] Domain Fronting removal
 
 ## v1.2.0
 - [x] Brand expansion
