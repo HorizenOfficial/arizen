@@ -474,7 +474,7 @@ function setSettings(newSettings) {
     }
     else {
         axiosApi = axios.create({
-            baseURL: "https://explorer.zensystem.io/insight-api-zen",
+            baseURL: settings.apiUrls[0],
             timeout: 30000,
         });
     }
