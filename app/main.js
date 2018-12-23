@@ -53,7 +53,16 @@ function attachUpdaterHandlers() {
             message: `Would you like to update Arizen ? If yes, Arizen will close and the new ${version} version will be installed. When the update is complete, the Arizen wallet will reopen.`
         }, function (response) {
             if (response === 0){
+                dialog.showMessageBox({
+                    type: "info",
+                    title: "You pressed Yes"
+                })
                 updater.quitAndInstall();
+            } else{
+                dialog.showMessageBox({
+                    type: "info",
+                    title: "You pressed No"
+                })                
             }
         });
     }
@@ -931,6 +940,11 @@ function createEditSubmenu() {
 
 function createHelpSubmenu() {
     return [
+        {
+            label: "v" + updater.version,
+            enabled: false
+        },
+        {type: "separator"},        
         {
             label: tr("menu.helpSubmenu.arizenManual", "User Manual"),
             accelerator: "CmdOrCtrl+H",
