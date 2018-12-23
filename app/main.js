@@ -47,17 +47,29 @@ function attachUpdaterHandlers() {
         let version = updater.meta.version;
         dialog.showMessageBox({
             type: "info",
+            title: "Update is here!",           
+            message: `Arizen update is ready. Arizen will close and the new ${version} version will be installed. When the update is complete, the Arizen wallet will reopen.`
+        }, function () {
+                updater.quitAndInstall();
+        });
+    }
+
+    function onUpdateAvailable() {
+        let version = updater.meta.version;
+        dialog.showMessageBox({
+            type: "info",
             title: "Update is here!",
             buttons: ["Yes", "No"],
             cancelId: -1,            
-            message: `Would you like to update Arizen ? If yes, Arizen will close and the new ${version} version will be installed. When the update is complete, the Arizen wallet will reopen.`
+            message: `Would you like to update Arizen ? If yes, Arizen will download and install the new ${version} version.`
         }, function (response) {
             if (response === 0){
                 dialog.showMessageBox({
                     type: "info",
                     title: "You pressed Yes"
                 })
-                updater.quitAndInstall();
+                updater.downloadUpdate();
+
             } else{
                 dialog.showMessageBox({
                     type: "info",
@@ -67,10 +79,13 @@ function attachUpdaterHandlers() {
         });
     }
 
+
     updater.on("update-downloaded", onUpdateDownloaded);
+    updater.on("update-available", onUpdateAvailable);
+    
 }
 
-updater.init({checkUpdateOnStart: true, autoDownload: true});
+updater.init({checkUpdateOnStart: true, autoDownload: false});
 attachUpdaterHandlers();
 
 // Keep a global reference of the window object, if you don't, the window will
