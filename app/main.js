@@ -47,8 +47,8 @@ function attachUpdaterHandlers() {
         let version = updater.meta.version;
         dialog.showMessageBox({
             type: "info",
-            title: "Update is here!",           
-            message: `Arizen update is ready. Arizen will close and the new ${version} version will be installed. When the update is complete, the Arizen wallet will reopen.`
+            title: "Update is ready!",
+            message: `New Arizen version ${version} is ready. Arizen will close and the new ${version} version will be installed. When the update is complete, the Arizen wallet will reopen.`
         }, function () {
                 updater.quitAndInstall();
         });
@@ -61,21 +61,21 @@ function attachUpdaterHandlers() {
             title: "Update is here!",
             buttons: ["Yes", "No"],
             cancelId: -1,            
-            message: `Would you like to update Arizen ? If yes, Arizen will download and install the new ${version} version.`
+            message: `Would you like to update Arizen? If yes, Arizen will download and install the new ${version} version.`
         }, function (response) {
-            if (response === 0){
-                dialog.showMessageBox({
-                    type: "info",
-                    title: "You pressed Yes"
-                })
-                updater.downloadUpdate();
+            // if (response === 0){
+            //     dialog.showMessageBox({
+            //         type: "info",
+            //         title: "You pressed Yes"
+            //     })
+            //     updater.downloadUpdate();
 
-            } else{
-                dialog.showMessageBox({
-                    type: "info",
-                    title: "You pressed No"
-                })                
-            }
+            // } else{
+            //     dialog.showMessageBox({
+            //         type: "info",
+            //         title: "You pressed No"
+            //     })
+            // }
         });
     }
 
@@ -83,7 +83,23 @@ function attachUpdaterHandlers() {
     updater.on("update-downloaded", onUpdateDownloaded);
     updater.on("update-available", onUpdateAvailable);
     
-}
+};
+
+function userChecksForUpdate() {
+    function onUpdateNotAvailable() {
+        let version = updater.version;
+        dialog.showMessageBox({
+            type: "info",
+            title: "You have the latest version!",
+            message: `Congratulations you have the latest version (${version}) of Arizen.`
+        }, function () {});
+    }
+
+    updater.on("update-not-available", onUpdateNotAvailable);
+    updater.checkForUpdates();
+
+
+};
 
 updater.init({checkUpdateOnStart: true, autoDownload: false});
 attachUpdaterHandlers();
@@ -956,8 +972,14 @@ function createEditSubmenu() {
 function createHelpSubmenu() {
     return [
         {
-            label: "v" + updater.version,
+            label: "Version " + updater.version,
             enabled: false
+        },
+        {
+            label: "Check for Update",
+            click: () => {                
+                userChecksForUpdate();
+            }
         },
         {type: "separator"},        
         {
