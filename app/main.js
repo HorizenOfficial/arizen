@@ -458,8 +458,11 @@ function setSettings(newSettings) {
         });
     }
     else {
+        var apiUrl = settings.apiUrls[0];
+        console.log("Current API URL: " + apiUrl);
         axiosApi = axios.create({
-            baseURL: "https://explorer.zensystem.io/insight-api-zen",
+            // take the first URL from the API URLs list for now
+            baseURL: apiUrl,
             timeout: 30000,
         });
     }
