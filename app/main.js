@@ -48,6 +48,7 @@ function attachUpdaterHandlers() {
         dialog.showMessageBox({
             type: "info",
             title: "Update is ready!",
+            buttons: ["OK"],
             message: `New Arizen version ${version} is ready. Arizen will close and the new ${version} version will be installed. When the update is complete, the Arizen wallet will reopen.`
         }, function () {
                 updater.quitAndInstall();
@@ -98,6 +99,7 @@ function userChecksForUpdate() {
         dialog.showMessageBox({
             type: "info",
             title: "You have the latest version!",
+            buttons: ["OK"],            
             message: `You have the latest version (${version}) of Arizen.`
         }, function () {});
     }
