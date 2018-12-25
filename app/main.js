@@ -56,26 +56,33 @@ function attachUpdaterHandlers() {
 
     function onUpdateAvailable() {
         let version = updater.meta.version;
+        let askForUpdatePath = getRootConfigPath() + "autoUpdateQuestion.json";
+
         dialog.showMessageBox({
             type: "info",
             title: "Update is here!",
             buttons: ["Yes", "No"],
             cancelId: -1,            
-            message: `Would you like to update Arizen? If yes, Arizen will download and install the new ${version} version.`
+            message: `Would you like to update Arizen now? If yes, Arizen will download and install the new ${version} version.`
         }, function (response) {
-            // if (response === 0){
-            //     dialog.showMessageBox({
-            //         type: "info",
-            //         title: "You pressed Yes"
-            //     })
-            //     updater.downloadUpdate();
-
-            // } else{
-            //     dialog.showMessageBox({
-            //         type: "info",
-            //         title: "You pressed No"
-            //     })
-            // }
+            if (response === 0){
+                dialog.showMessageBox({
+                    type: "info",
+                    title: "Donwloading new version of Arizen.",
+                    message: "Donwloading new version of Arizen."
+                })
+                if (fs.existsSync(askForUpdatePath)) {
+                    fs.unlinkSync(askForUpdatePath);
+                }
+                updater.downloadUpdate();
+            } else{
+                fs.writeFileSync(askForUpdatePath, "If you delete this Arizen will check for update next time it starts.");
+                dialog.showMessageBox({
+                    type: "info",
+                    title: "Arizen won't be updated now",
+                    message: "You can update Arizen by clicking Check for Update under Help menu."
+                })
+            }
         });
     }
 
@@ -91,18 +98,24 @@ function userChecksForUpdate() {
         dialog.showMessageBox({
             type: "info",
             title: "You have the latest version!",
-            message: `Congratulations you have the latest version (${version}) of Arizen.`
+            message: `You have the latest version (${version}) of Arizen.`
         }, function () {});
     }
-
     updater.on("update-not-available", onUpdateNotAvailable);
     updater.checkForUpdates();
-
-
 };
 
-updater.init({checkUpdateOnStart: true, autoDownload: false});
+function autoCheckForUpdateIfFirstTime(){
+    let askForUpdatePath = getRootConfigPath() + "autoUpdateQuestion.json";
+
+    if (!fs.existsSync(askForUpdatePath)) {
+        updater.checkForUpdates();
+    }
+}
+
+updater.init({checkUpdateOnStart: false, autoDownload: false});
 attachUpdaterHandlers();
+autoCheckForUpdateIfFirstTime();
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
