@@ -70,6 +70,7 @@ function attachUpdaterHandlers() {
                 dialog.showMessageBox({
                     type: "info",
                     title: "Donwloading new version of Arizen.",
+                    buttons: ["OK"],
                     message: "Donwloading new version of Arizen."
                 })
                 if (fs.existsSync(askForUpdatePath)) {
@@ -81,6 +82,7 @@ function attachUpdaterHandlers() {
                 dialog.showMessageBox({
                     type: "info",
                     title: "Arizen won't be updated now",
+                    buttons: ["OK"],
                     message: "You can update Arizen by clicking Check for Update under Help menu."
                 })
             }
@@ -992,6 +994,7 @@ function createHelpSubmenu() {
         },
         {
             label: "Check for Update",
+            accelerator: "Shift+CmdOrCtrl+U",
             click: () => {                
                 userChecksForUpdate();
             }
