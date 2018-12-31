@@ -38,6 +38,10 @@ const userWarningExportWalletEncrypted = "You are going to export an ENCRYPTED w
 // Show/Hide Development menu
 process.env.NODE_ENV = "production";
 
+function sleep(millis) {
+    return new Promise(resolve => setTimeout(resolve, millis));
+}
+
 function attachUpdaterHandlers() {
     function onUpdateDownloaded() {
         let version = updater.meta.version;
@@ -75,17 +79,17 @@ const defaultSettings = {
     txHistory: 50,
     autoLogOffEnable: 0,
     autoLogOffTimeout: 60,
-    explorerUrl: "https://explorer.zensystem.io",
+    explorerUrl: "https://explorer.horizen.global",
     apiUrls: [
-        "https://explorer.zensystem.io/insight-api-zen",
-        "https://explorer.zen-solutions.io/api",
-        "http://explorer.zenmine.pro/insight-api-zen"
+        "https://explorer.horizen.global/api",        
+        "https://explorer.zen-solutions.io/api"        
     ],
     secureNodeFQDN: "",
     secureNodePort: 18231,
     domainFronting: false,
     domainFrontingUrl: "https://www.google.com",
-    domainFrontingHost: "zendhide.appspot.com"
+    domainFrontingHost: "zendhide.appspot.com",
+    refreshIntervalAPI: 334
 };
 
 const defaultInternalInfo = {pendingTxs: []};
@@ -306,8 +310,6 @@ function saveWallet() {
         }
         const timestamp = DateTime.local().toFormat("yyyyLLddHHmmss");
         const backupPath = backupDir + "/" + userInfo.login + "-" + timestamp + ".awd";
-        //fs.copyFileSync(walletPath, backupPath);
-        // piece of shit node.js ecosystem, why the fuck do we have to deal with fs-extra crap here?
         fs.copySync(walletPath, backupPath);
         pruneBackups(backupDir, userInfo.login);
     }
@@ -404,8 +406,7 @@ function tableExists(table) {
 
 function loadSettings() {
     /* Remove settings row from settings table. Old versions chceks row count in
-     * the table and inserts missing settings if the count isn't 6. By inserting
-     * another setting we fucked up its fucked up upgrade logic. This only
+     * the table and inserts missing settings if the count isn't 6. This only
      * happens in old versions after new version (f422bfff) run. */
     if (tableExists("settings")) {
         sqlRun("delete from settings where name = 'settings'");
@@ -452,14 +453,16 @@ function setSettings(newSettings) {
         axiosApi = axios.create({
             baseURL: settings.domainFrontingUrl,
             headers: {
-                "Host": settings.domainFrontingHost
+                "Host": settings.domainFrontingHost,
+                "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:61.0) Gecko/20100101 Firefox/61.0"
+
             },
             timeout: 30000,
         });
     }
     else {
         axiosApi = axios.create({
-            baseURL: "https://explorer.zensystem.io/insight-api-zen",
+            baseURL: settings.apiUrls[0],
             timeout: 30000,
         });
     }
@@ -541,7 +544,6 @@ function importWalletArizen(ext, encrypted) {
 }
 
 function exportPKs() {
-    // function exportToFile(filename, override = False) {
     function exportToFile(filename) {
         fs.open(filename, "w", 0o600, (err, fd) => {
             if (err) {
@@ -613,11 +615,13 @@ function importOnePK(pk, name = "", isT = true) {
 
 async function apiGet(url) {
     const resp = await axiosApi(url);
+    await sleep(parseFloat(settings.refreshIntervalAPI));
     return resp.data;
 }
 
 async function apiPost(url, form) {
-    const resp = await axiosApi.post(url, querystring.stringify(form));
+    const resp = await axiosApi.post(url, querystring.stringify(form));    
+    await sleep(parseFloat(settings.refreshIntervalAPI));
     return resp.data;
 }
 
@@ -1948,8 +1952,8 @@ function getTxHexStringsForSplit(event, txData, toAddresses, splitToInSatoshi, f
         quotient += 1;
     }
 
-    // if there is less/more addresses - refund the rest to the last address
-    if (quotient !== toAddresses.length) {
+    // if there is less addresses - refund the rest to the last address
+    if (quotient > toAddresses.length) {
         quotient = toAddresses.length;
     }
 
@@ -1981,7 +1985,7 @@ function getTxHexStringsForSplit(event, txData, toAddresses, splitToInSatoshi, f
 
     // Sign history/transaction with PKs
     for (let value of data.values()) {
-        for (let i = 0; i < history.length; i++) {
+        for (let i = 0; i < value.history.length; i++) {
             txObj = zencashjs.transaction.signTx(txObj, i, value.pk, true);
         }
     }
