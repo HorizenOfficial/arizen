@@ -1,5 +1,5 @@
 # Arizen's Travis CI build script for building Linux, MacOS, and Windows release.
-
+# test windows build
 notifications:
   email: false
 
