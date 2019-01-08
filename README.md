@@ -4,6 +4,7 @@
 [![Code Climate][codeclimate-img]][codeclimate-url]
 
 # User Manuals
+- v1.2.1: [Arizen v1.2.1 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.2.1/Arizen.v1.2.1.Wallet.User.Manual.pdf)
 - v1.2.0: [Arizen v1.2.0 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.2.0/Arizen.v1.2.0.Wallet.User.Manual.pdf)
 - v1.1.8: [Arizen v1.1.8 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.8/Arizen.v1.1.8.Wallet.User.Manual.pdf)
 - v1.1.7: [Arizen v1.1.7 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.7/Arizen.v1.1.7.Wallet.User.Manual.pdf)
@@ -15,6 +16,13 @@
 - v1.0.0: [Arizen v1.0.0 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.0.0/Arizen.Wallet.User.Manual.pdf)
 
 # Version History
+
+## v1.2.1
+- [x] FIX: issue in Batch Split when are more addresses than you can divide into
+- [x] Small visual GUI changes
+- [x] FIX: Linux Sync issue: Add user defined delay
+- [x] FIX: Api URLs
+- [x] Domain Fronting removal
 
 ## v1.2.0
 - [x] Brand expansion

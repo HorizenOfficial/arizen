@@ -416,7 +416,8 @@ function showSettingsDialog() {
         const inputDomainFrontingUrl = dialog.querySelector(".settingDomainFrontingUrl");
         const inputDomainFrontingHost = dialog.querySelector(".settingDomainFrontingHost");
         const inputAutoLogOffEnable = dialog.querySelector(".settingAutoLogOffEnable");
-        const inputAutoLogOffTimeout = dialog.querySelector(".settingAutoLogOffTimeout");
+        const inputAutoLogOffTimeout = dialog.querySelector(".settingAutoLogOffTimeout"); 
+        const inputRefreshIntervalAPI = dialog.querySelector(".settingsRefreshIntervalAPI");
 
         inputTxHistory.value = settings.txHistory;
         inputExplorerUrl.value = settings.explorerUrl;
@@ -443,6 +444,7 @@ function showSettingsDialog() {
 
         inputAutoLogOffEnable.checked = settings.autoLogOffEnable;
         inputAutoLogOffTimeout.value = settings.autoLogOffTimeout || 60;
+        inputRefreshIntervalAPI.value = settings.refreshIntervalAPI || 334;
 
         dialog.querySelector(".chooseKeyPath").addEventListener("click", () => {
             let inputFakeElement = document.createElement('input');
@@ -479,7 +481,8 @@ function showSettingsDialog() {
                 domainFrontingUrl: inputDomainFrontingUrl.value,
                 domainFrontingHost: inputDomainFrontingHost.value,
                 autoLogOffEnable: inputAutoLogOffEnable.checked ? 1 : 0,
-                autoLogOffTimeout: inputAutoLogOffTimeout.value < 60 ? 60 : inputAutoLogOffTimeout.value
+                autoLogOffTimeout: inputAutoLogOffTimeout.value < 60 ? 60 : inputAutoLogOffTimeout.value,
+                refreshIntervalAPI: inputRefreshIntervalAPI.value
             };
 
             if (settings.lang !== newSettings.lang) {
