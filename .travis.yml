@@ -1,5 +1,4 @@
 # Arizen's Travis CI build script for building Linux, MacOS, and Windows release.
-
 notifications:
   email: false
 
@@ -8,18 +7,15 @@ git:
 
 branches:
   only:
-    # release tags
-    - /^v\d+\.\d+\.\d+.*$/
-    - development
-    - master
-language: node_js
-node_js:
-  - '6'   
+  # release tags
+  - /^v\d+\.\d+\.\d+.*$/
+  - development
+  - master
+
 env:
   global:
-    # TODO Update this to match the name of your project.
-    - PROJECT_NAME=arizen
-    - NODE_VERSION="6"
+  # TODO Update this to match the name of your project.
+  - PROJECT_NAME=arizen
 
 matrix:
   include:
@@ -27,17 +23,23 @@ matrix:
     env: TARGET_ARCH=x64
     osx_image: xcode9.2
     sudo: required
-    language: c
-  # - os: windows
-  #   sudo: required
-  #   env: TARGET_ARCH=x64
-  #  # language: node_js
+    language: node_js
+    node_js:
+    - "8"
+  - os: windows
+    sudo: required
+    env: TARGET_ARCH=x64
+    language: node_js
+    node_js:
+    - "8"
   - os: linux
     env: CC=clang CXX=clang++ npm_config_clang=1 TARGET_ARCH=x64
     compiler: clang
     sudo: required
     dist: trusty
-    language: c
+    language: node_js
+    node_js:
+    - "8"
 
 cache:
   directories:
@@ -54,38 +56,35 @@ addons:
     - icnsutils
 
 before_install:
-  - ./ci/before_install.sh
+- ./ci/before_install.sh
 
 install:
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then nvm install $NODE_VERSION; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then nvm install $NODE_VERSION; fi
-  #- if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then choco install nvm;  echo $NVM_HOME; export NVM_HOME=C:\\ProgramData\\nvm; export NVM_SYMLINK=C:\\ProgramData\\nodejs; echo $NVM_HOME; RefreshEnv.cmd; echo $NVM_HOME; fi
-  - ./ci/install.sh
+- ./ci/install.sh
 
 script:
-  - ./ci/script.sh
+- ./ci/script.sh
 
 after_script:
-  # - set +e
+# - set +e
 
 before_deploy:
-  # - sh ci/before_deploy.sh
+# - sh ci/before_deploy.sh
 
 # deploy:
-  # TODO update `api_key.secure`
-  # - Create a `public_repo` GitHub token. Go to: https://github.com/settings/tokens/new
-  # - Encrypt it: `travis encrypt 0123456789012345678901234567890123456789
-  # - Paste the output down here
-  #api_key:
-  #  secure: A9v3PIzQQ4U08
-  #file_glob: true
-  #file: $CRATE_NAME-$TRAVIS_TAG-$TARGET.*
-  #on:
-    # TODO Here you can pick which targets will generate binary releases
-    # In this example, there are some targets that are tested using the stable
-    # and nightly channels. This condition makes sure there is only one release
-    # for such targets and that's generated using the stable channel
-  #  condition: $TRAVIS_RUST_VERSION = stable
-  #  tags: true
-  #provider: releases
-  #skip_cleanup: true
+# TODO update `api_key.secure`
+# - Create a `public_repo` GitHub token. Go to: https://github.com/settings/tokens/new
+# - Encrypt it: `travis encrypt 0123456789012345678901234567890123456789
+# - Paste the output down here
+#api_key:
+#  secure: A9v3PIzQQ4U08
+#file_glob: true
+#file: $CRATE_NAME-$TRAVIS_TAG-$TARGET.*
+#on:
+# TODO Here you can pick which targets will generate binary releases
+# In this example, there are some targets that are tested using the stable
+# and nightly channels. This condition makes sure there is only one release
+# for such targets and that's generated using the stable channel
+#  condition: $TRAVIS_RUST_VERSION = stable
+#  tags: true
+#provider: releases
+#skip_cleanup: true
