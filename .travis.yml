@@ -1,4 +1,5 @@
 # Arizen's Travis CI build script for building Linux, MacOS, and Windows release.
+# test
 notifications:
   email: false
 
@@ -17,29 +18,33 @@ env:
   # TODO Update this to match the name of your project.
   - PROJECT_NAME=arizen
 
+
 matrix:
   include:
+  - os: linux
+    env: TARGET_ARCH=x64 PLATFORM=linux
+    compiler: clang
+    sudo: required
+    dist: bionic
+    language: node_js
+    node_js:
+    - "8"
+  - os: linux
+    env: TARGET_ARCH=x64 PLATFORM=windows
+    compiler: clang
+    sudo: required
+    dist: bionic
+    language: node_js
+    node_js:
+    - "8"
   - os: osx
-    env: TARGET_ARCH=x64
+    env: TARGET_ARCH=x64 PLATFORM=osx
     osx_image: xcode9.2
     sudo: required
     language: node_js
     node_js:
     - "8"
-  - os: windows
-    sudo: required
-    env: TARGET_ARCH=x64
-    language: node_js
-    node_js:
-    - "8"
-  - os: linux
-    env: CC=clang CXX=clang++ npm_config_clang=1 TARGET_ARCH=x64
-    compiler: clang
-    sudo: required
-    dist: trusty
-    language: node_js
-    node_js:
-    - "8"
+
 
 cache:
   directories:
@@ -64,25 +69,25 @@ install:
 script:
 - ./ci/script.sh
 
-after_script:
-# - set +e
+  #after_script:
+  # - set +e
 
-before_deploy:
-# - sh ci/before_deploy.sh
+  #before_deploy:
+  # - sh ci/before_deploy.sh
 
-# deploy:
-# TODO update `api_key.secure`
-# - Create a `public_repo` GitHub token. Go to: https://github.com/settings/tokens/new
-# - Encrypt it: `travis encrypt 0123456789012345678901234567890123456789
-# - Paste the output down here
-#api_key:
-#  secure: A9v3PIzQQ4U08
-#file_glob: true
-#file: $CRATE_NAME-$TRAVIS_TAG-$TARGET.*
-#on:
-# TODO Here you can pick which targets will generate binary releases
-# In this example, there are some targets that are tested using the stable
-# and nightly channels. This condition makes sure there is only one release
+  # deploy:
+  # TODO update `api_key.secure`
+  # - Create a `public_repo` GitHub token. Go to: https://github.com/settings/tokens/new
+  # - Encrypt it: `travis encrypt 0123456789012345678901234567890123456789
+  # - Paste the output down here
+  #api_key:
+  #  secure: A9v3PIzQQ4U08
+  #file_glob: true
+  #file: $CRATE_NAME-$TRAVIS_TAG-$TARGET.*
+  #on:
+  # TODO Here you can pick which targets will generate binary releases
+  # In this example, there are some targets that are tested using the stable
+  # and nightly channels. This condition makes sure there is only one release
 # for such targets and that's generated using the stable channel
 #  condition: $TRAVIS_RUST_VERSION = stable
 #  tags: true
