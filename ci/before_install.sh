@@ -12,10 +12,11 @@ elif [[ ${TRAVIS_OS_NAME} == "windows" ]]; then
     echo "Before install: Windows OS"
 elif [[ ${TRAVIS_OS_NAME} == "linux" ]]; then
     echo "Before install: Linux"
+    wget -O- -nc https://dl.winehq.org/wine-builds/winehq.key | sudo apt-key add -
     sudo apt-add-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ xenial main'
     sudo apt-get update
     sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils
-    sudo apt install --install-recommends --allow-unauthenticated winehq-stable
+    sudo apt install --install-recommends winehq-stable
     sudo apt install mono-devel
 else
     echo "Unknown OS"
