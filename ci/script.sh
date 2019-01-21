@@ -25,6 +25,8 @@ if [[ ${TRAVIS_BRANCH} == "development" ]]; then
 	account = ${BB_APPID}
 	key = ${BB_APP_KEY_ID}
 	hard_delete = false" > bbconfig.json
-	zip -r Arizen_development_${PLATFORM}.zip dist/*
-	rclone --config=bbconfig.json copy Arizen_development_${PLATFORM}.zip backblaze:backblazearizen
+	export DATE_WITH_TIME=`date "+%Y%m%d-%H%M%S"`
+	export FILE_NAME=Arizen_development_${PLATFORM}_PR_${TRAVIS_PULL_REQUEST}_$DATE_WITH_TIME.zip
+	zip -r $FILE_NAME dist/*
+	rclone --config=bbconfig.json copy $FILE_NAME backblaze:${BB_BUCKET}
 fi
