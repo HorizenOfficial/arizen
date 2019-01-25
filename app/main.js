@@ -29,6 +29,7 @@ const {DateTime} = require("luxon");
 const {zenextra} = require("./zenextra.js");
 
 let oldZAddrJSON;
+let maxInRowAPICalls = 3
 
 const userWarningImportFileWithPKs = "New address(es) and a private key(s) will be imported. Your previous back-ups do not include the newly imported addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
 const userWarningExportWalletUnencrypted = "You are going to export an UNENCRYPTED wallet ( ie your private keys) in plain text. That means that anyone with this file can control your ZENs. Store this file in a safe place. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
