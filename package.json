@@ -1,6 +1,6 @@
 {
   "name": "Arizen",
-  "version": "1.1.31-test",
+  "version": "1.2.1",
   "description": "Arizen is light API wallet for Horizen with localy stored and encrypted files.",
   "main": "app/main.js",
   "scripts": {

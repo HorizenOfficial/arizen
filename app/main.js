@@ -521,8 +521,7 @@ function setSettings(newSettings) {
         });
     }
     else {
-        var apiUrl = settings.apiUrls[0];
-        console.log("Current API URL: " + apiUrl);
+        let apiUrl = settings.apiUrls[0];
         axiosApi = axios.create({
             baseURL: apiUrl,
             timeout: 30000,
