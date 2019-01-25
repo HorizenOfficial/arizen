@@ -2,6 +2,6 @@
 
 set -e
 
-npm install electron-builder@next
-npm install
+npm install ${NPM_OPTIONS} electron-builder@next
+npm install ${NPM_OPTIONS}
 npm prune
