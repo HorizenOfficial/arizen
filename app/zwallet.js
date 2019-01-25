@@ -114,6 +114,13 @@ ipcRenderer.on("remove-loading-image", (event) => {
     }
 });
 
+ipcRenderer.on("force-remove-loading-image", (event) => {
+    refreshCounter = 0;
+    if (refreshCounter <= 0) {
+        loadingImageNode.innerHTML = ""
+    }
+});
+
 ipcRenderer.on("refresh-wallet-response", (event, msgStr) => {
     const msg = JSON.parse(msgStr);
     checkResponse(msg);
