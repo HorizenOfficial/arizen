@@ -6,8 +6,6 @@ echo "Before Install Script"
 
 if [[ ${TRAVIS_OS_NAME} == "osx" ]]; then
     echo "Before install: MacOS"
-    brew update
-    brew install graphviz
     curl https://rclone.org/install.sh | sudo bash
 elif [[ ${TRAVIS_OS_NAME} == "linux" ]]; then
     echo "Before install: Linux"
@@ -15,7 +13,6 @@ elif [[ ${TRAVIS_OS_NAME} == "linux" ]]; then
     wget -O- -nc https://dl.winehq.org/wine-builds/winehq.key | sudo apt-key add -
     sudo apt-add-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ xenial main'
     sudo apt-get update
-    sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils
     sudo apt install --install-recommends winehq-stable
     sudo apt install mono-devel
 else
