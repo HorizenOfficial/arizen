@@ -716,6 +716,30 @@ async function fetchBlockchainChanges(addrObjs, knownTxIds) {
     return result;
 }
 
+async function fetchBlockchainChangesOneAddress(obj, knownTxIds) {
+        const result = {
+            changedAddrs: [],
+            newTxs: []
+        };
+        const txIdSet = new Set();
+    
+        const info = await apiGet("/addr/" + obj.addr);
+        if (obj.lastbalance !== info.balance) {
+            obj.balanceDiff = info.balance - (obj.lastbalance || 0);
+            obj.lastbalance = info.balance;
+            result.changedAddrs.push(obj);
+        }
+        info.transactions.forEach(txId => txIdSet.add(txId));
+    
+        knownTxIds.forEach(txId => txIdSet.delete(txId));
+    
+        const newTxs = await fetchTransactions([...txIdSet], obj.addr);
+        result.newTxs = new List(newTxs).sortBy(tx => tx.block).toArray();
+    
+        return result;
+    }
+    
+
 async function updateBlockchainView(webContents) {
     webContents.send("add-loading-image");
     const addrObjs = sqlSelectObjects("SELECT addr, name, lastbalance FROM wallet where length(addr)=35");
