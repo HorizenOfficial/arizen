@@ -117,7 +117,7 @@ ipcRenderer.on("remove-loading-image", (event) => {
 ipcRenderer.on("force-remove-loading-image", (event) => {
     refreshCounter = 0;
     if (refreshCounter <= 0) {
-        loadingImageNode.innerHTML = ""
+        loadingImageNode.innerHTML = " / <span style='color:red'>" + tr("notification.apiCallFailed", "API Call failed. Check your connection and try again.")+"</span>"
     }
 });
 

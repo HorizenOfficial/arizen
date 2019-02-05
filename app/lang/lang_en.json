@@ -47,7 +47,8 @@
   "notification": {
     "settingsUpdated": "Settings updated",
     "balanceUpdated": "Balance Updated",
-    "newTransactions": "New transaction"
+    "newTransactions": "New transaction",
+    "apiCallFailed": "API Call failed. Check your connection and try again."
   },
   "common": {
     "selectAll": "Select all",
