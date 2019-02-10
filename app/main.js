@@ -20,7 +20,6 @@ const bitcoin = require("bitcoinjs-lib");
 const bip32utils = require("bip32-utils");
 const zencashjs = require("zencashjs");
 const sql = require("sql.js");
-const updater = require("electron-simple-updater");
 const axios = require("axios");
 const querystring = require("querystring");
 const {List} = require("immutable");
@@ -41,25 +40,6 @@ process.env.NODE_ENV = "production";
 function sleep(millis) {
     return new Promise(resolve => setTimeout(resolve, millis));
 }
-
-function attachUpdaterHandlers() {
-    function onUpdateDownloaded() {
-        let version = updater.meta.version;
-        dialog.showMessageBox({
-            type: "info",
-            title: "Update is here!",
-            message: `Arizen will close and the new ${version} version will be installed. When the update is complete, the Arizen wallet will reopen.`
-        }, function () {
-            // application forces to update itself
-            updater.quitAndInstall();
-        });
-    }
-
-    updater.on("update-downloaded", onUpdateDownloaded);
-}
-
-updater.init({checkUpdateOnStart: true, autoDownload: true});
-attachUpdaterHandlers();
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.

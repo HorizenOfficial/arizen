@@ -20,9 +20,6 @@
   "bugs": {
     "url": "https://github.com/ZencashOfficial/arizen/issues"
   },
-  "updater": {
-    "url": "https://raw.githubusercontent.com/ZencashOfficial/arizen/master/updates.json"
-  },
   "keywords": [
     "zen",
     "horizen",
@@ -101,7 +98,6 @@
     "electron-debug": "^2.0.0",
     "electron-download": "^4.1.1",
     "electron-packager": "^12.1.1",
-    "electron-simple-updater": "^1.2.4",
     "electron-tabs": "^0.9.4",
     "errors": "^0.3.0",
     "flatten-packages": "^0.1.4",
