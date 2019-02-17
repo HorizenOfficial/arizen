@@ -35,7 +35,7 @@ if [ "${TRAVIS_OS_NAME}" == "osx" ]; then
   done
   cd ./release
   for f in *\ *; do
-    mv "$f" "${f// /_}"
+    mv "$f" "${f// /_}" || true
   done
   for file in ./*; do
     shasum -a 256 "${file}" > "${file}.sha256"
@@ -51,7 +51,7 @@ if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
  done
  cd ./release
  for f in *\ *; do
-   mv "$f" "${f// /_}"
+   mv "$f" "${f// /_}" || true
  done
  for file in ./*; do
    shasum -a 256 "${file}" > "${file}.sha256"
