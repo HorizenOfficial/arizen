@@ -717,7 +717,7 @@ async function fetchBlockchainChanges(addrObjs, knownTxIds) {
     return result;
 }
 
-async function fetchBlockchainChangesOneAddress(obj, knownTxIds) {
+async function fetchBlockchainChangesOneAddress(obj, knownTxIds, addrObjs) {
         const result = {
             changedAddrs: [],
             newTxs: []
@@ -737,7 +737,7 @@ async function fetchBlockchainChangesOneAddress(obj, knownTxIds) {
     
         knownTxIds.forEach(txId => txIdSet.delete(txId));
     
-        const newTxs = await fetchTransactions([...txIdSet], obj.addr);
+        const newTxs = await fetchTransactions([...txIdSet], addrObjs.map(obj => obj.addr));
         result.newTxs = new List(newTxs).sortBy(tx => tx.block).toArray();
     
         return result;
@@ -755,7 +755,7 @@ async function updateBlockchainView(webContents) {
     for (const obj of addrObjs) {
         let result;
         try {
-            result = await fetchBlockchainChangesOneAddress(obj, knownTxIds);
+            result = await fetchBlockchainChangesOneAddress(obj, knownTxIds, addrObjs);
         } catch (e) {
             console.log("Update from API failed", e);
             //webContents.send("force-remove-loading-image");
@@ -773,9 +773,18 @@ async function updateBlockchainView(webContents) {
             }));
         }
         //console.log(addrObj.addr + " New Tx: " + len(result.newTxs))
-        //console.log(" New Tx: ")
+        console.log(" All Txs: ")
         allTxs = [...allTxs, ...result.newTxs];
-        //console.log(allTxs)
+        //knownTxIds = [...knownTxIds,...result.newTxs];
+        console.log(allTxs)
+        console.log(" New Txs: ")
+        console.log(result.newTxs)
+        console.log(" Known Txs: ")
+        console.log(knownTxIds)
+        result.newTxs.forEach(tx => knownTxIds.push(tx.txid))
+        console.log(" Known Txs After: ")
+        console.log(knownTxIds)
+        //console.log(typeof(knownTxIds))
     }
 
     const zAddrObjs = sqlSelectObjects("SELECT addr, name, lastbalance,pk FROM wallet where length(addr)=95");
