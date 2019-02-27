@@ -18,63 +18,64 @@ env:
   # TODO Update this to match the name of your project.
   - PROJECT_NAME=arizen
 
-
 matrix:
   include:
-  - os: linux
-    env: TARGET_ARCH=x64 PLATFORM=linux
-    compiler: clang
-    sudo: required
-    dist: xenial
-    language: node_js
-    node_js:
-    - "8"
-  - os: linux
-    env: TARGET_ARCH=x64 PLATFORM=windows
-    compiler: clang
-    sudo: required
-    dist: xenial
-    language: node_js
-    node_js:
-    - "8"
-  - os: osx
-    env: TARGET_ARCH=x64 PLATFORM=osx
-    osx_image: xcode9.2
-    sudo: required
-    language: node_js
-    node_js:
-    - "8"
+    - os: osx
+      osx_image: xcode9.4
+      sudo: required
+      language: node_js
+      node_js: "10"
+      env:
+        - ELECTRON_CACHE=$HOME/.cache/electron
+        - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
 
-before_install:
-- ./ci/before_install.sh
+    - os: linux
+      dist: xenial
+      sudo: required
+      services: docker
+      language: generic
 
-install:
-- ./ci/install.sh
+cache:
+  directories:
+    - node_modules
+    - $HOME/.cache/electron
+    - $HOME/.cache/electron-builder
+
+# skip install, done in script.sh
+install: true
 
 script:
-- ./ci/script.sh
+  - chmod 755 ./ci/script.sh
+  - ./ci/script.sh
 
-  #after_script:
-  # - set +e
+before_cache:
+  - rm -rf $HOME/.cache/electron-builder/wine
 
-  #before_deploy:
-  # - sh ci/before_deploy.sh
+after_success:
+  - curl https://rclone.org/install.sh | sudo bash
+  - chmod 755 ./ci/after_success.sh
+  - ./ci/after_success.sh
 
-  # deploy:
-  # TODO update `api_key.secure`
-  # - Create a `public_repo` GitHub token. Go to: https://github.com/settings/tokens/new
-  # - Encrypt it: `travis encrypt 0123456789012345678901234567890123456789
-  # - Paste the output down here
-  #api_key:
-  #  secure: A9v3PIzQQ4U08
-  #file_glob: true
-  #file: $CRATE_NAME-$TRAVIS_TAG-$TARGET.*
-  #on:
-  # TODO Here you can pick which targets will generate binary releases
-  # In this example, there are some targets that are tested using the stable
-  # and nightly channels. This condition makes sure there is only one release
-# for such targets and that's generated using the stable channel
-#  condition: $TRAVIS_RUST_VERSION = stable
-#  tags: true
-#provider: releases
-#skip_cleanup: true
+deploy:
+  provider: releases
+  draft: true
+  overwrite: true
+  api_key:
+    secure: "${GITHUB_TOKEN}"
+  body: Release
+  file_glob: true
+  file:
+    - "./release/*.dmg"
+    - "./release/*.zip"
+    - "./release/*.exe"
+    - "./release/*.nupkg"
+    - "./release/*.deb"
+    - "./release/*.AppImage"
+    - "./release/*.sha256"
+  skip_cleanup: true
+  on:
+    tags: true
+
+#after_deploy:
+#  - chmod 755 ./ci/after_deploy.sh
+#  - ./ci/after_deploy.sh

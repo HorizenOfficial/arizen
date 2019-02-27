@@ -1,32 +1,24 @@
 #!/bin/bash
 
-# This script takes care of testing your crate
-
 set -e
 
-#npm run dist
-
-#apt install -y wine
-
-if [[ ${PLATFORM} == "osx" ]]; then
-    npx electron-builder build -m
-elif [[ ${PLATFORM} == "windows" ]]; then
-    npx electron-builder build -w
-elif [[ ${PLATFORM} == "linux" ]]; then
-    npx electron-builder build -l
+# TODO add encrypted certificates
+if [ -z "${TRAVIS_TAG}" ] && git verify-tag "${TRAVIS_TAG}"; then
+  echo "decrypt certs placeholder"
 else
-    echo "Unknown OS"
+  echo "Not a tagged build or tag not signed."
 fi
 
-if [[ ${TRAVIS_BRANCH} == "development" ]]; then
-	echo \
-	"[backblaze]
-	type = b2
-	account = ${BB_APPID}
-	key = ${BB_APP_KEY_ID}
-	hard_delete = false" > bbconfig.json
-	export DATE_WITH_TIME=`date "+%Y%m%d-%H%M%S"`
-	export FILE_NAME=Arizen_development_${PLATFORM}_PR_${TRAVIS_PULL_REQUEST}_$DATE_WITH_TIME.zip
-	zip -r $FILE_NAME dist/*
-	rclone --config=bbconfig.json copy $FILE_NAME backblaze:${BB_BUCKET}
+# default yarn install options set in travis YARN_INSTALL_OPTIONS="--frozen-lockfile --link-duplicates"
+# Continue even on failing yarn audit, sometimes vulnerablilities cannot be fixed yet, but at least we have a log of them.
+if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
+  docker run --rm \
+    --env-file <(env | grep -iE 'DEBUG|NODE_|ELECTRON_|YARN_|NPM_|CI|CIRCLE|TRAVIS|APPVEYOR_|CSC_|_TOKEN|_KEY|AWS_|STRIP|BUILD_|TZ') \
+    -v "${PWD}":/project \
+    -v ~/.cache/electron:/root/.cache/electron \
+    -v ~/.cache/electron-builder:/root/.cache/electron-builder \
+    electronuserland/builder:wine-mono \
+    /bin/bash -c "yarn install ${YARN_INSTALL_OPTIONS} && yarn audit || true && yarn dist --linux --win"
+else
+  bash -c "yarn install ${YARN_INSTALL_OPTIONS} && yarn audit || true && yarn dist --mac"
 fi
