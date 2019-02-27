@@ -61,7 +61,6 @@ typings/
 
 
 .idea/
-package-lock.json
 .DS_Store
 
 
@@ -70,6 +69,5 @@ daemon/
 .vscode/launch.json
 wallets/
 
-yarn.lock
 
 .*.sw[po]
