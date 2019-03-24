@@ -61,8 +61,8 @@ const defaultSettings = {
     autoLogOffTimeout: 60,
     explorerUrl: "https://explorer.horizen.global",
     apiUrls: [
-        "https://explorer.horizen.global/api",        
-        "https://explorer.zen-solutions.io/api"        
+        "https://explorer.horizen.global/api",
+        "https://explorer.zen-solutions.io/api"
     ],
     secureNodeFQDN: "",
     secureNodePort: 18231,
@@ -441,8 +441,8 @@ function setSettings(newSettings) {
         });
     }
     else {
-        var apiUrl = settings.apiUrls[0];
-        console.log("Current API URL: " + apiUrl);
+      const apiUrl = settings.apiUrls[0];
+      console.log("Current API URL: " + apiUrl);
         axiosApi = axios.create({
             baseURL: apiUrl,
             timeout: 30000,
@@ -602,9 +602,21 @@ async function apiGet(url) {
 }
 
 async function apiPost(url, form) {
-    const resp = await axiosApi.post(url, querystring.stringify(form));    
+    const resp = await axiosApi.post(url, querystring.stringify(form));
     await sleep(parseFloat(settings.refreshIntervalAPI));
     return resp.data;
+}
+
+/**
+ * @param {Set} address
+ * @param {object[]} originalVout
+ */
+function getFilteredVout(address, originalVout) {
+    return new Promise(resolve => {
+        resolve(originalVout.filter(vout => {
+          return address.has(vout.scriptPubKey.addresses[0]);
+        }));
+    });
 }
 
 async function fetchTransactions(txIds, myAddrs) {
@@ -620,6 +632,8 @@ async function fetchTransactions(txIds, myAddrs) {
 
         // Address field in transaction rows is meaningless. Pick something sane.
         let firstMyAddr;
+
+        info.vout = await getFilteredVout(myAddrSet, info.vout);
 
         for (const vout of info.vout) {
             // XXX can it be something else?
