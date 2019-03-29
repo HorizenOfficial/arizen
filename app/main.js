@@ -1002,19 +1002,6 @@ function updateMenuAtLogin() {
                 },
                 {type: "separator"},
                 {
-                    label: tr("menu.importEncrypted", "Import ENCRYPTED Arizen wallet"),
-                    click() {
-                        importWalletArizen("awd", true);
-                    }
-                },
-                {
-                    label: tr("menu.importUnencrypted", "Import UNENCRYPTED Arizen wallet"),
-                    click() {
-                        importWalletArizen("uawd", false);
-                    }
-                },
-                {type: "separator"},
-                {
                     label: tr("menu.exportPrivateKeys", "Export private keys"),
                     click: function () {
                         exportPKs();
