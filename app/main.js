@@ -61,8 +61,8 @@ const defaultSettings = {
     autoLogOffTimeout: 60,
     explorerUrl: "https://explorer.horizen.global",
     apiUrls: [
-        "https://explorer.horizen.global/api",        
-        "https://explorer.zen-solutions.io/api"        
+        "https://explorer.horizen.global/api",
+        "https://explorer.zen-solutions.io/api"
     ],
     secureNodeFQDN: "",
     secureNodePort: 18231,
@@ -602,7 +602,7 @@ async function apiGet(url) {
 }
 
 async function apiPost(url, form) {
-    const resp = await axiosApi.post(url, querystring.stringify(form));    
+    const resp = await axiosApi.post(url, querystring.stringify(form));
     await sleep(parseFloat(settings.refreshIntervalAPI));
     return resp.data;
 }
@@ -987,12 +987,6 @@ function updateMenuAtLogin() {
                     }
                 },
                 {type: "separator"},
-                {
-                    label: tr("menu.importEncrypted", "Import ENCRYPTED Arizen wallet"),
-                    click() {
-                        importWalletArizen("awd", true);
-                    }
-                },
                 {
                     label: tr("menu.importUnencrypted", "Import UNENCRYPTED Arizen wallet"),
                     click() {
