@@ -4,7 +4,6 @@
 [![Code Climate][codeclimate-img]][codeclimate-url]
 
 # User Manuals
-- v1.2.1: [Arizen v1.2.1 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.2.1/Arizen.v1.2.1.Wallet.User.Manual.pdf)
 - v1.2.0: [Arizen v1.2.0 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.2.0/Arizen.v1.2.0.Wallet.User.Manual.pdf)
 - v1.1.8: [Arizen v1.1.8 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.8/Arizen.v1.1.8.Wallet.User.Manual.pdf)
 - v1.1.7: [Arizen v1.1.7 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.7/Arizen.v1.1.7.Wallet.User.Manual.pdf)
@@ -16,6 +15,12 @@
 - v1.0.0: [Arizen v1.0.0 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.0.0/Arizen.Wallet.User.Manual.pdf)
 
 # Version History
+
+## v1.2.2
+
+- [x] Fix: Add Async to vout array manipulation to improve performance
+- [x] Package updates based on results of yarn audit
+- [x] Removal of non functional import tool from main application menu
 
 ## v1.2.1
 - [x] FIX: issue in Batch Split when are more addresses than you can divide into
