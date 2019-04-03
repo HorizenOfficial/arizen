@@ -26,6 +26,7 @@ const {List} = require("immutable");
 const {translate} = require("./util.js");
 const {DateTime} = require("luxon");
 const {zenextra} = require("./zenextra.js");
+const { TransactionParser } = require("./transaction-parser.js");
 
 let oldZAddrJSON;
 
@@ -614,7 +615,19 @@ async function apiPost(url, form) {
 function getFilteredVout(address, originalVout) {
     return new Promise(resolve => {
         resolve(originalVout.filter(vout => {
-          return address.has(vout.scriptPubKey.addresses[0]);
+            return address.has(vout.scriptPubKey.addresses[0]);
+        }));
+    });
+}
+
+/**
+ * @param {Set} address
+ * @param {object[]} originalVin
+ */
+function getFilteredVin(address, originalVin) {
+    return new Promise(resolve => {
+        resolve(originalVin.filter(vin => {
+            return address.has(vin.addr);
         }));
     });
 }
@@ -627,15 +640,14 @@ async function fetchTransactions(txIds, myAddrs) {
         const info = await apiGet("tx/" + txId);
 
         let txBalance = 0;
-        const vins = [];
-        const vouts = [];
 
         // Address field in transaction rows is meaningless. Pick something sane.
         let firstMyAddr;
 
-        info.vout = await getFilteredVout(myAddrSet, info.vout);
+        const filteredVout = await getFilteredVout(myAddrSet, info.vout);
+        const filteredVin = await getFilteredVin(myAddrSet, info.vin);
 
-        for (const vout of info.vout) {
+        for (const vout of filteredVout) {
             // XXX can it be something else?
             if (!vout.scriptPubKey) {
                 continue;
@@ -649,13 +661,10 @@ async function fetchTransactions(txIds, myAddrs) {
                         firstMyAddr = addr;
                     }
                 }
-                if (!vouts.includes(addr)) {
-                    vouts.push(addr);
-                }
             }
         }
 
-        for (const vin of info.vin) {
+        for (const vin of filteredVin) {
             const addr = vin.addr;
             if (myAddrSet.has(addr)) {
                 txBalance -= parseFloat(vin.value);
@@ -663,17 +672,14 @@ async function fetchTransactions(txIds, myAddrs) {
                     firstMyAddr = addr;
                 }
             }
-            if (!vins.includes(addr)) {
-                vins.push(addr);
-            }
         }
 
         const tx = {
             txid: info.txid,
             time: info.blocktime,
             address: firstMyAddr,
-            vins: vins.join(","),
-            vouts: vouts.join(","),
+            vins: [...new Set(info.vin.map(vin => vin.addr))].join(','),
+            vouts: [...new Set(info.vout.map(vout => vout.scriptPubKey.addresses[0]))].join(','),
             amount: txBalance,
             block: info.blockheight
         };

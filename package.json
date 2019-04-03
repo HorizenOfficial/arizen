@@ -42,6 +42,10 @@
     {
       "name": "@Tigger",
       "email": "kamila@zensystem.io"
+    },
+    {
+      "name": "vherus",
+      "email": "nathan@horizen.global"
     }
   ],
   "license": "MIT",
@@ -94,6 +98,7 @@
     "bip32-utils": "^0.11.1",
     "bitcoinjs-lib": "^3.3.2",
     "bs58check": "2.1.2",
+    "decimal.js": "^10.1.1",
     "delay": "^4.1.0",
     "electron-debug": "^2.1.0",
     "electron-download": "^4.1.1",
@@ -125,7 +130,8 @@
     "electron-builder-squirrel-windows": "^20.39.0",
     "flow-bin": "^0.80.0",
     "json-file-plus": "^3.3.1",
-    "yargs": "^12.0.5"
+    "yargs": "^12.0.5",
+    "jest": "^23.4.1"
   },
   "optionalDependencies": {
     "electron-installer-debian": "^1.1.1",
