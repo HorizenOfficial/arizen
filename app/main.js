@@ -26,7 +26,6 @@ const {List} = require("immutable");
 const {translate} = require("./util.js");
 const {DateTime} = require("luxon");
 const {zenextra} = require("./zenextra.js");
-const { TransactionParser } = require("./transaction-parser.js");
 
 let oldZAddrJSON;
 
