@@ -639,6 +639,8 @@ async function fetchTransactions(txIds, myAddrs) {
         const info = await apiGet("tx/" + txId);
 
         let txBalance = 0;
+        const vins = [];
+        const vouts = [];
 
         // Address field in transaction rows is meaningless. Pick something sane.
         let firstMyAddr;
@@ -660,6 +662,10 @@ async function fetchTransactions(txIds, myAddrs) {
                         firstMyAddr = addr;
                     }
                 }
+
+                if (!vouts.includes(addr)) {
+                    vouts.push(addr);
+                }
             }
         }
 
@@ -671,14 +677,20 @@ async function fetchTransactions(txIds, myAddrs) {
                     firstMyAddr = addr;
                 }
             }
+
+            if (!vins.includes(addr)) {
+                vins.push(addr);
+            }
         }
+
+        const isWithdraw = txBalance < 0;
 
         const tx = {
             txid: info.txid,
             time: info.blocktime,
             address: firstMyAddr,
-            vins: [...new Set(info.vin.map(vin => vin.addr))].join(','),
-            vouts: [...new Set(info.vout.map(vout => vout.scriptPubKey.addresses[0]))].join(','),
+            vins: isWithdraw ? [...new Set(filteredVin.map(vin => vin.addr))].join(',') : [...new Set(info.vin.map(vin => vin.addr))].join(','),
+            vouts: isWithdraw ? [...new Set(info.vout.map(vout => vout.scriptPubKey.addresses[0]))].join(',') : [...new Set(filteredVout.map(vout => vout.scriptPubKey.addresses[0]))].join(','),
             amount: txBalance,
             block: info.blockheight
         };
