@@ -170,7 +170,7 @@
     },
     "settings": {
       "label": "Settings",
-      "limit": "Transaction limit",
+      "limit": "Transaction history display limit",
       "items": "items",
       "language": "Language",
       "explorerUrl": "ZEN Explorer URL",
