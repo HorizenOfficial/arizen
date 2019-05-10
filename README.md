@@ -16,6 +16,10 @@
 
 # Version History
 
+## v1.2.3
+- [x] Fix transaction history crashing the app for some users
+- [x] Clarify intent of transaction limit setting
+
 ## v1.2.2
 
 - [x] Fix: Add Async to vout array manipulation to improve performance
