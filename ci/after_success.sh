@@ -16,8 +16,8 @@ if [ "${TRAVIS_BRANCH}" == "development" ]; then
     FILE_NAME="Arizen_development_${TRAVIS_OS_NAME}_COMMIT${TRAVIS_COMMIT}_${DATE_WITH_TIME}.zip"
   fi
   zip -r "${FILE_NAME}" dist/*
-  rclone --config=bbconfig.json copy "${FILE_NAME}" backblaze:"${BB_BUCKET}" || FAIL="true" \
-  && echo "Backblaze upload failed, filename: ${FILE_NAME}"
+  rclone --config=bbconfig.json copy "${FILE_NAME}" backblaze:"${BB_BUCKET}" || { FAIL="true" \
+  && echo "Backblaze upload failed, filename: ${FILE_NAME}"; }
 # post link in PR comment
   if [ "${TRAVIS_PULL_REQUEST}" != "false" ] && [ -z ${FAIL+x} ]; then
     curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
