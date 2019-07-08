@@ -614,6 +614,10 @@ async function apiPost(url, form) {
 function getFilteredVout(address, originalVout) {
     return new Promise(resolve => {
         resolve(originalVout.filter(vout => {
+            if (!vout.scriptPubKey.addresses) {
+                return false;
+            }
+
             return address.has(vout.scriptPubKey.addresses[0]);
         }));
     });
@@ -633,7 +637,7 @@ function getFilteredVin(address, originalVin) {
 
 async function fetchTransactions(txIds, myAddrs) {
     const txs = [];
-    const myAddrSet = new Set(myAddrs);
+    const myAddrSet = new Set(!Array.isArray(myAddrs) ? [myAddrs] : myAddrs);
 
     for (const txId of txIds) {
         const info = await apiGet("tx/" + txId);
