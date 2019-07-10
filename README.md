@@ -4,7 +4,7 @@
 [![Code Climate][codeclimate-img]][codeclimate-url]
 
 # User Manuals
-- v1.2.4: [Arizen v1.2.4 Wallet User Manual.pdf](https://horizenofficial.atlassian.net/wiki/spaces/ZEN/pages/665354259/Arizen+User+Manual)
+- v1.2.4: [Arizen v1.2.4 Wallet User Manual](https://horizenofficial.atlassian.net/wiki/spaces/ZEN/pages/665354259/Arizen+User+Manual)
 
 # Version History
 
