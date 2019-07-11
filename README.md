@@ -4,17 +4,13 @@
 [![Code Climate][codeclimate-img]][codeclimate-url]
 
 # User Manuals
-- v1.2.0: [Arizen v1.2.0 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.2.0/Arizen.v1.2.0.Wallet.User.Manual.pdf)
-- v1.1.8: [Arizen v1.1.8 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.8/Arizen.v1.1.8.Wallet.User.Manual.pdf)
-- v1.1.7: [Arizen v1.1.7 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.7/Arizen.v1.1.7.Wallet.User.Manual.pdf)
-- v1.1.6: [Arizen v1.1.6 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.6/Arizen.v1.1.6.Wallet.User.Manual.pdf)
-- v1.1.5: [Arizen v1.1.5 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.5/Arizen.v1.1.5.Wallet.User.Manual.pdf)
-- v1.1.4: [Arizen v1.1.4 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.4/Arizen.v1.1.4.Wallet.User.Manual.pdf)
-- v1.1.3: [Arizen v1.1.3 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.3/Arizen.v1.1.3.Wallet.User.Manual.pdf)
-- v1.1.1: [Arizen v1.1.1 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.1.1/Arizen.v1.1.1.Wallet.User.Manual.pdf)
-- v1.0.0: [Arizen v1.0.0 Wallet User Manual.pdf](https://github.com/ZencashOfficial/arizen/releases/download/v1.0.0/Arizen.Wallet.User.Manual.pdf)
+- v1.2.4: [Arizen v1.2.4 Wallet User Manual](https://horizenofficial.atlassian.net/wiki/spaces/ZEN/pages/665354259/Arizen+User+Manual)
 
 # Version History
+
+## v1.2.4
+- [x] Fix for OP_RETURN vout causing balance updates to fail
+- [x] Package updates based on results of yarn audit
 
 ## v1.2.3
 - [x] Fix transaction history crashing the app for some users
