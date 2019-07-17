@@ -126,7 +126,7 @@
     "devtron": "^1.4.0",
     "electron": "5.0.7",
     "electron-builder": "21.0.15",
-    "electron-builder-squirrel-windows": "21.0.6",
+    "electron-builder-squirrel-windows": "21.0.16",
     "flow-bin": "0.102.0",
     "json-file-plus": "^3.3.1",
     "yargs": "13.3.0"
