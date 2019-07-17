@@ -71,3 +71,4 @@ wallets/
 
 
 .*.sw[po]
+yarn copy.lock
