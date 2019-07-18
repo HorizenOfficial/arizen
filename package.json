@@ -99,7 +99,7 @@
     "bitcoinjs-lib": "^5.0.5",
     "bs58check": "2.1.2",
     "delay": "^4.3.0",
-    "electron-debug": "^3.0.1",
+    "electron-debug": "^2.1.0",
     "electron-download": "^4.1.1",
     "electron-packager": "^14.0.1",
     "electron-tabs": "^0.9.5",

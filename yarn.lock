@@ -2750,12 +2750,12 @@ electron-builder@^20.39.0:
     update-notifier "^3.0.0"
     yargs "^13.2.4"
 
-electron-debug@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/electron-debug/-/electron-debug-3.0.1.tgz#95b43b968ec7dbe96300034143e58b803a1e82dc"
-  integrity sha512-fo3mtDM4Bxxm3DW1I+XcJKfQlUlns4QGWyWGs8OrXK1bBZ2X9HeqYMntYBx78MYRcGY5S/ualuG4GhCnPlaZEA==
+electron-debug@^2.1.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/electron-debug/-/electron-debug-2.2.0.tgz#408672aaf17436818287409c48ab2451e6e76394"
+  integrity sha512-bjZ+4wLzV0jvYRUv+cpESJIv8wB3v5u2WIIy5gMQMqzWlBI6ck1OQJ4goQXgJYHLpuIbu6ddswzv1LSHZ8Ho3A==
   dependencies:
-    electron-is-dev "^1.1.0"
+    electron-is-dev "^0.3.0"
     electron-localshortcut "^3.1.0"
 
 electron-download@^3.0.1:
@@ -2850,10 +2850,10 @@ electron-is-accelerator@^0.1.0:
   resolved "https://registry.yarnpkg.com/electron-is-accelerator/-/electron-is-accelerator-0.1.2.tgz#509e510c26a56b55e17f863a4b04e111846ab27b"
   integrity sha1-UJ5RDCala1Xhf4Y6SwThEYRqsns=
 
-electron-is-dev@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/electron-is-dev/-/electron-is-dev-1.1.0.tgz#b15a2a600bdc48a51a857d460e05f15b19a2522c"
-  integrity sha512-Z1qA/1oHNowGtSBIcWk0pcLEqYT/j+13xUw/MYOrBUOL4X7VN0i0KCTf5SqyvMPmW5pSPKbo28wkxMxzZ20YnQ==
+electron-is-dev@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/electron-is-dev/-/electron-is-dev-0.3.0.tgz#14e6fda5c68e9e4ecbeff9ccf037cbd7c05c5afe"
+  integrity sha1-FOb9pcaOnk7L7/nM8DfL18BcWv4=
 
 electron-localshortcut@^3.1.0:
   version "3.1.0"
