@@ -600,8 +600,7 @@ function updateDepositQrcode(qrcodeDelay = 0) {
         clearTimeout(depositQrcodeTimer);
     }
     depositQrcodeTimer = setTimeout(() => {
-        const json = {symbol: "zen", tAddr: toAddr, amount: amount};
-        Qrcode.toDataURL(JSON.stringify(json), qrcodeOpts, (err, url) => {
+        Qrcode.toDataURL(`horizen:${toAddr}?amount=${amount}`, qrcodeOpts, (err, url) => {
             if (err) {
                 console.log(err);
             } else {
