@@ -4,9 +4,15 @@
 [![Code Climate][codeclimate-img]][codeclimate-url]
 
 # User Manuals
-- v1.2.4: [Arizen v1.2.4 Wallet User Manual](https://horizenofficial.atlassian.net/wiki/spaces/ZEN/pages/665354259/Arizen+User+Manual)
+- v1.2.5: [Arizen v1.2.4 Wallet User Manual](https://horizenofficial.atlassian.net/wiki/spaces/ZEN/pages/665354259/Arizen+User+Manual)
 
 # Version History
+
+## v1.2.5
+- [x] Update of dependencies, removal of unused dependencies
+- [x] Switch to NSIS Windows installer
+- [x] Code Signed releases
+- [x] Fix for incorrect fiat price info
 
 ## v1.2.4
 - [x] Fix for OP_RETURN vout causing balance updates to fail
