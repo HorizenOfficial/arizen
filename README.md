@@ -3,8 +3,13 @@
 [![Build status][travis-img]][travis-url]
 [![Code Climate][codeclimate-img]][codeclimate-url]
 
+<p align="center"><img src="https://www.horizen.global/assets/img/icons/page_media/logo_no_tagline.svg" width="600"></p>
+
 # User Manuals
-- v1.2.5: [Arizen v1.2.4 Wallet User Manual](https://horizenofficial.atlassian.net/wiki/spaces/ZEN/pages/665354259/Arizen+User+Manual)
+- v1.2.5: [Arizen v1.2.5 Wallet User Manual](https://horizenofficial.atlassian.net/wiki/spaces/ZEN/pages/665354259/Arizen+User+Manual)
+
+# Notes
+- To upgrade to v1.2.5 on Windows, please uninstall any previous version of Arizen before installing v1.2.5. This is needed because the installer works differently in v1.2.5. As always please make sure you create regular [backups](https://horizenofficial.atlassian.net/wiki/spaces/ZEN/pages/666009654/1.4+-+Manual+Backup) of your awd files.
 
 # Version History
 
