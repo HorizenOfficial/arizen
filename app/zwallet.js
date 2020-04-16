@@ -203,9 +203,10 @@ function setFiatBalanceText(balanceZen, fiatCurrencySymbol = "") {
     }
 
     const axios = require("axios");
-    const BASE_API_URL = "https://api.coinmarketcap.com/v1/ticker";
-    // TODO: change this when CMC will update
-    let API_URL = BASE_API_URL + "/zencash/?convert=" + fiatCurrencySymbol;
+    //Updated from the deprecated CMC api endpoint, same data is now provided from our own service
+    const BASE_API_URL = "https://papi.zenchain.info/api/v1";
+    
+    let API_URL = BASE_API_URL + "/zen/ticker";
 
     axios.get(API_URL).then(response => {
         let resp = response.data;
