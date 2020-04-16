@@ -1,5 +1,8 @@
 # Arizen's Travis CI build script for building Linux, MacOS, and Windows release.
-# test
+os: linux
+dist: bionic
+language: generic
+
 notifications:
   email: false
 
@@ -15,29 +18,31 @@ branches:
 
 env:
   global:
-  # TODO Update this to match the name of your project.
   - PROJECT_NAME=arizen
 
-matrix:
+addons:
+  homebrew:
+    packages:
+      - gnupg
+  apt:
+    packages:
+      - gpg
+
+jobs:
   include:
     - os: osx
-      osx_image: xcode9.4
-      sudo: required
+      osx_image: xcode10.2
       language: node_js
-      node_js: "10"
+      node_js: lts/erbium
       env:
         - ELECTRON_CACHE=$HOME/.cache/electron
         - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
-
     - os: linux
-      dist: xenial
-      sudo: required
       services: docker
-      language: generic
 
 cache:
+  npm: false
   directories:
-    - node_modules
     - $HOME/.cache/electron
     - $HOME/.cache/electron-builder
 
@@ -45,24 +50,22 @@ cache:
 install: true
 
 script:
-  - chmod 755 ./ci/script.sh
-  - ./ci/script.sh
+  - source ./ci/script.sh
 
 before_cache:
   - rm -rf $HOME/.cache/electron-builder/wine
 
 after_success:
-  - curl https://rclone.org/install.sh | sudo bash
-  - chmod 755 ./ci/after_success.sh
+  - sudo pip install --upgrade b2
   - ./ci/after_success.sh
 
 deploy:
+  edge: true
   provider: releases
   draft: true
   overwrite: true
-  api_key:
-    secure: "${GITHUB_TOKEN}"
-  body: Release
+  token: "${GITHUB_TOKEN}"
+  release_notes: Release
   file_glob: true
   file:
     - "./release/*.dmg"
@@ -72,10 +75,6 @@ deploy:
     - "./release/*.deb"
     - "./release/*.AppImage"
     - "./release/*.sha256"
-  skip_cleanup: true
+  cleanup: false
   on:
     tags: true
-
-#after_deploy:
-#  - chmod 755 ./ci/after_deploy.sh
-#  - ./ci/after_deploy.sh

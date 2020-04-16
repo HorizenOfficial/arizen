@@ -1,24 +1,50 @@
 #!/bin/bash
 
-set -e
+set -eo pipefail
 
-# TODO add encrypted certificates
-if [ -z "${TRAVIS_TAG}" ] && git verify-tag "${TRAVIS_TAG}"; then
-  echo "decrypt certs placeholder"
+if [ ! -z "${TRAVIS_TAG}" ]; then
+  export GNUPGHOME="$(mktemp -d 2>/dev/null || mktemp -d -t 'GNUPGHOME')"
+  echo "Tagged build, fetching maintainer keys."
+  gpg -v --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys $MAINTAINER_KEYS ||
+    gpg -v --batch --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys $MAINTAINER_KEYS ||
+    gpg -v --batch --keyserver hkp://pgp.mit.edu:80 --recv-keys $MAINTAINER_KEYS
+  if git verify-tag -v "${TRAVIS_TAG}"; then
+    echo "Valid signed tag, fetching certificates."
+    curl -sLH "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3.raw" "$CERT_ARCHIVE_URL" |
+      openssl enc -d -aes-256-cbc -md sha256 -pass pass:$CERT_ARCHIVE_PASSWORD |
+      tar -xzf-
+  else
+    unset CERT_ARCHIVE_URL
+    unset CERT_ARCHIVE_PASSWORD
+    unset CSC_LINK
+    unset CSC_KEY_PASSWORD
+    unset WIN_CSC_LINK
+    unset WIN_CSC_KEY_PASSWORD
+    echo "Tag not signed by maintainer, not code signing."
+  fi
 else
-  echo "Not a tagged build or tag not signed."
+  unset CODESIGN_URL
+  unset CERT_ARCHIVE_PASSWORD
+  unset CSC_LINK
+  unset CSC_KEY_PASSWORD
+  unset WIN_CSC_LINK
+  unset WIN_CSC_KEY_PASSWORD
+  echo "Not a tagged build, not code signing."
 fi
 
-# default yarn install options set in travis YARN_INSTALL_OPTIONS="--frozen-lockfile --link-duplicates"
-# Continue even on failing yarn audit, sometimes vulnerablilities cannot be fixed yet, but at least we have a log of them.
+# Continue even on failing npm audit, sometimes vulnerablilities cannot be fixed yet, but at least we have a log of them.
+# fix /root/.npm/tmp permission errors on package install from git by installing latest npm
 if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
   docker run --rm \
-    --env-file <(env | grep -vE '\r|\n' | grep -iE 'DEBUG|NODE_|ELECTRON_|YARN_|NPM_|CI|CIRCLE|TRAVIS|APPVEYOR_|CSC_|_TOKEN|_KEY|AWS_|STRIP|BUILD_|TZ') \
+    --env-file <(env | grep -iE 'DEBUG|NODE_|ELECTRON_|YARN_|NPM_|CI|CIRCLE|TRAVIS|APPVEYOR_|WIN_|CSC_|_TOKEN|_KEY|AWS_|STRIP|BUILD_|TZ') \
     -v "${PWD}":/project \
-    -v ~/.cache/electron:/root/.cache/electron \
-    -v ~/.cache/electron-builder:/root/.cache/electron-builder \
-    electronuserland/builder:wine-mono \
-    /bin/bash -c "yarn install ${YARN_INSTALL_OPTIONS} && yarn audit || true && yarn dist --linux --win"
+    -v "${HOME}"/.cache/electron:/root/.cache/electron \
+    -v "${HOME}"/.cache/electron-builder:/root/.cache/electron-builder \
+    --tmpfs /tmp --tmpfs /run \
+    electronuserland/builder:wine \
+    /bin/bash -c "npm install -g npm@latest && npm ci && npm audit || true && npm run build-linux && npm run build-win"
 else
-  bash -c "yarn install ${YARN_INSTALL_OPTIONS} && yarn audit || true && yarn dist --mac"
+  bash -c "sudo npm install -g npm@latest && npm ci && npm audit || true && npm run build-mac"
 fi
+
+set +e
