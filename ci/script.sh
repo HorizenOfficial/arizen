@@ -36,7 +36,7 @@ fi
 # fix /root/.npm/tmp permission errors on package install from git by installing latest npm
 if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
   docker run --rm \
-    --env-file <(env | grep -iE 'DEBUG|NODE_|ELECTRON_|YARN_|NPM_|CI|CIRCLE|TRAVIS|APPVEYOR_|WIN_|CSC_|_TOKEN|_KEY|AWS_|STRIP|BUILD_|TZ') \
+    $(env | grep -E 'DEBUG|NODE_|ELECTRON_|YARN_|NPM_|CI|CIRCLE|TRAVIS|APPVEYOR_|WIN_|CSC_|_TOKEN|_KEY|AWS_|STRIP|BUILD_|TZ' | sed -n '/^[^\t]/s/=.*//p' | sed '/^$/d' | sed 's/^/-e /g' | tr '\n' ' ') \
     -v "${PWD}":/project \
     -v "${HOME}"/.cache/electron:/root/.cache/electron \
     -v "${HOME}"/.cache/electron-builder:/root/.cache/electron-builder \
