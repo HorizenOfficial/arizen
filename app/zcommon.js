@@ -238,7 +238,7 @@ function createLink(url, text) {
 
 // TODO this doesn't belong here
 function showAboutDialog() {
-    const pkg = require("../package.json");
+    const pkg = require("./package.json");
     showDialogFromTemplate("aboutDialogTemplate", dialog => {
         dialog.querySelector(".aboutHomepage").appendChild(createLink(pkg.homepage, pkg.homepage));
         dialog.querySelector(".aboutVersion").textContent = pkg.version;

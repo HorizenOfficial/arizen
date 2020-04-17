@@ -1,0 +1,17 @@
+diff --git a/node_modules/zencashjs/lib/crypto.js b/node_modules/zencashjs/lib/crypto.js
+index 294b54e..76d1d02 100644
+--- a/node_modules/zencashjs/lib/crypto.js
++++ b/node_modules/zencashjs/lib/crypto.js
+@@ -11,7 +11,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
+ var createHash = require('create-hash');
+ 
+ function ripemd160(buffer) {
+-  return createHash('rmd160').update(buffer).digest('hex');
++  try {
++    return createHash('rmd160').update(buffer).digest('hex');
++  } catch(e) {
++    return createHash('ripemd160').update(buffer).digest('hex');
++  }
+ }
+ 
+ function sha1(buffer) {

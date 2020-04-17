@@ -1094,7 +1094,7 @@ function updateMenuAtLogout() {
 
 function createWindow() {
     updateMenuAtLogout();
-    mainWindow = new BrowserWindow({width: 1010, height: 730, resizable: true, icon: "resources/zen_icon.png"});
+    mainWindow = new BrowserWindow({width: 1010, height: 730, resizable: true, icon: "resources/zen_icon.png", webPreferences: {nodeIntegration: true}});
 
     // mainWindow.webContents.openDevTools();
 
