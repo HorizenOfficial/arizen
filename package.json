@@ -134,7 +134,7 @@
   "devDependencies": {
     "deepmerge": "^4.2.2",
     "devtron": "^1.4.0",
-    "electron": "^5.0.13",
+    "electron": "^7.2.4",
     "electron-builder": "^22.4.1",
     "flow-bin": "^0.80.0",
     "json-file-plus": "^3.3.1",
