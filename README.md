@@ -172,7 +172,7 @@ printed. This created address can by included to your Arizen or not.
 ## Development
 
 ### How to create distribution
-      git clone https://github.com/ZencashOfficial/arizen
+      git clone https://github.com/HorizenOfficial/arizen
       git checkout master
       npm install
       npm run dist
@@ -208,6 +208,6 @@ printed. This created address can by included to your Arizen or not.
 [license-img]: https://img.shields.io/badge/license-MIT-green.svg?style=flat-square
 [license-url]: LICENSE
 [travis-img]: https://img.shields.io/travis/ZencashOfficial/arizen.svg?style=flat-square
-[travis-url]: https://travis-ci.org/ZencashOfficial/arizen.svg?branch=master
+[travis-url]: https://travis-ci.org/HorizenOfficial/arizen.svg?branch=master
 [codeclimate-img]: https://codeclimate.com/github/ZencashOfficial/arizen/badges/gpa.svg?style=flat-square
 [codeclimate-url]: https://codeclimate.com/github/ZencashOfficial/arizen

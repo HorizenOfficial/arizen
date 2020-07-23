@@ -6,10 +6,10 @@
   "homepage": "https://horizen.global/github/arizen",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ZencashOfficial/arizen.git"
+    "url": "git+https://github.com/HorizenOfficial/arizen.git"
   },
   "bugs": {
-    "url": "https://github.com/ZencashOfficial/arizen/issues"
+    "url": "https://github.com/HorizenOfficial/arizen/issues"
   },
   "keywords": [
     "zen",

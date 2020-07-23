@@ -949,7 +949,7 @@ function createHelpSubmenu() {
             label: tr("menu.helpSubmenu.arizenManual", "User Manual"),
             accelerator: "CmdOrCtrl+H",
             click: () => {
-                require("electron").shell.openExternal("https://github.com/ZencashOfficial/arizen#user-manuals");
+                require("electron").shell.openExternal("https://github.com/HorizenOfficial/arizen#user-manuals");
             }
         },
         {
