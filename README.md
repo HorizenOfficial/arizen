@@ -1,7 +1,6 @@
 [![Dependency status][david-img]][david-url]
 [![License][license-img]][license-url]
 [![Build status][travis-img]][travis-url]
-[![Code Climate][codeclimate-img]][codeclimate-url]
 
 <p align="center"><img src="https://www.horizen.global/assets/img/icons/page_media/logo_no_tagline.svg" width="600"></p>
 
@@ -172,7 +171,7 @@ printed. This created address can by included to your Arizen or not.
 ## Development
 
 ### How to create distribution
-      git clone https://github.com/ZencashOfficial/arizen
+      git clone https://github.com/HorizenOfficial/arizen
       git checkout master
       npm install
       npm run dist
@@ -203,11 +202,9 @@ printed. This created address can by included to your Arizen or not.
 ![Notification](https://i.imgur.com/WdW0WMK.png)
 
 
-[david-img]: https://david-dm.org/ZencashOfficial/arizen.svg?style=flat-square
-[david-url]: https://david-dm.org/ZencashOfficial/arizen
+[david-img]: https://david-dm.org/HorizenOfficial/arizen.svg?style=flat-square
+[david-url]: https://david-dm.org/HorizenOfficial/arizen
 [license-img]: https://img.shields.io/badge/license-MIT-green.svg?style=flat-square
 [license-url]: LICENSE
-[travis-img]: https://img.shields.io/travis/ZencashOfficial/arizen.svg?style=flat-square
-[travis-url]: https://travis-ci.org/ZencashOfficial/arizen.svg?branch=master
-[codeclimate-img]: https://codeclimate.com/github/ZencashOfficial/arizen/badges/gpa.svg?style=flat-square
-[codeclimate-url]: https://codeclimate.com/github/ZencashOfficial/arizen
+[travis-img]: https://img.shields.io/travis/HorizenOfficial/arizen.svg?style=flat-square
+[travis-url]: https://travis-ci.org/HorizenOfficial/arizen.svg?branch=master
