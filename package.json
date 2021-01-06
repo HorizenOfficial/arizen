@@ -111,7 +111,7 @@
     }
   },
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "axios-debug-log": "^0.7.0",
     "bip32-utils": "^0.11.1",
     "bitcoinjs-lib": "^3.3.2",
