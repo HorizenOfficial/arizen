@@ -51,6 +51,10 @@ ipcRenderer.on("write-login-response", function (event, resp) {
     }
 });
 
+ipcRenderer.on("testnet", function(){
+    document.getElementById("testnet").style.display = "block";
+})
+
 function changeClass(objectid, newClass, oldClass) {
     /* FIXME: use classList.replace when electron uses chrome 61 */
     document.getElementById(objectid).classList.add(newClass);

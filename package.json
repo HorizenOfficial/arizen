@@ -11,7 +11,8 @@
     "pack-mac": "electron-builder install-app-deps --platform darwin && cd app && patch-package --patch-dir ../patches && cd .. && electron-builder --dir --mac",
     "build-linux": "electron-builder install-app-deps --platform linux && cd app && patch-package --patch-dir ../patches && cd .. && electron-builder --linux",
     "build-win": "electron-builder install-app-deps --platform win32 && cd app && patch-package --patch-dir ../patches && cd .. && electron-builder --win",
-    "build-mac": "electron-builder install-app-deps --platform darwin && cd app && patch-package --patch-dir ../patches && cd .. && electron-builder --mac"
+    "build-mac": "electron-builder install-app-deps --platform darwin && cd app && patch-package --patch-dir ../patches && cd .. && electron-builder --mac",
+    "testnet": "electron-builder install-app-deps && cd app && patch-package --patch-dir ../patches && cd .. && electron . testnet"
   },
   "homepage": "https://horizen.global/github/arizen",
   "repository": {

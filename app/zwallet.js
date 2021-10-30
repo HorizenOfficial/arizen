@@ -153,6 +153,10 @@ ipcRenderer.on("change-wallet-password-finish", (event, msgStr) => {
     showPasswordChangeNotice(msg);
 });
 
+ipcRenderer.on("testnet", function(){
+    document.getElementById("testnet").style.display = "block";
+})
+
 window.addEventListener("load", initWallet);
 
 // FUNCTIONS

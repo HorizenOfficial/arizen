@@ -9,7 +9,7 @@ require("electron-debug")();
 require("axios-debug-log");
 const electron = require("electron");
 const BrowserWindow = electron.BrowserWindow;
-const {app, Menu, ipcMain, dialog} = require("electron");
+const { app, Menu, ipcMain, dialog } = require("electron");
 const path = require("path");
 const url = require("url");
 const os = require("os");
@@ -22,10 +22,10 @@ const zencashjs = require("zencashjs");
 const sql = require("sql.js");
 const axios = require("axios");
 const querystring = require("querystring");
-const {List} = require("immutable");
-const {translate} = require("./util.js");
-const {DateTime} = require("luxon");
-const {zenextra} = require("./zenextra.js");
+const { List } = require("immutable");
+const { translate } = require("./util.js");
+const { DateTime } = require("luxon");
+const { zenextra } = require("./zenextra.js");
 
 let oldZAddrJSON;
 
@@ -33,9 +33,10 @@ const userWarningImportFileWithPKs = "New address(es) and a private key(s) will 
 const userWarningExportWalletUnencrypted = "You are going to export an UNENCRYPTED wallet ( ie your private keys) in plain text. That means that anyone with this file can control your ZENs. Store this file in a safe place. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
 const userWarningExportWalletEncrypted = "You are going to export an ENCRYPTED wallet and your private keys will be encrypted. That means that in order to access your private keys you need to know the corresponding username and password. In case you don't know them you cannot control the ZENs that are controled by these private keys. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
 
-// Uncomment if you want to run in production
-// Show/Hide Development menu
-process.env.NODE_ENV = "production";
+const isTestnet = process.argv.length > 2 && process.argv[2] === 'testnet' || false;
+const prefix = isTestnet ? 'zt' : 'zn';
+
+process.env.NODE_ENV = isTestnet ? 'development' : 'production';
 
 function sleep(millis) {
     return new Promise(resolve => setTimeout(resolve, millis));
@@ -59,11 +60,8 @@ const defaultSettings = {
     txHistory: 50,
     autoLogOffEnable: 0,
     autoLogOffTimeout: 60,
-    explorerUrl: "https://explorer.horizen.global",
-    apiUrls: [
-        "https://explorer.horizen.global/api",
-        "https://explorer.zen-solutions.io/api"
-    ],
+    explorerUrl: `https://explorer${isTestnet ? '-testnet' : ''}.horizen.io`,
+    apiUrls: [`https://explorer${isTestnet ? '-testnet' : ''}.horizen.io/api`],
     secureNodeFQDN: "",
     secureNodePort: 18231,
     domainFronting: false,
@@ -72,7 +70,7 @@ const defaultSettings = {
     refreshIntervalAPI: 334
 };
 
-const defaultInternalInfo = {pendingTxs: []};
+const defaultInternalInfo = { pendingTxs: [] };
 
 let settings = defaultSettings;
 let langDict;
@@ -222,11 +220,11 @@ function pruneBackups(backupDir, walletName) {
     const PRUNING_PATTERNS = [
         ["secondly", "yyyy-LL-dd HH:mm:ss"],
         ["minutely", "yyyy-LL-dd HH:mm"],
-        ["hourly",   "yyyy-LL-dd HH"],
-        ["daily",    "yyyy-LL-dd"],
-        ["weekly",   "kkkk-WW"],
-        ["monthly",  "yyyy-LL"],
-        ["yearly",   "yyyy"]];
+        ["hourly", "yyyy-LL-dd HH"],
+        ["daily", "yyyy-LL-dd"],
+        ["weekly", "kkkk-WW"],
+        ["monthly", "yyyy-LL"],
+        ["yearly", "yyyy"]];
 
     const PRUNING_PATTERNS_DICT = {};
     PRUNING_PATTERNS.forEach(x => PRUNING_PATTERNS_DICT[x[0]] = x[1]);
@@ -333,8 +331,11 @@ function generateNewWallet(login, password) {
     db.run(dbStructSettings);
     for (i = 0; i <= 42; i += 1) {
         pk = zencashjs.address.WIFToPrivKey(privateKeys[i]);
-        pubKey = zencashjs.address.privKeyToPubKey(pk, true);
-        db.run("INSERT INTO wallet VALUES (?,?,?,?,?)", [null, pk, zencashjs.address.pubKeyToAddr(pubKey), 0, ""]);
+        pubKey = zencashjs.address.privKeyToPubKey(pk, true, isTestnet ? zencashjs.config.testnet.wif : zencashjs.config.mainnet.wif);
+        db.run(
+            "INSERT INTO wallet VALUES (?,?,?,?,?)",
+            [null, pk, zencashjs.address.pubKeyToAddr(pubKey, isTestnet ? zencashjs.config.testnet.pubKeyHash : zencashjs.config.mainnet.pubKeyHash), 0, ""]
+        );
     }
 
     let data = db.export();
@@ -348,11 +349,11 @@ function getNewAddress(name) {
     let privateKeys = generateNewAddress(1, userInfo.pass);
 
     pk = zencashjs.address.WIFToPrivKey(privateKeys[0]);
-    addr = zencashjs.address.pubKeyToAddr(zencashjs.address.privKeyToPubKey(pk, true));
+    addr = zencashjs.address.pubKeyToAddr(zencashjs.address.privKeyToPubKey(pk, true, isTestnet ? zencashjs.config.testnet.wif : zencashjs.config.mainnet.wif));
     userInfo.walletDb.run("INSERT INTO wallet VALUES (?,?,?,?,?)", [null, pk, addr, 0, name]);
     saveWallet();
 
-    return {addr: addr, name: name, lastbalance: 0, pk: pk, wif: privateKeys[0]};
+    return { addr: addr, name: name, lastbalance: 0, pk: pk, wif: privateKeys[0] };
 }
 
 function sqlSelect(asObjects, sql, ...args) {
@@ -441,8 +442,8 @@ function setSettings(newSettings) {
         });
     }
     else {
-      const apiUrl = settings.apiUrls[0];
-      console.log("Current API URL: " + apiUrl);
+        const apiUrl = settings.apiUrls[0];
+        console.log("Current API URL: " + apiUrl);
         axiosApi = axios.create({
             baseURL: apiUrl,
             timeout: 30000,
@@ -479,7 +480,7 @@ function exportWalletArizen(ext, encrypt) {
         if (response === 0) {
             dialog.showSaveDialog({
                 title: "Save wallet." + ext,
-                filters: [{name: "Wallet", extensions: [ext]}],
+                filters: [{ name: "Wallet", extensions: [ext] }],
                 defaultPath: userInfo.login
             }, function (filename) {
                 if (typeof filename !== "undefined" && filename !== "") {
@@ -507,7 +508,7 @@ function importWalletArizen(ext, encrypted) {
     if (userInfo.loggedIn) {
         dialog.showOpenDialog({
             title: "Import wallet." + ext,
-            filters: [{name: "Wallet", extensions: [ext]}]
+            filters: [{ name: "Wallet", extensions: [ext] }]
         }, function (filePaths) {
             if (filePaths) {
                 dialog.showMessageBox({
@@ -578,8 +579,8 @@ function importOnePK(pk, name = "", isT = true) {
             if (pk.length !== 64) {
                 pk = zencashjs.address.WIFToPrivKey(pk);
             }
-            const pub = zencashjs.address.privKeyToPubKey(pk, true);
-            addr = zencashjs.address.pubKeyToAddr(pub);
+            const pub = zencashjs.address.privKeyToPubKey(pk, true, isTestnet ? zencashjs.config.testnet.wif : zencashjs.config.mainnet.wif);
+            addr = zencashjs.address.pubKeyToAddr(pub, isTestnet ? zencashjs.config.testnet.pubKeyHash : zencashjs.config.mainnet.pubKeyHash);
         } else {
             if (pk.length !== 64) {
                 pk = zenextra.spendingKeyToSecretKey(pk); // pk = spendingKey
@@ -919,7 +920,7 @@ function createEditSubmenu() {
             accelerator: "Shift+CmdOrCtrl+Z",
             selector: "redo:"
         },
-        {type: "separator"},
+        { type: "separator" },
         {
             label: tr("menu.editSubmenu.cut", "Cut"),
             accelerator: "CmdOrCtrl+X",
@@ -959,7 +960,7 @@ function createHelpSubmenu() {
                 require("electron").shell.openExternal("https://support.horizen.global");
             }
         },
-        {type: "separator"},
+        { type: "separator" },
         {
             label: tr("menu.helpSubmenu.horizen", "Horizen"),
             click: () => {
@@ -981,18 +982,18 @@ function includeDeveloperMenu(template) {
                         focusedWindow.toggleDevTools();
                     }
                 },
-                {role: "reload"},
-                {role: 'forcereload'},
-                {type: 'separator'},
-                {role: 'togglefullscreen'},
-                {type: "separator"},
+                { role: "reload" },
+                { role: 'forcereload' },
+                { type: 'separator' },
+                { role: 'togglefullscreen' },
+                { type: "separator" },
                 {
                     label: tr("menu.backupUnencrypted", "Backup UNENCRYPTED wallet"),
                     click() {
                         exportWalletArizen("uawd", false);
                     }
                 },
-                {type: "separator"},
+                { type: "separator" },
                 {
                     label: "RPC console",
                     click() {
@@ -1021,7 +1022,7 @@ function updateMenuAtLogin() {
                         exportWalletArizen("uawd", false);
                     }
                 },
-                {type: "separator"},
+                { type: "separator" },
                 {
                     label: tr("menu.exportPrivateKeys", "Export private keys"),
                     click: function () {
@@ -1034,14 +1035,14 @@ function updateMenuAtLogin() {
                         importPKs();
                     }
                 },
-                {type: "separator"},
+                { type: "separator" },
                 {
                     label: tr("menu.changeWalletPassword", "Change wallet password"),
                     click() {
                         changeWalletPasswordBegin();
                     }
                 },
-                {type: "separator"},
+                { type: "separator" },
                 {
                     label: tr("menu.exit", "Exit"),
                     click() {
@@ -1094,7 +1095,7 @@ function updateMenuAtLogout() {
 
 function createWindow() {
     updateMenuAtLogout();
-    mainWindow = new BrowserWindow({width: 1010, height: 730, resizable: true, icon: "resources/zen_icon.png", webPreferences: {nodeIntegration: true}});
+    mainWindow = new BrowserWindow({ width: 1010, height: 730, resizable: true, icon: "resources/zen_icon.png", webPreferences: { nodeIntegration: true } });
 
     // mainWindow.webContents.openDevTools();
 
@@ -1110,6 +1111,12 @@ function createWindow() {
             protocol: "file:",
             slashes: true
         }));
+    }
+
+    if (isTestnet) {
+        mainWindow.webContents.on('did-finish-load', () => {
+            mainWindow.webContents.send('testnet', '')
+        })
     }
 
     // Emitted when the window is closed.
@@ -1296,7 +1303,7 @@ ipcMain.on("get-wallets", () => {
 });
 
 ipcMain.on("refresh-wallet", function (event) {
-    let resp = {response: "ERR"};
+    let resp = { response: "ERR" };
 
     if (userInfo.loggedIn) {
         updateBlockchainView(event.sender);
@@ -1372,7 +1379,7 @@ ipcMain.on("save-settings", function (event, newSettingsStr) {
     const newSettings = JSON.parse(newSettingsStr);
     saveSettings(newSettings);
     setSettings(newSettings);
-    event.sender.send("save-settings-response", JSON.stringify({response: "OK"}));
+    event.sender.send("save-settings-response", JSON.stringify({ response: "OK" }));
     event.sender.send("settings", newSettingsStr);
 });
 
@@ -1404,7 +1411,7 @@ ipcMain.on("check-if-address-in-wallet", function (event, address) {
             break;
         }
     }
-    event.returnValue = {exist: exist, result: result};
+    event.returnValue = { exist: exist, result: result };
 });
 
 ipcMain.on("change-wallet-password-continue", (event, newPassword) => {
@@ -1419,8 +1426,8 @@ function checkSendParameters(fromAddresses, toAddresses, fee) {
             errors.push(tr("wallet.tabWithdraw.messages.fromAddressBadLength", "Bad length of the source address!"));
         }
 
-        if (fromAddress.substring(0, 2) !== "zn") {
-            errors.push(tr("wallet.tabWithdraw.messages.fromAddressBadPrefix", "Bad source address prefix - it has to be 'zn'!"));
+        if (fromAddress.substring(0, 2) !== prefix) {
+            errors.push(tr("wallet.tabWithdraw.messages.fromAddressBadPrefix", `Bad source address prefix - it has to be '${prefix}'!`));
         }
     }
 
@@ -1429,8 +1436,8 @@ function checkSendParameters(fromAddresses, toAddresses, fee) {
             errors.push(tr("wallet.tabWithdraw.messages.toAddressBadLength", "Bad length of the destination address!"));
         }
 
-        if (toAddress.substring(0, 2) !== "zn") {
-            errors.push(tr("wallet.tabWithdraw.messages.toAddressBadPrefix", "Bad destination address prefix - it has to be 'zn'!"));
+        if (toAddress.substring(0, 2) !== prefix) {
+            errors.push(tr("wallet.tabWithdraw.messages.toAddressBadPrefix", `Bad destination address prefix - it has to be '${prefix}'!`));
         }
     }
 
@@ -1518,7 +1525,7 @@ ipcMain.on("send", async function (event, fromAddress, toAddress, fee, amount) {
         // Calculate maximum ZEN satoshis that we have
         let satoshisSoFar = 0;
         let history = [];
-        let recipients = [{address: toAddress, satoshis: amountInSatoshi}];
+        let recipients = [{ address: toAddress, satoshis: amountInSatoshi }];
 
         const txData = await apiGet(prevTxURL);
         const infoData = await apiGet(infoURL);
@@ -1563,7 +1570,7 @@ ipcMain.on("send", async function (event, fromAddress, toAddress, fee, amount) {
         // If we don't have exact amount - refund remaining to current address
         if (satoshisSoFar !== (amountInSatoshi + feeInSatoshi)) {
             let refundSatoshis = satoshisSoFar - amountInSatoshi - feeInSatoshi;
-            recipients = recipients.concat({address: fromAddress, satoshis: refundSatoshis});
+            recipients = recipients.concat({ address: fromAddress, satoshis: refundSatoshis });
         }
 
         // Create transaction
@@ -1576,7 +1583,7 @@ ipcMain.on("send", async function (event, fromAddress, toAddress, fee, amount) {
 
         // Convert it to hex string
         const txHexString = zencashjs.transaction.serializeTx(txObj);
-        const txRespData = await apiPost(sendRawTxURL, {rawtx: txHexString});
+        const txRespData = await apiPost(sendRawTxURL, { rawtx: txHexString });
 
         let message = "TXid:\n\n<small>" + txRespData.txid + "</small><br /><a href=\"javascript:void(0)\" onclick=\"openUrl('" + settings.explorerUrl + "/tx/" + txRespData.txid + "')\" class=\"walletListItemDetails transactionExplorer\" target=\"_blank\">Show Transaction in Explorer</a>";
         event.sender.send("send-finish", "ok", message);
@@ -1723,7 +1730,7 @@ function calculateForNaddress(event, start, nAddress, data, thresholdLimitInSato
         return;
     }
 
-    let recipients = [{address: toAddress, satoshis: amountInSatoshiToSend}];
+    let recipients = [{ address: toAddress, satoshis: amountInSatoshiToSend }];
 
     for (let [key, value] of data.entries()) {
         if (value.id >= start) {
@@ -1739,7 +1746,7 @@ function calculateForNaddress(event, start, nAddress, data, thresholdLimitInSato
                 });
             }
 
-            value.history.forEach(function(h) {
+            value.history.forEach(function (h) {
                 history = history.concat(h);
             });
         }
@@ -1864,7 +1871,7 @@ ipcMain.on("send-many", async function (event, fromAddressesAll, toAddress, fee,
         let fromAddresses = filterOutZeroAddresses(fromAddressesAll, thresholdLimit);
 
         // check if there isn't any address with a balance
-        if(fromAddresses.length === 0){
+        if (fromAddresses.length === 0) {
             err = tr("wallet.tabWithdraw.messages.noSourceAddress", "No source address was selected!");
             event.sender.send("send-finish", "error", err);
         }
@@ -1903,8 +1910,8 @@ ipcMain.on("send-many", async function (event, fromAddressesAll, toAddress, fee,
 
         const txHexStrings = getMaxTxHexStrings(event, txData, thresholdLimitInSatoshi, feeInSatoshi, toAddress, blockHeight, blockHash, addrPk);
 
-        for(let i = 0; i < txHexStrings.length; i++){
-            const txRespData = await apiPost(sendRawTxURL, {rawtx: txHexStrings[i]});
+        for (let i = 0; i < txHexStrings.length; i++) {
+            const txRespData = await apiPost(sendRawTxURL, { rawtx: txHexStrings[i] });
             finalMessage += `<small><a href="javascript:void(0)" onclick="openUrl('${settings.explorerUrl}/tx/${txRespData.txid}')" class="walletListItemDetails transactionExplorer monospace" target="_blank">${txRespData.txid}</a>`;
             finalMessage += "</small><br/>\n\n";
         }
@@ -1979,7 +1986,7 @@ function getTxHexStringsForSplit(event, txData, toAddresses, splitToInSatoshi, f
     }
 
     for (let value of data.values()) {
-        value.history.forEach(function(h) {
+        value.history.forEach(function (h) {
             history = history.concat(h);
         });
     }
@@ -2021,7 +2028,7 @@ ipcMain.on("split", async function (event, fromAddress, toAddresses, fee, splitT
         let splitToInSatoshi = Math.round(splitTo * satoshi);
 
         // check if an address has been selected
-        if(fromAddress === ""){
+        if (fromAddress === "") {
             err = tr("wallet.tabWithdraw.messages.noSourceAddress", "No source address was selected!");
             event.sender.send("send-finish", "error", err);
         }
@@ -2053,7 +2060,7 @@ ipcMain.on("split", async function (event, fromAddress, toAddresses, fee, splitT
             return;
         }
 
-        const txRespData = await apiPost(sendRawTxURL, {rawtx: txHexString});
+        const txRespData = await apiPost(sendRawTxURL, { rawtx: txHexString });
         finalMessage += `<small><a href="javascript:void(0)" onclick="openUrl('${settings.explorerUrl}/tx/${txRespData.txid}')" class="walletListItemDetails transactionExplorer monospace" target="_blank">${txRespData.txid}</a>`;
         finalMessage += "</small><br/>\n\n";
 
@@ -2070,7 +2077,7 @@ ipcMain.on("create-paper-wallet", (event, name, addToWallet) => {
     if (addToWallet) {
         const addr = getNewAddress(name);
         mainWindow.webContents.send("generate-wallet-response",
-            JSON.stringify({response: "OK", addr: addr}));
+            JSON.stringify({ response: "OK", addr: addr }));
         wif = addr.wif;
     } else {
         wif = generateNewAddress(1, userInfo.pass)[0];
@@ -2125,7 +2132,7 @@ ipcMain.on("DB-insert-address", function (event, nameAddress, pkZaddress, zAddre
 
     if (userInfo.loggedIn) {
         resp.response = "OK";
-        resp.addr = {addr: zAddress, name: nameAddress, lastbalance: 0, pk: pkZaddress};
+        resp.addr = { addr: zAddress, name: nameAddress, lastbalance: 0, pk: pkZaddress };
         userInfo.walletDb.run("INSERT INTO wallet VALUES (?,?,?,?,?)", [null, pkZaddress, zAddress, 0, nameAddress]);
         saveWallet();
     }

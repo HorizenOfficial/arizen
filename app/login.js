@@ -24,3 +24,7 @@ ipcRenderer.on("verify-login-response", function (event, resp) {
         document.getElementById("login_nonexistent_wallet_name").style.display = "block";
     }
 });
+
+ipcRenderer.on("testnet", function(){
+    document.getElementById("testnet").style.display = "block";
+})
