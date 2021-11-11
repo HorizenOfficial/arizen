@@ -1,12 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self';
+    connect-src 'self' https: wss:;
+    script-src 'self' 'unsafe-inline';
+    style-src 'self' 'unsafe-inline' 'unsafe-eval';
+    img-src 'self' 'unsafe-eval' 'unsafe-inline';
+    font-src 'self';
+    media-src 'self' blob:;
+    child-src 'self';
+    object-src 'none';"
+    >
     <title data-tr=login.title>Arizen: Login</title>
     <link rel="stylesheet" href="resources/login_styles.css">
-    <script src="login.js"></script>
 </head>
 
 <body>
+<div style="display:none">
+    <img src="resources/invalid.png">
+</div>
 <div id="topHeader" class="topHeader" style="text-align:center; margin:auto; vertical-align: middle;">
     <!-- same as in create_wallet.html -->
     <img src="resources/zen_icon.png" width="40px">
@@ -25,7 +38,7 @@
             </li>
             <li>
                 <!-- type has to be "submit" -- ENTER doesnt work with button -->
-                <input id="btSubmit" class="buttons" name="btSubmit" type="submit" data-tr=login.loginButton value="Login" onclick="doLogin();" tabindex="3">
+                <input id="btSubmit" class="buttons" name="btSubmit" type="submit" data-tr=login.loginButton value="Login" tabindex="3">
             </li>
         </ul>
         <div class="right">
@@ -48,9 +61,10 @@
         </ul>
     </div>
     <div id="testnet" style="color:darkred; margin-top:26px; text-align:center; display:none">
-        <div><strong>Running on TESTNET</strong></div>
+        <div><strong>TESTNET</strong></div>
     </div>
 </div>
 
+<script src="login.js"></script>
 </body>
 </html>

@@ -5,13 +5,13 @@
 
 const {ipcRenderer} = require("electron");
 const Qrcode = require("qrcode");
-const PDFjs = require("jspdf");
+const { jsPDF } = require("jspdf");
 const zencashjs = require("zencashjs");
 
-ipcRenderer.on("export-paper-wallet", (sender, wif, name) => {
+ipcRenderer.on("export-paper-wallet", (sender, wif, name, WIF, PUBKEYHASH, isTestnet) => {
     const privateKey = zencashjs.address.WIFToPrivKey(wif);
-    const pubKey = zencashjs.address.privKeyToPubKey(privateKey, true);
-    const tAddr = zencashjs.address.pubKeyToAddr(pubKey);
+    const pubKey = zencashjs.address.privKeyToPubKey(privateKey, true, WIF);
+    const tAddr = zencashjs.address.pubKeyToAddr(pubKey, PUBKEYHASH);
 
     function createQrCodeAsync(text) {
         const opts = {
@@ -21,7 +21,7 @@ ipcRenderer.on("export-paper-wallet", (sender, wif, name) => {
     }
 
     function renderWallet(pkHexQrCode, tAddrQrCode) {
-        const pdf = new PDFjs(); // a4
+        const pdf = new jsPDF(); // a4
         const pdfW = pdf.internal.pageSize.getWidth();
 
         function centeredText(text, y) {
@@ -48,13 +48,13 @@ ipcRenderer.on("export-paper-wallet", (sender, wif, name) => {
         }
         y += 10;
 
-        y += centeredText("PRIVATE KEY", y);
+        y += centeredText(`${isTestnet ? 'TESTNET ' : ''}PRIVATE KEY`, y);
         y += 0;
         y += centeredText(wif, y);
         y += 0;
         y += centerSquareImage(pkHexQrCode, "JPEG", y);
         y += 10;
-        y += centeredText("T-ADDRESS", y);
+        y += centeredText(`${isTestnet ? 'TESTNET ' : ''}T-ADDRESS`, y);
         y += 0;
         y += centeredText(tAddr, y);
         y += 0;

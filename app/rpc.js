@@ -35,6 +35,7 @@ function clientCallSync(methodUsed, paramsUsed) {
             protocol: "http", // Optional. Will be http by default
         }, function (error, result) {
             if (error) {
+                console.log(`RPC error ${error === 'error:'? result : error}`)
                 reject(error);
             }
             else {
@@ -82,7 +83,9 @@ async function rpcCallCoreSync(methodUsed, paramsUsed) {
 
     // FIXME: colorRpcLEDs - element is not exported
     try {
+        console.log(`making rpc call for ${methodUsed}`)
         outputCore = await clientCallSyncRetry(methodUsed, paramsUsed, 3, 1000); // 3 is retries, 1000 is 1 sec delay
+        console.log(`returned rpc call for ${methodUsed}`)
         colorRpcLEDs(true); // false = Red // true = Green
     } catch (error) {
         outputCore = "rpcCallCoreSync error in method : " + methodUsed + " ";
@@ -154,7 +157,7 @@ async function helpSync() {
     console.log(result);
 }
 
-async function importPKinSN(pk, address) {
+async function importPKinSN(pk, address, ZCSPENDINGKEYHASH) {
     if (pk === undefined) {
         return {output: "No PK given.", status: "ok"}
     } else {
@@ -162,7 +165,7 @@ async function importPKinSN(pk, address) {
         if (zenextra.isZeroAddr(address)) {
             cmd = "z_importkey";
             if (zenextra.isPK(pk)) {
-                pk = zencashjs.zaddress.zSecretKeyToSpendingKey(pk);
+                pk = zencashjs.zaddress.zSecretKeyToSpendingKey(pk, ZCSPENDINGKEYHASH);
             }
         }
         if (zenextra.isTransaparentAddr(address)) {
@@ -336,11 +339,11 @@ async function importAllZAddressesFromSNtoArizenExcludeExisting() {
     }
 }
 
-async function importAllZAddressesFromArizenToSN() {
+async function importAllZAddressesFromArizenToSN(ZCSPENDINGKEYHASH) {
     const zAddrObjs = ipcRenderer.sendSync("get-all-Z-addresses");
     let nullResp;
     for (const addrObj of zAddrObjs) {
-        nullResp = await importPKinSN(addrObj.pk, addrObj.addr);
+        nullResp = await importPKinSN(addrObj.pk, addrObj.addr, ZCSPENDINGKEYHASH);
     }
 }
 

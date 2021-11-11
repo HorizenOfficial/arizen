@@ -4,9 +4,9 @@
 "use strict";
 
 // Press F12 to open the DevTools. See https://github.com/sindresorhus/electron-debug.
-// DO NOT COMMENT !!!
-require("electron-debug")();
-require("axios-debug-log");
+// uncomment next two lines during development. comment for commit and production builds
+// require("electron-debug")();
+// require("axios-debug-log/enable");
 const electron = require("electron");
 const BrowserWindow = electron.BrowserWindow;
 const { app, Menu, ipcMain, dialog } = require("electron");
@@ -19,7 +19,7 @@ const crypto = require("crypto");
 const bitcoin = require("bitcoinjs-lib");
 const bip32utils = require("bip32-utils");
 const zencashjs = require("zencashjs");
-const sql = require("sql.js");
+const initSqlJs = require("sql.js");
 const axios = require("axios");
 const querystring = require("querystring");
 const { List } = require("immutable");
@@ -27,14 +27,34 @@ const { translate } = require("./util.js");
 const { DateTime } = require("luxon");
 const { zenextra } = require("./zenextra.js");
 
+let sql;
+initSqlJs().then((SQL) => {
+    sql = SQL;
+    console.log("SQLite is loaded");
+});
+
 let oldZAddrJSON;
 
-const userWarningImportFileWithPKs = "New address(es) and a private key(s) will be imported. Your previous back-ups do not include the newly imported addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
-const userWarningExportWalletUnencrypted = "You are going to export an UNENCRYPTED wallet ( ie your private keys) in plain text. That means that anyone with this file can control your ZENs. Store this file in a safe place. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
-const userWarningExportWalletEncrypted = "You are going to export an ENCRYPTED wallet and your private keys will be encrypted. That means that in order to access your private keys you need to know the corresponding username and password. In case you don't know them you cannot control the ZENs that are controled by these private keys. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
+const userWarningImportFileWithPKs = "New address(es) and a private key(s) will be imported. Your previous back-ups do not include the newly imported "
++ "addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet "
++ "backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
+const userWarningExportWalletUnencrypted = "You are going to export an UNENCRYPTED wallet ( ie your private keys) in plain text. That means that anyone "
++"with this file can control your ZENs. Store this file in a safe place. By pressing 'I understand' you declare that you understand this. For further "
++ "information please refer to the help menu of Arizen.";
+const userWarningExportWalletEncrypted = "You are going to export an ENCRYPTED wallet and your private keys will be encrypted. That means that in order to "
++ "access your private keys you need to know the corresponding username and password. In case you don't know them you cannot control the ZENs that are controled"
++ " by these private keys. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
+const userWarningCreateWallet = "To make sure that you will never lose your wallet make sure to keep backup of your wallet(s) file. (.uawd or .awd + username "
++ "+ password). If you are not sure please refer to the Arizen manual for further information. By pressing 'I understand' you declare that you understand "
++ "this. For further information please refer to the help menu of Arizen. Enter your new wallet information on the Login page.";
+
 
 const isTestnet = process.argv.length > 2 && process.argv[2] === 'testnet' || false;
 const prefix = isTestnet ? 'zt' : 'zn';
+const WIF = isTestnet ? zencashjs.config.testnet.wif : zencashjs.config.mainnet.wif;
+const PUBKEYHASH = isTestnet ? zencashjs.config.testnet.pubKeyHash : zencashjs.config.mainnet.pubKeyHash;
+const ZCSPENDINGKEYHASH = isTestnet ? zencashjs.config.testnet.zcSpendingKeyHash : zencashjs.config.mainnet.zcSpendingKeyHash;
+const ZCPAYMENTADDRESSHASH = isTestnet ? zencashjs.config.testnet.zcPaymentAddressHash : zencashjs.config.mainnet.zcPaymentAddressHash;
 
 process.env.NODE_ENV = isTestnet ? 'development' : 'production';
 
@@ -331,10 +351,10 @@ function generateNewWallet(login, password) {
     db.run(dbStructSettings);
     for (i = 0; i <= 42; i += 1) {
         pk = zencashjs.address.WIFToPrivKey(privateKeys[i]);
-        pubKey = zencashjs.address.privKeyToPubKey(pk, true, isTestnet ? zencashjs.config.testnet.wif : zencashjs.config.mainnet.wif);
+        pubKey = zencashjs.address.privKeyToPubKey(pk, true, WIF);
         db.run(
             "INSERT INTO wallet VALUES (?,?,?,?,?)",
-            [null, pk, zencashjs.address.pubKeyToAddr(pubKey, isTestnet ? zencashjs.config.testnet.pubKeyHash : zencashjs.config.mainnet.pubKeyHash), 0, ""]
+            [null, pk, zencashjs.address.pubKeyToAddr(pubKey, PUBKEYHASH), 0, ""]
         );
     }
 
@@ -349,7 +369,7 @@ function getNewAddress(name) {
     let privateKeys = generateNewAddress(1, userInfo.pass);
 
     pk = zencashjs.address.WIFToPrivKey(privateKeys[0]);
-    addr = zencashjs.address.pubKeyToAddr(zencashjs.address.privKeyToPubKey(pk, true, isTestnet ? zencashjs.config.testnet.wif : zencashjs.config.mainnet.wif));
+    addr = zencashjs.address.pubKeyToAddr(zencashjs.address.privKeyToPubKey(pk, true, WIF), PUBKEYHASH);
     userInfo.walletDb.run("INSERT INTO wallet VALUES (?,?,?,?,?)", [null, pk, addr, 0, name]);
     saveWallet();
 
@@ -476,27 +496,31 @@ function exportWalletArizen(ext, encrypt) {
         message: showMessage,
         buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand"), tr("warmingMessages.cancel", "Cancel")],
         cancelId: -1
-    }, function (response) {
-        if (response === 0) {
+    })
+    .then((response1) => {
+        if (response1.response === 0) {
             dialog.showSaveDialog({
                 title: "Save wallet." + ext,
                 filters: [{ name: "Wallet", extensions: [ext] }],
                 defaultPath: userInfo.login
-            }, function (filename) {
-                if (typeof filename !== "undefined" && filename !== "") {
-                    if (!fs.exists(filename)) {
+            })
+            .then(async (response2) => {
+                if (typeof response2.filePath !== "undefined" && response2.filePath !== "") {
+                    const exists = await fs.pathExists(response2.filePath);
+                    if (exists) {
                         dialog.showMessageBox({
                             type: "warning",
                             message: "Do you want to replace file?",
                             buttons: ["Yes", "No"],
                             title: "Replace wallet?"
-                        }, function (response) {
-                            if (response === 0) {
-                                exportWallet(filename, encrypt);
+                        })
+                        .then((response3) => {
+                            if (response3.response === 0) {
+                                exportWallet(response2.filePath, encrypt);
                             }
                         });
                     } else {
-                        exportWallet(filename, encrypt);
+                        exportWallet(response2.filePath, encrypt);
                     }
                 }
             });
@@ -509,16 +533,18 @@ function importWalletArizen(ext, encrypted) {
         dialog.showOpenDialog({
             title: "Import wallet." + ext,
             filters: [{ name: "Wallet", extensions: [ext] }]
-        }, function (filePaths) {
-            if (filePaths) {
+        })
+        .then((response1) => {
+            if (response1.filePaths) {
                 dialog.showMessageBox({
                     type: "warning",
                     message: "This will replace your actual wallet. Are you sure?",
                     buttons: ["Yes", "No"],
                     title: "Replace wallet?"
-                }, function (response) {
-                    if (response === 0) {
-                        importWallet(filePaths[0], encrypted);
+                })
+                .then((response2) =>{
+                    if (response2.response === 0) {
+                        importWallet(response2.filePaths[0], encrypted);
                     }
                 });
             }
@@ -542,7 +568,7 @@ function exportPKs() {
                 const zkeys = sqlSelectObjects("select pk, addr from wallet where length(addr)=95");
                 for (let k of zkeys) {
                     if (zenextra.isPK(k.pk)) {
-                        const spendingKey = zencashjs.zaddress.zSecretKeyToSpendingKey(k.pk);
+                        const spendingKey = zencashjs.zaddress.zSecretKeyToSpendingKey(k.pk, ZCSPENDINGKEYHASH);
                         fs.write(fd, spendingKey + " " + k.addr + "\n");
                     }
                 }
@@ -556,15 +582,17 @@ function exportPKs() {
         message: tr("warmingMessages.userWarningExportWalletUnencrypted", userWarningExportWalletUnencrypted),
         buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand"), tr("warmingMessages.cancel", "Cancel")],
         cancelId: -1
-    }, function (response) {
-        if (response === 0) {
+    })
+    .then((response1) => {
+        if (response1.response === 0) {
             dialog.showSaveDialog({
                 type: "warning",
                 title: "Choose file for private keys",
                 defaultPath: "arizen-private-keys-" + userInfo.login + ".txt"
-            }, filename => {
-                if (filename) {
-                    exportToFile(filename);
+            })
+            .then((response2) => {
+                if (response2.filePath) {
+                    exportToFile(response2.filePath);
                 }
             });
         }
@@ -579,8 +607,8 @@ function importOnePK(pk, name = "", isT = true) {
             if (pk.length !== 64) {
                 pk = zencashjs.address.WIFToPrivKey(pk);
             }
-            const pub = zencashjs.address.privKeyToPubKey(pk, true, isTestnet ? zencashjs.config.testnet.wif : zencashjs.config.mainnet.wif);
-            addr = zencashjs.address.pubKeyToAddr(pub, isTestnet ? zencashjs.config.testnet.pubKeyHash : zencashjs.config.mainnet.pubKeyHash);
+            const pub = zencashjs.address.privKeyToPubKey(pk, true, WIF);
+            addr = zencashjs.address.pubKeyToAddr(pub, PUBKEYHASH);
         } else {
             if (pk.length !== 64) {
                 pk = zenextra.spendingKeyToSecretKey(pk); // pk = spendingKey
@@ -588,7 +616,7 @@ function importOnePK(pk, name = "", isT = true) {
             let secretKey = pk;
             let aPk = zencashjs.zaddress.zSecretKeyToPayingKey(secretKey);
             let encPk = zencashjs.zaddress.zSecretKeyToTransmissionKey(secretKey);
-            addr = zencashjs.zaddress.mkZAddress(aPk, encPk);
+            addr = zencashjs.zaddress.mkZAddress(aPk, encPk, ZCPAYMENTADDRESSHASH);
         }
         sqlRun("insert or ignore into wallet (pk, addr, lastbalance, name) values (?, ?, 0, ?)", pk, addr, name);
     } catch (err) {
@@ -834,11 +862,13 @@ function importPKs() {
         message: tr("warmingMessages.userWarningImportFileWithPKs", userWarningImportFileWithPKs),
         buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand"), tr("warmingMessages.cancel", "Cancel")],
         cancelId: -1
-    }, function (response) {
+    })
+    .then((response) => {
         if (response === 0) {
             dialog.showOpenDialog({
                 title: "Choose file with private keys"
-            }, filenames => {
+            })
+            .then((filenames) => {
                 if (filenames) {
                     for (let f of filenames) {
                         importFromFile(f);
@@ -1095,27 +1125,28 @@ function updateMenuAtLogout() {
 
 function createWindow() {
     updateMenuAtLogout();
-    mainWindow = new BrowserWindow({ width: 1010, height: 730, resizable: true, icon: "resources/zen_icon.png", webPreferences: { nodeIntegration: true } });
+    mainWindow = new BrowserWindow({
+        width: 1010,
+        height: 730,
+        resizable: true,
+        icon: "resources/zen_icon.png",
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false,
+        }
+    });
 
     // mainWindow.webContents.openDevTools();
 
     if (fs.existsSync(getWalletPath())) {
-        mainWindow.loadURL(url.format({
-            pathname: path.join(__dirname, "login.html"),
-            protocol: "file:",
-            slashes: true
-        }));
+        mainWindow.loadFile(path.join(__dirname, "login.html"))
     } else {
-        mainWindow.loadURL(url.format({
-            pathname: path.join(__dirname, "create_wallet.html"),
-            protocol: "file:",
-            slashes: true
-        }));
+        mainWindow.loadFile(path.join(__dirname, "create_wallet.html"))
     }
 
     if (isTestnet) {
         mainWindow.webContents.on('did-finish-load', () => {
-            mainWindow.webContents.send('testnet', '')
+            mainWindow.webContents.send('testnet', JSON.stringify({ WIF, PUBKEYHASH, ZCSPENDINGKEYHASH, ZCPAYMENTADDRESSHASH }));
         })
     }
 
@@ -1136,7 +1167,7 @@ if (process.platform === "linux") {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on("ready", () => createWindow());
+app.whenReady().then(() => createWindow());
 
 // Quit when all windows are closed.
 app.on("window-all-closed", function () {
@@ -1211,10 +1242,21 @@ ipcMain.on("write-login-info", function (event, data) {
             resp.response = "OK";
         }
     } else {
-        resp.msg = "User is already registered";
+        resp.msg = "Wallet is already registered";
     }
     event.sender.send("write-login-response", JSON.stringify(resp));
 });
+
+ipcMain.on("new-wallet-warning", function (event){
+    dialog.showMessageBox({
+        type: "warning",
+        title: "Important Information",
+        message: userWarningCreateWallet,
+        buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand")],
+        cancelId: -1
+    })
+    .then(() => event.sender.send("new-wallet-response"));
+})
 
 ipcMain.on("verify-login-info", function (event, login, pass) {
     let resp;
@@ -2082,20 +2124,24 @@ ipcMain.on("create-paper-wallet", (event, name, addToWallet) => {
     } else {
         wif = generateNewAddress(1, userInfo.pass)[0];
     }
-    mainWindow.webContents.send("export-paper-wallet", wif, name);
+    mainWindow.webContents.send("export-paper-wallet", wif, name, WIF, PUBKEYHASH, isTestnet);
 });
 
-ipcMain.on("renderer-show-message-box", (event, msgStr, buttons) => {
+ipcMain.handle("renderer-show-message-box", async (event, msgStr, buttons) => {
     buttons = buttons.concat([tr("warmingMessages.cancel", "Cancel")]);
-    dialog.showMessageBox({
+
+    const result = await dialog.showMessageBox(mainWindow, {
         type: "warning",
         title: "Important Information",
         message: msgStr,
         buttons: buttons,
         cancelId: -1
-    }, function (response) {
-        event.returnValue = response;
+    })
+    .then((response1) => {
+        console.log(response1)
+        return response1.response
     });
+    return result;
 });
 
 ipcMain.on("update-Z-old-balance", (event) => {

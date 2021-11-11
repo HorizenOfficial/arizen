@@ -1,6 +1,6 @@
 {
   "name": "Arizen",
-  "version": "1.2.5",
+  "version": "1.3.0-beta",
   "description": "Arizen is light API wallet for Horizen with localy stored and encrypted files.",
   "main": "app/main.js",
   "scripts": {
@@ -112,35 +112,34 @@
     }
   },
   "dependencies": {
-    "axios": "^0.19.2",
-    "axios-debug-log": "^0.7.0",
+    "axios": "^0.24.0",
+    "axios-debug-log": "^0.8.4",
     "bip32-utils": "^0.11.1",
     "bitcoinjs-lib": "^3.3.2",
     "bs58check": "2.1.2",
-    "delay": "^4.3.0",
+    "delay": "^5.0.0",
     "electron-debug": "^3.0.1",
-    "fs-extra": "^9.0.0",
-    "immutable": "^3.8.2",
+    "fs-extra": "^10.0.0",
+    "immutable": "^4.0.0",
     "is-ip": "^3.1.0",
-    "jspdf": "^1.5.3",
-    "luxon": "^1.11.2",
+    "jspdf": "^2.4.0",
+    "luxon": "^2.1.1",
     "node-json-rpc2": "^1.1.0",
-    "open-ssh-tunnel": "^0.3.1",
     "password-hash": "^1.2.2",
-    "ping": "^0.2.2",
-    "qrcode": "^1.3.3",
-    "sql.js": "^0.5.0",
-    "zencashjs": "^1.2.4"
+    "ping": "^0.4.1",
+    "qrcode": "^1.4.4",
+    "sql.js": "^1.6.2",
+    "tunnel-ssh": "^4.1.6",
+    "zencashjs": "^2.0.1"
   },
   "devDependencies": {
     "deepmerge": "^4.2.2",
-    "devtron": "^1.4.0",
-    "electron": "^5.0.13",
+    "electron": "^15.3.1",
     "electron-builder": "^22.4.1",
-    "flow-bin": "^0.80.0",
+    "flow-bin": "^0.163.0",
     "json-file-plus": "^3.3.1",
     "patch-package": "^6.2.2",
     "xmlhttprequest": "^1.8.0",
-    "yargs": "^15.3.1"
+    "yargs": "^17.2.1"
   }
 }

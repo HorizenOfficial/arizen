@@ -1,0 +1,17 @@
+diff --git a/node_modules/bitcoinjs-lib/src/crypto.js b/node_modules/bitcoinjs-lib/src/crypto.js
+index 1bb39f1..3dec28e 100644
+--- a/node_modules/bitcoinjs-lib/src/crypto.js
++++ b/node_modules/bitcoinjs-lib/src/crypto.js
+@@ -1,7 +1,11 @@
+ var createHash = require('create-hash')
+ 
+ function ripemd160 (buffer) {
+-  return createHash('rmd160').update(buffer).digest()
++  try {
++    return createHash('rmd160').update(buffer).digest()
++  } catch(e) {
++    return createHash('ripemd160').update(buffer).digest()
++  }
+ }
+ 
+ function sha1 (buffer) {

@@ -319,10 +319,10 @@ function properlyConfigRemoteNode(){
         return propConf
 }
 
-function syncZaddrIfSettingsExist() {
+function syncZaddrIfSettingsExist(ZCSPENDINGKEYHASH) {
     if (properlyConfigRemoteNode()) {
         rpc.importAllZAddressesFromSNtoArizenExcludeExisting();
-        rpc.importAllZAddressesFromArizenToSN();
+        rpc.importAllZAddressesFromArizenToSN(ZCSPENDINGKEYHASH);
     }
 }
 function ledWrapperExists(){
@@ -495,69 +495,70 @@ function showSettingsDialog() {
             let zenBalance = getZenBalance();
             setFiatBalanceText(zenBalance, inputFiatCurrency.value);
 
-            syncZaddrIfSettingsExist();
+            syncZaddrIfSettingsExist(ZCSPENDINGKEYHASH);
 
             dialog.close();
         });
     });
 }
 
-function showImportSinglePKDialog() {
-    let response = -1;
-    response = ipcRenderer.sendSync("renderer-show-message-box", tr("warmingMessages.userWarningImportPK", userWarningImportPK), [tr("warmingMessages.userWarningIUnderstand", "I understand")]);
-    if (response === 0) {
-        showDialogFromTemplate("importSinglePrivateKeyDialogTemplate", dialog => {
-            const importButton = dialog.querySelector(".newPrivateKeyImportButton");
-            const nameInput = dialog.querySelector(".newPrivateKeyDialogName");
-            const privateKeyInput = dialog.querySelector(".newPrivateKeyDialogKey");
-            importButton.addEventListener("click", () => {
-                const name = nameInput.value ? nameInput.value : "";
-                let pk = privateKeyInput.value;
-                let importT = dialog.querySelector(".importTorZgetT").checked;
-                let importZ = dialog.querySelector(".importTorZgetZ").checked;
-                let checkAddr;
+function showImportSinglePKDialog(WIF, PUBKEYHASH, ZCPAYMENTADDRESSHASH) {
+    ipcRenderer.invoke("renderer-show-message-box", tr("warmingMessages.userWarningImportPK", userWarningImportPK), [tr("warmingMessages.userWarningIUnderstand", "I understand")])
+        .then((response) => {
+            if (response === 0) {
+                showDialogFromTemplate("importSinglePrivateKeyDialogTemplate", dialog => {
+                    const importButton = dialog.querySelector(".newPrivateKeyImportButton");
+                    const nameInput = dialog.querySelector(".newPrivateKeyDialogName");
+                    const privateKeyInput = dialog.querySelector(".newPrivateKeyDialogKey");
+                    importButton.addEventListener("click", () => {
+                        const name = nameInput.value ? nameInput.value : "";
+                        let pk = privateKeyInput.value;
+                        let importT = dialog.querySelector(".importTorZgetT").checked;
+                        let importZ = dialog.querySelector(".importTorZgetZ").checked;
+                        let checkAddr;
 
-                if ((zenextra.isPKorWif(pk) === true && importT) || (zenextra.isPKorSpendingKey(pk) === true && importZ)) {
-                    console.log(name);
-                    console.log(pk);
-                    if (importT) {
-                        if (zenextra.isWif(pk) === true) {
-                            pk = zencashjs.address.WIFToPrivKey(pk);
-                        }
-                        let pubKey = zencashjs.address.privKeyToPubKey(pk, true);
-                        checkAddr = zencashjs.address.pubKeyToAddr(pubKey);
-                    }
-                    if (importZ) {
-                        let secretKey = pk;
-                        if (zenextra.isSpendingKey(pk) === true) {
-                            // pk = spendingKey
-                            secretKey = zenextra.spendingKeyToSecretKey(pk);
-                            pk = secretKey;
-                        }
-                        let a_pk = zencashjs.zaddress.zSecretKeyToPayingKey(secretKey);
-                        let pk_enc = zencashjs.zaddress.zSecretKeyToTransmissionKey(secretKey);
-                        checkAddr = zencashjs.zaddress.mkZAddress(a_pk, pk_enc);
-                    }
+                        if ((zenextra.isPKorWif(pk) === true && importT) || (zenextra.isPKorSpendingKey(pk) === true && importZ)) {
+                            console.log(name);
+                            console.log(pk);
+                            if (importT) {
+                                if (zenextra.isWif(pk) === true) {
+                                    pk = zencashjs.address.WIFToPrivKey(pk);
+                                }
+                                let pubKey = zencashjs.address.privKeyToPubKey(pk, true, WIF);
+                                checkAddr = zencashjs.address.pubKeyToAddr(pubKey, PUBKEYHASH);
+                            }
+                            if (importZ) {
+                                let secretKey = pk;
+                                if (zenextra.isSpendingKey(pk) === true) {
+                                    // pk = spendingKey
+                                    secretKey = zenextra.spendingKeyToSecretKey(pk);
+                                    pk = secretKey;
+                                }
+                                let a_pk = zencashjs.zaddress.zSecretKeyToPayingKey(secretKey);
+                                let pk_enc = zencashjs.zaddress.zSecretKeyToTransmissionKey(secretKey);
+                                checkAddr = zencashjs.zaddress.mkZAddress(a_pk, pk_enc, ZCPAYMENTADDRESSHASH);
+                            }
 
-                    let resp = ipcRenderer.sendSync("check-if-address-in-wallet", checkAddr);
-                    let addrExists = resp.exist;
+                            let resp = ipcRenderer.sendSync("check-if-address-in-wallet", checkAddr);
+                            let addrExists = resp.exist;
 
-                    if (addrExists === true) {
-                        alert(tr("wallet.importSinglePrivateKey.warningNotValidAddress", "Address exist in your wallet"))
-                    } else {
-                        ipcRenderer.send("import-single-key", name, pk, importT);
-                        alert(tr("warmingMessages.userWarningImportPK", userWarningImportPK));
-                        if (importZ) {
-                            alert(tr("warmingMessages.userWarningImportPkUserZendRescan", userWarningImportPkUserZendRescan));
+                            if (addrExists === true) {
+                                alert(tr("wallet.importSinglePrivateKey.warningNotValidAddress", "Address exist in your wallet"))
+                            } else {
+                                ipcRenderer.send("import-single-key", name, pk, importT);
+                                alert(tr("warmingMessages.userWarningImportPK", userWarningImportPK));
+                                if (importZ) {
+                                    alert(tr("warmingMessages.userWarningImportPkUserZendRescan", userWarningImportPkUserZendRescan));
+                                }
+                                dialog.close();
+                            }
+                        } else {
+                            alert(tr("wallet.importSinglePrivateKey.warningNotValidPK", "This is not a valid Private Key or you try to import a Spending Key (only for Z addresses) as T address Private key."));
                         }
-                        dialog.close();
-                    }
-                } else {
-                    alert(tr("wallet.importSinglePrivateKey.warningNotValidPK", "This is not a valid Private Key or you try to import a Spending Key (only for Z addresses) as T address Private key."));
-                }
-            });
-        });
-    }
+                    });
+                });
+            }
+        })
 }
 
 function showRpcDialog() {
