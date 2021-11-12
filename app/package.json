@@ -62,7 +62,7 @@
     "node-json-rpc2": "^1.1.0",
     "password-hash": "^1.2.2",
     "ping": "^0.4.1",
-    "qrcode": "^1.4.4",
+    "qrcode": "github:soldair/node-qrcode#c0c5108e5f3738d1336fb35b2c71ea6a517c4c3a",
     "sql.js": "^1.6.2",
     "tunnel-ssh": "^4.1.6",
     "zencashjs": "^2.0.1"
