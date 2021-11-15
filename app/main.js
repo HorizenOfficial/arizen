@@ -351,7 +351,7 @@ function generateNewWallet(login, password) {
     db.run(dbStructSettings);
     for (i = 0; i <= 42; i += 1) {
         pk = zencashjs.address.WIFToPrivKey(privateKeys[i]);
-        pubKey = zencashjs.address.privKeyToPubKey(pk, true, WIF);
+        pubKey = zencashjs.address.privKeyToPubKey(pk, true);
         db.run(
             "INSERT INTO wallet VALUES (?,?,?,?,?)",
             [null, pk, zencashjs.address.pubKeyToAddr(pubKey, PUBKEYHASH), 0, ""]
@@ -369,7 +369,7 @@ function getNewAddress(name) {
     let privateKeys = generateNewAddress(1, userInfo.pass);
 
     pk = zencashjs.address.WIFToPrivKey(privateKeys[0]);
-    addr = zencashjs.address.pubKeyToAddr(zencashjs.address.privKeyToPubKey(pk, true, WIF), PUBKEYHASH);
+    addr = zencashjs.address.pubKeyToAddr(zencashjs.address.privKeyToPubKey(pk, true), PUBKEYHASH);
     userInfo.walletDb.run("INSERT INTO wallet VALUES (?,?,?,?,?)", [null, pk, addr, 0, name]);
     saveWallet();
 
@@ -561,7 +561,7 @@ function exportPKs() {
                 const keys = sqlSelectObjects("select pk, addr from wallet where length(addr)=35");
                 for (let k of keys) {
                     if (zenextra.isPK(k.pk)) {
-                        const wif = zencashjs.address.privKeyToWIF(k.pk, true);
+                        const wif = zencashjs.address.privKeyToWIF(k.pk, true, WIF);
                         fs.write(fd, wif + " " + k.addr + "\n");
                     }
                 }
@@ -607,7 +607,7 @@ function importOnePK(pk, name = "", isT = true) {
             if (pk.length !== 64) {
                 pk = zencashjs.address.WIFToPrivKey(pk);
             }
-            const pub = zencashjs.address.privKeyToPubKey(pk, true, WIF);
+            const pub = zencashjs.address.privKeyToPubKey(pk, true);
             addr = zencashjs.address.pubKeyToAddr(pub, PUBKEYHASH);
         } else {
             if (pk.length !== 64) {

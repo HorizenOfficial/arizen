@@ -535,7 +535,7 @@ function refresh() {
     pingSecureNode();
     scheduleRefresh();
     toggleLedHTML();
-    syncZaddrIfSettingsExist(ZCSPENDINGKEYHASH);
+    syncZaddrIfSettingsExist(ZCSPENDINGKEYHASH, WIF);
     rpc.updateAllZBalances();
     ipcRenderer.send("refresh-wallet");
     sendPendingTxs();

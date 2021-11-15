@@ -10,7 +10,7 @@ const zencashjs = require("zencashjs");
 
 ipcRenderer.on("export-paper-wallet", (sender, wif, name, WIF, PUBKEYHASH, isTestnet) => {
     const privateKey = zencashjs.address.WIFToPrivKey(wif);
-    const pubKey = zencashjs.address.privKeyToPubKey(privateKey, true, WIF);
+    const pubKey = zencashjs.address.privKeyToPubKey(privateKey, true);
     const tAddr = zencashjs.address.pubKeyToAddr(pubKey, PUBKEYHASH);
 
     function createQrCodeAsync(text) {

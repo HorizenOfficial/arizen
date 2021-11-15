@@ -157,7 +157,7 @@ async function helpSync() {
     console.log(result);
 }
 
-async function importPKinSN(pk, address, ZCSPENDINGKEYHASH) {
+async function importPKinSN(pk, address, ZCSPENDINGKEYHASH, WIF) {
     if (pk === undefined) {
         return {output: "No PK given.", status: "ok"}
     } else {
@@ -171,7 +171,7 @@ async function importPKinSN(pk, address, ZCSPENDINGKEYHASH) {
         if (zenextra.isTransaparentAddr(address)) {
             cmd = "importprivkey";
             if (!zenextra.isWif(pk)) {
-                pk = zencashjs.address.privKeyToWIF(pk);
+                pk = zencashjs.address.privKeyToWIF(pk, true, WIF);
             }
         }
         return await rpcCallResultSync(cmd, [pk, "no"]);
@@ -339,11 +339,11 @@ async function importAllZAddressesFromSNtoArizenExcludeExisting() {
     }
 }
 
-async function importAllZAddressesFromArizenToSN(ZCSPENDINGKEYHASH) {
+async function importAllZAddressesFromArizenToSN(ZCSPENDINGKEYHASH, WIF) {
     const zAddrObjs = ipcRenderer.sendSync("get-all-Z-addresses");
     let nullResp;
     for (const addrObj of zAddrObjs) {
-        nullResp = await importPKinSN(addrObj.pk, addrObj.addr, ZCSPENDINGKEYHASH);
+        nullResp = await importPKinSN(addrObj.pk, addrObj.addr, ZCSPENDINGKEYHASH, WIF);
     }
 }
 

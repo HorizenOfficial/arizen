@@ -319,10 +319,10 @@ function properlyConfigRemoteNode(){
         return propConf
 }
 
-function syncZaddrIfSettingsExist(ZCSPENDINGKEYHASH) {
+function syncZaddrIfSettingsExist(ZCSPENDINGKEYHASH, WIF) {
     if (properlyConfigRemoteNode()) {
         rpc.importAllZAddressesFromSNtoArizenExcludeExisting();
-        rpc.importAllZAddressesFromArizenToSN(ZCSPENDINGKEYHASH);
+        rpc.importAllZAddressesFromArizenToSN(ZCSPENDINGKEYHASH, WIF);
     }
 }
 function ledWrapperExists(){
@@ -495,7 +495,7 @@ function showSettingsDialog() {
             let zenBalance = getZenBalance();
             setFiatBalanceText(zenBalance, inputFiatCurrency.value);
 
-            syncZaddrIfSettingsExist(ZCSPENDINGKEYHASH);
+            syncZaddrIfSettingsExist(ZCSPENDINGKEYHASH, WIF);
 
             dialog.close();
         });
@@ -524,7 +524,7 @@ function showImportSinglePKDialog(WIF, PUBKEYHASH, ZCPAYMENTADDRESSHASH) {
                                 if (zenextra.isWif(pk) === true) {
                                     pk = zencashjs.address.WIFToPrivKey(pk);
                                 }
-                                let pubKey = zencashjs.address.privKeyToPubKey(pk, true, WIF);
+                                let pubKey = zencashjs.address.privKeyToPubKey(pk, true);
                                 checkAddr = zencashjs.address.pubKeyToAddr(pubKey, PUBKEYHASH);
                             }
                             if (importZ) {
