@@ -377,6 +377,10 @@ function getNewAddress(name) {
 }
 
 function sqlSelect(asObjects, sql, ...args) {
+    // check loggedIn again. user may be logging out.
+    if (!userInfo.loggedIn) {
+        return;
+    }
     const stmt = userInfo.walletDb.prepare(sql);
     stmt.bind(args);
     const results = [];
