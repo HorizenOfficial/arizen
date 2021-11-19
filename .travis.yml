@@ -33,7 +33,7 @@ jobs:
     - os: osx
       osx_image: xcode10.2
       language: node_js
-      node_js: lts/erbium
+      node_js: lts/gallium
       env:
         - ELECTRON_CACHE=$HOME/.cache/electron
         - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
