@@ -51,7 +51,7 @@
   ],
   "license": "MIT",
   "engines": {
-    "node": ">=16.5.0",
+    "node": ">=16.0.0",
     "npm": ">=6.0.0"
   },
   "build": {
