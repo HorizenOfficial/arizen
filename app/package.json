@@ -23,23 +23,19 @@
     "desktop",
     "electron"
   ],
-  "author": "Horizen team <arizen@horizen.global>",
+  "author": "Horizen team <arizen@horizen.io>",
   "contributors": [
     {
-      "name": "@lukas",
-      "email": "lukas@zensystem.io"
+      "name": "@lukas"
     },
     {
-      "name": "@gsfakianakis",
-      "email": "georgios@zensystem.io"
+      "name": "@gsfakianakis"
     },
     {
-      "name": "@Tigger",
-      "email": "kamila@zensystem.io"
+      "name": "@Tigger"
     },
     {
-      "name": "vherus",
-      "email": "nathan@horizen.global"
+      "name": "vherus"
     }
   ],
   "license": "MIT",
