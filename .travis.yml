@@ -30,6 +30,8 @@ addons:
   apt:
     packages:
       - gpg
+      - python3-pip
+      - python3-setuptools
 
 jobs:
   include:
