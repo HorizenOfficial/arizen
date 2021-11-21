@@ -42,9 +42,9 @@ if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
     -v "${HOME}"/.cache/electron-builder:/root/.cache/electron-builder \
     --tmpfs /tmp --tmpfs /run \
     electronuserland/builder:wine \
-    /bin/bash -c "npm install -g npm@latest && npm ci && npm audit || true && npm run build-linux && npm run build-win"
+    /bin/bash -c "apt-get update && apt-get -y --no-install-recommends install cmake && npm ci && npm audit || true && npm run build-linux && npm run build-win"
 else
-  bash -c "sudo npm install -g npm@latest && npm ci && npm audit || true && npm run build-mac"
+  bash -c "npm ci && npm audit || true && npm run build-mac"
 fi
 
 set +e
