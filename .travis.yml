@@ -20,6 +20,7 @@ env:
   global:
   - PROJECT_NAME=arizen
   - HOMEBREW_NO_AUTO_UPDATE=1
+  - USE_HARD_LINKS=false
 
 addons:
   homebrew:
