@@ -68,6 +68,11 @@ let addrObjList;
 let addrIdxByAddr;
 let refreshCounter = 0;
 let maxAmount = 0;
+let isTestnet = false;
+let WIF;
+let PUBKEYHASH;
+let ZCSPENDINGKEYHASH;
+let ZCPAYMENTADDRESSHASH;
 
 // ---------------------------------------------------------------------------------------------------------------------
 // IPC
@@ -152,6 +157,13 @@ ipcRenderer.on("change-wallet-password-finish", (event, msgStr) => {
     const msg = JSON.parse(msgStr);
     showPasswordChangeNotice(msg);
 });
+
+ipcRenderer.on("testnet", function(event, msg){
+    document.getElementById("testnet").style.display = "block";
+    isTestnet = true;
+    const vars = JSON.parse(msg);
+    ({ WIF, PUBKEYHASH, ZCSPENDINGKEYHASH, ZCPAYMENTADDRESSHASH } = vars);
+})
 
 window.addEventListener("load", initWallet);
 
@@ -283,7 +295,7 @@ function showAddrDetail(addr) {
             ipcRenderer.send("rename-wallet", addr, nameNode.value);
         });
         dialog.addEventListener("keypress", ev => {
-            if (event.keyCode === 13) {
+            if (ev.keyCode === 13) {
                 saveButton.click();
             }
         });
@@ -428,43 +440,46 @@ function setAddressName(addr, name) {
 }
 
 function showNewAddrDialog() {
-    let response = -1;
-    response = ipcRenderer.sendSync("renderer-show-message-box", tr("warmingMessages.userWarningCreateNewAddress", userWarningCreateNewAddress), [tr("warmingMessages.userWarningIUnderstand", "I understand")]);
-    if (response === 0) {
-        showDialogFromTemplate("newAddrDialogTemplate", dialog => {
-            const createButton = dialog.querySelector(".newAddrDialogCreate");
-            if (!properlyConfigRemoteNode()){
-                let zSelection = dialog.querySelector(".TorZgetZ");
-                zSelection.disabled = true;
-                zSelection.style.visibility="hidden";
-                let zSelectionLabel = dialog.querySelector(".TorZgetZLabel"); // 192.168.99.204
-                zSelectionLabel.style.visibility="hidden";
-                let zSelectionRadioLabel = dialog.querySelector(".TorZgetZframe"); // 192.168.99.204
-                zSelectionRadioLabel.innerHTML = ""
-
-            }
-            createButton.addEventListener("click", () => {
-                let getT = dialog.querySelector(".TorZgetT").checked;
-                let getZ = false;
-                if (dialog.querySelector(".TorZgetZ")) {
-                    getZ = dialog.querySelector(".TorZgetZ").checked;
+    ipcRenderer.invoke(
+        "renderer-show-message-box",
+        tr("warmingMessages.userWarningCreateNewAddress", userWarningCreateNewAddress),
+        [tr("warmingMessages.userWarningIUnderstand", "I understand")]
+    ).then((response) => {
+        if (response === 0) {
+            showDialogFromTemplate("newAddrDialogTemplate", dialog => {
+                const createButton = dialog.querySelector(".newAddrDialogCreate");
+                if (!properlyConfigRemoteNode()) {
+                    let zSelection = dialog.querySelector(".TorZgetZ");
+                    zSelection.disabled = true;
+                    zSelection.style.visibility = "hidden";
+                    let zSelectionLabel = dialog.querySelector(".TorZgetZLabel"); // 192.168.99.204
+                    zSelectionLabel.style.visibility = "hidden";
+                    let zSelectionRadioLabel = dialog.querySelector(".TorZgetZframe"); // 192.168.99.204
+                    zSelectionRadioLabel.innerHTML = "";
                 }
-                let nameAddress = dialog.querySelector(".newAddrDialogName").value;
-                if (getT) {
-                    ipcRenderer.send("generate-wallet", nameAddress);
-                }
-                if (getZ) {
-                    rpc.getNewZaddressPK(nameAddress)
-                }
-                dialog.close();
+                createButton.addEventListener("click", () => {
+                    let getT = dialog.querySelector(".TorZgetT").checked;
+                    let getZ = false;
+                    if (dialog.querySelector(".TorZgetZ")) {
+                        getZ = dialog.querySelector(".TorZgetZ").checked;
+                    }
+                    let nameAddress = dialog.querySelector(".newAddrDialogName").value;
+                    if (getT) {
+                        ipcRenderer.send("generate-wallet", nameAddress);
+                    }
+                    if (getZ) {
+                        rpc.getNewZaddressPK(nameAddress)
+                    }
+                    dialog.close();
+                });
+                dialog.addEventListener("keypress", ev => {
+                    if (ev.keyCode === 13) {
+                        createButton.click();
+                    }
+                });
             });
-            dialog.addEventListener("keypress", ev => {
-                if (event.keyCode === 13) {
-                    createButton.click();
-                }
-            });
-        });
-    }
+        }
+    })
 }
 
 function addTransactions(txs, newTx = false) {
@@ -483,6 +498,8 @@ function addTransactions(txs, newTx = false) {
         const oldTxItem = txListNode.querySelector(`[data-txid='${txObj.txid}']`);
         if (oldTxItem) {
             if (oldTxItem.dataset.blockheight !== "-1") {
+                // not acutally an error but an item out of sequence. e.g. an imported address with transactions older than the current list
+                // these will be listed first (top of list) until app restarted.
                 console.error(tr("wallet.transactionHistory.replaceAttempt", "Attempting to replace transaction in block"));
             } else if (txObj.block >= 0) {
                 txListNode.replaceChild(createTxItem(txObj, newTx), oldTxItem);
@@ -518,7 +535,7 @@ function refresh() {
     pingSecureNode();
     scheduleRefresh();
     toggleLedHTML();
-    syncZaddrIfSettingsExist();
+    syncZaddrIfSettingsExist(ZCSPENDINGKEYHASH, WIF);
     rpc.updateAllZBalances();
     ipcRenderer.send("refresh-wallet");
     sendPendingTxs();
@@ -638,7 +655,7 @@ async function checkIntermediateSend(tIntermediateAddress, toAddr, amount, feeTw
 async function sendPendingTxs() {
     let newPendingTxs = [];
     let oldPendingTxs = internalInfo.pendingTxs; //[{type:"snT-Z",fromAddress: "zn", toAddress: "zn2", amount:1, fee:0.1}]; //internalInfo.pendingTxs;
-    console.log("Preious Txs:");
+    console.log("Previous Txs:");
     console.log(internalInfo);
 
     for (let pendTx of oldPendingTxs) {
@@ -1042,3 +1059,43 @@ function showPasswordChangeNotice(result) {
         alert(tr("wallet.changePassword.noticeError", "Failed to change wallet password"));
     }
 }
+
+const ArizenDialogElement = (() => {
+    const doc = document.currentScript.ownerDocument;
+
+    const cls = class extends HTMLElement {
+        constructor() {
+            super();
+            const template = doc.getElementById("arizen-dialog-template");
+            const dom = template.content.cloneNode(true);
+            const shadowRoot = this.attachShadow({mode: "open"});
+            shadowRoot.appendChild(dom);
+            this._dialog = shadowRoot.querySelector("dialog");
+            shadowRoot.getElementById("closeButton").addEventListener("click", () => this.close());
+        }
+
+        // FIXME: unused
+        showModal() {
+            this._dialog.showModal();
+        }
+
+        close() {
+            this._dialog.close();
+            this.dispatchEvent(new Event("close", {bubbles: true, composed: false}));
+        }
+    };
+
+    return cls;
+})();
+
+customElements.define("arizen-dialog", ArizenDialogElement);
+// event listeners
+document.getElementById ("sBWD"). addEventListener ('click', function (e) { showBatchWithdrawDialog() }, false);
+document.getElementById ("sBSD"). addEventListener ('click', function (e) { showBatchSplitDialog()}, false);
+document.getElementById ("sPWD"). addEventListener ('click', function (e) { showPaperWalletDialog() }, false);
+document.getElementById ("sISPD"). addEventListener ('click', function (e) { showImportSinglePKDialog(WIF, PUBKEYHASH, ZCPAYMENTADDRESSHASH) }, false);
+
+document.getElementById ("sSD"). addEventListener ('click', function (e) { showSettingsDialog() }, false);
+document.getElementById ("sAD"). addEventListener ('click', function (e) { showAboutDialog() }, false);
+document.getElementById ("logout"). addEventListener ('click', function (e) { logout() }, false);
+document.getElementById ("exitApp"). addEventListener ('click', function (e) { exitApp() }, false);

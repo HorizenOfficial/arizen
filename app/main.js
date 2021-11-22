@@ -4,12 +4,12 @@
 "use strict";
 
 // Press F12 to open the DevTools. See https://github.com/sindresorhus/electron-debug.
-// DO NOT COMMENT !!!
-require("electron-debug")();
-require("axios-debug-log");
+// uncomment next two lines during development. comment for commit and production builds
+// require("electron-debug")();
+// require("axios-debug-log/enable");
 const electron = require("electron");
 const BrowserWindow = electron.BrowserWindow;
-const {app, Menu, ipcMain, dialog} = require("electron");
+const { app, Menu, ipcMain, dialog } = require("electron");
 const path = require("path");
 const url = require("url");
 const os = require("os");
@@ -19,23 +19,44 @@ const crypto = require("crypto");
 const bitcoin = require("bitcoinjs-lib");
 const bip32utils = require("bip32-utils");
 const zencashjs = require("zencashjs");
-const sql = require("sql.js");
+const initSqlJs = require("sql.js");
 const axios = require("axios");
 const querystring = require("querystring");
-const {List} = require("immutable");
-const {translate} = require("./util.js");
-const {DateTime} = require("luxon");
-const {zenextra} = require("./zenextra.js");
+const { List } = require("immutable");
+const { translate } = require("./util.js");
+const { DateTime } = require("luxon");
+const { zenextra } = require("./zenextra.js");
+
+let sql;
+initSqlJs().then((SQL) => {
+    sql = SQL;
+    console.log("SQLite is loaded");
+});
 
 let oldZAddrJSON;
 
-const userWarningImportFileWithPKs = "New address(es) and a private key(s) will be imported. Your previous back-ups do not include the newly imported addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
-const userWarningExportWalletUnencrypted = "You are going to export an UNENCRYPTED wallet ( ie your private keys) in plain text. That means that anyone with this file can control your ZENs. Store this file in a safe place. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
-const userWarningExportWalletEncrypted = "You are going to export an ENCRYPTED wallet and your private keys will be encrypted. That means that in order to access your private keys you need to know the corresponding username and password. In case you don't know them you cannot control the ZENs that are controled by these private keys. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
+const userWarningImportFileWithPKs = "New address(es) and a private key(s) will be imported. Your previous back-ups do not include the newly imported "
++ "addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet "
++ "backup. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
+const userWarningExportWalletUnencrypted = "You are going to export an UNENCRYPTED wallet ( ie your private keys) in plain text. That means that anyone "
++"with this file can control your ZENs. Store this file in a safe place. By pressing 'I understand' you declare that you understand this. For further "
++ "information please refer to the help menu of Arizen.";
+const userWarningExportWalletEncrypted = "You are going to export an ENCRYPTED wallet and your private keys will be encrypted. That means that in order to "
++ "access your private keys you need to know the corresponding username and password. In case you don't know them you cannot control the ZENs that are controled"
++ " by these private keys. By pressing 'I understand' you declare that you understand this. For further information please refer to the help menu of Arizen.";
+const userWarningCreateWallet = "To make sure that you will never lose your wallet make sure to keep backup of your wallet(s) file. (.uawd or .awd + username "
++ "+ password). If you are not sure please refer to the Arizen manual for further information. By pressing 'I understand' you declare that you understand "
++ "this. For further information please refer to the help menu of Arizen. Enter your new wallet information on the Login page.";
 
-// Uncomment if you want to run in production
-// Show/Hide Development menu
-process.env.NODE_ENV = "production";
+
+const isTestnet = process.argv.length > 2 && process.argv[2] === 'testnet' || false;
+const prefix = isTestnet ? 'zt' : 'zn';
+const WIF = isTestnet ? zencashjs.config.testnet.wif : zencashjs.config.mainnet.wif;
+const PUBKEYHASH = isTestnet ? zencashjs.config.testnet.pubKeyHash : zencashjs.config.mainnet.pubKeyHash;
+const ZCSPENDINGKEYHASH = isTestnet ? zencashjs.config.testnet.zcSpendingKeyHash : zencashjs.config.mainnet.zcSpendingKeyHash;
+const ZCPAYMENTADDRESSHASH = isTestnet ? zencashjs.config.testnet.zcPaymentAddressHash : zencashjs.config.mainnet.zcPaymentAddressHash;
+
+process.env.NODE_ENV = isTestnet ? 'development' : 'production';
 
 function sleep(millis) {
     return new Promise(resolve => setTimeout(resolve, millis));
@@ -59,11 +80,8 @@ const defaultSettings = {
     txHistory: 50,
     autoLogOffEnable: 0,
     autoLogOffTimeout: 60,
-    explorerUrl: "https://explorer.horizen.global",
-    apiUrls: [
-        "https://explorer.horizen.global/api",
-        "https://explorer.zen-solutions.io/api"
-    ],
+    explorerUrl: `https://explorer${isTestnet ? '-testnet' : ''}.horizen.io`,
+    apiUrls: [`https://explorer${isTestnet ? '-testnet' : ''}.horizen.io/api`],
     secureNodeFQDN: "",
     secureNodePort: 18231,
     domainFronting: false,
@@ -72,7 +90,7 @@ const defaultSettings = {
     refreshIntervalAPI: 334
 };
 
-const defaultInternalInfo = {pendingTxs: []};
+const defaultInternalInfo = { pendingTxs: [] };
 
 let settings = defaultSettings;
 let langDict;
@@ -222,11 +240,11 @@ function pruneBackups(backupDir, walletName) {
     const PRUNING_PATTERNS = [
         ["secondly", "yyyy-LL-dd HH:mm:ss"],
         ["minutely", "yyyy-LL-dd HH:mm"],
-        ["hourly",   "yyyy-LL-dd HH"],
-        ["daily",    "yyyy-LL-dd"],
-        ["weekly",   "kkkk-WW"],
-        ["monthly",  "yyyy-LL"],
-        ["yearly",   "yyyy"]];
+        ["hourly", "yyyy-LL-dd HH"],
+        ["daily", "yyyy-LL-dd"],
+        ["weekly", "kkkk-WW"],
+        ["monthly", "yyyy-LL"],
+        ["yearly", "yyyy"]];
 
     const PRUNING_PATTERNS_DICT = {};
     PRUNING_PATTERNS.forEach(x => PRUNING_PATTERNS_DICT[x[0]] = x[1]);
@@ -334,7 +352,10 @@ function generateNewWallet(login, password) {
     for (i = 0; i <= 42; i += 1) {
         pk = zencashjs.address.WIFToPrivKey(privateKeys[i]);
         pubKey = zencashjs.address.privKeyToPubKey(pk, true);
-        db.run("INSERT INTO wallet VALUES (?,?,?,?,?)", [null, pk, zencashjs.address.pubKeyToAddr(pubKey), 0, ""]);
+        db.run(
+            "INSERT INTO wallet VALUES (?,?,?,?,?)",
+            [null, pk, zencashjs.address.pubKeyToAddr(pubKey, PUBKEYHASH), 0, ""]
+        );
     }
 
     let data = db.export();
@@ -348,14 +369,18 @@ function getNewAddress(name) {
     let privateKeys = generateNewAddress(1, userInfo.pass);
 
     pk = zencashjs.address.WIFToPrivKey(privateKeys[0]);
-    addr = zencashjs.address.pubKeyToAddr(zencashjs.address.privKeyToPubKey(pk, true));
+    addr = zencashjs.address.pubKeyToAddr(zencashjs.address.privKeyToPubKey(pk, true), PUBKEYHASH);
     userInfo.walletDb.run("INSERT INTO wallet VALUES (?,?,?,?,?)", [null, pk, addr, 0, name]);
     saveWallet();
 
-    return {addr: addr, name: name, lastbalance: 0, pk: pk, wif: privateKeys[0]};
+    return { addr: addr, name: name, lastbalance: 0, pk: pk, wif: privateKeys[0] };
 }
 
 function sqlSelect(asObjects, sql, ...args) {
+    // check loggedIn again. user may be logging out.
+    if (!userInfo.loggedIn) {
+        return;
+    }
     const stmt = userInfo.walletDb.prepare(sql);
     stmt.bind(args);
     const results = [];
@@ -441,8 +466,8 @@ function setSettings(newSettings) {
         });
     }
     else {
-      const apiUrl = settings.apiUrls[0];
-      console.log("Current API URL: " + apiUrl);
+        const apiUrl = settings.apiUrls[0];
+        console.log("Current API URL: " + apiUrl);
         axiosApi = axios.create({
             baseURL: apiUrl,
             timeout: 30000,
@@ -475,27 +500,31 @@ function exportWalletArizen(ext, encrypt) {
         message: showMessage,
         buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand"), tr("warmingMessages.cancel", "Cancel")],
         cancelId: -1
-    }, function (response) {
-        if (response === 0) {
+    })
+    .then((response1) => {
+        if (response1.response === 0) {
             dialog.showSaveDialog({
                 title: "Save wallet." + ext,
-                filters: [{name: "Wallet", extensions: [ext]}],
+                filters: [{ name: "Wallet", extensions: [ext] }],
                 defaultPath: userInfo.login
-            }, function (filename) {
-                if (typeof filename !== "undefined" && filename !== "") {
-                    if (!fs.exists(filename)) {
+            })
+            .then(async (response2) => {
+                if (typeof response2.filePath !== "undefined" && response2.filePath !== "") {
+                    const exists = await fs.pathExists(response2.filePath);
+                    if (exists) {
                         dialog.showMessageBox({
                             type: "warning",
                             message: "Do you want to replace file?",
                             buttons: ["Yes", "No"],
                             title: "Replace wallet?"
-                        }, function (response) {
-                            if (response === 0) {
-                                exportWallet(filename, encrypt);
+                        })
+                        .then((response3) => {
+                            if (response3.response === 0) {
+                                exportWallet(response2.filePath, encrypt);
                             }
                         });
                     } else {
-                        exportWallet(filename, encrypt);
+                        exportWallet(response2.filePath, encrypt);
                     }
                 }
             });
@@ -507,17 +536,19 @@ function importWalletArizen(ext, encrypted) {
     if (userInfo.loggedIn) {
         dialog.showOpenDialog({
             title: "Import wallet." + ext,
-            filters: [{name: "Wallet", extensions: [ext]}]
-        }, function (filePaths) {
-            if (filePaths) {
+            filters: [{ name: "Wallet", extensions: [ext] }]
+        })
+        .then((response1) => {
+            if (response1.filePaths) {
                 dialog.showMessageBox({
                     type: "warning",
                     message: "This will replace your actual wallet. Are you sure?",
                     buttons: ["Yes", "No"],
                     title: "Replace wallet?"
-                }, function (response) {
-                    if (response === 0) {
-                        importWallet(filePaths[0], encrypted);
+                })
+                .then((response2) =>{
+                    if (response2.response === 0) {
+                        importWallet(response2.filePaths[0], encrypted);
                     }
                 });
             }
@@ -534,14 +565,14 @@ function exportPKs() {
                 const keys = sqlSelectObjects("select pk, addr from wallet where length(addr)=35");
                 for (let k of keys) {
                     if (zenextra.isPK(k.pk)) {
-                        const wif = zencashjs.address.privKeyToWIF(k.pk, true);
+                        const wif = zencashjs.address.privKeyToWIF(k.pk, true, WIF);
                         fs.write(fd, wif + " " + k.addr + "\n");
                     }
                 }
                 const zkeys = sqlSelectObjects("select pk, addr from wallet where length(addr)=95");
                 for (let k of zkeys) {
                     if (zenextra.isPK(k.pk)) {
-                        const spendingKey = zencashjs.zaddress.zSecretKeyToSpendingKey(k.pk);
+                        const spendingKey = zencashjs.zaddress.zSecretKeyToSpendingKey(k.pk, ZCSPENDINGKEYHASH);
                         fs.write(fd, spendingKey + " " + k.addr + "\n");
                     }
                 }
@@ -555,15 +586,17 @@ function exportPKs() {
         message: tr("warmingMessages.userWarningExportWalletUnencrypted", userWarningExportWalletUnencrypted),
         buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand"), tr("warmingMessages.cancel", "Cancel")],
         cancelId: -1
-    }, function (response) {
-        if (response === 0) {
+    })
+    .then((response1) => {
+        if (response1.response === 0) {
             dialog.showSaveDialog({
                 type: "warning",
                 title: "Choose file for private keys",
                 defaultPath: "arizen-private-keys-" + userInfo.login + ".txt"
-            }, filename => {
-                if (filename) {
-                    exportToFile(filename);
+            })
+            .then((response2) => {
+                if (response2.filePath) {
+                    exportToFile(response2.filePath);
                 }
             });
         }
@@ -579,7 +612,7 @@ function importOnePK(pk, name = "", isT = true) {
                 pk = zencashjs.address.WIFToPrivKey(pk);
             }
             const pub = zencashjs.address.privKeyToPubKey(pk, true);
-            addr = zencashjs.address.pubKeyToAddr(pub);
+            addr = zencashjs.address.pubKeyToAddr(pub, PUBKEYHASH);
         } else {
             if (pk.length !== 64) {
                 pk = zenextra.spendingKeyToSecretKey(pk); // pk = spendingKey
@@ -587,7 +620,7 @@ function importOnePK(pk, name = "", isT = true) {
             let secretKey = pk;
             let aPk = zencashjs.zaddress.zSecretKeyToPayingKey(secretKey);
             let encPk = zencashjs.zaddress.zSecretKeyToTransmissionKey(secretKey);
-            addr = zencashjs.zaddress.mkZAddress(aPk, encPk);
+            addr = zencashjs.zaddress.mkZAddress(aPk, encPk, ZCPAYMENTADDRESSHASH);
         }
         sqlRun("insert or ignore into wallet (pk, addr, lastbalance, name) values (?, ?, 0, ?)", pk, addr, name);
     } catch (err) {
@@ -833,11 +866,13 @@ function importPKs() {
         message: tr("warmingMessages.userWarningImportFileWithPKs", userWarningImportFileWithPKs),
         buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand"), tr("warmingMessages.cancel", "Cancel")],
         cancelId: -1
-    }, function (response) {
+    })
+    .then((response) => {
         if (response === 0) {
             dialog.showOpenDialog({
                 title: "Choose file with private keys"
-            }, filenames => {
+            })
+            .then((filenames) => {
                 if (filenames) {
                     for (let f of filenames) {
                         importFromFile(f);
@@ -919,7 +954,7 @@ function createEditSubmenu() {
             accelerator: "Shift+CmdOrCtrl+Z",
             selector: "redo:"
         },
-        {type: "separator"},
+        { type: "separator" },
         {
             label: tr("menu.editSubmenu.cut", "Cut"),
             accelerator: "CmdOrCtrl+X",
@@ -949,7 +984,7 @@ function createHelpSubmenu() {
             label: tr("menu.helpSubmenu.arizenManual", "User Manual"),
             accelerator: "CmdOrCtrl+H",
             click: () => {
-                require("electron").shell.openExternal("https://github.com/ZencashOfficial/arizen#user-manuals");
+                require("electron").shell.openExternal("https://github.com/HorizenOfficial/arizen#user-manuals");
             }
         },
         {
@@ -959,7 +994,7 @@ function createHelpSubmenu() {
                 require("electron").shell.openExternal("https://support.horizen.global");
             }
         },
-        {type: "separator"},
+        { type: "separator" },
         {
             label: tr("menu.helpSubmenu.horizen", "Horizen"),
             click: () => {
@@ -981,18 +1016,18 @@ function includeDeveloperMenu(template) {
                         focusedWindow.toggleDevTools();
                     }
                 },
-                {role: "reload"},
-                {role: 'forcereload'},
-                {type: 'separator'},
-                {role: 'togglefullscreen'},
-                {type: "separator"},
+                { role: "reload" },
+                { role: 'forcereload' },
+                { type: 'separator' },
+                { role: 'togglefullscreen' },
+                { type: "separator" },
                 {
                     label: tr("menu.backupUnencrypted", "Backup UNENCRYPTED wallet"),
                     click() {
                         exportWalletArizen("uawd", false);
                     }
                 },
-                {type: "separator"},
+                { type: "separator" },
                 {
                     label: "RPC console",
                     click() {
@@ -1021,7 +1056,7 @@ function updateMenuAtLogin() {
                         exportWalletArizen("uawd", false);
                     }
                 },
-                {type: "separator"},
+                { type: "separator" },
                 {
                     label: tr("menu.exportPrivateKeys", "Export private keys"),
                     click: function () {
@@ -1034,14 +1069,14 @@ function updateMenuAtLogin() {
                         importPKs();
                     }
                 },
-                {type: "separator"},
+                { type: "separator" },
                 {
                     label: tr("menu.changeWalletPassword", "Change wallet password"),
                     click() {
                         changeWalletPasswordBegin();
                     }
                 },
-                {type: "separator"},
+                { type: "separator" },
                 {
                     label: tr("menu.exit", "Exit"),
                     click() {
@@ -1094,22 +1129,29 @@ function updateMenuAtLogout() {
 
 function createWindow() {
     updateMenuAtLogout();
-    mainWindow = new BrowserWindow({width: 1010, height: 730, resizable: true, icon: "resources/zen_icon.png", webPreferences: {nodeIntegration: true}});
+    mainWindow = new BrowserWindow({
+        width: 1010,
+        height: 730,
+        resizable: true,
+        icon: "resources/zen_icon.png",
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false,
+        }
+    });
 
     // mainWindow.webContents.openDevTools();
 
     if (fs.existsSync(getWalletPath())) {
-        mainWindow.loadURL(url.format({
-            pathname: path.join(__dirname, "login.html"),
-            protocol: "file:",
-            slashes: true
-        }));
+        mainWindow.loadFile(path.join(__dirname, "login.html"))
     } else {
-        mainWindow.loadURL(url.format({
-            pathname: path.join(__dirname, "create_wallet.html"),
-            protocol: "file:",
-            slashes: true
-        }));
+        mainWindow.loadFile(path.join(__dirname, "create_wallet.html"))
+    }
+
+    if (isTestnet) {
+        mainWindow.webContents.on('did-finish-load', () => {
+            mainWindow.webContents.send('testnet', JSON.stringify({ WIF, PUBKEYHASH, ZCSPENDINGKEYHASH, ZCPAYMENTADDRESSHASH }));
+        })
     }
 
     // Emitted when the window is closed.
@@ -1129,7 +1171,7 @@ if (process.platform === "linux") {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on("ready", () => createWindow());
+app.whenReady().then(() => createWindow());
 
 // Quit when all windows are closed.
 app.on("window-all-closed", function () {
@@ -1204,10 +1246,21 @@ ipcMain.on("write-login-info", function (event, data) {
             resp.response = "OK";
         }
     } else {
-        resp.msg = "User is already registered";
+        resp.msg = "Wallet is already registered";
     }
     event.sender.send("write-login-response", JSON.stringify(resp));
 });
+
+ipcMain.on("new-wallet-warning", function (event){
+    dialog.showMessageBox({
+        type: "warning",
+        title: "Important Information",
+        message: userWarningCreateWallet,
+        buttons: [tr("warmingMessages.userWarningIUnderstand", "I understand")],
+        cancelId: -1
+    })
+    .then(() => event.sender.send("new-wallet-response"));
+})
 
 ipcMain.on("verify-login-info", function (event, login, pass) {
     let resp;
@@ -1296,7 +1349,7 @@ ipcMain.on("get-wallets", () => {
 });
 
 ipcMain.on("refresh-wallet", function (event) {
-    let resp = {response: "ERR"};
+    let resp = { response: "ERR" };
 
     if (userInfo.loggedIn) {
         updateBlockchainView(event.sender);
@@ -1372,7 +1425,7 @@ ipcMain.on("save-settings", function (event, newSettingsStr) {
     const newSettings = JSON.parse(newSettingsStr);
     saveSettings(newSettings);
     setSettings(newSettings);
-    event.sender.send("save-settings-response", JSON.stringify({response: "OK"}));
+    event.sender.send("save-settings-response", JSON.stringify({ response: "OK" }));
     event.sender.send("settings", newSettingsStr);
 });
 
@@ -1404,7 +1457,7 @@ ipcMain.on("check-if-address-in-wallet", function (event, address) {
             break;
         }
     }
-    event.returnValue = {exist: exist, result: result};
+    event.returnValue = { exist: exist, result: result };
 });
 
 ipcMain.on("change-wallet-password-continue", (event, newPassword) => {
@@ -1419,8 +1472,8 @@ function checkSendParameters(fromAddresses, toAddresses, fee) {
             errors.push(tr("wallet.tabWithdraw.messages.fromAddressBadLength", "Bad length of the source address!"));
         }
 
-        if (fromAddress.substring(0, 2) !== "zn") {
-            errors.push(tr("wallet.tabWithdraw.messages.fromAddressBadPrefix", "Bad source address prefix - it has to be 'zn'!"));
+        if (fromAddress.substring(0, 2) !== prefix) {
+            errors.push(tr("wallet.tabWithdraw.messages.fromAddressBadPrefix", `Bad source address prefix - it has to be '${prefix}'!`));
         }
     }
 
@@ -1429,8 +1482,8 @@ function checkSendParameters(fromAddresses, toAddresses, fee) {
             errors.push(tr("wallet.tabWithdraw.messages.toAddressBadLength", "Bad length of the destination address!"));
         }
 
-        if (toAddress.substring(0, 2) !== "zn") {
-            errors.push(tr("wallet.tabWithdraw.messages.toAddressBadPrefix", "Bad destination address prefix - it has to be 'zn'!"));
+        if (toAddress.substring(0, 2) !== prefix) {
+            errors.push(tr("wallet.tabWithdraw.messages.toAddressBadPrefix", `Bad destination address prefix - it has to be '${prefix}'!`));
         }
     }
 
@@ -1518,7 +1571,7 @@ ipcMain.on("send", async function (event, fromAddress, toAddress, fee, amount) {
         // Calculate maximum ZEN satoshis that we have
         let satoshisSoFar = 0;
         let history = [];
-        let recipients = [{address: toAddress, satoshis: amountInSatoshi}];
+        let recipients = [{ address: toAddress, satoshis: amountInSatoshi }];
 
         const txData = await apiGet(prevTxURL);
         const infoData = await apiGet(infoURL);
@@ -1563,7 +1616,7 @@ ipcMain.on("send", async function (event, fromAddress, toAddress, fee, amount) {
         // If we don't have exact amount - refund remaining to current address
         if (satoshisSoFar !== (amountInSatoshi + feeInSatoshi)) {
             let refundSatoshis = satoshisSoFar - amountInSatoshi - feeInSatoshi;
-            recipients = recipients.concat({address: fromAddress, satoshis: refundSatoshis});
+            recipients = recipients.concat({ address: fromAddress, satoshis: refundSatoshis });
         }
 
         // Create transaction
@@ -1576,7 +1629,7 @@ ipcMain.on("send", async function (event, fromAddress, toAddress, fee, amount) {
 
         // Convert it to hex string
         const txHexString = zencashjs.transaction.serializeTx(txObj);
-        const txRespData = await apiPost(sendRawTxURL, {rawtx: txHexString});
+        const txRespData = await apiPost(sendRawTxURL, { rawtx: txHexString });
 
         let message = "TXid:\n\n<small>" + txRespData.txid + "</small><br /><a href=\"javascript:void(0)\" onclick=\"openUrl('" + settings.explorerUrl + "/tx/" + txRespData.txid + "')\" class=\"walletListItemDetails transactionExplorer\" target=\"_blank\">Show Transaction in Explorer</a>";
         event.sender.send("send-finish", "ok", message);
@@ -1723,7 +1776,7 @@ function calculateForNaddress(event, start, nAddress, data, thresholdLimitInSato
         return;
     }
 
-    let recipients = [{address: toAddress, satoshis: amountInSatoshiToSend}];
+    let recipients = [{ address: toAddress, satoshis: amountInSatoshiToSend }];
 
     for (let [key, value] of data.entries()) {
         if (value.id >= start) {
@@ -1739,7 +1792,7 @@ function calculateForNaddress(event, start, nAddress, data, thresholdLimitInSato
                 });
             }
 
-            value.history.forEach(function(h) {
+            value.history.forEach(function (h) {
                 history = history.concat(h);
             });
         }
@@ -1864,7 +1917,7 @@ ipcMain.on("send-many", async function (event, fromAddressesAll, toAddress, fee,
         let fromAddresses = filterOutZeroAddresses(fromAddressesAll, thresholdLimit);
 
         // check if there isn't any address with a balance
-        if(fromAddresses.length === 0){
+        if (fromAddresses.length === 0) {
             err = tr("wallet.tabWithdraw.messages.noSourceAddress", "No source address was selected!");
             event.sender.send("send-finish", "error", err);
         }
@@ -1903,8 +1956,8 @@ ipcMain.on("send-many", async function (event, fromAddressesAll, toAddress, fee,
 
         const txHexStrings = getMaxTxHexStrings(event, txData, thresholdLimitInSatoshi, feeInSatoshi, toAddress, blockHeight, blockHash, addrPk);
 
-        for(let i = 0; i < txHexStrings.length; i++){
-            const txRespData = await apiPost(sendRawTxURL, {rawtx: txHexStrings[i]});
+        for (let i = 0; i < txHexStrings.length; i++) {
+            const txRespData = await apiPost(sendRawTxURL, { rawtx: txHexStrings[i] });
             finalMessage += `<small><a href="javascript:void(0)" onclick="openUrl('${settings.explorerUrl}/tx/${txRespData.txid}')" class="walletListItemDetails transactionExplorer monospace" target="_blank">${txRespData.txid}</a>`;
             finalMessage += "</small><br/>\n\n";
         }
@@ -1979,7 +2032,7 @@ function getTxHexStringsForSplit(event, txData, toAddresses, splitToInSatoshi, f
     }
 
     for (let value of data.values()) {
-        value.history.forEach(function(h) {
+        value.history.forEach(function (h) {
             history = history.concat(h);
         });
     }
@@ -2021,7 +2074,7 @@ ipcMain.on("split", async function (event, fromAddress, toAddresses, fee, splitT
         let splitToInSatoshi = Math.round(splitTo * satoshi);
 
         // check if an address has been selected
-        if(fromAddress === ""){
+        if (fromAddress === "") {
             err = tr("wallet.tabWithdraw.messages.noSourceAddress", "No source address was selected!");
             event.sender.send("send-finish", "error", err);
         }
@@ -2053,7 +2106,7 @@ ipcMain.on("split", async function (event, fromAddress, toAddresses, fee, splitT
             return;
         }
 
-        const txRespData = await apiPost(sendRawTxURL, {rawtx: txHexString});
+        const txRespData = await apiPost(sendRawTxURL, { rawtx: txHexString });
         finalMessage += `<small><a href="javascript:void(0)" onclick="openUrl('${settings.explorerUrl}/tx/${txRespData.txid}')" class="walletListItemDetails transactionExplorer monospace" target="_blank">${txRespData.txid}</a>`;
         finalMessage += "</small><br/>\n\n";
 
@@ -2070,25 +2123,29 @@ ipcMain.on("create-paper-wallet", (event, name, addToWallet) => {
     if (addToWallet) {
         const addr = getNewAddress(name);
         mainWindow.webContents.send("generate-wallet-response",
-            JSON.stringify({response: "OK", addr: addr}));
+            JSON.stringify({ response: "OK", addr: addr }));
         wif = addr.wif;
     } else {
         wif = generateNewAddress(1, userInfo.pass)[0];
     }
-    mainWindow.webContents.send("export-paper-wallet", wif, name);
+    mainWindow.webContents.send("export-paper-wallet", wif, name, WIF, PUBKEYHASH, isTestnet);
 });
 
-ipcMain.on("renderer-show-message-box", (event, msgStr, buttons) => {
+ipcMain.handle("renderer-show-message-box", async (event, msgStr, buttons) => {
     buttons = buttons.concat([tr("warmingMessages.cancel", "Cancel")]);
-    dialog.showMessageBox({
+
+    const result = await dialog.showMessageBox(mainWindow, {
         type: "warning",
         title: "Important Information",
         message: msgStr,
         buttons: buttons,
         cancelId: -1
-    }, function (response) {
-        event.returnValue = response;
+    })
+    .then((response1) => {
+        console.log(response1)
+        return response1.response
     });
+    return result;
 });
 
 ipcMain.on("update-Z-old-balance", (event) => {
@@ -2125,7 +2182,7 @@ ipcMain.on("DB-insert-address", function (event, nameAddress, pkZaddress, zAddre
 
     if (userInfo.loggedIn) {
         resp.response = "OK";
-        resp.addr = {addr: zAddress, name: nameAddress, lastbalance: 0, pk: pkZaddress};
+        resp.addr = { addr: zAddress, name: nameAddress, lastbalance: 0, pk: pkZaddress };
         userInfo.walletDb.run("INSERT INTO wallet VALUES (?,?,?,?,?)", [null, pkZaddress, zAddress, 0, nameAddress]);
         saveWallet();
     }

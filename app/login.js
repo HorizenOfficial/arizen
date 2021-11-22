@@ -18,9 +18,21 @@ ipcRenderer.on("verify-login-response", function (event, resp) {
         console.log("Login was successful - redirecting to wallet.html");
     } else if (data.response === "ERR_corrupted_file") {
         document.getElementById("login_corrupted_file").style.display = "block";
+        document.getElementById("login_wrong_credentials").style.display = "none";
+        document.getElementById("login_nonexistent_wallet_name").style.display = "none";
     } else if (data.response === "ERR_wrong_credentials") {
         document.getElementById("login_wrong_credentials").style.display = "block";
+        document.getElementById("login_corrupted_file").style.display = "none";
+        document.getElementById("login_nonexistent_wallet_name").style.display = "none";
     } else if (data.response === "ERR_nonexistent_wallet_name") {
         document.getElementById("login_nonexistent_wallet_name").style.display = "block";
+        document.getElementById("login_wrong_credentials").style.display = "none";
+        document.getElementById("login_corrupted_file").style.display = "none";
     }
 });
+
+ipcRenderer.on("testnet", function(){
+    document.getElementById("testnet").style.display = "block";
+})
+
+document.getElementById ("btSubmit"). addEventListener ('click', function (e) { e.preventDefault(); doLogin() }, false);

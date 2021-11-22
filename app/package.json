@@ -1,15 +1,15 @@
 {
   "name": "Arizen",
-  "version": "1.2.5",
+  "version": "1.3.0-beta",
   "description": "Arizen is light API wallet for Horizen with localy stored and encrypted files.",
   "main": "main.js",
   "homepage": "https://horizen.global/github/arizen",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ZencashOfficial/arizen.git"
+    "url": "git+https://github.com/HorizenOfficial/arizen.git"
   },
   "bugs": {
-    "url": "https://github.com/ZencashOfficial/arizen/issues"
+    "url": "https://github.com/HorizenOfficial/arizen/issues"
   },
   "keywords": [
     "zen",
@@ -23,49 +23,44 @@
     "desktop",
     "electron"
   ],
-  "author": "Horizen team <arizen@horizen.global>",
+  "author": "Horizen team <arizen@horizen.io>",
   "contributors": [
     {
-      "name": "@lukas",
-      "email": "lukas@zensystem.io"
+      "name": "@lukas"
     },
     {
-      "name": "@gsfakianakis",
-      "email": "georgios@zensystem.io"
+      "name": "@gsfakianakis"
     },
     {
-      "name": "@Tigger",
-      "email": "kamila@zensystem.io"
+      "name": "@Tigger"
     },
     {
-      "name": "vherus",
-      "email": "nathan@horizen.global"
+      "name": "vherus"
     }
   ],
   "license": "MIT",
   "engines": {
-    "node": ">=12.0.0",
+    "node": ">=14.0.0",
     "npm": ">=6.0.0"
   },
   "dependencies": {
-    "axios": "^0.19.2",
-    "axios-debug-log": "^0.7.0",
+    "axios": "^0.24.0",
     "bip32-utils": "^0.11.1",
     "bitcoinjs-lib": "^3.3.2",
     "bs58check": "2.1.2",
-    "delay": "^4.3.0",
-    "electron-debug": "^3.0.1",
-    "fs-extra": "^9.0.0",
-    "immutable": "^3.8.2",
+    "delay": "^5.0.0",
+    "electron-debug": "^3.2.0",
+    "fs-extra": "^10.0.0",
+    "immutable": "^4.0.0",
     "is-ip": "^3.1.0",
-    "jspdf": "^1.5.3",
-    "luxon": "^1.11.2",
+    "jspdf": "^2.4.0",
+    "luxon": "^2.1.1",
     "node-json-rpc2": "^1.1.0",
-    "open-ssh-tunnel": "^0.3.1",
     "password-hash": "^1.2.2",
-    "ping": "^0.2.2",
-    "qrcode": "^1.3.3",
-    "sql.js": "^0.5.0",
-    "zencashjs": "^1.2.4"
+    "ping": "^0.4.1",
+    "qrcode": "Tg7z/node-qrcode.git#c0c5108e5f3738d1336fb35b2c71ea6a517c4c3a",
+    "sql.js": "^1.6.2",
+    "tunnel-ssh": "^4.1.6",
+    "zencashjs": "^2.0.1"
   }
 }

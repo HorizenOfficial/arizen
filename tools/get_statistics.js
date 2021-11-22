@@ -4,9 +4,9 @@ let XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 let xhr = new XMLHttpRequest();
 
 // 8346870 - latest v1.0.1
-// let url = "https://api.github.com/repos/ZencashOfficial/arizen/releases/8252416";
+// let url = "https://api.github.com/repos/HorizenOfficial/arizen/releases/8252416";
 // 8252416 - v1.0.0
-let url = "https://api.github.com/repos/ZencashOfficial/arizen/releases/8252416";
+let url = "https://api.github.com/repos/HorizenOfficial/arizen/releases/8252416";
 
 xhr.open("GET", url, true);
 xhr.onload = function () {

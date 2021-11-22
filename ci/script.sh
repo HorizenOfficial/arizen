@@ -36,15 +36,15 @@ fi
 # fix /root/.npm/tmp permission errors on package install from git by installing latest npm
 if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
   docker run --rm \
-    $(env | grep -E 'DEBUG|NODE_|ELECTRON_|YARN_|NPM_|CI|CIRCLE|TRAVIS|APPVEYOR_|WIN_|CSC_|_TOKEN|_KEY|AWS_|STRIP|BUILD_|TZ' | sed -n '/^[^\t]/s/=.*//p' | sed '/^$/d' | sed 's/^/-e /g' | tr '\n' ' ') \
+    $(env | grep -E 'DEBUG|NODE_|ELECTRON_|YARN_|NPM_|CI|CIRCLE|TRAVIS|APPVEYOR_|WIN_|CSC_|_TOKEN|_KEY|AWS_|STRIP|BUILD_|TZ|USE_HARD_LINKS' | sed -n '/^[^\t]/s/=.*//p' | sed '/^$/d' | sed 's/^/-e /g' | tr '\n' ' ') \
     -v "${PWD}":/project \
     -v "${HOME}"/.cache/electron:/root/.cache/electron \
     -v "${HOME}"/.cache/electron-builder:/root/.cache/electron-builder \
     --tmpfs /tmp --tmpfs /run \
     electronuserland/builder:wine \
-    /bin/bash -c "npm install -g npm@latest && npm ci && npm audit || true && npm run build-linux && npm run build-win"
+    /bin/bash -c "apt-get update && apt-get -y --no-install-recommends install cmake && npm ci && npm audit || true && npm run build-linux && npm run build-win"
 else
-  bash -c "sudo npm install -g npm@latest && npm ci && npm audit || true && npm run build-mac"
+  bash -c "npm ci && npm audit || true && npm run build-mac"
 fi
 
 set +e

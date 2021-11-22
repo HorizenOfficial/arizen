@@ -1,17 +1,24 @@
 [![Dependency status][david-img]][david-url]
 [![License][license-img]][license-url]
 [![Build status][travis-img]][travis-url]
-[![Code Climate][codeclimate-img]][codeclimate-url]
 
 <p align="center"><img src="https://www.horizen.global/assets/img/icons/page_media/logo_no_tagline.svg" width="600"></p>
 
 # User Manuals
-- v1.2.5: [Arizen v1.2.5 Wallet User Manual](https://horizenofficial.atlassian.net/wiki/spaces/ZEN/pages/665354259/Arizen+User+Manual)
+- v1.3.0: [Arizen v1.3.0 Wallet User Manual](https://horizenofficial.atlassian.net/wiki/spaces/ZEN/pages/665354259/Arizen+User+Manual)
 
 # Notes
-- To upgrade to v1.2.5 on Windows, please uninstall any previous version of Arizen before installing v1.2.5. This is needed because the installer works differently in v1.2.5. As always please make sure you create regular [backups](https://horizenofficial.atlassian.net/wiki/spaces/ZEN/pages/666009654/1.4+-+Manual+Backup) of your awd files.
+- To upgrade to v1.3.0 on Windows, please uninstall any previous version of Arizen older than v1.2.5. This is needed because the installer works differently in v1.2.5+. As always please make sure you create regular [backups](https://horizenofficial.atlassian.net/wiki/spaces/ZEN/pages/666009654/1.4+-+Manual+Backup) of your awd files.
 
 # Version History
+
+## v1.3.0-beta
+ - [x] Update of dependencies, switch out unsupported dependencies 
+ - [x] Modify to support new versions of dependencies
+ - [x] Add ability to run on testnet (using `npm run testnet` in cloned repo)
+ - [x] Test compatibility with zen v3.0.0
+ - [x] Add Content Security Policy for additional security
+ - [x] Fixed missing cursor on login after creating a new wallet
 
 ## v1.2.5
 - [x] Update of dependencies, removal of unused dependencies
@@ -172,7 +179,7 @@ printed. This created address can by included to your Arizen or not.
 ## Development
 
 ### How to create distribution
-      git clone https://github.com/ZencashOfficial/arizen
+      git clone https://github.com/HorizenOfficial/arizen
       git checkout master
       npm install
       npm run dist
@@ -203,11 +210,9 @@ printed. This created address can by included to your Arizen or not.
 ![Notification](https://i.imgur.com/WdW0WMK.png)
 
 
-[david-img]: https://david-dm.org/ZencashOfficial/arizen.svg?style=flat-square
-[david-url]: https://david-dm.org/ZencashOfficial/arizen
+[david-img]: https://david-dm.org/HorizenOfficial/arizen.svg?style=flat-square
+[david-url]: https://david-dm.org/HorizenOfficial/arizen
 [license-img]: https://img.shields.io/badge/license-MIT-green.svg?style=flat-square
 [license-url]: LICENSE
-[travis-img]: https://img.shields.io/travis/ZencashOfficial/arizen.svg?style=flat-square
-[travis-url]: https://travis-ci.org/ZencashOfficial/arizen.svg?branch=master
-[codeclimate-img]: https://codeclimate.com/github/ZencashOfficial/arizen/badges/gpa.svg?style=flat-square
-[codeclimate-url]: https://codeclimate.com/github/ZencashOfficial/arizen
+[travis-img]: https://img.shields.io/travis/HorizenOfficial/arizen.svg?style=flat-square
+[travis-url]: https://travis-ci.org/HorizenOfficial/arizen.svg?branch=master

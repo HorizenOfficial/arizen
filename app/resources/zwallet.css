@@ -1,7 +1,7 @@
 .body {
     display: grid !important;
     grid-gap: 5px;
-    grid-template-rows: min-content auto 30px;
+    grid-template-rows: min-content minmax(0px, auto) 30px;
     grid-template-columns: minmax(550px, min-content) auto;
     grid-template-areas: "header header" "walletOps transactions" "statusLine statusLine";
 }
@@ -63,7 +63,7 @@ header button {
 .walletOps {
     grid-area: walletOps;
     display: grid;
-    grid-template-rows: max-content auto;
+    grid-template-rows: max-content minmax(0px, auto);
     margin-left: 5px;
 }
 

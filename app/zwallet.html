@@ -2,14 +2,80 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" 
+    content="default-src 'self';
+    connect-src 'self' https: wss: data:;
+    script-src 'self'  ;
+    style-src 'self' 'unsafe-inline';
+    img-src 'self' blob: data:;
+    font-src 'self';
+    media-src 'self' blob:;
+    child-src 'self';
+    object-src 'none'"
+    >
     <title>Arizen</title>
+    
     <link rel="stylesheet" href="resources/zstyle.css">
     <link rel="stylesheet" href="resources/page.css">
     <link rel="stylesheet" href="resources/zwallet.css">
     <script src="tabs.js"></script>
-    <link rel=import href="webcomponents/arizen-dialog.html">
+    
 </head>
 <body>
+
+<template id=arizen-dialog-template>
+    <style>
+        @import "resources/zstyle.css";
+
+        dialog {
+            background-color: var(--panel-bg);
+            padding: 0;
+            margin: auto;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            max-width: 90vw;
+            max-height: 90vh;
+            /* Header text may overlap with buttons when content is empty. */
+            min-width: 400px;
+        }
+
+        dialog::backdrop {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .buttons {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            display: flex;
+        }
+
+        .content {
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            max-width: inherit;
+            max-height: inherit;
+        }
+    </style>
+
+    <dialog>
+        <div class=buttons>
+            <button id=closeButton>X</button>
+        </div>
+        <div class=content>
+            <header>
+                <h2><slot name=headerText></slot></h2>
+            </header>
+            <hr/>
+            <slot name=content></slot>
+        </div>
+    </dialog>
+</template>
+    
 
 <template id=txDialogTemplate>
     <arizen-dialog class=txDialog>
@@ -261,6 +327,7 @@
             <div class=formButtons>
                 <button class=paperWalletCreateButton data-tr=wallet.paperWallet.exportPDFLabel>Export PDF</button>
             </div>
+            <div style='font-size: 0.8em; text-align: center; margin-top:10px;'>PDF is saved in Arizen program folder</div>
         </div>
     </arizen-dialog>
 </template>
@@ -443,21 +510,24 @@
 
 <header class='panel'>
     <div class=headerLeft>
-        <span><button onclick="showBatchWithdrawDialog()" data-tr=wallet.showBatchWithdrawDialog>Batch Withdraw</button></span>
-        <span><button onclick="showBatchSplitDialog()" data-tr=wallet.showBatchSplitDialog>Batch Split</button></span>
-        <span><button onclick="showPaperWalletDialog()" data-tr=wallet.paperWallet.label>Paper Wallet</button></span>
-        <span><button onclick="showImportSinglePKDialog()" data-tr=wallet.importSinglePrivateKey.openButtonLabel>Import Private Key</button></span>
+        <span><button id='sBWD' data-tr=wallet.showBatchWithdrawDialog>Batch Withdraw</button></span>
+        <span><button id='sBSD' data-tr=wallet.showBatchSplitDialog>Batch Split</button></span>
+        <span><button id='sPWD' data-tr=wallet.paperWallet.label>Paper Wallet</button></span>
+        <span><button id='sISPD' data-tr=wallet.importSinglePrivateKey.openButtonLabel>Import Private Key</button></span>
     </div>
     <div class=headerCenter>
-        <a class=arizenTitle href='https://github.com/ZencashOfficial/arizen'>Arizen</a>
+        <div id="testnet" style="color:darkred; text-align:center; display:none">
+            <div><strong>TESTNET </strong></div>
+        </div>
+        <a class=arizenTitle href='https://github.com/HorizenOfficial/arizen'>Arizen</a>
         <a class=zenLogo><img id=zenImg src='resources/zen_icon.png' /></a>
     </div>
     <div class=headerRight>
-        <span><button onclick="showSettingsDialog()" data-tr=wallet.showSettingsDialogButton>Settings</button></span>
-        <span><button onclick="showAboutDialog()" data-tr=wallet.showAboutDialogButton>About</button></span>
+        <span><button id='sSD' data-tr=wallet.showSettingsDialogButton>Settings</button></span>
+        <span><button id='sAD' data-tr=wallet.showAboutDialogButton>About</button></span>
         <span><button id=refreshButton data-tr=wallet.refreshWallet>Refresh</button></span>
-        <span><button onclick='logout()' data-tr=wallet.logout>Logout</button></span>
-        <span><button onclick='exitApp()' data-tr=wallet.exit>Exit</button></span>
+        <span><button id='logout' data-tr=wallet.logout>Logout</button></span>
+        <span><button id='exitApp' data-tr=wallet.exit>Exit</button></span>
     </div>
 </header>
 
