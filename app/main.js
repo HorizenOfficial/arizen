@@ -774,6 +774,7 @@ async function updateBlockchainView(webContents) {
         result = await fetchBlockchainChanges(addrObjs, knownTxIds);
     } catch (e) {
         console.log("Update from API failed", e);
+        webContents.send("force-remove-loading-image");
         return;
     }
 
