@@ -34,6 +34,7 @@ initSqlJs().then((SQL) => {
 });
 
 let oldZAddrJSON;
+let maxInRowAPICalls = 3
 
 const userWarningImportFileWithPKs = "New address(es) and a private key(s) will be imported. Your previous back-ups do not include the newly imported "
 + "addresses or the corresponding private keys. Please use the backup feature of Arizen to make new backup file and replace your existing Arizen wallet "
@@ -630,6 +631,7 @@ function importOnePK(pk, name = "", isT = true) {
 
 async function apiGet(url) {
     const resp = await axiosApi(url);
+    console.log(url)
     await sleep(parseFloat(settings.refreshIntervalAPI));
     return resp.data;
 }
@@ -763,29 +765,74 @@ async function fetchBlockchainChanges(addrObjs, knownTxIds) {
     return result;
 }
 
+async function fetchBlockchainChangesOneAddress(obj, knownTxIds, addrObjs) {
+        const result = {
+            changedAddrs: [],
+            newTxs: []
+        };
+        const txIdSet = new Set();
+    
+        const info = await apiGet("/addr/" + obj.addr);
+        if (obj.lastbalance !== info.balance) {
+            obj.balanceDiff = info.balance - (obj.lastbalance || 0);
+            obj.lastbalance = info.balance;
+            //result.changedAddrs = obj;
+            result.changedAddrs.push(obj);
+        }
+        //result.changedAddrs.push(obj);
+        console.log(result.changedAddrs)
+        info.transactions.forEach(txId => txIdSet.add(txId));
+    
+        knownTxIds.forEach(txId => txIdSet.delete(txId));
+    
+        const newTxs = await fetchTransactions([...txIdSet], addrObjs.map(obj => obj.addr));
+        result.newTxs = new List(newTxs).sortBy(tx => tx.block).toArray();
+    
+        return result;
+    }
+    
+
 async function updateBlockchainView(webContents) {
     webContents.send("add-loading-image");
     const addrObjs = sqlSelectObjects("SELECT addr, name, lastbalance FROM wallet where length(addr)=35");
     const knownTxIds = sqlSelectColumns("SELECT DISTINCT txid FROM transactions").map(row => row[0]);
     let totalBalance = addrObjs.filter(obj => obj.lastbalance).reduce((sum, a) => sum + a.lastbalance, 0);
 
-    let result;
-    try {
-        result = await fetchBlockchainChanges(addrObjs, knownTxIds);
-    } catch (e) {
-        console.log("Update from API failed", e);
-        return;
-    }
+    let allTxs = [];
+    //console.log(typeof(allTxs))
+    for (const obj of addrObjs) {
+        let result;
+        try {
+            result = await fetchBlockchainChangesOneAddress(obj, knownTxIds, addrObjs);
+        } catch (e) {
+            console.log("Update from API failed", e);
+            //webContents.send("force-remove-loading-image");
+            return;
+        }
 
-    for (const addrObj of result.changedAddrs) {
-        sqlRun("UPDATE wallet SET lastbalance = ? WHERE addr = ?", addrObj.lastbalance, addrObj.addr);
-        totalBalance += addrObj.balanceDiff;
-        webContents.send("update-wallet-balance", JSON.stringify({
-            response: "OK",
-            addrObj: addrObj,
-            diff: addrObj.balanceDiff,
-            total: totalBalance
-        }));
+        for (const addrObj of result.changedAddrs) {
+            sqlRun("UPDATE wallet SET lastbalance = ? WHERE addr = ?", addrObj.lastbalance, addrObj.addr);
+            totalBalance += addrObj.balanceDiff;
+            webContents.send("update-wallet-balance", JSON.stringify({
+                response: "OK",
+                addrObj: addrObj,
+                diff: addrObj.balanceDiff,
+                total: totalBalance
+            }));
+        }
+        //console.log(addrObj.addr + " New Tx: " + len(result.newTxs))
+        console.log(" All Txs: ")
+        allTxs = [...allTxs, ...result.newTxs];
+        //knownTxIds = [...knownTxIds,...result.newTxs];
+        console.log(allTxs)
+        console.log(" New Txs: ")
+        console.log(result.newTxs)
+        console.log(" Known Txs: ")
+        console.log(knownTxIds)
+        result.newTxs.forEach(tx => knownTxIds.push(tx.txid))
+        console.log(" Known Txs After: ")
+        console.log(knownTxIds)
+        //console.log(typeof(knownTxIds))
     }
 
     const zAddrObjs = sqlSelectObjects("SELECT addr, name, lastbalance,pk FROM wallet where length(addr)=95");
@@ -823,7 +870,8 @@ async function updateBlockchainView(webContents) {
     // Why here ? In case balance is unchanged the 'update-wallet-balance' is never sent, but the Zen/Fiat balance will change.
     webContents.send("send-refreshed-wallet-balance", totalBalance);
 
-    for (const tx of result.newTxs) {
+    for (const tx of allTxs) {
+        console.log(tx)
         if (tx.block >= 0) {
             sqlRun("INSERT INTO transactions VALUES (?,?,?,?,?,?,?,?)", null, tx.txid, tx.time, tx.address, tx.vins, tx.vouts, tx.amount, tx.block);
         }
