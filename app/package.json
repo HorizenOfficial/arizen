@@ -59,7 +59,7 @@
     "immutable": "^3.8.2",
     "is-ip": "^3.1.0",
     "jspdf": "^1.5.3",
-    "luxon": "^1.11.2",
+    "luxon": "^2.5.2",
     "node-json-rpc2": "^1.1.0",
     "open-ssh-tunnel": "^0.3.1",
     "password-hash": "^1.2.2",
