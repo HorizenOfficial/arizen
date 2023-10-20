@@ -35,13 +35,13 @@ addons:
 
 jobs:
   include:
-    - os: osx
-      osx_image: xcode10.2
-      language: node_js
-      node_js: lts/fermium
-      env:
-        - ELECTRON_CACHE=$HOME/.cache/electron
-        - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
+    # - os: osx
+    #   osx_image: xcode10.2
+    #   language: node_js
+    #   node_js: lts/fermium
+    #   env:
+    #     - ELECTRON_CACHE=$HOME/.cache/electron
+    #     - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
     - os: linux
       services: docker
 
