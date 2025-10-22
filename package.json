@@ -121,7 +121,7 @@
     "fs-extra": "^9.0.0",
     "immutable": "^3.8.2",
     "is-ip": "^3.1.0",
-    "jspdf": "^1.5.3",
+    "jspdf": "^2.5.1",
     "luxon": "^1.11.2",
     "node-json-rpc2": "^1.1.0",
     "open-ssh-tunnel": "^0.3.1",
